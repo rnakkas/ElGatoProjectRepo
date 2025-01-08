@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://dkjcbiyswrxb7"]
+
+[node name="player_elgato" type="CharacterBody2D"]
+
+[node name="sprite" type="AnimatedSprite2D" parent="."]
+
+[node name="collider" type="CollisionShape2D" parent="."]
