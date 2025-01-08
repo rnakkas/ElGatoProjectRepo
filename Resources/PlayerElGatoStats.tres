@@ -5,8 +5,8 @@
 [resource]
 script = ExtResource("1_cvuia")
 MaxSpeed = 250.0
-Acceleration = 190.0
-Friction = 220.0
+Acceleration = 15.0
+Friction = 10.0
 MaxHealth = 100.0
 CurrentHealth = 55.0
 JumpVelocity = -300.0

@@ -7,38 +7,45 @@ namespace ElGatoProject.Players.Scripts;
 
 public partial class PlayerElgato : CharacterBody2D
 {
-	[Export] private PlayerStats PlayerStats { get; set; }
+	[Export] private PlayerStats _playerStats;
+	[Export] private PlayerControllerComponent _playerController;
+	[Export] private VelocityComponent _velocityComponent;
 
+	private Vector2 _velocity = Vector2.Zero;
+	
+	public override void _Ready()
+	{
+		_velocity = Velocity;
+
+		_playerController.MovementInputDetected += PlayerMovementStarted;
+		_playerController.MovementInputNotDetected += PlayerMovementStopped;
+		_playerController.JumpInputDetected += PlayerJumped;
+	}
+
+	private void PlayerMovementStarted(Vector2 direction)
+	{
+		_velocity.X = _velocityComponent.AccelerateToMaxSpeed(direction, _playerStats.MaxSpeed, _playerStats.Acceleration);
+	}
+
+	private void PlayerMovementStopped()
+	{
+		_velocity.X = _velocityComponent.SlowdownToZeroSpeed(_playerStats.Friction);
+	}
+
+	private void PlayerJumped()
+	{
+		_velocity.Y = _velocityComponent.JumpVelocity(_playerStats.JumpVelocity);
+	}
+	
 	public override void _PhysicsProcess(double delta)
 	{
-		Vector2 velocity = Velocity;
-
 		// Add the gravity.
 		if (!IsOnFloor())
 		{
-			velocity.Y += PlayerStats.Gravity * (float)delta;
+			_velocity.Y += _playerStats.Gravity * (float)delta;
 		}
 
-		// Handle Jump.
-		if (Input.IsActionJustPressed("ui_accept") && IsOnFloor())
-		{
-			velocity.Y = PlayerStats.JumpVelocity;
-		}
-
-		// Get the input direction and handle the movement/deceleration.
-		// As good practice, you should replace UI actions with custom gameplay actions.
-		Vector2 direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
-		if (direction != Vector2.Zero)
-		{
-			velocity.X =  Mathf.MoveToward(Velocity.X, direction.X * PlayerStats.MaxSpeed, PlayerStats.Acceleration*(float)delta );
-			// _velocityComponent.RunVelocity(direction, (float)delta);
-		}
-		else
-		{
-			velocity.X = Mathf.MoveToward(Velocity.X, 0, PlayerStats.Friction*(float)delta);
-		}
-
-		Velocity = velocity;
+		Velocity = _velocity;
 		MoveAndSlide();
 	}
 }

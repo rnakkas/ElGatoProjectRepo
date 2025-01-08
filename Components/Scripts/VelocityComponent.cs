@@ -7,34 +7,29 @@ namespace ElGatoProject.Components.Scripts;
 [GlobalClass]
 public partial class VelocityComponent : Node2D
 {
-	[Export] private PlayerStats _playerStats;
-	[Export] private CharacterBody2D _characterBody;
-	
 	private Vector2 _velocity = Vector2.Zero;
-
-	public override void _Ready()
+	
+	public float AccelerateToMaxSpeed(Vector2 direction, float maxSpeed, float acceleration)
 	{
-		_velocity = _characterBody.Velocity;
+		_velocity.X =  Mathf.MoveToward(_velocity.X, direction.X * maxSpeed, acceleration);
+		return _velocity.X;
 	}
 
-	public void AccelerateToMaxSpeed(Vector2 direction, float delta)
+	public float SlowdownToZeroSpeed(float friction)
 	{
-		_velocity.X =  Mathf.MoveToward(_characterBody.Velocity.X, direction.X * _playerStats.MaxSpeed, _playerStats.Acceleration*delta );
+		_velocity.X = Mathf.MoveToward(_velocity.X, 0, friction);
+		return _velocity.X;
 	}
 
-	public void SlowdownToZeroSpeed(Vector2 direction, float delta)
+	public float JumpVelocity(float jumpVelocity)
 	{
-		_velocity.X = Mathf.MoveToward(_characterBody.Velocity.X, 0, _playerStats.Friction*delta);
+		_velocity.Y = jumpVelocity;
+		return _velocity.Y;
 	}
 
-	public void JumpVelocity()
+	public void FallDueToGravity(float delta, float gravity)
 	{
-		_velocity.Y = _playerStats.JumpVelocity;
-	}
-
-	public void FallDueToGravity(float delta)
-	{
-		_velocity.Y += _playerStats.Gravity * delta;
+		_velocity.Y += gravity * delta;
 	}
 	
 }
