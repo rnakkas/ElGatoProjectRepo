@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="PlayerStats" load_steps=2 format=3 uid="uid://cdhnfups52naf"]
+
+[ext_resource type="Script" path="res://Resources/PlayerStats.cs" id="1_cvuia"]
+
+[resource]
+script = ExtResource("1_cvuia")
+MaxSpeed = 250.0
+Acceleration = 190.0
+Friction = 220.0
+MaxHealth = 100.0
+CurrentHealth = 55.0
+JumpVelocity = -300.0
+Gravity = 780.0

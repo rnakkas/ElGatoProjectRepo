@@ -1,6 +1,9 @@
-[gd_scene load_steps=24 format=3 uid="uid://dkjcbiyswrxb7"]
+[gd_scene load_steps=27 format=3 uid="uid://dkjcbiyswrxb7"]
 
 [ext_resource type="Texture2D" uid="uid://db6pixvh8c8c1" path="res://Assets/Players/cat_fingerGun-1.png" id="1_q2g7s"]
+[ext_resource type="Script" path="res://Players/Scripts/PlayerElgato.cs" id="1_q6xoq"]
+[ext_resource type="Resource" uid="uid://cdhnfups52naf" path="res://Resources/PlayerElGatoStats.tres" id="2_2pill"]
+[ext_resource type="Script" path="res://Components/Scripts/VelocityComponent.cs" id="4_ovntu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8r34m"]
 size = Vector2(12.5, 19.5)
@@ -186,6 +189,9 @@ animations = [{
 }]
 
 [node name="player_elgato" type="CharacterBody2D"]
+collision_mask = 6
+script = ExtResource("1_q6xoq")
+PlayerStats = ExtResource("2_2pill")
 
 [node name="collider" type="CollisionShape2D" parent="."]
 position = Vector2(0, 2.25)
@@ -194,4 +200,8 @@ shape = SubResource("RectangleShape2D_8r34m")
 [node name="sprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_npxfn")
 animation = &"idle"
-frame_progress = 0.671417
+
+[node name="VelocityComponent" type="Node2D" parent="." node_paths=PackedStringArray("_characterBody")]
+script = ExtResource("4_ovntu")
+_playerStats = ExtResource("2_2pill")
+_characterBody = NodePath("..")

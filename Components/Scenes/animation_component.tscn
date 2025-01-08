@@ -1,0 +1,3 @@
+[gd_scene format=3 uid="uid://damxsvtt6b32j"]
+
+[node name="AnimationComponent" type="Node2D"]
