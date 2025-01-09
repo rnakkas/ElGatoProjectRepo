@@ -188,11 +188,13 @@ animations = [{
 "speed": 9.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_8r34m"]
-size = Vector2(12.2031, 19.5)
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dci6a"]
+radius = 8.0
+height = 18.0
 
 [node name="player_elgato" type="CharacterBody2D" node_paths=PackedStringArray("_playerController", "_playerStates", "_velocityComponent", "_animationComponent", "_leftWallDetect", "_rightWallDetect")]
 collision_mask = 6
+safe_margin = 1.9
 script = ExtResource("1_q6xoq")
 _playerStats = ExtResource("2_2pill")
 _playerController = NodePath("PlayerControllerComponent")
@@ -203,13 +205,13 @@ _leftWallDetect = NodePath("LeftWallDetect")
 _rightWallDetect = NodePath("RightWallDetect")
 
 [node name="AnimationComponent" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -2)
 sprite_frames = SubResource("SpriteFrames_hhv1f")
 animation = &"idle"
 script = ExtResource("6_pxjsr")
 
 [node name="collider" type="CollisionShape2D" parent="."]
-position = Vector2(0.178961, 2.34921)
-shape = SubResource("RectangleShape2D_8r34m")
+shape = SubResource("CapsuleShape2D_dci6a")
 
 [node name="PlayerControllerComponent" type="Node2D" parent="."]
 script = ExtResource("4_afk48")
@@ -224,11 +226,11 @@ _playerStats = ExtResource("2_2pill")
 [node name="LeftWallDetect" type="RayCast2D" parent="."]
 self_modulate = Color(1, 0, 1, 1)
 position = Vector2(0, 4)
-target_position = Vector2(-13, 0)
+target_position = Vector2(-12, 0)
 collision_mask = 4
 
 [node name="RightWallDetect" type="RayCast2D" parent="."]
 self_modulate = Color(1, 0, 1, 1)
 position = Vector2(0, 4)
-target_position = Vector2(13, 0)
+target_position = Vector2(12, 0)
 collision_mask = 4

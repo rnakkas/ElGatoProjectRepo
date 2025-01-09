@@ -81,7 +81,7 @@ tile_map_data = PackedByteArray("AAAAAAAAAAAFAAMAAAAAAPL/AAAFAAIAAAAAAPP/AAAFAAI
 tile_set = SubResource("TileSet_4l5qw")
 
 [node name="player_elgato" parent="." instance=ExtResource("2_e8fkw")]
-position = Vector2(302, -100)
+position = Vector2(297, -225)
 
 [node name="Camera2D" type="Camera2D" parent="player_elgato"]
 zoom = Vector2(2.7, 2.7)
