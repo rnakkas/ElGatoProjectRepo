@@ -1,9 +1,9 @@
 using Godot;
-using System;
-using ElGatoProject.Resources;
+using Godot.Collections;
 
 namespace ElGatoProject.Components.Scripts;
 
+// This component allows player control over entities
 [GlobalClass]
 public partial class PlayerControllerComponent : Node2D
 {
@@ -13,6 +13,39 @@ public partial class PlayerControllerComponent : Node2D
 	[Signal] public delegate void MovementInputDetectedEventHandler(Vector2 direction);
 	[Signal] public delegate void MovementInputNotDetectedEventHandler();
 	[Signal] public delegate void JumpInputDetectedEventHandler();
+
+	public Dictionary<string, bool> GetInputs()
+	{
+		return new Dictionary<string, bool>
+		{
+			{"move_left", Input.IsActionPressed("move_left")},
+			{"move_right", Input.IsActionPressed("move_right")},
+			{"move_up", Input.IsActionPressed("move_up")},
+			{"move_down", Input.IsActionPressed("move_down")},
+			{"jump", Input.IsActionPressed("jump")},
+			{"shoot", Input.IsActionPressed("shoot")},
+		};
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	public void Run()
 	{
@@ -25,7 +58,6 @@ public partial class PlayerControllerComponent : Node2D
 		if (_direction.X != 0)
 		{
 			EmitSignal(SignalName.MovementInputDetected, _direction);
-			// _velocity.X = _velocityComponent.AccelerateToMaxSpeed(_direction, _playerStats.MaxSpeed, _playerStats.Acceleration);
 		}
 	}
 
@@ -33,7 +65,6 @@ public partial class PlayerControllerComponent : Node2D
 	{
 		if (_direction.X == 0)
 		{
-			// _velocity.X = _velocityComponent.SlowdownToZeroSpeed(_playerStats.Friction);
 			EmitSignal(SignalName.MovementInputNotDetected);
 		}
 	}

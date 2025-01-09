@@ -1,35 +1,80 @@
 using Godot;
 using System;
 using ElGatoProject.Resources;
+using Godot.Collections;
 
 namespace ElGatoProject.Components.Scripts;
 
+// This component sets velocity for entities
 [GlobalClass]
 public partial class VelocityComponent : Node2D
 {
-	private Vector2 _velocity = Vector2.Zero;
+	[Export] private PlayerStats _playerStats;
 	
-	public float AccelerateToMaxSpeed(Vector2 direction, float maxSpeed, float acceleration)
+	private Vector2 _velocity = Vector2.Zero;
+	private float _direction;
+
+	public Vector2 CalculateVelocity(
+		Dictionary<string, bool> input, 
+		CharacterStatesComponent.State currentState, 
+		float delta, 
+		bool isOnFloor)
 	{
-		_velocity.X =  Mathf.MoveToward(_velocity.X, direction.X * maxSpeed, acceleration);
-		return _velocity.X;
+		if (input["move_left"])
+		{
+			_direction = -1;
+		}
+		else if (input["move_right"])
+		{
+			_direction = 1;
+		}
+
+		if (input["move_left"] || input["move_right"])
+		{
+			AccelerateToMaxSpeed(_direction, _playerStats.MaxSpeed, _playerStats.Acceleration);
+		}
+		else if (isOnFloor && (!input["move_left"] || !input["move_right"]))
+		{
+			SlowdownToZeroSpeed(_playerStats.Friction);
+			VerticalVelocityStoppedOnGround();
+		}
+
+		if (isOnFloor && input["jump"])
+		{
+			JumpVelocity(_playerStats.JumpVelocity);
+		}
+
+		if (!isOnFloor)
+		{
+			FallDueToGravity(delta, _playerStats.Gravity);
+		}
+		
+		return _velocity;
+	}
+	
+	public void AccelerateToMaxSpeed(float direction, float maxSpeed, float acceleration)
+	{
+		_velocity.X =  Mathf.MoveToward(_velocity.X, direction * maxSpeed, acceleration);
 	}
 
-	public float SlowdownToZeroSpeed(float friction)
+	public void SlowdownToZeroSpeed(float friction)
 	{
 		_velocity.X = Mathf.MoveToward(_velocity.X, 0, friction);
-		return _velocity.X;
 	}
 
-	public float JumpVelocity(float jumpVelocity)
+	public void JumpVelocity(float jumpVelocity)
 	{
 		_velocity.Y = jumpVelocity;
-		return _velocity.Y;
 	}
 
 	public void FallDueToGravity(float delta, float gravity)
 	{
 		_velocity.Y += gravity * delta;
+	}
+
+	public void VerticalVelocityStoppedOnGround()
+	{
+		_velocity.Y = 0;
 	}
 	
 }

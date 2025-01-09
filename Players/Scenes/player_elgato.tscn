@@ -1,10 +1,12 @@
-[gd_scene load_steps=28 format=3 uid="uid://dkjcbiyswrxb7"]
+[gd_scene load_steps=30 format=3 uid="uid://dkjcbiyswrxb7"]
 
 [ext_resource type="Texture2D" uid="uid://db6pixvh8c8c1" path="res://Assets/Players/cat_fingerGun-1.png" id="1_q2g7s"]
 [ext_resource type="Script" path="res://Players/Scripts/PlayerElgato.cs" id="1_q6xoq"]
 [ext_resource type="Resource" uid="uid://cdhnfups52naf" path="res://Resources/PlayerElGatoStats.tres" id="2_2pill"]
 [ext_resource type="Script" path="res://Components/Scripts/PlayerControllerComponent.cs" id="4_afk48"]
+[ext_resource type="Script" path="res://Components/Scripts/CharacterStatesComponent.cs" id="4_ndcph"]
 [ext_resource type="Script" path="res://Components/Scripts/VelocityComponent.cs" id="4_ovntu"]
+[ext_resource type="Script" path="res://Components/Scripts/AnimationComponent.cs" id="6_pxjsr"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8r34m"]
 size = Vector2(12.5, 19.5)
@@ -89,7 +91,7 @@ region = Rect2(340, 25, 34, 25)
 atlas = ExtResource("1_q2g7s")
 region = Rect2(374, 25, 34, 25)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_npxfn"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_hhv1f"]
 animations = [{
 "frames": [{
 "duration": 1.0,
@@ -189,25 +191,30 @@ animations = [{
 "speed": 9.0
 }]
 
-[node name="player_elgato" type="CharacterBody2D" node_paths=PackedStringArray("_playerController", "_velocityComponent")]
+[node name="player_elgato" type="CharacterBody2D" node_paths=PackedStringArray("_playerController", "_playerStates", "_velocityComponent", "_animationComponent")]
 collision_mask = 6
 script = ExtResource("1_q6xoq")
 _playerStats = ExtResource("2_2pill")
 _playerController = NodePath("PlayerControllerComponent")
+_playerStates = NodePath("CharacterStatesComponent")
 _velocityComponent = NodePath("VelocityComponent")
+_animationComponent = NodePath("AnimationComponent")
 
 [node name="collider" type="CollisionShape2D" parent="."]
 position = Vector2(0, 2.25)
 shape = SubResource("RectangleShape2D_8r34m")
 
-[node name="sprite" type="AnimatedSprite2D" parent="."]
-sprite_frames = SubResource("SpriteFrames_npxfn")
-animation = &"idle"
+[node name="PlayerControllerComponent" type="Node2D" parent="."]
+script = ExtResource("4_afk48")
+
+[node name="CharacterStatesComponent" type="Node2D" parent="."]
+script = ExtResource("4_ndcph")
 
 [node name="VelocityComponent" type="Node2D" parent="."]
 script = ExtResource("4_ovntu")
-
-[node name="PlayerControllerComponent" type="Node2D" parent="." node_paths=PackedStringArray("_velocityComponent")]
-script = ExtResource("4_afk48")
 _playerStats = ExtResource("2_2pill")
-_velocityComponent = NodePath("../VelocityComponent")
+
+[node name="AnimationComponent" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_hhv1f")
+animation = &"idle"
+script = ExtResource("6_pxjsr")
