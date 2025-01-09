@@ -8,9 +8,6 @@
 [ext_resource type="Script" path="res://Components/Scripts/VelocityComponent.cs" id="4_ovntu"]
 [ext_resource type="Script" path="res://Components/Scripts/AnimationComponent.cs" id="6_pxjsr"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_8r34m"]
-size = Vector2(12.5, 19.5)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_yklg5"]
 atlas = ExtResource("1_q2g7s")
 region = Rect2(238, 25, 34, 25)
@@ -191,7 +188,10 @@ animations = [{
 "speed": 9.0
 }]
 
-[node name="player_elgato" type="CharacterBody2D" node_paths=PackedStringArray("_playerController", "_playerStates", "_velocityComponent", "_animationComponent")]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8r34m"]
+size = Vector2(12.2031, 19.5)
+
+[node name="player_elgato" type="CharacterBody2D" node_paths=PackedStringArray("_playerController", "_playerStates", "_velocityComponent", "_animationComponent", "_leftWallDetect", "_rightWallDetect")]
 collision_mask = 6
 script = ExtResource("1_q6xoq")
 _playerStats = ExtResource("2_2pill")
@@ -199,9 +199,16 @@ _playerController = NodePath("PlayerControllerComponent")
 _playerStates = NodePath("CharacterStatesComponent")
 _velocityComponent = NodePath("VelocityComponent")
 _animationComponent = NodePath("AnimationComponent")
+_leftWallDetect = NodePath("LeftWallDetect")
+_rightWallDetect = NodePath("RightWallDetect")
+
+[node name="AnimationComponent" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_hhv1f")
+animation = &"idle"
+script = ExtResource("6_pxjsr")
 
 [node name="collider" type="CollisionShape2D" parent="."]
-position = Vector2(0, 2.25)
+position = Vector2(0.178961, 2.34921)
 shape = SubResource("RectangleShape2D_8r34m")
 
 [node name="PlayerControllerComponent" type="Node2D" parent="."]
@@ -214,7 +221,14 @@ script = ExtResource("4_ndcph")
 script = ExtResource("4_ovntu")
 _playerStats = ExtResource("2_2pill")
 
-[node name="AnimationComponent" type="AnimatedSprite2D" parent="."]
-sprite_frames = SubResource("SpriteFrames_hhv1f")
-animation = &"idle"
-script = ExtResource("6_pxjsr")
+[node name="LeftWallDetect" type="RayCast2D" parent="."]
+self_modulate = Color(1, 0, 1, 1)
+position = Vector2(0, 4)
+target_position = Vector2(-13, 0)
+collision_mask = 4
+
+[node name="RightWallDetect" type="RayCast2D" parent="."]
+self_modulate = Color(1, 0, 1, 1)
+position = Vector2(0, 4)
+target_position = Vector2(13, 0)
+collision_mask = 4

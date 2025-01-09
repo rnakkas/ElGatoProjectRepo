@@ -4,10 +4,13 @@
 
 [resource]
 script = ExtResource("1_cvuia")
-MaxSpeed = 250.0
+MaxSpeed = 170.0
 Acceleration = 15.0
 Friction = 10.0
 MaxHealth = 100.0
 CurrentHealth = 55.0
-JumpVelocity = -350.0
+JumpVelocity = -340.0
 Gravity = 780.0
+WallSlideGravity = 10.0
+WallJumpVelocity = -220.0
+WallSlideVelocity = 20.0

@@ -12,26 +12,36 @@ public partial class VelocityComponent : Node2D
 	[Export] private PlayerStats _playerStats;
 	
 	private Vector2 _velocity = Vector2.Zero;
-	private float _direction;
+	public float Direction;
 
-	public Vector2 CalculateVelocity(
+	public Vector2 CalculatePlayerVelocity(
 		Dictionary<string, bool> input, 
-		CharacterStatesComponent.State currentState, 
 		float delta, 
-		bool isOnFloor)
+		bool isOnFloor,
+		bool isOnWall,
+		RayCast2D leftWallDetect,
+		RayCast2D rightWallDetect
+		)
 	{
+		// Set directions for velocity
 		if (input["move_left"])
 		{
-			_direction = -1;
+			Direction = -1;
 		}
 		else if (input["move_right"])
 		{
-			_direction = 1;
+			Direction = 1;
 		}
 
+		// Running and stopping
 		if (input["move_left"] || input["move_right"])
 		{
-			AccelerateToMaxSpeed(_direction, _playerStats.MaxSpeed, _playerStats.Acceleration);
+			AccelerateToMaxSpeed(Direction, _playerStats.MaxSpeed, _playerStats.Acceleration);
+
+			if (isOnFloor)
+			{
+				VerticalVelocityStoppedOnGround();
+			}
 		}
 		else if (isOnFloor && (!input["move_left"] || !input["move_right"]))
 		{
@@ -39,6 +49,7 @@ public partial class VelocityComponent : Node2D
 			VerticalVelocityStoppedOnGround();
 		}
 
+		// Jumping
 		if (isOnFloor && input["jump"])
 		{
 			JumpVelocity(_playerStats.JumpVelocity);
@@ -49,32 +60,66 @@ public partial class VelocityComponent : Node2D
 			FallDueToGravity(delta, _playerStats.Gravity);
 		}
 		
+		// Wall sliding
+		if (!isOnFloor && (leftWallDetect.IsColliding() || rightWallDetect.IsColliding()))
+		{
+			WallSlide(_playerStats.WallSlideVelocity, _playerStats.WallSlideGravity);
+
+			if (leftWallDetect.IsColliding())
+			{
+				Direction = 1;
+			} 
+			
+			if (rightWallDetect.IsColliding())
+			{
+				Direction = -1;
+			}
+			
+			// Wall Jump
+			if (input["jump_justPressed"])
+			{
+				JumpVelocity(_playerStats.WallJumpVelocity);
+				WallJumpHorizontalVelocity(Direction, _playerStats.MaxSpeed);
+			}
+		}
+		
 		return _velocity;
 	}
 	
-	public void AccelerateToMaxSpeed(float direction, float maxSpeed, float acceleration)
+	private void AccelerateToMaxSpeed(float direction, float maxSpeed, float acceleration)
 	{
 		_velocity.X =  Mathf.MoveToward(_velocity.X, direction * maxSpeed, acceleration);
 	}
 
-	public void SlowdownToZeroSpeed(float friction)
+	private void SlowdownToZeroSpeed(float friction)
 	{
 		_velocity.X = Mathf.MoveToward(_velocity.X, 0, friction);
 	}
 
-	public void JumpVelocity(float jumpVelocity)
+	private void JumpVelocity(float jumpVelocity)
 	{
 		_velocity.Y = jumpVelocity;
 	}
 
-	public void FallDueToGravity(float delta, float gravity)
+	private void FallDueToGravity(float delta, float gravity)
 	{
 		_velocity.Y += gravity * delta;
 	}
 
-	public void VerticalVelocityStoppedOnGround()
+	private void VerticalVelocityStoppedOnGround()
 	{
 		_velocity.Y = 0;
+	}
+
+	private void WallSlide(float wallSlideVelocity, float wallSlideGravity)
+	{
+		_velocity.X = 0;
+		_velocity.Y = Mathf.MoveToward(_velocity.Y, wallSlideVelocity, wallSlideGravity);
+	}
+
+	private void WallJumpHorizontalVelocity(float direction, float maxSpeed)
+	{
+		_velocity.X = direction * maxSpeed;
 	}
 	
 }

@@ -6,40 +6,60 @@ namespace ElGatoProject.Components.Scripts;
 [GlobalClass]
 public partial class AnimationComponent : AnimatedSprite2D
 {
-	public void FlipSprite(Vector2 direction)
+	public void PlayAnimation(CharacterStatesComponent.State currentState, float direction)
 	{
-		if (direction.X < 0)
+		switch (currentState)
+		{
+			case CharacterStatesComponent.State.Idle:
+				Play("idle");
+				break;
+			
+			case CharacterStatesComponent.State.Run:
+				FlipSprite(direction);
+				Play("run");
+				break;
+			
+			case CharacterStatesComponent.State.Jump:
+				FlipSprite(direction);
+				
+				if (Animation != "jump")
+				{
+					Stop();
+					Play("jump");
+				}
+				break;
+			
+			case CharacterStatesComponent.State.Fall:
+				FlipSprite(direction);
+				
+				if (Animation != "fall")
+				{
+					Stop();
+					Play("fall");
+				}
+				break;
+			
+			case CharacterStatesComponent.State.WallSlide:
+				FlipSprite(direction);
+				if (Animation != "wall_slide")
+				{
+					Stop();
+					Play("wall_slide");
+				}
+				break;
+		}
+	}
+	
+	private void FlipSprite(float direction)
+	{
+		if (direction < 0)
 		{
 			FlipH = true;
 		}
-		else if (direction.X > 0)
+		else if (direction > 0)
 		{
 			FlipH = false;
 		}
 	}
 	
-	public void PlayIdleAnimation()
-	{
-		Play("idle");
-	}
-
-	public void PlayRunAnimation()
-	{
-		Play("run");
-	}
-
-	public void PlayJumpAnimation()
-	{
-		Play("jump");
-	}
-
-	public void PlayFallAnimation()
-	{
-		Play("fall");
-	}
-
-	public void PlayWallSlideAnimation()
-	{
-		Play("wall_slide");
-	}
 }

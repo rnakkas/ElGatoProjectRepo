@@ -17,8 +17,13 @@ public partial class CharacterStatesComponent : Node2D
     }
 
     public State CurrentState;
-
-    public void UpdateState(Vector2 velocity)
+    
+    public void UpdateState(
+        Vector2 velocity, 
+        RayCast2D leftWallDetect, 
+        RayCast2D rightWallDetect,
+        bool isOnFloor
+        )
     {
         if (velocity.X != 0)
         {
@@ -33,9 +38,20 @@ public partial class CharacterStatesComponent : Node2D
         {
             CurrentState = State.Jump;
         }
-        else if (velocity.Y >= 0)
+        else if (
+            velocity.Y > 0 && 
+            (!leftWallDetect.IsColliding() || !rightWallDetect.IsColliding())
+            )
         {
             CurrentState = State.Fall;
+        }
+
+        if (
+            !isOnFloor &&
+            (leftWallDetect.IsColliding() || rightWallDetect.IsColliding())
+        )
+        {
+            CurrentState = State.WallSlide;
         }
     }
 }

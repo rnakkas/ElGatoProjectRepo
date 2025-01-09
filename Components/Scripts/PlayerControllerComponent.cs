@@ -23,6 +23,7 @@ public partial class PlayerControllerComponent : Node2D
 			{"move_up", Input.IsActionPressed("move_up")},
 			{"move_down", Input.IsActionPressed("move_down")},
 			{"jump", Input.IsActionPressed("jump")},
+			{"jump_justPressed", Input.IsActionJustPressed("jump")},
 			{"shoot", Input.IsActionPressed("shoot")},
 		};
 	}
