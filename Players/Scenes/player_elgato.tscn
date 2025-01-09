@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://dkjcbiyswrxb7"]
+[gd_scene load_steps=33 format=3 uid="uid://dkjcbiyswrxb7"]
 
 [ext_resource type="Texture2D" uid="uid://db6pixvh8c8c1" path="res://Assets/Players/cat_fingerGun-1.png" id="1_q2g7s"]
 [ext_resource type="Script" path="res://Players/Scripts/PlayerElgato.cs" id="1_q6xoq"]
@@ -7,6 +7,8 @@
 [ext_resource type="Script" path="res://Components/Scripts/CharacterStatesComponent.cs" id="4_ndcph"]
 [ext_resource type="Script" path="res://Components/Scripts/VelocityComponent.cs" id="4_ovntu"]
 [ext_resource type="Script" path="res://Components/Scripts/AnimationComponent.cs" id="6_pxjsr"]
+[ext_resource type="Script" path="res://Components/Scripts/HurtboxComponent.cs" id="8_ppklg"]
+[ext_resource type="Script" path="res://Components/Scripts/HealthComponent.cs" id="9_l3d01"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_yklg5"]
 atlas = ExtResource("1_q2g7s")
@@ -192,7 +194,11 @@ animations = [{
 radius = 8.0
 height = 18.0
 
-[node name="player_elgato" type="CharacterBody2D" node_paths=PackedStringArray("_playerController", "_playerStates", "_velocityComponent", "_animationComponent", "_leftWallDetect", "_rightWallDetect")]
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_3rpfy"]
+radius = 6.0
+height = 18.0
+
+[node name="player_elgato" type="CharacterBody2D" node_paths=PackedStringArray("_playerController", "_playerStates", "_velocityComponent", "_animationComponent", "_leftWallDetect", "_rightWallDetect", "_hurtboxComponent", "_healthComponent")]
 collision_mask = 6
 safe_margin = 1.9
 script = ExtResource("1_q6xoq")
@@ -203,6 +209,8 @@ _velocityComponent = NodePath("VelocityComponent")
 _animationComponent = NodePath("AnimationComponent")
 _leftWallDetect = NodePath("LeftWallDetect")
 _rightWallDetect = NodePath("RightWallDetect")
+_hurtboxComponent = NodePath("HurtboxComponent")
+_healthComponent = NodePath("HealthComponent")
 
 [node name="AnimationComponent" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -2)
@@ -234,3 +242,15 @@ self_modulate = Color(1, 0, 1, 1)
 position = Vector2(0, 4)
 target_position = Vector2(12, 0)
 collision_mask = 4
+
+[node name="HurtboxComponent" type="Area2D" parent="."]
+collision_mask = 64
+script = ExtResource("8_ppklg")
+
+[node name="HurtboxCollider" type="CollisionShape2D" parent="HurtboxComponent"]
+shape = SubResource("CapsuleShape2D_3rpfy")
+debug_color = Color(0.942816, 0.207681, 0.313411, 0.42)
+
+[node name="HealthComponent" type="Node2D" parent="."]
+script = ExtResource("9_l3d01")
+_playerStats = ExtResource("2_2pill")

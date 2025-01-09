@@ -13,7 +13,9 @@ public partial class CharacterStatesComponent : Node2D
         Run,
         Jump,
         Fall,
-        WallSlide
+        WallSlide,
+        Hurt,
+        Death
     }
 
     public State CurrentState;
@@ -22,7 +24,8 @@ public partial class CharacterStatesComponent : Node2D
         Vector2 velocity, 
         RayCast2D leftWallDetect, 
         RayCast2D rightWallDetect,
-        bool isOnFloor
+        bool isOnFloor,
+        bool hurtStatus
         )
     {
         if (velocity.X != 0)

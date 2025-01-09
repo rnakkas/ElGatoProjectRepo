@@ -1,7 +1,9 @@
-[gd_scene load_steps=7 format=4 uid="uid://cne5xpx7c4fh0"]
+[gd_scene load_steps=10 format=4 uid="uid://cne5xpx7c4fh0"]
 
 [ext_resource type="Texture2D" uid="uid://d2hqfvsf0rube" path="res://Assets/Tilesets/tilemap-floors-walls-1.png" id="1_l2xyl"]
 [ext_resource type="PackedScene" uid="uid://dkjcbiyswrxb7" path="res://Players/Scenes/player_elgato.tscn" id="2_e8fkw"]
+[ext_resource type="PackedScene" uid="uid://csyfqkdwuqca8" path="res://TestingStuff/test_area.tscn" id="3_sfurj"]
+[ext_resource type="Texture2D" uid="uid://dqx6rpywerr0u" path="res://icon.svg" id="4_f7241"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_5x7kg"]
 texture = ExtResource("1_l2xyl")
@@ -70,6 +72,9 @@ texture = ExtResource("1_l2xyl")
 physics_layer_0/collision_layer = 4
 sources/0 = SubResource("TileSetAtlasSource_nyd86")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gy6ed"]
+size = Vector2(13, 12)
+
 [node name="staging_level" type="Node2D"]
 
 [node name="floor" type="TileMapLayer" parent="."]
@@ -86,3 +91,27 @@ position = Vector2(297, -225)
 [node name="Camera2D" type="Camera2D" parent="player_elgato"]
 zoom = Vector2(2.7, 2.7)
 position_smoothing_enabled = true
+
+[node name="TestArea" parent="." node_paths=PackedStringArray("_rightWallDetect", "_leftWallDetect") instance=ExtResource("3_sfurj")]
+position = Vector2(417, -14)
+collision_layer = 64
+AreaType = 1
+HealAmount = 0
+_rightWallDetect = NodePath("RightWallDetect")
+_leftWallDetect = NodePath("LeftWallDetect")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TestArea"]
+shape = SubResource("RectangleShape2D_gy6ed")
+
+[node name="Sprite2D" type="Sprite2D" parent="TestArea"]
+self_modulate = Color(1, 0.027451, 0, 1)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("4_f7241")
+
+[node name="RightWallDetect" type="RayCast2D" parent="TestArea"]
+target_position = Vector2(31, 0)
+collision_mask = 6
+
+[node name="LeftWallDetect" type="RayCast2D" parent="TestArea"]
+target_position = Vector2(-29, 0)
+collision_mask = 6
