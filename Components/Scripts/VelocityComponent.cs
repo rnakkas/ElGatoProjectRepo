@@ -21,7 +21,9 @@ public partial class VelocityComponent : Node2D
 		bool isOnWall,
 		RayCast2D leftWallDetect,
 		RayCast2D rightWallDetect,
-		bool hurtStatus
+		bool hurtStatus,
+		float knockback,
+		Vector2 attackVelocity
 		)
 	{
 		// Set directions for velocity
@@ -88,10 +90,16 @@ public partial class VelocityComponent : Node2D
 		if (hurtStatus)
 		{ 
 			_velocity = Vector2.Zero;
+			KnockbackFromAttack(knockback, attackVelocity);
 			return _velocity;
 		}
 		
 		return _velocity;
+	}
+
+	private void KnockbackFromAttack(float knockback, Vector2 attackVelocity)
+	{
+		_velocity.X = knockback * attackVelocity.X;
 	}
 	
 	private void AccelerateToMaxSpeed(float direction, float maxSpeed, float acceleration)

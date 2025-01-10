@@ -15,7 +15,7 @@ public partial class TestArea : Area2D
 	[Export] public Type AreaType = Type.HealthPickup;
 	[Export] public int HealAmount = 20;
 	[Export] public int AttackDamage = 15;
-	[Export] public float Knockback = 5.0f;
+	[Export] public float Knockback = 70.0f;
 	[Export] private RayCast2D _rightWallDetect;
 	[Export] private RayCast2D _leftWallDetect;
 

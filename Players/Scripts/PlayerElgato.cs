@@ -21,6 +21,8 @@ public partial class PlayerElgato : CharacterBody2D
 	private Vector2 _velocity = Vector2.Zero;
 	private Dictionary<string, bool> _playerInputs;
 	private bool _hurtStatus;
+	private float _knockback;
+	private Vector2 _attackVelocity;
 	
 	public override void _Ready()
 	{
@@ -35,6 +37,8 @@ public partial class PlayerElgato : CharacterBody2D
 		float attackDirection)
 	{
 		_healthComponent.TakeDamage(damage);
+		_knockback = knockback;
+		_attackVelocity = attackVelocity;
 	}
 	
 	public override void _PhysicsProcess(double delta)
@@ -50,7 +54,9 @@ public partial class PlayerElgato : CharacterBody2D
 			IsOnWall(),
 			_leftWallDetect,
 			_rightWallDetect,
-			_hurtStatus
+			_hurtStatus,
+			_knockback,
+			_attackVelocity
 			);
 		
 		_playerStates.UpdateState(_velocity, _leftWallDetect, _rightWallDetect, IsOnFloor(), _hurtStatus);
