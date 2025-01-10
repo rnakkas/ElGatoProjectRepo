@@ -19,6 +19,10 @@ config/icon="res://icon.svg"
 
 project/assembly_name="ElGatoProject"
 
+[global_group]
+
+EnemyProjectiles="Group for enemy projectiles"
+
 [input]
 
 move_left={

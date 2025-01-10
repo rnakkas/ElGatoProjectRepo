@@ -19,8 +19,13 @@ public partial class TestArea : Area2D
 	[Export] private RayCast2D _rightWallDetect;
 	[Export] private RayCast2D _leftWallDetect;
 
-	public float Direction = 1.0f;
+	public float Direction = 0.0f;
 	public Vector2 Velocity;
+
+	public override void _Ready()
+	{
+		AddToGroup("EnemyProjectiles");
+	}
 
 	public override void _PhysicsProcess(double delta)
 	{
@@ -33,7 +38,7 @@ public partial class TestArea : Area2D
 		{
 			Direction = 1.0f;
 		}
-
+		
 		Velocity.X = (float)delta * 80 * Direction;
 		
 		MoveLocalX(Velocity.X, true);

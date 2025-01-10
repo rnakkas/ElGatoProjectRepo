@@ -13,34 +13,44 @@ public partial class PlayerElgato : CharacterBody2D
 	[Export] private AnimatedSprite2D _sprite;
 	[Export] private RayCast2D _leftWallDetect;
 	[Export] private RayCast2D _rightWallDetect;
+	[Export] private Area2D _hurtbox;
+	[Export] private Timer _hurtStaggerTimer;
 	
 	private Vector2 _velocity = Vector2.Zero;
 	private Dictionary<string, bool> _playerInputs;
 	private float _direction;
-	
-	
-	
 	private bool _hurtStatus;
 	private float _knockback;
 	private Vector2 _attackVelocity;
+	private Area2D _enemyAttackArea;
 	
 	public override void _Ready()
 	{
 		_velocity = Velocity;
-		// _hurtboxComponent.HitByAttack += PlayerHitByAttack;
+		_hurtbox.AreaEntered += PlayerHitByAttack;
+		_hurtStaggerTimer.OneShot = true;
+		_hurtStaggerTimer.SetWaitTime(_playerStats.HurtStaggerTime);
+		_hurtStaggerTimer.Timeout += HurtStaggerTimerTimedOut;
 	}
 
-	// private void PlayerHitByAttack(
-	// 	int damage, 
-	// 	float knockback, 
-	// 	Vector2 attackVelocity, 
-	// 	float attackDirection)
-	// {
-	// 	_healthComponent.TakeDamage(damage);
-	// 	_knockback = knockback;
-	// 	_attackVelocity = attackVelocity;
-	// }
+	
+	// Getting hit by attacks
+	private void PlayerHitByAttack(Area2D area)
+	{
+		if (area.IsInGroup("EnemyProjectiles"))
+		{
+			_enemyAttackArea = area;
+			_playerStats.TakeDamage((float)area.Get("AttackDamage"));
+			_hurtStatus = true;
+			_hurtStaggerTimer.Start();
+			GD.Print("current health: " + _playerStats.CurrentHealth);
+		}
+	}
 
+	private void HurtStaggerTimerTimedOut()
+	{
+		_hurtStatus = false;
+	}
 	
 	// Set direction
 	private void SetDirection()
@@ -54,7 +64,7 @@ public partial class PlayerElgato : CharacterBody2D
 			_direction = 0;
 		}
 	}
-	private void PlayerMovement(float delta)
+	private void PlayerMovements(float delta)
 	{
 		SetDirection();
 		
@@ -67,6 +77,9 @@ public partial class PlayerElgato : CharacterBody2D
 		// Wall Sliding and wall jumping
 		WallSlideAndWallJump();
 		
+		// Hurt
+		PlayerHurt();
+
 	}
 
 	private void RunAndIdle()
@@ -77,7 +90,7 @@ public partial class PlayerElgato : CharacterBody2D
 
 			if (IsOnFloor())
 			{
-				_sprite.Play("run");
+				_playerStats.State = PlayerStats.PlayerState.Run;
 			}
 			
 			if (IsOnFloor())
@@ -89,7 +102,7 @@ public partial class PlayerElgato : CharacterBody2D
 		{
 			_velocity.X = Mathf.MoveToward(_velocity.X, 0, _playerStats.Friction);
 			_velocity.Y = 0;
-			_sprite.Play("idle");
+			_playerStats.State = PlayerStats.PlayerState.Idle;
 		}
 	}
 
@@ -98,7 +111,7 @@ public partial class PlayerElgato : CharacterBody2D
 		if (IsOnFloor() && _playerInputs["jump"])
 		{
 			_velocity.Y = _playerStats.JumpVelocity;
-			_sprite.Play("jump");
+			_playerStats.State = PlayerStats.PlayerState.Jump;
 		}
 
 		if (!IsOnFloor())
@@ -107,7 +120,7 @@ public partial class PlayerElgato : CharacterBody2D
 
 			if (_velocity.Y > 0)
 			{
-				_sprite.Play("fall");
+				_playerStats.State = PlayerStats.PlayerState.Fall;
 			}
 		}
 	}
@@ -116,7 +129,7 @@ public partial class PlayerElgato : CharacterBody2D
 	{
 		if (!IsOnFloor() && (_leftWallDetect.IsColliding() || _rightWallDetect.IsColliding()))
 		{
-			_sprite.Play("wall_slide");
+			_playerStats.State = PlayerStats.PlayerState.WallSlide;
 			_velocity.X = 0;
 			_velocity.Y = Mathf.MoveToward(_velocity.Y, _playerStats.WallSlideVelocity, _playerStats.WallSlideGravity);
 
@@ -135,8 +148,50 @@ public partial class PlayerElgato : CharacterBody2D
 			{
 				_velocity.Y = _playerStats.WallJumpVelocity;;
 				_velocity.X = _direction * _playerStats.MaxSpeed;
-				_sprite.Play("jump");
+				_playerStats.State = PlayerStats.PlayerState.Jump;
 			}
+		}
+	}
+	
+	private void PlayerHurt()
+	{
+		if (_hurtStatus)
+		{ 
+			_velocity = Vector2.Zero;
+			_playerStats.State = PlayerStats.PlayerState.Hurt;
+			
+			// Knockback from attack
+			
+			float knockback = (float)_enemyAttackArea.Get("Knockback");
+			Vector2 attackVelocity = (Vector2)_enemyAttackArea.Get("Velocity");
+			float attackDirection = (float)_enemyAttackArea.Get("Direction");
+			KnockbackFromAttack(knockback, attackVelocity, attackDirection);
+		}
+	}
+
+	private void KnockbackFromAttack(float knockback, Vector2 attackVelocity, float attackDirection)
+	{
+		if (attackDirection < 0)
+		{
+			_velocity.X = knockback * attackVelocity.X * -attackDirection;
+		}
+		else if (attackDirection > 0)
+		{
+			_velocity.X = knockback * attackVelocity.X * attackDirection;
+		}
+		else if (attackDirection == 0)
+		{
+			Vector2 attackPosition = GlobalPosition - _enemyAttackArea.GlobalPosition;
+			if (attackPosition.X < 0)
+			{
+				attackDirection = -1;
+			}
+			else if (attackPosition.X > 0)
+			{
+				attackDirection = 1;
+			}
+			
+			_velocity.X = knockback * attackDirection;
 		}
 	}
 
@@ -151,12 +206,37 @@ public partial class PlayerElgato : CharacterBody2D
 			_sprite.FlipH = false;
 		}
 	}
+
+	private void PlayerAnimations()
+	{
+		switch (_playerStats.State)
+		{
+			case PlayerStats.PlayerState.Run:
+				_sprite.Play("run");
+				break;
+			case PlayerStats.PlayerState.Idle:
+				_sprite.Play("idle");
+				break;
+			case PlayerStats.PlayerState.Jump:
+				_sprite.Play("jump");
+				break;
+			case PlayerStats.PlayerState.Fall:
+				_sprite.Play("fall");
+				break;
+			case PlayerStats.PlayerState.WallSlide:
+				_sprite.Play("wall_slide");
+				break;
+			case PlayerStats.PlayerState.Hurt:
+				_sprite.Play("hurt");
+				break;
+		}
+	}
 	
 	public override void _PhysicsProcess(double delta)
 	{
 		_playerInputs = _playerController.GetInputs();
-		
-		PlayerMovement((float)delta);
+		PlayerMovements((float)delta);
+		PlayerAnimations();
 		FlipSprite();
 		
 		Velocity = _velocity;

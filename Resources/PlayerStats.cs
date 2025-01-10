@@ -6,6 +6,7 @@ namespace ElGatoProject.Resources;
 [GlobalClass]
 public partial class PlayerStats : Resource
 {
+    // Player stats variables
     [Export] public float MaxSpeed { get; set; }
     [Export] public float Acceleration { get; set; }
     [Export] public float Friction { get; set; }
@@ -16,21 +17,33 @@ public partial class PlayerStats : Resource
     [Export] public float WallSlideGravity { get; set; }
     [Export] public float WallJumpVelocity { get; set; }
     [Export] public float WallSlideVelocity { get; set; }
-    
     [Export] public float HurtStaggerTime { get; set; }
 
-    public enum State
+    public enum PlayerState
     {
         Idle,
         Run,
         Jump,
         Fall,
         WallSlide,
-        Hurt,
-        Death
+        Hurt
     }
+
+    public PlayerState State;
     
-    [Export] public State PlayerState { get; set; }
+    // Methods
+    public void TakeDamage(float damage)
+    {
+        CurrentHealth -= damage;
+    }
+
+    public void Heal(float heal)
+    {
+        if (CurrentHealth + heal >= MaxHealth)
+        {
+            CurrentHealth = Mathf.Min(CurrentHealth + heal, MaxHealth);
+        }
+    }
     
     
 }

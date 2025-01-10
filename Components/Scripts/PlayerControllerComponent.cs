@@ -10,10 +10,6 @@ public partial class PlayerControllerComponent : Node2D
 	private Vector2 _direction = Vector2.Zero;
 	private Vector2 _velocity = Vector2.Zero;
 	
-	[Signal] public delegate void MovementInputDetectedEventHandler(Vector2 direction);
-	[Signal] public delegate void MovementInputNotDetectedEventHandler();
-	[Signal] public delegate void JumpInputDetectedEventHandler();
-
 	public Dictionary<string, bool> GetInputs()
 	{
 		return new Dictionary<string, bool>
