@@ -21,12 +21,7 @@ public partial class AnimationComponent : AnimatedSprite2D
 			
 			case CharacterStatesComponent.State.Jump:
 				FlipSprite(direction);
-				
-				if (Animation != "jump")
-				{
-					Stop();
-					Play("jump");
-				}
+				Play("jump");
 				break;
 			
 			case CharacterStatesComponent.State.Fall:
@@ -41,11 +36,12 @@ public partial class AnimationComponent : AnimatedSprite2D
 			
 			case CharacterStatesComponent.State.WallSlide:
 				FlipSprite(direction);
-				if (Animation != "wall_slide")
-				{
-					Stop();
-					Play("wall_slide");
-				}
+				Play("wall_slide");
+				break;
+			
+			case CharacterStatesComponent.State.Hurt:
+				FlipSprite(direction);
+				Play("hurt");
 				break;
 		}
 	}

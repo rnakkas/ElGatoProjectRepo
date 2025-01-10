@@ -20,7 +20,8 @@ public partial class VelocityComponent : Node2D
 		bool isOnFloor,
 		bool isOnWall,
 		RayCast2D leftWallDetect,
-		RayCast2D rightWallDetect
+		RayCast2D rightWallDetect,
+		bool hurtStatus
 		)
 	{
 		// Set directions for velocity
@@ -32,9 +33,9 @@ public partial class VelocityComponent : Node2D
 		{
 			Direction = 1;
 		}
-
+		
 		// Running and stopping
-		if (input["move_left"] || input["move_right"])
+		if ((input["move_left"] || input["move_right"]))
 		{
 			AccelerateToMaxSpeed(Direction, _playerStats.MaxSpeed, _playerStats.Acceleration);
 
@@ -81,6 +82,13 @@ public partial class VelocityComponent : Node2D
 				JumpVelocity(_playerStats.WallJumpVelocity);
 				WallJumpHorizontalVelocity(Direction, _playerStats.MaxSpeed);
 			}
+		}
+		
+		// Hurt, don't allow movement
+		if (hurtStatus)
+		{ 
+			_velocity = Vector2.Zero;
+			return _velocity;
 		}
 		
 		return _velocity;

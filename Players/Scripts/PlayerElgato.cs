@@ -25,11 +25,14 @@ public partial class PlayerElgato : CharacterBody2D
 	public override void _Ready()
 	{
 		_velocity = Velocity;
-
-		_hurtboxComponent.DamagedByAttack += PlayerDamagedByAttack;
+		_hurtboxComponent.HitByAttack += PlayerHitByAttack;
 	}
 
-	private void PlayerDamagedByAttack(int damage, float knockback, Vector2 velocity, float direction)
+	private void PlayerHitByAttack(
+		int damage, 
+		float knockback, 
+		Vector2 attackVelocity, 
+		float attackDirection)
 	{
 		_healthComponent.TakeDamage(damage);
 	}
@@ -38,6 +41,7 @@ public partial class PlayerElgato : CharacterBody2D
 	{
 		
 		_playerInputs = _playerController.GetInputs();
+		_hurtStatus = _hurtboxComponent.GetHurtStatus();
 		
 		_velocity = _velocityComponent.CalculatePlayerVelocity(
 			_playerInputs, 
@@ -45,14 +49,13 @@ public partial class PlayerElgato : CharacterBody2D
 			IsOnFloor(), 
 			IsOnWall(),
 			_leftWallDetect,
-			_rightWallDetect
+			_rightWallDetect,
+			_hurtStatus
 			);
 		
 		_playerStates.UpdateState(_velocity, _leftWallDetect, _rightWallDetect, IsOnFloor(), _hurtStatus);
 		
-		_animationComponent.PlayAnimation(
-			_playerStates.CurrentState, 
-			_velocityComponent.Direction);
+		_animationComponent.PlayAnimation(_playerStates.CurrentState, _velocityComponent.Direction);
 		
 		Velocity = _velocity;
 		MoveAndSlide();

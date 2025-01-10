@@ -28,22 +28,23 @@ public partial class CharacterStatesComponent : Node2D
         bool hurtStatus
         )
     {
-        if (velocity.X != 0)
+        if (velocity.X != 0 && !hurtStatus)
         {
             CurrentState = State.Run;
         }
-        else if (velocity == Vector2.Zero)
+        else if (velocity == Vector2.Zero && !hurtStatus)
         {
             CurrentState = State.Idle;
         }
 
-        if (velocity.Y < 0)
+        if (velocity.Y < 0 && !hurtStatus)
         {
             CurrentState = State.Jump;
         }
         else if (
             velocity.Y > 0 && 
-            (!leftWallDetect.IsColliding() || !rightWallDetect.IsColliding())
+            (!leftWallDetect.IsColliding() || !rightWallDetect.IsColliding()) && 
+            !hurtStatus
             )
         {
             CurrentState = State.Fall;
@@ -51,10 +52,16 @@ public partial class CharacterStatesComponent : Node2D
 
         if (
             !isOnFloor &&
-            (leftWallDetect.IsColliding() || rightWallDetect.IsColliding())
+            (leftWallDetect.IsColliding() || rightWallDetect.IsColliding()) && 
+            !hurtStatus
         )
         {
             CurrentState = State.WallSlide;
+        }
+
+        if (hurtStatus)
+        {
+            CurrentState = State.Hurt;
         }
     }
 }

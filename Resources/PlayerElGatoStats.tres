@@ -14,3 +14,4 @@ Gravity = 780.0
 WallSlideGravity = 9.0
 WallJumpVelocity = -230.0
 WallSlideVelocity = 100.0
+HurtStaggerTime = 1.0

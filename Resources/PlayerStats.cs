@@ -17,4 +17,6 @@ public partial class PlayerStats : Resource
     [Export] public float WallJumpVelocity { get; set; }
     [Export] public float WallSlideVelocity { get; set; }
     
+    [Export] public float HurtStaggerTime { get; set; }
+    
 }
