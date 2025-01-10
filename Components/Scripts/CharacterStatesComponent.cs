@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using ElGatoProject.Resources;
 using Godot.Collections;
 
 namespace ElGatoProject.Components.Scripts;
@@ -7,6 +8,7 @@ namespace ElGatoProject.Components.Scripts;
 [GlobalClass]
 public partial class CharacterStatesComponent : Node2D
 {
+    [Export] private PlayerStats _playerStats;
     public enum State
     {
         Idle,

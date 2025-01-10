@@ -18,5 +18,19 @@ public partial class PlayerStats : Resource
     [Export] public float WallSlideVelocity { get; set; }
     
     [Export] public float HurtStaggerTime { get; set; }
+
+    public enum State
+    {
+        Idle,
+        Run,
+        Jump,
+        Fall,
+        WallSlide,
+        Hurt,
+        Death
+    }
+    
+    [Export] public State PlayerState { get; set; }
+    
     
 }
