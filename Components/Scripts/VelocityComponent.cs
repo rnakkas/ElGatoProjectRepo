@@ -13,7 +13,7 @@ public partial class VelocityComponent : Node2D
 	
 	private Vector2 _velocity = Vector2.Zero;
 	public float Direction;
-
+	
 	public Vector2 CalculatePlayerVelocity(
 		Dictionary<string, bool> input, 
 		float delta, 
@@ -102,9 +102,10 @@ public partial class VelocityComponent : Node2D
 		_velocity.X = knockback * attackVelocity.X;
 	}
 	
-	private void AccelerateToMaxSpeed(float direction, float maxSpeed, float acceleration)
+	public Vector2 AccelerateToMaxSpeed(float direction, float maxSpeed, float acceleration)
 	{
 		_velocity.X =  Mathf.MoveToward(_velocity.X, direction * maxSpeed, acceleration);
+		return _velocity;
 	}
 
 	private void SlowdownToZeroSpeed(float friction)
