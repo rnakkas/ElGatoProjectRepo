@@ -9,7 +9,8 @@ public partial class TestArea : Area2D
 	public enum Type
 	{
 		HealthPickup,
-		EnemyProjectile
+		EnemyProjectile,
+		EnemyAttack
 	}
 
 	[Export] public Type AreaType = Type.HealthPickup;
@@ -19,12 +20,27 @@ public partial class TestArea : Area2D
 	[Export] private RayCast2D _rightWallDetect;
 	[Export] private RayCast2D _leftWallDetect;
 
-	public float Direction = 0.0f;
+	public float Direction;
 	public Vector2 Velocity;
-
+	
 	public override void _Ready()
 	{
-		AddToGroup("EnemyProjectiles");
+		if (AreaType == Type.HealthPickup)
+		{
+			Direction = 0.0f;
+			AddToGroup("Pickups");
+		}
+		else if (AreaType == Type.EnemyProjectile)
+		{
+			Direction = 1.0f;
+			AddToGroup("EnemyProjectiles");
+		}
+		else if (AreaType == Type.EnemyAttack)
+		{
+			Direction = 0.0f;
+			AddToGroup("EnemyAttacks");
+		}
+		
 	}
 
 	public override void _PhysicsProcess(double delta)

@@ -92,26 +92,77 @@ position = Vector2(297, -225)
 zoom = Vector2(2.7, 2.7)
 position_smoothing_enabled = true
 
-[node name="TestArea" parent="." node_paths=PackedStringArray("_rightWallDetect", "_leftWallDetect") instance=ExtResource("3_sfurj")]
+[node name="Test_enemyProjectile" parent="." node_paths=PackedStringArray("_rightWallDetect", "_leftWallDetect") instance=ExtResource("3_sfurj")]
 position = Vector2(417, -14)
 collision_layer = 64
 AreaType = 1
 HealAmount = 0
+Knockback = 40.0
 _rightWallDetect = NodePath("RightWallDetect")
 _leftWallDetect = NodePath("LeftWallDetect")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="TestArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Test_enemyProjectile"]
 shape = SubResource("RectangleShape2D_gy6ed")
 
-[node name="Sprite2D" type="Sprite2D" parent="TestArea"]
+[node name="Sprite2D" type="Sprite2D" parent="Test_enemyProjectile"]
 self_modulate = Color(1, 0.027451, 0, 1)
 scale = Vector2(0.1, 0.1)
 texture = ExtResource("4_f7241")
 
-[node name="RightWallDetect" type="RayCast2D" parent="TestArea"]
+[node name="RightWallDetect" type="RayCast2D" parent="Test_enemyProjectile"]
 target_position = Vector2(31, 0)
 collision_mask = 6
 
-[node name="LeftWallDetect" type="RayCast2D" parent="TestArea"]
+[node name="LeftWallDetect" type="RayCast2D" parent="Test_enemyProjectile"]
+target_position = Vector2(-29, 0)
+collision_mask = 6
+
+[node name="Test_pickup" parent="." node_paths=PackedStringArray("_rightWallDetect", "_leftWallDetect") instance=ExtResource("3_sfurj")]
+position = Vector2(351, -14)
+collision_layer = 64
+AttackDamage = 0
+Knockback = 0.0
+_rightWallDetect = NodePath("RightWallDetect")
+_leftWallDetect = NodePath("LeftWallDetect")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Test_pickup"]
+shape = SubResource("RectangleShape2D_gy6ed")
+
+[node name="Sprite2D" type="Sprite2D" parent="Test_pickup"]
+self_modulate = Color(0.223943, 0.639381, 5.77569e-07, 1)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("4_f7241")
+
+[node name="RightWallDetect" type="RayCast2D" parent="Test_pickup"]
+target_position = Vector2(31, 0)
+collision_mask = 6
+
+[node name="LeftWallDetect" type="RayCast2D" parent="Test_pickup"]
+target_position = Vector2(-29, 0)
+collision_mask = 6
+
+[node name="Test_meleeAttack" parent="." node_paths=PackedStringArray("_rightWallDetect", "_leftWallDetect") instance=ExtResource("3_sfurj")]
+position = Vector2(507, -14)
+collision_layer = 64
+AreaType = 2
+HealAmount = 0
+AttackDamage = 25
+Knockback = 90.0
+_rightWallDetect = NodePath("RightWallDetect")
+_leftWallDetect = NodePath("LeftWallDetect")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Test_meleeAttack"]
+shape = SubResource("RectangleShape2D_gy6ed")
+
+[node name="Sprite2D" type="Sprite2D" parent="Test_meleeAttack"]
+self_modulate = Color(0.631867, 0.346403, 1, 1)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("4_f7241")
+
+[node name="RightWallDetect" type="RayCast2D" parent="Test_meleeAttack"]
+target_position = Vector2(31, 0)
+collision_mask = 6
+
+[node name="LeftWallDetect" type="RayCast2D" parent="Test_meleeAttack"]
 target_position = Vector2(-29, 0)
 collision_mask = 6

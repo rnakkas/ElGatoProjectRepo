@@ -22,6 +22,8 @@ project/assembly_name="ElGatoProject"
 [global_group]
 
 EnemyProjectiles="Group for enemy projectiles"
+Pickups="Group for item pickups"
+EnemyAttacks="Group for enemy melee attacks"
 
 [input]
 

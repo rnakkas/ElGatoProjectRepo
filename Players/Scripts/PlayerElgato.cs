@@ -37,7 +37,7 @@ public partial class PlayerElgato : CharacterBody2D
 	// Getting hit by attacks
 	private void PlayerHitByAttack(Area2D area)
 	{
-		if (area.IsInGroup("EnemyProjectiles"))
+		if (area.IsInGroup("EnemyProjectiles") || area.IsInGroup("EnemyAttacks"))
 		{
 			_enemyAttackArea = area;
 			_playerStats.TakeDamage((float)area.Get("AttackDamage"));
