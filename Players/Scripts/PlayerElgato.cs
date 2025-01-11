@@ -15,6 +15,7 @@ public partial class PlayerElgato : CharacterBody2D
 	[Export] private RayCast2D _rightWallDetect;
 	[Export] private Area2D _hurtbox;
 	[Export] private Timer _hurtStaggerTimer;
+	[Export] private Area2D _pickupsBox;
 	
 	private Vector2 _velocity = Vector2.Zero;
 	private Dictionary<string, bool> _playerInputs;
@@ -27,10 +28,13 @@ public partial class PlayerElgato : CharacterBody2D
 	public override void _Ready()
 	{
 		_velocity = Velocity;
+		
 		_hurtbox.AreaEntered += PlayerHitByAttack;
 		_hurtStaggerTimer.OneShot = true;
 		_hurtStaggerTimer.SetWaitTime(_playerStats.HurtStaggerTime);
 		_hurtStaggerTimer.Timeout += HurtStaggerTimerTimedOut;
+
+		_pickupsBox.AreaEntered += PlayerPickedUpItem;
 	}
 
 	
@@ -50,6 +54,16 @@ public partial class PlayerElgato : CharacterBody2D
 	private void HurtStaggerTimerTimedOut()
 	{
 		_hurtStatus = false;
+	}
+	
+	// Picking up items
+	private void PlayerPickedUpItem(Area2D area)
+	{
+		if (area.IsInGroup("Pickups"))
+		{
+			_playerStats.Heal((int)area.Get("HealAmount"));
+			GD.Print("healed, current health: " + _playerStats.CurrentHealth);
+		}
 	}
 	
 	// Set direction
@@ -230,7 +244,5 @@ public partial class PlayerElgato : CharacterBody2D
 		
 		Velocity = _velocity;
 		MoveAndSlide();
-		
-		GD.Print(_velocity);
 	}
 }

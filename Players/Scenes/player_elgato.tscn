@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://dkjcbiyswrxb7"]
+[gd_scene load_steps=28 format=3 uid="uid://dkjcbiyswrxb7"]
 
 [ext_resource type="Script" path="res://Players/Scripts/PlayerElgato.cs" id="1_q6xoq"]
 [ext_resource type="Resource" uid="uid://cdhnfups52naf" path="res://Resources/PlayerElGatoStats.tres" id="2_2pill"]
@@ -215,7 +215,10 @@ animations = [{
 radius = 6.0
 height = 18.0
 
-[node name="player_elgato" type="CharacterBody2D" node_paths=PackedStringArray("_playerController", "_sprite", "_leftWallDetect", "_rightWallDetect", "_hurtbox", "_hurtStaggerTimer")]
+[sub_resource type="CircleShape2D" id="CircleShape2D_6qqgf"]
+radius = 9.0
+
+[node name="player_elgato" type="CharacterBody2D" node_paths=PackedStringArray("_playerController", "_sprite", "_leftWallDetect", "_rightWallDetect", "_hurtbox", "_hurtStaggerTimer", "_pickupsBox")]
 collision_mask = 6
 safe_margin = 1.7
 script = ExtResource("1_q6xoq")
@@ -226,6 +229,7 @@ _leftWallDetect = NodePath("LeftWallDetect")
 _rightWallDetect = NodePath("RightWallDetect")
 _hurtbox = NodePath("Hurtbox")
 _hurtStaggerTimer = NodePath("HurtStaggerTimer")
+_pickupsBox = NodePath("Pickupsbox")
 
 [node name="sprite" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, 3)
@@ -258,3 +262,10 @@ shape = SubResource("CapsuleShape2D_dci6a")
 debug_color = Color(0.897598, 0.279026, 0.387079, 0.42)
 
 [node name="HurtStaggerTimer" type="Timer" parent="."]
+
+[node name="Pickupsbox" type="Area2D" parent="."]
+collision_mask = 16
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pickupsbox"]
+shape = SubResource("CircleShape2D_6qqgf")
+debug_color = Color(0, 0.65098, 0, 0.419608)

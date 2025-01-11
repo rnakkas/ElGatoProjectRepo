@@ -146,7 +146,7 @@ collision_mask = 6
 
 [node name="Test_pickup" parent="testingAreas" node_paths=PackedStringArray("_rightWallDetect", "_leftWallDetect") instance=ExtResource("3_sfurj")]
 position = Vector2(351, -14)
-collision_layer = 64
+collision_layer = 16
 AttackDamage = 0
 Knockback = 0.0
 _rightWallDetect = NodePath("RightWallDetect")

@@ -37,11 +37,15 @@ public partial class PlayerStats : Resource
         CurrentHealth -= damage;
     }
 
-    public void Heal(float heal)
+    public void Heal(int heal)
     {
         if (CurrentHealth + heal >= MaxHealth)
         {
             CurrentHealth = Mathf.Min(CurrentHealth + heal, MaxHealth);
+        }
+        else
+        {
+            CurrentHealth += heal;
         }
     }
     
