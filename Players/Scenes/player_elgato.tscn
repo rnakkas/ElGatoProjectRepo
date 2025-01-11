@@ -1,9 +1,10 @@
-[gd_scene load_steps=28 format=3 uid="uid://dkjcbiyswrxb7"]
+[gd_scene load_steps=29 format=3 uid="uid://dkjcbiyswrxb7"]
 
 [ext_resource type="Script" path="res://Players/Scripts/PlayerElgato.cs" id="1_q6xoq"]
 [ext_resource type="Resource" uid="uid://cdhnfups52naf" path="res://Resources/PlayerElGatoStats.tres" id="2_2pill"]
 [ext_resource type="Texture2D" uid="uid://lo3w8s4ichdj" path="res://Assets/Players/cat_fingerGun-2.png" id="3_wgayd"]
 [ext_resource type="Script" path="res://Components/Scripts/PlayerControllerComponent.cs" id="4_afk48"]
+[ext_resource type="PackedScene" uid="uid://bec21vtufstsw" path="res://Players/Scenes/weapon_elgato.tscn" id="5_c0mry"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dfscj"]
 atlas = ExtResource("3_wgayd")
@@ -218,7 +219,7 @@ height = 18.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_6qqgf"]
 radius = 9.0
 
-[node name="player_elgato" type="CharacterBody2D" node_paths=PackedStringArray("_playerController", "_sprite", "_leftWallDetect", "_rightWallDetect", "_hurtbox", "_hurtStaggerTimer", "_pickupsBox")]
+[node name="player_elgato" type="CharacterBody2D" node_paths=PackedStringArray("_playerController", "_sprite", "_leftWallDetect", "_rightWallDetect", "_hurtbox", "_hurtStaggerTimer", "_pickupsBox", "_weapon")]
 collision_mask = 6
 safe_margin = 1.7
 script = ExtResource("1_q6xoq")
@@ -230,13 +231,15 @@ _rightWallDetect = NodePath("RightWallDetect")
 _hurtbox = NodePath("Hurtbox")
 _hurtStaggerTimer = NodePath("HurtStaggerTimer")
 _pickupsBox = NodePath("Pickupsbox")
+_weapon = NodePath("Weapon_ElGato")
 
 [node name="sprite" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, 3)
 sprite_frames = SubResource("SpriteFrames_nl62c")
-animation = &"fall"
+animation = &"idle"
 
 [node name="collider" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource("CapsuleShape2D_dci6a")
 
 [node name="PlayerControllerComponent" type="Node2D" parent="."]
@@ -255,6 +258,7 @@ target_position = Vector2(12, 0)
 collision_mask = 4
 
 [node name="Hurtbox" type="Area2D" parent="."]
+visible = false
 collision_mask = 64
 
 [node name="HurtboxCollider" type="CollisionShape2D" parent="Hurtbox"]
@@ -264,8 +268,12 @@ debug_color = Color(0.897598, 0.279026, 0.387079, 0.42)
 [node name="HurtStaggerTimer" type="Timer" parent="."]
 
 [node name="Pickupsbox" type="Area2D" parent="."]
+visible = false
 collision_mask = 16
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Pickupsbox"]
 shape = SubResource("CircleShape2D_6qqgf")
 debug_color = Color(0, 0.65098, 0, 0.419608)
+
+[node name="Weapon_ElGato" parent="." node_paths=PackedStringArray("_playerController") instance=ExtResource("5_c0mry")]
+_playerController = NodePath("../PlayerControllerComponent")

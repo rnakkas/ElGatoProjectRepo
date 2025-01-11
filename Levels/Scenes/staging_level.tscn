@@ -86,7 +86,7 @@ tile_map_data = PackedByteArray("AAAAAAAAAAAFAAMAAAAAAPL/AAAFAAIAAAAAAPP/AAAFAAI
 tile_set = SubResource("TileSet_4l5qw")
 
 [node name="player_elgato" parent="." instance=ExtResource("2_e8fkw")]
-position = Vector2(297, -225)
+position = Vector2(174, -186)
 
 [node name="Camera2D" type="Camera2D" parent="player_elgato"]
 zoom = Vector2(2.7, 2.7)
@@ -149,6 +149,7 @@ position = Vector2(351, -14)
 collision_layer = 16
 AttackDamage = 0
 Knockback = 0.0
+MovementSpeed = 0.0
 _rightWallDetect = NodePath("RightWallDetect")
 _leftWallDetect = NodePath("LeftWallDetect")
 
@@ -175,6 +176,7 @@ AreaType = 2
 HealAmount = 0
 AttackDamage = 25
 Knockback = 90.0
+MovementSpeed = 0.0
 _rightWallDetect = NodePath("RightWallDetect")
 _leftWallDetect = NodePath("LeftWallDetect")
 
@@ -201,6 +203,7 @@ AreaType = 2
 HealAmount = 0
 AttackDamage = 25
 Knockback = 90.0
+MovementSpeed = 0.0
 _rightWallDetect = NodePath("RightWallDetect")
 _leftWallDetect = NodePath("LeftWallDetect")
 

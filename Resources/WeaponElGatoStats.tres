@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="WeaponStats" load_steps=2 format=3 uid="uid://de75230qm47lm"]
+
+[ext_resource type="Script" path="res://Resources/WeaponStats.cs" id="1_m1bxb"]
+
+[resource]
+script = ExtResource("1_m1bxb")
+CooldownTime = 0.6
+BulletsPerShot = 1
+ShotAngleDegrees = 1.2

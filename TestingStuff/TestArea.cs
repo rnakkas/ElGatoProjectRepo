@@ -17,6 +17,7 @@ public partial class TestArea : Area2D
 	[Export] public int HealAmount = 20;
 	[Export] public int AttackDamage = 15;
 	[Export] public float Knockback = 70.0f;
+	[Export] public float MovementSpeed = 80.0f;
 	[Export] private RayCast2D _rightWallDetect;
 	[Export] private RayCast2D _leftWallDetect;
 
@@ -55,7 +56,7 @@ public partial class TestArea : Area2D
 			Direction = 1.0f;
 		}
 		
-		Velocity.X = (float)delta * 80 * Direction;
+		Velocity.X = (float)delta * MovementSpeed * Direction;
 		
 		MoveLocalX(Velocity.X, true);
 		

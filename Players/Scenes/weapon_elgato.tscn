@@ -1,0 +1,101 @@
+[gd_scene load_steps=12 format=3 uid="uid://bec21vtufstsw"]
+
+[ext_resource type="Script" path="res://Players/Scripts/WeaponElgato.cs" id="1_704rr"]
+[ext_resource type="Texture2D" uid="uid://lo3w8s4ichdj" path="res://Assets/Players/cat_fingerGun-2.png" id="1_e4hys"]
+[ext_resource type="Resource" uid="uid://de75230qm47lm" path="res://Resources/WeaponElGatoStats.tres" id="2_x2bf0"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n7jid"]
+atlas = ExtResource("1_e4hys")
+region = Rect2(680, 36, 34, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ic1eo"]
+atlas = ExtResource("1_e4hys")
+region = Rect2(714, 36, 34, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_aet5j"]
+atlas = ExtResource("1_e4hys")
+region = Rect2(748, 36, 34, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qpbcc"]
+atlas = ExtResource("1_e4hys")
+region = Rect2(782, 36, 34, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0m5ln"]
+atlas = ExtResource("1_e4hys")
+region = Rect2(816, 36, 34, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v1p3e"]
+atlas = ExtResource("1_e4hys")
+region = Rect2(850, 36, 34, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_awbom"]
+atlas = ExtResource("1_e4hys")
+region = Rect2(884, 36, 34, 36)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ld3wl"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n7jid")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ic1eo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_aet5j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qpbcc")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n7jid")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ic1eo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_aet5j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qpbcc")
+}],
+"loop": true,
+"name": &"run",
+"speed": 9.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0m5ln")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v1p3e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_awbom")
+}],
+"loop": false,
+"name": &"shoot",
+"speed": 10.0
+}]
+
+[node name="Weapon_ElGato" type="Node2D" node_paths=PackedStringArray("_playerController")]
+position = Vector2(-0.5, 2.3)
+script = ExtResource("1_704rr")
+_playerController = NodePath("")
+_weaponStats = ExtResource("2_x2bf0")
+
+[node name="sprite" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_ld3wl")
+animation = &"shoot"
+frame = 2
+frame_progress = 1.0
+
+[node name="muzzle" type="Marker2D" parent="."]
+position = Vector2(15.5, -5.045)
+
+[node name="shotCooldownTimer" type="Timer" parent="."]

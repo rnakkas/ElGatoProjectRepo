@@ -16,6 +16,7 @@ public partial class PlayerElgato : CharacterBody2D
 	[Export] private Area2D _hurtbox;
 	[Export] private Timer _hurtStaggerTimer;
 	[Export] private Area2D _pickupsBox;
+	[Export] private WeaponElgato _weapon;
 	
 	private Vector2 _velocity = Vector2.Zero;
 	private Dictionary<string, bool> _playerInputs;
@@ -70,7 +71,9 @@ public partial class PlayerElgato : CharacterBody2D
 	private void SetDirection()
 	{
 		if (_playerInputs["move_left"])
+		{
 			_direction = -1.0f;
+		}
 		else if (_playerInputs["move_right"])
 			_direction = 1.0f;
 		else if (!_playerInputs["move_left"] || !_playerInputs["move_right"])
@@ -241,6 +244,8 @@ public partial class PlayerElgato : CharacterBody2D
 		PlayerMovements((float)delta);
 		PlayerAnimations();
 		FlipSprite();
+		
+		_weapon.Direction = _direction;
 		
 		Velocity = _velocity;
 		MoveAndSlide();
