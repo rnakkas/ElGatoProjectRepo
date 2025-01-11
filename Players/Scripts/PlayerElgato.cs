@@ -78,7 +78,7 @@ public partial class PlayerElgato : CharacterBody2D
 		WallSlideAndWallJump();
 		
 		// Hurt
-		PlayerHurt();
+		PlayerHurt(delta);
 
 	}
 
@@ -153,45 +153,34 @@ public partial class PlayerElgato : CharacterBody2D
 		}
 	}
 	
-	private void PlayerHurt()
+	private void PlayerHurt(float delta)
 	{
 		if (_hurtStatus)
 		{ 
-			_velocity = Vector2.Zero;
 			_playerStats.State = PlayerStats.PlayerState.Hurt;
 			
 			// Knockback from attack
-			
 			float knockback = (float)_enemyAttackArea.Get("Knockback");
 			Vector2 attackVelocity = (Vector2)_enemyAttackArea.Get("Velocity");
-			float attackDirection = (float)_enemyAttackArea.Get("Direction");
-			KnockbackFromAttack(knockback, attackVelocity, attackDirection);
+			KnockbackFromAttack(knockback, attackVelocity);
 		}
 	}
 
-	private void KnockbackFromAttack(float knockback, Vector2 attackVelocity, float attackDirection)
+	private void KnockbackFromAttack(float knockback, Vector2 attackVelocity)
 	{
-		if (attackDirection < 0)
+		Vector2 attackPosition = _enemyAttackArea.GlobalPosition - GlobalPosition;
+		
+		if (attackVelocity != Vector2.Zero)
 		{
-			_velocity.X = knockback * attackVelocity.X * -attackDirection;
+			_velocity.X = knockback * attackVelocity.X;	
+		} 
+		else if (attackVelocity == Vector2.Zero && attackPosition.X < 0)
+		{
+			_velocity.X = knockback;
 		}
-		else if (attackDirection > 0)
+		else if (attackVelocity == Vector2.Zero && attackPosition.X > 0)
 		{
-			_velocity.X = knockback * attackVelocity.X * attackDirection;
-		}
-		else if (attackDirection == 0)
-		{
-			Vector2 attackPosition = GlobalPosition - _enemyAttackArea.GlobalPosition;
-			if (attackPosition.X < 0)
-			{
-				attackDirection = -1;
-			}
-			else if (attackPosition.X > 0)
-			{
-				attackDirection = 1;
-			}
-			
-			_velocity.X = knockback * attackDirection;
+			_velocity.X = -knockback;
 		}
 	}
 
@@ -241,5 +230,7 @@ public partial class PlayerElgato : CharacterBody2D
 		
 		Velocity = _velocity;
 		MoveAndSlide();
+		
+		GD.Print(_velocity);
 	}
 }
