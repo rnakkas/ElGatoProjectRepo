@@ -4,6 +4,6 @@
 
 [resource]
 script = ExtResource("1_m1bxb")
-CooldownTime = 0.6
+CooldownTime = 2.0
 BulletsPerShot = 1
 ShotAngleDegrees = 1.2

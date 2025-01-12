@@ -83,17 +83,14 @@ animations = [{
 "speed": 10.0
 }]
 
-[node name="Weapon_ElGato" type="Node2D" node_paths=PackedStringArray("_playerController")]
+[node name="Weapon_ElGato" type="Node2D"]
 position = Vector2(-0.5, 2.3)
 script = ExtResource("1_704rr")
-_playerController = NodePath("")
 _weaponStats = ExtResource("2_x2bf0")
 
 [node name="sprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_ld3wl")
 animation = &"shoot"
-frame = 2
-frame_progress = 1.0
 
 [node name="muzzle" type="Marker2D" parent="."]
 position = Vector2(15.5, -5.045)
