@@ -1,8 +1,9 @@
-[gd_scene load_steps=12 format=3 uid="uid://bec21vtufstsw"]
+[gd_scene load_steps=13 format=3 uid="uid://bec21vtufstsw"]
 
 [ext_resource type="Script" path="res://Players/Scripts/WeaponElgato.cs" id="1_704rr"]
 [ext_resource type="Texture2D" uid="uid://lo3w8s4ichdj" path="res://Assets/Players/cat_fingerGun-2.png" id="1_e4hys"]
 [ext_resource type="Resource" uid="uid://de75230qm47lm" path="res://Resources/WeaponElGatoStats.tres" id="2_x2bf0"]
+[ext_resource type="PackedScene" uid="uid://c8xcg4nidmij2" path="res://Players/Scenes/bullet.tscn" id="3_hoq5c"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_n7jid"]
 atlas = ExtResource("1_e4hys")
@@ -87,10 +88,11 @@ animations = [{
 position = Vector2(-0.5, 2.3)
 script = ExtResource("1_704rr")
 _weaponStats = ExtResource("2_x2bf0")
+_bulletScene = ExtResource("3_hoq5c")
 
 [node name="sprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_ld3wl")
-animation = &"shoot"
+animation = &"idle"
 
 [node name="muzzle" type="Marker2D" parent="."]
 position = Vector2(15.5, -5.045)

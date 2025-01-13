@@ -57,8 +57,8 @@ public partial class TestArea : Area2D
 		}
 		
 		Velocity.X = (float)delta * MovementSpeed * Direction;
-		
+
 		MoveLocalX(Velocity.X, true);
-		
+
 	}
 }

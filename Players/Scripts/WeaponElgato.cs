@@ -11,6 +11,7 @@ public partial class WeaponElgato : Node2D
 {
 	[Export] private PlayerControllerComponent _playerController;
 	[Export] private WeaponStats _weaponStats;
+	[Export] private PackedScene _bulletScene;
 
 	[Signal]
 	public delegate void ShootEventHandler();
@@ -24,7 +25,9 @@ public partial class WeaponElgato : Node2D
 
 	public float Direction;
 	private bool _onCooldown;
-	private bool _animationFinished;
+	private Vector2 _muzzlePosition;
+	
+	// private PackedScene _bullet = ResourceLoader.Load<PackedScene>("res://Assets/Bullet.tscn");
 	
 	public override void _Ready()
 	{
@@ -41,6 +44,8 @@ public partial class WeaponElgato : Node2D
 
 		Shoot += OnShoot;
 		Idle += OnIdle;
+		
+		_muzzlePosition = _muzzle.Position;
 	}
 	
 	private void ShotCooldownTimedOut()
@@ -65,6 +70,27 @@ public partial class WeaponElgato : Node2D
 	private void OnShoot()
 	{
 		_sprite.Play("shoot");
+		SpawnBullets();
+		
+	}
+	
+	private void SpawnBullets()
+	{
+		var bulletInstance = (Bullet)_bulletScene.Instantiate();
+
+		// Set direction for bullet
+		if (_sprite.IsFlippedH())
+		{
+			Direction = -1.0f;
+		}
+		else if (!_sprite.IsFlippedH())
+		{
+			Direction = 1.0f;
+		}
+		
+		bulletInstance.Direction = Direction;
+		bulletInstance.GlobalPosition = _muzzle.GlobalPosition;
+		GetTree().Root.AddChild(bulletInstance);
 	}
 
 	private void OnIdle()
@@ -81,10 +107,12 @@ public partial class WeaponElgato : Node2D
 		if (Direction < 0)
 		{
 			_sprite.FlipH = true;
+			_muzzle.Position = new Vector2(-_muzzlePosition.X, _muzzlePosition.Y);
 		}
 		else if (Direction > 0)
 		{
 			_sprite.FlipH = false;
+			_muzzle.Position = new Vector2(_muzzlePosition.X, _muzzlePosition.Y);
 		}
 	}
 	

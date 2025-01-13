@@ -36,6 +36,7 @@ texture = ExtResource("1_l2xyl")
 
 [sub_resource type="TileSet" id="TileSet_h1huo"]
 physics_layer_0/collision_layer = 2
+physics_layer_0/collision_mask = 9
 sources/0 = SubResource("TileSetAtlasSource_5x7kg")
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_nyd86"]
@@ -70,6 +71,7 @@ texture = ExtResource("1_l2xyl")
 
 [sub_resource type="TileSet" id="TileSet_4l5qw"]
 physics_layer_0/collision_layer = 4
+physics_layer_0/collision_mask = 9
 sources/0 = SubResource("TileSetAtlasSource_nyd86")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gy6ed"]

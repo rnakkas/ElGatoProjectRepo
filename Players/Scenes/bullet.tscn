@@ -1,3 +1,39 @@
-[gd_scene format=3 uid="uid://c8xcg4nidmij2"]
+[gd_scene load_steps=6 format=3 uid="uid://c8xcg4nidmij2"]
 
-[node name="bullet" type="Area2D"]
+[ext_resource type="Texture2D" uid="uid://dqx6rpywerr0u" path="res://icon.svg" id="1_hsc86"]
+[ext_resource type="Script" path="res://Players/Scripts/Bullet.cs" id="1_ou1ib"]
+[ext_resource type="Resource" uid="uid://uefat4efhjg" path="res://Resources/BulletElGatoStats.tres" id="2_boa2r"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_hkq3d"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_hsc86")
+}],
+"loop": true,
+"name": &"fly",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ta2cc"]
+size = Vector2(4, 4)
+
+[node name="bullet" type="Area2D" node_paths=PackedStringArray("_sprite", "_despawnTimer")]
+collision_layer = 8
+collision_mask = 38
+script = ExtResource("1_ou1ib")
+_bulletStats = ExtResource("2_boa2r")
+_sprite = NodePath("sprite")
+_despawnTimer = NodePath("despawnTimer")
+
+[node name="sprite" type="AnimatedSprite2D" parent="."]
+self_modulate = Color(1, 1, 0, 1)
+position = Vector2(-2.98023e-08, -2.98023e-08)
+scale = Vector2(0.035, 0.035)
+sprite_frames = SubResource("SpriteFrames_hkq3d")
+animation = &"fly"
+
+[node name="collider" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_ta2cc")
+
+[node name="despawnTimer" type="Timer" parent="."]

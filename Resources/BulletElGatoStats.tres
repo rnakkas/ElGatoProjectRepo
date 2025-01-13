@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="BulletStats" load_steps=2 format=3 uid="uid://uefat4efhjg"]
+
+[ext_resource type="Script" path="res://Resources/BulletStats.cs" id="1_3d4lp"]
+
+[resource]
+script = ExtResource("1_3d4lp")
+BulletSpeed = 200.0
+BulletDamage = 10
+BulletDespawnTime = 5.0
