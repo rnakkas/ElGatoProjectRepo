@@ -163,7 +163,7 @@ public partial class PlayerElgato : CharacterBody2D
 			// Wall Jump
 			if (_playerInputs["jump_justPressed"])
 			{
-				_velocity.Y = _playerStats.WallJumpVelocity;;
+				_velocity.Y = _playerStats.WallJumpVelocity;
 				_velocity.X = _direction * _playerStats.MaxSpeed;
 				_playerStats.State = PlayerStats.PlayerState.Jump;
 			}
@@ -246,6 +246,7 @@ public partial class PlayerElgato : CharacterBody2D
 		FlipSprite();
 		
 		_weapon.Direction = _direction;
+		_weapon.HurtStatus = _hurtStatus;
 		
 		Velocity = _velocity;
 		MoveAndSlide();

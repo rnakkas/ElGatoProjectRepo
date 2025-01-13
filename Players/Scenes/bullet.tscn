@@ -22,7 +22,7 @@ size = Vector2(4, 4)
 collision_layer = 8
 collision_mask = 38
 script = ExtResource("1_ou1ib")
-_bulletStats = ExtResource("2_boa2r")
+BulletStats = ExtResource("2_boa2r")
 _sprite = NodePath("sprite")
 _despawnTimer = NodePath("despawnTimer")
 

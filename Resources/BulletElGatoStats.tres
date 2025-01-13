@@ -7,3 +7,4 @@ script = ExtResource("1_3d4lp")
 BulletSpeed = 250.0
 BulletDamage = 10
 BulletDespawnTime = 5.0
+BulletKnockback = 100.0

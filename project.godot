@@ -25,6 +25,8 @@ EnemyProjectiles="Group for enemy projectiles"
 EnemyAttacks="Group for enemy melee attacks"
 HealthPickups="Group for health  pickups"
 PowerUpPickups="Group for power ups pickups"
+Enemies="Group for enemies"
+PlayerProjectiles="Group for player projectiles"
 
 [input]
 

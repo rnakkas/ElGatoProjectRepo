@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=4 uid="uid://cne5xpx7c4fh0"]
+[gd_scene load_steps=11 format=4 uid="uid://cne5xpx7c4fh0"]
 
 [ext_resource type="Texture2D" uid="uid://d2hqfvsf0rube" path="res://Assets/Tilesets/tilemap-floors-walls-1.png" id="1_l2xyl"]
 [ext_resource type="PackedScene" uid="uid://dkjcbiyswrxb7" path="res://Players/Scenes/player_elgato.tscn" id="2_e8fkw"]
@@ -77,6 +77,9 @@ sources/0 = SubResource("TileSetAtlasSource_nyd86")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gy6ed"]
 size = Vector2(13, 12)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hoh1g"]
+size = Vector2(18, 33)
+
 [node name="staging_level" type="Node2D"]
 
 [node name="floor" type="TileMapLayer" parent="."]
@@ -151,7 +154,6 @@ position = Vector2(351, -14)
 collision_layer = 16
 AttackDamage = 0
 Knockback = 0.0
-MovementSpeed = 0.0
 _rightWallDetect = NodePath("RightWallDetect")
 _leftWallDetect = NodePath("LeftWallDetect")
 
@@ -172,13 +174,12 @@ target_position = Vector2(-29, 0)
 collision_mask = 6
 
 [node name="Test_meleeAttack" parent="testingAreas" node_paths=PackedStringArray("_rightWallDetect", "_leftWallDetect") instance=ExtResource("3_sfurj")]
-position = Vector2(319, -52)
+position = Vector2(570, -51)
 collision_layer = 64
 AreaType = 2
 HealAmount = 0
 AttackDamage = 25
 Knockback = 90.0
-MovementSpeed = 0.0
 _rightWallDetect = NodePath("RightWallDetect")
 _leftWallDetect = NodePath("LeftWallDetect")
 
@@ -205,7 +206,6 @@ AreaType = 2
 HealAmount = 0
 AttackDamage = 25
 Knockback = 90.0
-MovementSpeed = 0.0
 _rightWallDetect = NodePath("RightWallDetect")
 _leftWallDetect = NodePath("LeftWallDetect")
 
@@ -224,3 +224,35 @@ collision_mask = 6
 [node name="LeftWallDetect" type="RayCast2D" parent="testingAreas/Test_meleeAttack2"]
 target_position = Vector2(-29, 0)
 collision_mask = 6
+
+[node name="Test_enemyStationary" parent="testingAreas" node_paths=PackedStringArray("_rightWallDetect", "_leftWallDetect", "_hurtStaggerTimer") instance=ExtResource("3_sfurj")]
+position = Vector2(35, -14)
+collision_layer = 32
+collision_mask = 8
+AreaType = 3
+HealAmount = 0
+AttackDamage = 0
+Knockback = 0.0
+_rightWallDetect = NodePath("RightWallDetect")
+_leftWallDetect = NodePath("LeftWallDetect")
+_hurtStaggerTimer = NodePath("hurtStaggerTimer")
+
+[node name="Sprite2D" type="Sprite2D" parent="testingAreas/Test_enemyStationary"]
+self_modulate = Color(0.820972, 5.03448e-05, 0.624768, 1)
+position = Vector2(-2.89999, -1.15)
+scale = Vector2(0.157812, 0.263281)
+texture = ExtResource("4_f7241")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="testingAreas/Test_enemyStationary"]
+position = Vector2(-3, -1.5)
+shape = SubResource("RectangleShape2D_hoh1g")
+
+[node name="RightWallDetect" type="RayCast2D" parent="testingAreas/Test_enemyStationary"]
+target_position = Vector2(31, 0)
+collision_mask = 6
+
+[node name="LeftWallDetect" type="RayCast2D" parent="testingAreas/Test_enemyStationary"]
+target_position = Vector2(-29, 0)
+collision_mask = 6
+
+[node name="hurtStaggerTimer" type="Timer" parent="testingAreas/Test_enemyStationary"]

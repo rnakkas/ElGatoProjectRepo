@@ -24,6 +24,7 @@ public partial class WeaponElgato : Node2D
 	private Timer _shotCooldownTimer;
 
 	public float Direction;
+	public bool HurtStatus;
 	private bool _onCooldown;
 	private Vector2 _muzzlePosition;
 	
@@ -55,7 +56,8 @@ public partial class WeaponElgato : Node2D
 
 	private void WeaponBehaviour()
 	{
-		if (_playerInputs["shoot"] && !_onCooldown)
+		// player can only shoot if not on cooldown and not hurt
+		if (_playerInputs["shoot"] && !_onCooldown && !HurtStatus)
 		{
 			EmitSignal(SignalName.Shoot);
 			_onCooldown = true;
