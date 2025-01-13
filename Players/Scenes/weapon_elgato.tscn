@@ -95,6 +95,6 @@ sprite_frames = SubResource("SpriteFrames_ld3wl")
 animation = &"idle"
 
 [node name="muzzle" type="Marker2D" parent="."]
-position = Vector2(15.5, -5.045)
+position = Vector2(18.305, -5.045)
 
 [node name="shotCooldownTimer" type="Timer" parent="."]
