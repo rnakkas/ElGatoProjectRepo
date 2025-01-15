@@ -1,7 +1,6 @@
 using Godot;
 using System;
 using ElGatoProject.Players.Scripts;
-using ElGatoProject.Resources;
 
 namespace ElGatoProject.TestingStuff;
 
@@ -86,12 +85,11 @@ public partial class TestArea : Area2D
 
 	private void TakeDamageFromPlayerProjectile()
 	{
-		// Pattern matching to check that BulletStats is not null, otherwise assign to variable bulletStats
-		if (_playerProjectile is not Bullet { BulletStats: { } bulletStats }) 
+		if (_playerProjectile is not Bullet bullet)
 			return;
 		
 		_hurtStatus = true;
-		EnemyHealth -= bulletStats.BulletDamage;
+		EnemyHealth -= bullet.BulletDamage;
 		GD.Print("enemy health: "+ EnemyHealth);
 		
 		_hurtStaggerTimer.Start();
@@ -106,15 +104,12 @@ public partial class TestArea : Area2D
 		else if (_hurtStatus)
 		{
 			Velocity = Vector2.Zero;
-			if (IsInstanceValid(_playerProjectile))
-			{
-				if (_playerProjectile is not Bullet { BulletStats: { } bulletStats }) 
-                	return;
-                float bulletKnockback = bulletStats.BulletKnockback;
-                Vector2 bulletVelocity = (Vector2) _playerProjectile.Get("Velocity");
-                Velocity.X = delta * bulletKnockback * bulletVelocity.X;
-			}
-			
+			if (!IsInstanceValid(_playerProjectile)) 
+				return;
+			if (_playerProjectile is not Bullet bullet)
+				return;
+				
+			Velocity.X = delta * bullet.BulletKnockback * bullet.Velocity.X;
 		}
 	}
 

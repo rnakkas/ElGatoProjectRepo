@@ -213,7 +213,7 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dci6a"]
-radius = 6.0
+radius = 7.0
 height = 18.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_6qqgf"]
@@ -221,7 +221,7 @@ radius = 9.0
 
 [node name="player_elgato" type="CharacterBody2D" node_paths=PackedStringArray("_playerController", "_sprite", "_leftWallDetect", "_rightWallDetect", "_hurtbox", "_hurtStaggerTimer", "_pickupsBox", "_weapon")]
 collision_mask = 6
-safe_margin = 1.7
+safe_margin = 2.5
 script = ExtResource("1_q6xoq")
 _playerStats = ExtResource("2_2pill")
 _playerController = NodePath("PlayerControllerComponent")
@@ -239,7 +239,6 @@ sprite_frames = SubResource("SpriteFrames_nl62c")
 animation = &"idle"
 
 [node name="collider" type="CollisionShape2D" parent="."]
-visible = false
 shape = SubResource("CapsuleShape2D_dci6a")
 
 [node name="PlayerControllerComponent" type="Node2D" parent="."]

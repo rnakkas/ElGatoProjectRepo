@@ -90,7 +90,12 @@ public partial class WeaponElgato : Node2D
 			Direction = 1.0f;
 		}
 		
+		// Set properties for the bullet
 		bulletInstance.Direction = Direction;
+		bulletInstance.BulletSpeed = _weaponStats.BulletSpeed;
+		bulletInstance.BulletKnockback = _weaponStats.BulletKnockback;
+		bulletInstance.BulletDespawnTimeSeconds = _weaponStats.BulletDespawnTimeSeconds;
+		bulletInstance.BulletDamage = _weaponStats.BulletDamage;
 		bulletInstance.GlobalPosition = _muzzle.GlobalPosition;
 		GetTree().Root.AddChild(bulletInstance);
 	}

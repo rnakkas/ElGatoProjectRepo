@@ -86,24 +86,24 @@ public partial class PlayerElgato : CharacterBody2D
 		SetDirection();
 		
 		// Run and idle
-		RunAndIdle();
+		RunAndIdle(delta);
 		
 		// Jumping and falling
 		JumpingAndFalling(delta);
 		
 		// Wall Sliding and wall jumping
-		WallSlideAndWallJump();
+		WallSlideAndWallJump(delta);
 		
 		// Hurt
-		PlayerHurt(delta);
+		PlayerHurt();
 
 	}
 
-	private void RunAndIdle()
+	private void RunAndIdle(float delta)
 	{
 		if (_direction != 0)
 		{
-			_velocity.X = Mathf.MoveToward(_velocity.X, _direction * _playerStats.MaxSpeed, _playerStats.Acceleration);
+			_velocity.X = Mathf.MoveToward(_velocity.X, _direction * _playerStats.MaxSpeed, _playerStats.Acceleration * delta);
 
 			if (IsOnFloor())
 			{
@@ -117,7 +117,7 @@ public partial class PlayerElgato : CharacterBody2D
 		}
 		else if (IsOnFloor() && _direction == 0)
 		{
-			_velocity.X = Mathf.MoveToward(_velocity.X, 0, _playerStats.Friction);
+			_velocity.X = Mathf.MoveToward(_velocity.X, 0, _playerStats.Friction * delta);
 			_velocity.Y = 0;
 			_playerStats.State = PlayerStats.PlayerState.Idle;
 		}
@@ -142,13 +142,13 @@ public partial class PlayerElgato : CharacterBody2D
 		}
 	}
 
-	private void WallSlideAndWallJump()
+	private void WallSlideAndWallJump(float delta)
 	{
 		if (!IsOnFloor() && (_leftWallDetect.IsColliding() || _rightWallDetect.IsColliding()))
 		{
 			_playerStats.State = PlayerStats.PlayerState.WallSlide;
 			_velocity.X = 0;
-			_velocity.Y = Mathf.MoveToward(_velocity.Y, _playerStats.WallSlideVelocity, _playerStats.WallSlideGravity);
+			_velocity.Y = Mathf.MoveToward(_velocity.Y, _playerStats.WallSlideVelocity, _playerStats.WallSlideGravity * delta);
 
 			if (_leftWallDetect.IsColliding())
 			{
@@ -170,7 +170,7 @@ public partial class PlayerElgato : CharacterBody2D
 		}
 	}
 	
-	private void PlayerHurt(float delta)
+	private void PlayerHurt()
 	{
 		if (_hurtStatus)
 		{ 

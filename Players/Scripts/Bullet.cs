@@ -6,20 +6,19 @@ namespace ElGatoProject.Players.Scripts;
 
 public partial class Bullet : Area2D
 {
-	[Export] public BulletStats BulletStats;
 	[Export] private AnimatedSprite2D _sprite;
 	[Export] private Timer _despawnTimer;
 
-	public float Direction;
+	public float Direction, BulletSpeed, BulletKnockback, BulletDespawnTimeSeconds;
+	public int BulletDamage;
 	public Vector2 Velocity;
 	
-	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		AddToGroup("PlayerProjectiles");
 		
 		_despawnTimer.OneShot = true;
-		_despawnTimer.SetWaitTime(BulletStats.BulletDespawnTime);
+		_despawnTimer.SetWaitTime(BulletDespawnTimeSeconds);
 		_despawnTimer.Timeout += BulletDespawnTimerTimedOut;
 		_despawnTimer.Start();
 
@@ -49,11 +48,10 @@ public partial class Bullet : Area2D
 		GD.Print("despawn");
 		QueueFree();
 	}
-
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
+	
 	public override void _Process(double delta)
 	{
-		Velocity.X = (float)delta * BulletStats.BulletSpeed * Direction;
+		Velocity.X = (float)delta * BulletSpeed * Direction;
 
 		MoveLocalX(Velocity.X, true);
 	}
