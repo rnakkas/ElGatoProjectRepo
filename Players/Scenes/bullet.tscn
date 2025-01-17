@@ -34,7 +34,7 @@ self_modulate = Color(1, 1, 0, 1)
 position = Vector2(-2.98023e-08, -2.98023e-08)
 scale = Vector2(0.035, 0.035)
 sprite_frames = SubResource("SpriteFrames_hkq3d")
-animation = &"hit"
+animation = &"fly"
 
 [node name="collider" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_ta2cc")

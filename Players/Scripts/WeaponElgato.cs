@@ -28,8 +28,6 @@ public partial class WeaponElgato : Node2D
 	private bool _onCooldown;
 	private Vector2 _muzzlePosition;
 	
-	// private PackedScene _bullet = ResourceLoader.Load<PackedScene>("res://Assets/Bullet.tscn");
-	
 	public override void _Ready()
 	{
 		// Get child nodes

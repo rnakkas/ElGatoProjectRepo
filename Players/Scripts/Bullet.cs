@@ -24,6 +24,8 @@ public partial class Bullet : Area2D
 
 		BodyEntered += BulletHitWallOrFloor;
 		AreaEntered += BulletHitEnemy;
+		
+		_sprite.Play("fly");
 
 	}
 	
