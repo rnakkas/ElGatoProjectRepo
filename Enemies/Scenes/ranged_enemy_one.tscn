@@ -1,0 +1,58 @@
+[gd_scene load_steps=6 format=3 uid="uid://dv2u8le4n8uyn"]
+
+[ext_resource type="Script" path="res://Enemies/Scripts/Enemy.cs" id="1_wrtka"]
+[ext_resource type="Texture2D" uid="uid://dqx6rpywerr0u" path="res://icon.svg" id="2_x0jcw"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sel7k"]
+size = Vector2(14, 28)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_b4wby"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_x0jcw")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4a8ns"]
+radius = 199.123
+
+[node name="RangedEnemyOne" type="Area2D"]
+collision_layer = 32
+collision_mask = 9
+script = ExtResource("1_wrtka")
+
+[node name="collider" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_sel7k")
+debug_color = Color(0.937255, 0, 0.196078, 0.419608)
+
+[node name="sprite" type="AnimatedSprite2D" parent="."]
+self_modulate = Color(0.0196078, 0.0196078, 0.0196078, 1)
+scale = Vector2(0.0820313, 0.222656)
+sprite_frames = SubResource("SpriteFrames_b4wby")
+animation = &"idle"
+
+[node name="Sprite2D" type="Sprite2D" parent="sprite"]
+modulate = Color(1, 0, 0, 1)
+position = Vector2(-1.90735e-06, -35.9298)
+scale = Vector2(0.595238, 0.219298)
+texture = ExtResource("2_x0jcw")
+
+[node name="eye" type="Marker2D" parent="."]
+position = Vector2(0, -8)
+
+[node name="PlayerDetectionArea" type="Area2D" parent="."]
+
+[node name="collider" type="CollisionShape2D" parent="PlayerDetectionArea"]
+position = Vector2(0, -8)
+shape = SubResource("CircleShape2D_4a8ns")
+debug_color = Color(0.6, 0.545098, 0, 0.129412)
+
+[node name="PlayerDetectionRaycast" type="RayCast2D" parent="."]
+self_modulate = Color(0, 0, 0, 1)
+position = Vector2(0, -8)
+target_position = Vector2(-200, 0)
+collision_mask = 7

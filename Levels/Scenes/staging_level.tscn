@@ -1,9 +1,10 @@
-[gd_scene load_steps=11 format=4 uid="uid://cne5xpx7c4fh0"]
+[gd_scene load_steps=12 format=4 uid="uid://cne5xpx7c4fh0"]
 
 [ext_resource type="Texture2D" uid="uid://d2hqfvsf0rube" path="res://Assets/Tilesets/tilemap-floors-walls-1.png" id="1_l2xyl"]
 [ext_resource type="PackedScene" uid="uid://dkjcbiyswrxb7" path="res://Players/Scenes/player_elgato.tscn" id="2_e8fkw"]
 [ext_resource type="PackedScene" uid="uid://csyfqkdwuqca8" path="res://TestingStuff/test_area.tscn" id="3_sfurj"]
 [ext_resource type="Texture2D" uid="uid://dqx6rpywerr0u" path="res://icon.svg" id="4_f7241"]
+[ext_resource type="PackedScene" uid="uid://dv2u8le4n8uyn" path="res://Enemies/Scenes/ranged_enemy_one.tscn" id="5_n3bcu"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_5x7kg"]
 texture = ExtResource("1_l2xyl")
@@ -258,3 +259,8 @@ target_position = Vector2(-29, 0)
 collision_mask = 6
 
 [node name="hurtStaggerTimer" type="Timer" parent="testingAreas/Test_enemyStationary"]
+
+[node name="enemies" type="Node" parent="."]
+
+[node name="RangedEnemyOne" parent="enemies" instance=ExtResource("5_n3bcu")]
+position = Vector2(370, -194)

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="EnemyStats" load_steps=2 format=3 uid="uid://dprn0ob8smyty"]
+
+[ext_resource type="Script" path="res://Resources/EnemyStats.cs" id="1_se1io"]
+
+[resource]
+script = ExtResource("1_se1io")
+EnemyType = 0
+EnemyHealth = 0
+AttackDamage = 0
+Knockback = 0.0
+PatrolSpeed = 0.0
+ChaseSpeed = 0.0
+ChaseTime = 0.0
+HurtStaggerTime = 0.0
