@@ -4,11 +4,11 @@
 
 [resource]
 script = ExtResource("1_se1io")
-EnemyType = 0
-EnemyHealth = 0
-AttackDamage = 0
-Knockback = 0.0
+EnemyType = 2
+EnemyHealth = 50
+AttackDamage = 15
+Knockback = 70.0
 PatrolSpeed = 0.0
 ChaseSpeed = 0.0
 ChaseTime = 0.0
-HurtStaggerTime = 0.0
+HurtStaggerTime = 0.3

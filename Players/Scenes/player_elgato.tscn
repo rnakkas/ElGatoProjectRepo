@@ -220,6 +220,7 @@ height = 18.0
 radius = 9.0
 
 [node name="player_elgato" type="CharacterBody2D" node_paths=PackedStringArray("_playerController", "_sprite", "_leftWallDetect", "_rightWallDetect", "_hurtbox", "_hurtStaggerTimer", "_pickupsBox", "_weapon")]
+z_index = 1
 collision_mask = 6
 safe_margin = 2.5
 script = ExtResource("1_q6xoq")
