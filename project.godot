@@ -27,6 +27,7 @@ HealthPickups="Group for health  pickups"
 PowerUpPickups="Group for power ups pickups"
 Enemies="Group for enemies"
 PlayerProjectiles="Group for player projectiles"
+Players="Group for player characters"
 
 [input]
 

@@ -17,6 +17,7 @@ public partial class PlayerElgato : CharacterBody2D
 	[Export] private Timer _hurtStaggerTimer;
 	[Export] private Area2D _pickupsBox;
 	[Export] private WeaponElgato _weapon;
+	[Export] private Label _debugHealthLabel;
 	
 	private Vector2 _velocity = Vector2.Zero;
 	private Dictionary<string, bool> _playerInputs;
@@ -36,6 +37,8 @@ public partial class PlayerElgato : CharacterBody2D
 		_hurtStaggerTimer.Timeout += HurtStaggerTimerTimedOut;
 
 		_pickupsBox.AreaEntered += PlayerPickedUpItem;
+		
+		_debugHealthLabel.SetText("HP: " + _playerStats.CurrentHealth);
 	}
 
 	
@@ -45,10 +48,11 @@ public partial class PlayerElgato : CharacterBody2D
 		if (area.IsInGroup("EnemyProjectiles") || area.IsInGroup("EnemyAttacks"))
 		{
 			_enemyAttackArea = area;
-			_playerStats.TakeDamage((float)area.Get("AttackDamage"));
+			_playerStats.TakeDamage((int)area.Get("AttackDamage"));
 			_hurtStatus = true;
 			_hurtStaggerTimer.Start();
-			GD.Print("current health: " + _playerStats.CurrentHealth);
+			
+			_debugHealthLabel.SetText("HP: " + _playerStats.CurrentHealth);
 		}
 	}
 
@@ -63,7 +67,8 @@ public partial class PlayerElgato : CharacterBody2D
 		if (area.IsInGroup("Pickups"))
 		{
 			_playerStats.Heal((int)area.Get("HealAmount"));
-			GD.Print("healed, current health: " + _playerStats.CurrentHealth);
+			
+			_debugHealthLabel.SetText("HP: " + _playerStats.CurrentHealth);
 		}
 	}
 	

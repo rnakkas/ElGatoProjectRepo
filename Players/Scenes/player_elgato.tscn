@@ -219,7 +219,7 @@ height = 18.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_6qqgf"]
 radius = 9.0
 
-[node name="player_elgato" type="CharacterBody2D" node_paths=PackedStringArray("_playerController", "_sprite", "_leftWallDetect", "_rightWallDetect", "_hurtbox", "_hurtStaggerTimer", "_pickupsBox", "_weapon")]
+[node name="player_elgato" type="CharacterBody2D" node_paths=PackedStringArray("_playerController", "_sprite", "_leftWallDetect", "_rightWallDetect", "_hurtbox", "_hurtStaggerTimer", "_pickupsBox", "_weapon", "_debugHealthLabel") groups=["Players"]]
 z_index = 1
 collision_mask = 6
 safe_margin = 2.5
@@ -233,6 +233,7 @@ _hurtbox = NodePath("Hurtbox")
 _hurtStaggerTimer = NodePath("HurtStaggerTimer")
 _pickupsBox = NodePath("Pickupsbox")
 _weapon = NodePath("Weapon_ElGato")
+_debugHealthLabel = NodePath("HealthLabel")
 
 [node name="sprite" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, 3)
@@ -277,3 +278,10 @@ debug_color = Color(0, 0.65098, 0, 0.419608)
 
 [node name="Weapon_ElGato" parent="." node_paths=PackedStringArray("_playerController") instance=ExtResource("5_c0mry")]
 _playerController = NodePath("../PlayerControllerComponent")
+
+[node name="HealthLabel" type="Label" parent="."]
+offset_left = -12.0
+offset_top = -25.0
+offset_right = 31.0
+offset_bottom = -12.0
+theme_override_font_sizes/font_size = 9

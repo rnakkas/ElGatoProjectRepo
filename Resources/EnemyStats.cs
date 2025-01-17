@@ -22,4 +22,10 @@ public partial class EnemyStats : Resource
     [Export] public float ChaseSpeed;
     [Export] public float ChaseTime;
     [Export] public float HurtStaggerTime;
+    
+    // Methods
+    public void TakeDamage(int damage)
+    {
+        EnemyHealth -= damage;
+    }
 }
