@@ -1,10 +1,12 @@
 using Godot;
 using System;
 
+namespace ElGatoProject.Enemies.Scripts;
 public partial class EnemyBullet : Area2D
 {
-	[Export] private AnimatedSprite2D _sprite;
-	[Export] private Timer _despawnTimer;
+	// Nodes
+	private AnimatedSprite2D _sprite;
+	private Timer _despawnTimer;
 
 	public Vector2 Target;
 	public float BulletSpeed, BulletKnockback, BulletDespawnTimeSeconds;
@@ -13,7 +15,9 @@ public partial class EnemyBullet : Area2D
 	
 	public override void _Ready()
 	{
-		AddToGroup("PlayerProjectiles");
+		// Get nodes
+		_sprite = GetNodeOrNull<AnimatedSprite2D>("sprite");
+		_despawnTimer = GetNodeOrNull<Timer>("despawnTimer");
 		
 		_despawnTimer.OneShot = true;
 		_despawnTimer.SetWaitTime(BulletDespawnTimeSeconds);
@@ -48,12 +52,19 @@ public partial class EnemyBullet : Area2D
 		GD.Print("despawn");
 		QueueFree();
 	}
+
+	private void CalculateVelocity(float delta)
+	{
+		Velocity = new Vector2(
+			delta * BulletSpeed * Target.X,
+			delta * BulletSpeed * Target.Y
+		);
+		
+		Position += Velocity;
+	}
 	
 	public override void _Process(double delta)
 	{
-		Velocity.X = (float)delta * BulletSpeed * Target.X;
-		Velocity.Y = (float)delta * BulletSpeed * Target.Y;
-
-		MoveLocalX(Velocity.X, true);
+		CalculateVelocity((float)delta);
 	}
 }
