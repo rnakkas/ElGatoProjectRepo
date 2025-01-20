@@ -7,7 +7,7 @@ namespace ElGatoProject.Enemies.Scripts;
 
 /*
 TODO: 
-Dying:
+Dying: DONE
 If health <= 0
 	Die - QueueFree()
 
@@ -31,6 +31,8 @@ public partial class RangedEnemyOne : Area2D
 	[Export] private Timer _hurtStaggerTimer;
 	[Export] private Label _debugStateLabel;
 	[Export] private Label _debugHealthLabel;
+	
+	[Signal] public delegate void HealthDepletedEventHandler();
 
 	private bool _playerInRange;
 		
@@ -52,12 +54,25 @@ public partial class RangedEnemyOne : Area2D
 
 		_playerDetectionArea.BodyEntered += PlayerEnteredDetectionRange;
 		_playerDetectionArea.BodyExited += PlayerExitedDetectionRange;
+
+		HealthDepleted += OnHealthDepleted;
 		
 		// For debug only, remove later
 		_debugStateLabel.SetText("idle");
 		_debugHealthLabel.SetText("HP: "+ _rangedEnemyOneStats.EnemyHealth);
 	}
 	
+	// Enemy behaviour
+	private void EnemyBehaviour()
+	{
+		if (_rangedEnemyOneStats.EnemyHealth <= 0)
+		{
+			EmitSignal(SignalName.HealthDepleted);
+		}
+	}
+	
+	
+	// Getting hit by player bullets
 	private void HurtStaggerTimerTimedOut()
 	{
 		_hurtStatus = false;
@@ -86,7 +101,14 @@ public partial class RangedEnemyOne : Area2D
 		
 		_hurtStaggerTimer.Start();
 	}
-
+	
+	// Dying
+	private void OnHealthDepleted()
+	{
+		QueueFree();
+	}
+	
+	// Detecting when player enters attack range
 	private void PlayerEnteredDetectionRange(Node2D body)
 	{
 		if (body.IsInGroup("Players"))
@@ -107,8 +129,8 @@ public partial class RangedEnemyOne : Area2D
 		}
 	}
 	
-	
 	public override void _Process(double delta)
 	{
+		EnemyBehaviour();
 	}
 }
