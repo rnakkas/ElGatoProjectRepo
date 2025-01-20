@@ -30,9 +30,9 @@ animations = [{
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_4a8ns"]
-radius = 150.0
+radius = 309.04
 
-[node name="RangedEnemyOne" type="Area2D" node_paths=PackedStringArray("_spriteBody", "_spriteEye", "_eyeMarker", "_playerDetectionArea", "_playerDetectionRay", "_hurtStaggerTimer", "_debugStateLabel", "_debugHealthLabel") groups=["Enemies"]]
+[node name="RangedEnemyOne" type="Area2D" node_paths=PackedStringArray("_spriteBody", "_spriteEye", "_eyeMarker", "_playerDetectionArea", "_wallDetectionRay", "_hurtStaggerTimer", "_shotCooldownTimer", "_alertTimer", "_debugStateLabel", "_debugHealthLabel") groups=["Enemies"]]
 collision_layer = 32
 collision_mask = 8
 script = ExtResource("1_ej6yh")
@@ -41,8 +41,10 @@ _spriteBody = NodePath("spriteBody")
 _spriteEye = NodePath("spriteEye")
 _eyeMarker = NodePath("eyeMarker")
 _playerDetectionArea = NodePath("PlayerDetectionArea")
-_playerDetectionRay = NodePath("PlayerDetectionRaycast")
+_wallDetectionRay = NodePath("WallDetectionRaycast")
 _hurtStaggerTimer = NodePath("HurtStaggerTimer")
+_shotCooldownTimer = NodePath("ShotCooldownTimer")
+_alertTimer = NodePath("AlertTimer")
 _debugStateLabel = NodePath("StateLabel")
 _debugHealthLabel = NodePath("HealthLabel")
 
@@ -75,13 +77,17 @@ monitorable = false
 shape = SubResource("CircleShape2D_4a8ns")
 debug_color = Color(0.6, 0.545098, 0, 0.129412)
 
-[node name="PlayerDetectionRaycast" type="RayCast2D" parent="."]
+[node name="WallDetectionRaycast" type="RayCast2D" parent="."]
 self_modulate = Color(0, 0, 0, 1)
 position = Vector2(0, -11)
 target_position = Vector2(-145, 0)
-collision_mask = 7
+collision_mask = 6
 
 [node name="HurtStaggerTimer" type="Timer" parent="."]
+
+[node name="ShotCooldownTimer" type="Timer" parent="."]
+
+[node name="AlertTimer" type="Timer" parent="."]
 
 [node name="StateLabel" type="Label" parent="."]
 offset_left = -8.0

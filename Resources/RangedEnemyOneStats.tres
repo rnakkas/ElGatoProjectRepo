@@ -6,9 +6,10 @@
 script = ExtResource("1_se1io")
 EnemyType = 2
 EnemyHealth = 50
+AttackCooldownTime = 1.5
 AttackDamage = 15
 Knockback = 70.0
 PatrolSpeed = 0.0
 ChaseSpeed = 0.0
-ChaseTime = 0.0
+ChaseTime = 2.0
 HurtStaggerTime = 0.3

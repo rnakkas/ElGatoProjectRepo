@@ -16,12 +16,13 @@ public partial class EnemyStats : Resource
     
     [Export] public Type EnemyType { get; set; }
     [Export] public int EnemyHealth { get; set; }
-    [Export] public int AttackDamage;
-    [Export] public float Knockback;
-    [Export] public float PatrolSpeed;
-    [Export] public float ChaseSpeed;
-    [Export] public float ChaseTime;
-    [Export] public float HurtStaggerTime;
+    [Export] public float AttackCooldownTime { get; set; }
+    [Export] public int AttackDamage { get; set; }
+    [Export] public float Knockback { get; set; }
+    [Export] public float PatrolSpeed { get; set; }
+    [Export] public float ChaseSpeed { get; set; }
+    [Export] public float ChaseTime { get; set; }
+    [Export] public float HurtStaggerTime { get; set; }
     
     // Methods
     public void TakeDamage(int damage)

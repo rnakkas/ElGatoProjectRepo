@@ -97,13 +97,13 @@ tile_set = SubResource("TileSet_4l5qw")
 position = Vector2(174, -186)
 
 [node name="Camera2D" type="Camera2D" parent="player_elgato"]
-zoom = Vector2(2.7, 2.7)
+zoom = Vector2(1.5, 1.5)
 position_smoothing_enabled = true
 
 [node name="testingAreas" type="Node" parent="."]
 
 [node name="Test_enemyProjectile" parent="testingAreas" node_paths=PackedStringArray("_rightWallDetect", "_leftWallDetect") instance=ExtResource("3_sfurj")]
-position = Vector2(417, -55)
+position = Vector2(86, -329)
 collision_layer = 64
 AreaType = 1
 HealAmount = 0
@@ -128,7 +128,7 @@ target_position = Vector2(-29, 0)
 collision_mask = 6
 
 [node name="Test_enemyProjectile2" parent="testingAreas" node_paths=PackedStringArray("_rightWallDetect", "_leftWallDetect") instance=ExtResource("3_sfurj")]
-position = Vector2(454, -15)
+position = Vector2(123, -289)
 collision_layer = 64
 AreaType = 1
 HealAmount = 0
@@ -177,7 +177,7 @@ target_position = Vector2(-29, 0)
 collision_mask = 6
 
 [node name="Test_meleeAttack" parent="testingAreas" node_paths=PackedStringArray("_rightWallDetect", "_leftWallDetect") instance=ExtResource("3_sfurj")]
-position = Vector2(570, -51)
+position = Vector2(239, -325)
 collision_layer = 64
 AreaType = 2
 HealAmount = 0
@@ -203,7 +203,7 @@ target_position = Vector2(-6.71141, 0.447426)
 collision_mask = 6
 
 [node name="Test_meleeAttack2" parent="testingAreas" node_paths=PackedStringArray("_rightWallDetect", "_leftWallDetect") instance=ExtResource("3_sfurj")]
-position = Vector2(516, -15)
+position = Vector2(185, -289)
 collision_layer = 64
 AreaType = 2
 HealAmount = 0

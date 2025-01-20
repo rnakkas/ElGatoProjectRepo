@@ -27,19 +27,26 @@ public partial class RangedEnemyOne : Area2D
 	[Export] private AnimatedSprite2D _spriteBody, _spriteEye;
 	[Export] private Marker2D _eyeMarker;
 	[Export] private Area2D _playerDetectionArea;
-	[Export] private RayCast2D _playerDetectionRay;
+	[Export] private RayCast2D _wallDetectionRay;
 	[Export] private Timer _hurtStaggerTimer;
+	[Export] private Timer _shotCooldownTimer;
+	[Export] private Timer _alertTimer;
 	[Export] private Label _debugStateLabel;
 	[Export] private Label _debugHealthLabel;
 	
-	[Signal] public delegate void HealthDepletedEventHandler();
-
-	private bool _playerInRange;
-		
+	[Signal]
+	public delegate void ShootEventHandler();
+	[Signal]
+	public delegate void IdleEventHandler();
+	[Signal]
+	public delegate void AlertEventHandler();
+	
+	private bool _hurtStatus, _playerInRange, _onCooldown, _onAlert;
+	private Area2D _playerProjectile;
+	private Node2D _player;
+	
 	public float Direction;
 	public Vector2 Velocity;
-	private bool _hurtStatus;
-	private Area2D _playerProjectile;
 	
 	public override void _Ready()
 	{
@@ -50,12 +57,24 @@ public partial class RangedEnemyOne : Area2D
 			_hurtStaggerTimer.Timeout += HurtStaggerTimerTimedOut;
 		}
 		
+		_shotCooldownTimer.OneShot = true;
+		_shotCooldownTimer.SetWaitTime(_rangedEnemyOneStats.AttackCooldownTime);
+		_shotCooldownTimer.Timeout += ShotCooldownTimerTimedOut;
+		
+		_alertTimer.OneShot = true;
+		_alertTimer.SetWaitTime(_rangedEnemyOneStats.ChaseTime);
+		_alertTimer.Timeout += AlertTimerTimedOut;
+		
 		AreaEntered += HitByPlayerBullets;
 
 		_playerDetectionArea.BodyEntered += PlayerEnteredDetectionRange;
 		_playerDetectionArea.BodyExited += PlayerExitedDetectionRange;
 
-		HealthDepleted += OnHealthDepleted;
+		_wallDetectionRay.Enabled = false;
+
+		Shoot += OnShoot;
+		Idle += OnIdle;
+		Alert += OnAlert;
 		
 		// For debug only, remove later
 		_debugStateLabel.SetText("idle");
@@ -65,19 +84,61 @@ public partial class RangedEnemyOne : Area2D
 	// Enemy behaviour
 	private void EnemyBehaviour()
 	{
-		if (_rangedEnemyOneStats.EnemyHealth <= 0)
+		// Use raycast to detect if line of sight to player is blocked by wall
+		if (_playerInRange)
 		{
-			EmitSignal(SignalName.HealthDepleted);
+			_wallDetectionRay.TargetPosition = ToLocal(_player.GlobalPosition);
+		}
+
+		if (_playerInRange && !_wallDetectionRay.IsColliding())
+		{
+			if (!_onAlert)
+			{
+				EmitSignal(SignalName.Alert);
+	            _onAlert = true;
+	            _alertTimer.Start();
+			}
+			else if (!_onCooldown)
+			{
+				EmitSignal(SignalName.Shoot);
+				_onCooldown = true;
+				_shotCooldownTimer.Start();
+			}
+		}
+		else if (!_playerInRange)
+		{
+			EmitSignal(SignalName.Idle);
 		}
 	}
-	
-	
-	// Getting hit by player bullets
-	private void HurtStaggerTimerTimedOut()
+
+	private void OnShoot()
 	{
-		_hurtStatus = false;
+		GD.Print("shooting");
+		_debugStateLabel.SetText("Shooting");
+	}
+
+	private void OnIdle()
+	{
+		_debugStateLabel.SetText("Idle");
+	}
+
+	private void OnAlert()
+	{
+		GD.Print("alert");
+		_debugStateLabel.SetText("Alert");
+	}
+
+	private void ShotCooldownTimerTimedOut()
+	{
+		_onCooldown = false;
+	}
+
+	private void AlertTimerTimedOut()
+	{
+		_onAlert = false;
 	}
 	
+	// Getting hit by player bullets
 	private void HitByPlayerBullets(Area2D area)
 	{
 		if (!area.IsInGroup("PlayerProjectiles")) 
@@ -85,7 +146,6 @@ public partial class RangedEnemyOne : Area2D
 
 		_playerProjectile = area;
 		TakeDamageFromPlayerProjectile();
-
 	}
 	
 	private void TakeDamageFromPlayerProjectile()
@@ -96,26 +156,31 @@ public partial class RangedEnemyOne : Area2D
 		_hurtStatus = true;
 		_rangedEnemyOneStats.TakeDamage(bullet.BulletDamage);
 		
-		// For debug only, remove later
-		_debugHealthLabel.SetText("HP: "+ _rangedEnemyOneStats.EnemyHealth);
+		// Die if health reaches zero
+		if (_rangedEnemyOneStats.EnemyHealth <= 0)
+		{
+			QueueFree();
+		}
 		
 		_hurtStaggerTimer.Start();
+		
+		// For debug only, remove later
+		_debugHealthLabel.SetText("HP: "+ _rangedEnemyOneStats.EnemyHealth);
 	}
 	
-	// Dying
-	private void OnHealthDepleted()
+	private void HurtStaggerTimerTimedOut()
 	{
-		QueueFree();
+		_hurtStatus = false;
 	}
 	
-	// Detecting when player enters attack range
+	// Detecting when player enters or exits detection range
 	private void PlayerEnteredDetectionRange(Node2D body)
 	{
 		if (body.IsInGroup("Players"))
 		{
+			_player = body;
 			_playerInRange = true;
-			
-			_debugStateLabel.SetText("PlayerInRange");
+			_wallDetectionRay.Enabled = true;
 		}
 	}
 
@@ -124,6 +189,7 @@ public partial class RangedEnemyOne : Area2D
 		if (body.IsInGroup("Players"))
 		{
 			_playerInRange = false;
+			_wallDetectionRay.Enabled = false;
 			
 			_debugStateLabel.SetText("Idle");
 		}

@@ -30,7 +30,7 @@ _sprite = NodePath("sprite")
 _despawnTimer = NodePath("despawnTimer")
 
 [node name="sprite" type="AnimatedSprite2D" parent="."]
-self_modulate = Color(1, 1, 0, 1)
+self_modulate = Color(0, 0, 1, 1)
 position = Vector2(-2.98023e-08, -2.98023e-08)
 scale = Vector2(0.035, 0.035)
 sprite_frames = SubResource("SpriteFrames_hkq3d")
