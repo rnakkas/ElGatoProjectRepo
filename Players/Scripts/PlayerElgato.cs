@@ -181,6 +181,9 @@ public partial class PlayerElgato : CharacterBody2D
 		{ 
 			_playerStats.State = PlayerStats.PlayerState.Hurt;
 			
+			if (!IsInstanceValid(_enemyAttackArea)) 
+				return;
+			
 			// Knockback from attack
 			float knockback = (float)_enemyAttackArea.Get("Knockback");
 			Vector2 attackVelocity = (Vector2)_enemyAttackArea.Get("Velocity");

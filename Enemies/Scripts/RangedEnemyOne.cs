@@ -30,7 +30,7 @@ public partial class RangedEnemyOne : Area2D
 	[Export] private RayCast2D _wallDetectionRay;
 	[Export] private Timer _hurtStaggerTimer;
 	[Export] private Timer _shotCooldownTimer;
-	[Export] private Timer _alertTimer;
+	[Export] private PackedScene _bulletScene;
 	[Export] private Label _debugStateLabel;
 	[Export] private Label _debugHealthLabel;
 	
@@ -38,10 +38,8 @@ public partial class RangedEnemyOne : Area2D
 	public delegate void ShootEventHandler();
 	[Signal]
 	public delegate void IdleEventHandler();
-	[Signal]
-	public delegate void AlertEventHandler();
 	
-	private bool _hurtStatus, _playerInRange, _onCooldown, _onAlert;
+	private bool _hurtStatus, _playerInRange, _onCooldown;
 	private Area2D _playerProjectile;
 	private Node2D _player;
 	
@@ -61,10 +59,6 @@ public partial class RangedEnemyOne : Area2D
 		_shotCooldownTimer.SetWaitTime(_rangedEnemyOneStats.AttackCooldownTime);
 		_shotCooldownTimer.Timeout += ShotCooldownTimerTimedOut;
 		
-		_alertTimer.OneShot = true;
-		_alertTimer.SetWaitTime(_rangedEnemyOneStats.ChaseTime);
-		_alertTimer.Timeout += AlertTimerTimedOut;
-		
 		AreaEntered += HitByPlayerBullets;
 
 		_playerDetectionArea.BodyEntered += PlayerEnteredDetectionRange;
@@ -74,11 +68,33 @@ public partial class RangedEnemyOne : Area2D
 
 		Shoot += OnShoot;
 		Idle += OnIdle;
-		Alert += OnAlert;
 		
 		// For debug only, remove later
 		_debugStateLabel.SetText("idle");
 		_debugHealthLabel.SetText("HP: "+ _rangedEnemyOneStats.EnemyHealth);
+	}
+	
+	// Detecting when player enters or exits detection range
+	private void PlayerEnteredDetectionRange(Node2D body)
+	{
+		if (body.IsInGroup("Players"))
+		{
+			_player = body;
+			_playerInRange = true;
+			_wallDetectionRay.Enabled = true;
+			_wallDetectionRay.TargetPosition = ToLocal(_player.GlobalPosition);
+		}
+	}
+
+	private void PlayerExitedDetectionRange(Node2D body)
+	{
+		if (body.IsInGroup("Players"))
+		{
+			_playerInRange = false;
+			_wallDetectionRay.Enabled = false;
+			
+			_debugStateLabel.SetText("Idle");
+		}
 	}
 	
 	// Enemy behaviour
@@ -88,33 +104,38 @@ public partial class RangedEnemyOne : Area2D
 		if (_playerInRange)
 		{
 			_wallDetectionRay.TargetPosition = ToLocal(_player.GlobalPosition);
-		}
 
-		if (_playerInRange && !_wallDetectionRay.IsColliding())
-		{
-			if (!_onAlert)
-			{
-				EmitSignal(SignalName.Alert);
-	            _onAlert = true;
-	            _alertTimer.Start();
-			}
-			else if (!_onCooldown)
+			if (!_wallDetectionRay.IsColliding() && !_onCooldown)
 			{
 				EmitSignal(SignalName.Shoot);
 				_onCooldown = true;
 				_shotCooldownTimer.Start();
 			}
-		}
-		else if (!_playerInRange)
-		{
-			EmitSignal(SignalName.Idle);
+			else
+			{
+				EmitSignal(SignalName.Idle);
+			}
 		}
 	}
 
 	private void OnShoot()
 	{
-		GD.Print("shooting");
 		_debugStateLabel.SetText("Shooting");
+		SpawnBullets();
+	}
+	
+	private void SpawnBullets()
+	{
+		var bulletInstance = (EnemyBullet)_bulletScene.Instantiate();
+		
+		// Set properties for the bullet
+		bulletInstance.Target = GlobalPosition.DirectionTo(_player.GlobalPosition);
+		bulletInstance.BulletSpeed = _rangedEnemyOneStats.BulletSpeed;
+		bulletInstance.BulletKnockback = _rangedEnemyOneStats.Knockback;
+		bulletInstance.BulletDespawnTimeSeconds = _rangedEnemyOneStats.BulletDespawnTimeSeconds;
+		bulletInstance.BulletDamage = _rangedEnemyOneStats.BulletDamage;
+		bulletInstance.GlobalPosition = _eyeMarker.GlobalPosition;
+		GetTree().Root.AddChild(bulletInstance);
 	}
 
 	private void OnIdle()
@@ -122,20 +143,9 @@ public partial class RangedEnemyOne : Area2D
 		_debugStateLabel.SetText("Idle");
 	}
 
-	private void OnAlert()
-	{
-		GD.Print("alert");
-		_debugStateLabel.SetText("Alert");
-	}
-
 	private void ShotCooldownTimerTimedOut()
 	{
 		_onCooldown = false;
-	}
-
-	private void AlertTimerTimedOut()
-	{
-		_onAlert = false;
 	}
 	
 	// Getting hit by player bullets
@@ -171,28 +181,6 @@ public partial class RangedEnemyOne : Area2D
 	private void HurtStaggerTimerTimedOut()
 	{
 		_hurtStatus = false;
-	}
-	
-	// Detecting when player enters or exits detection range
-	private void PlayerEnteredDetectionRange(Node2D body)
-	{
-		if (body.IsInGroup("Players"))
-		{
-			_player = body;
-			_playerInRange = true;
-			_wallDetectionRay.Enabled = true;
-		}
-	}
-
-	private void PlayerExitedDetectionRange(Node2D body)
-	{
-		if (body.IsInGroup("Players"))
-		{
-			_playerInRange = false;
-			_wallDetectionRay.Enabled = false;
-			
-			_debugStateLabel.SetText("Idle");
-		}
 	}
 	
 	public override void _Process(double delta)

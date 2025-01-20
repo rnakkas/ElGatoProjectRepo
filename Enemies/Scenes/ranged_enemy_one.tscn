@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://dv2u8le4n8uyn"]
+[gd_scene load_steps=9 format=3 uid="uid://dv2u8le4n8uyn"]
 
 [ext_resource type="Script" path="res://Enemies/Scripts/RangedEnemyOne.cs" id="1_ej6yh"]
 [ext_resource type="Resource" uid="uid://dprn0ob8smyty" path="res://Resources/RangedEnemyOneStats.tres" id="2_cbw8e"]
 [ext_resource type="Texture2D" uid="uid://dqx6rpywerr0u" path="res://icon.svg" id="2_x0jcw"]
+[ext_resource type="PackedScene" uid="uid://c4sphn5j4wm3d" path="res://Enemies/Scenes/enemy_bullet.tscn" id="3_btlh0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sel7k"]
 size = Vector2(14, 34)
@@ -30,9 +31,9 @@ animations = [{
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_4a8ns"]
-radius = 309.04
+radius = 235.31
 
-[node name="RangedEnemyOne" type="Area2D" node_paths=PackedStringArray("_spriteBody", "_spriteEye", "_eyeMarker", "_playerDetectionArea", "_wallDetectionRay", "_hurtStaggerTimer", "_shotCooldownTimer", "_alertTimer", "_debugStateLabel", "_debugHealthLabel") groups=["Enemies"]]
+[node name="RangedEnemyOne" type="Area2D" node_paths=PackedStringArray("_spriteBody", "_spriteEye", "_eyeMarker", "_playerDetectionArea", "_wallDetectionRay", "_hurtStaggerTimer", "_shotCooldownTimer", "_debugStateLabel", "_debugHealthLabel") groups=["Enemies"]]
 collision_layer = 32
 collision_mask = 8
 script = ExtResource("1_ej6yh")
@@ -44,7 +45,7 @@ _playerDetectionArea = NodePath("PlayerDetectionArea")
 _wallDetectionRay = NodePath("WallDetectionRaycast")
 _hurtStaggerTimer = NodePath("HurtStaggerTimer")
 _shotCooldownTimer = NodePath("ShotCooldownTimer")
-_alertTimer = NodePath("AlertTimer")
+_bulletScene = ExtResource("3_btlh0")
 _debugStateLabel = NodePath("StateLabel")
 _debugHealthLabel = NodePath("HealthLabel")
 
