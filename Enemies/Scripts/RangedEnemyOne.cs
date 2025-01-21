@@ -38,6 +38,10 @@ public partial class RangedEnemyOne : Area2D
 	public delegate void ShootEventHandler();
 	[Signal]
 	public delegate void IdleEventHandler();
+	[Signal]
+	public delegate void HurtEventHandler();
+	[Signal]
+	public delegate void DeathEventHandler();
 	
 	private bool _hurtStatus, _playerInRange, _onCooldown;
 	private Area2D _playerProjectile;
@@ -68,6 +72,7 @@ public partial class RangedEnemyOne : Area2D
 
 		Shoot += OnShoot;
 		Idle += OnIdle;
+		Hurt += OnHurt;
 		
 		// For debug only, remove later
 		_debugStateLabel.SetText("idle");
@@ -105,19 +110,32 @@ public partial class RangedEnemyOne : Area2D
 		{
 			_wallDetectionRay.TargetPosition = ToLocal(_player.GlobalPosition);
 
-			if (!_wallDetectionRay.IsColliding() && !_onCooldown)
+			if (!_wallDetectionRay.IsColliding() && !_onCooldown && !_hurtStatus)
 			{
 				EmitSignal(SignalName.Shoot);
 				_onCooldown = true;
 				_shotCooldownTimer.Start();
+			}
+			else if (_hurtStatus)
+			{
+				EmitSignal(SignalName.Hurt);
 			}
 			else
 			{
 				EmitSignal(SignalName.Idle);
 			}
 		}
-	}
 
+		if (_hurtStatus)
+		{
+			EmitSignal(SignalName.Hurt);
+		}
+		else
+		{
+			EmitSignal(SignalName.Idle);
+		}
+	}
+	
 	private void OnShoot()
 	{
 		_debugStateLabel.SetText("Shooting");
@@ -155,6 +173,7 @@ public partial class RangedEnemyOne : Area2D
 			return;
 
 		_playerProjectile = area;
+
 		TakeDamageFromPlayerProjectile();
 	}
 	
@@ -176,6 +195,11 @@ public partial class RangedEnemyOne : Area2D
 		
 		// For debug only, remove later
 		_debugHealthLabel.SetText("HP: "+ _rangedEnemyOneStats.EnemyHealth);
+	}
+
+	private void OnHurt()
+	{
+		_debugStateLabel.SetText("Hurt");
 	}
 	
 	private void HurtStaggerTimerTimedOut()
