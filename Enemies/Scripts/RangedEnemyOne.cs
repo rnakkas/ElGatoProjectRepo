@@ -128,6 +128,10 @@ public partial class RangedEnemyOne : Area2D
 			case EnemyStats.Type.RangedEnemyHeavy:
 				SpawnShotgunShells();
 				break;
+			
+			case EnemyStats.Type.RangedEnemyMachineGun:
+				SpawnMachineGunBullets();
+				break;
 		}
 		
 	}
@@ -150,6 +154,23 @@ public partial class RangedEnemyOne : Area2D
             bulletInstance.GlobalPosition = _eyeMarker.GlobalPosition;
             GetTree().Root.AddChild(bulletInstance);
 		}
+	}
+
+	private void SpawnMachineGunBullets()
+	{
+		var rng = new RandomNumberGenerator();
+		
+		var bulletInstance = (EnemyBullet)_bulletScene.Instantiate();
+		
+		// Set properties for the bullet
+		bulletInstance.Target = GlobalPosition.DirectionTo(_player.GlobalPosition);
+		bulletInstance.RotationDegrees = rng.RandfRange(-_rangedEnemyOneStats.BulletAngle, _rangedEnemyOneStats.BulletAngle);
+		bulletInstance.BulletSpeed = _rangedEnemyOneStats.BulletSpeed;
+		bulletInstance.Knockback = _rangedEnemyOneStats.Knockback;
+		bulletInstance.BulletDespawnTimeSeconds = _rangedEnemyOneStats.BulletDespawnTimeSeconds;
+		bulletInstance.AttackDamage = _rangedEnemyOneStats.AttackDamage;
+		bulletInstance.GlobalPosition = _eyeMarker.GlobalPosition;
+		GetTree().Root.AddChild(bulletInstance);
 	}
 
 	private void OnIdle()

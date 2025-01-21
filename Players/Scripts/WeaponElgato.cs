@@ -76,6 +76,8 @@ public partial class WeaponElgato : Node2D
 	
 	private void SpawnBullets()
 	{
+		var rng = new RandomNumberGenerator();
+		
 		var bulletInstance = (Bullet)_bulletScene.Instantiate();
 
 		// Set direction for bullet
@@ -90,6 +92,7 @@ public partial class WeaponElgato : Node2D
 		
 		// Set properties for the bullet
 		bulletInstance.Direction = Direction;
+		bulletInstance.RotationDegrees = rng.RandfRange(-_weaponStats.WeaponSwayDegrees, _weaponStats.WeaponSwayDegrees);
 		bulletInstance.BulletSpeed = _weaponStats.BulletSpeed;
 		bulletInstance.BulletKnockback = _weaponStats.BulletKnockback;
 		bulletInstance.BulletDespawnTimeSeconds = _weaponStats.BulletDespawnTimeSeconds;

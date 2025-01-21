@@ -11,7 +11,8 @@ public partial class EnemyStats : Resource
         MeleeEnemyStationary,
         MeleeEnemyMoving,
         RangedEnemyLight,
-        RangedEnemyHeavy
+        RangedEnemyHeavy,
+        RangedEnemyMachineGun
     }
     
     [Export] public Type EnemyType { get; set; }
