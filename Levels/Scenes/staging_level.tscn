@@ -94,10 +94,10 @@ tile_map_data = PackedByteArray("AAAAAPL/AAAFAAIAAAAAAPP/AAAFAAIAAAAAAPT/AAAFAAI
 tile_set = SubResource("TileSet_4l5qw")
 
 [node name="player_elgato" parent="." instance=ExtResource("2_e8fkw")]
-position = Vector2(143, -14)
+position = Vector2(167, -203)
 
 [node name="Camera2D" type="Camera2D" parent="player_elgato"]
-zoom = Vector2(1.8, 1.8)
+zoom = Vector2(2, 2)
 position_smoothing_enabled = true
 
 [node name="testingAreas" type="Node" parent="."]

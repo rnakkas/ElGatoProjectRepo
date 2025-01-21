@@ -9,8 +9,8 @@ public partial class EnemyBullet : Area2D
 	private Timer _despawnTimer;
 
 	public Vector2 Target;
-	public float BulletSpeed, BulletKnockback, BulletDespawnTimeSeconds, WeaponSwayAmount;
-	public int BulletDamage;
+	public float BulletSpeed, Knockback, BulletDespawnTimeSeconds, WeaponSwayAmount;
+	public int AttackDamage;
 	public Vector2 Velocity;
 	
 	public override void _Ready()
@@ -57,14 +57,18 @@ public partial class EnemyBullet : Area2D
 	{
 		Velocity = new Vector2(
 			delta * BulletSpeed * Target.X,
-			delta * BulletSpeed * (Target.Y + WeaponSwayAmount)
+			delta * BulletSpeed * Target.Y
 		);
 		
-		Position += Velocity;
+		MoveLocalX(Velocity.X, true);
+		MoveLocalY(Velocity.Y, true);
+		
+		// Position += Velocity;
 	}
 	
 	public override void _Process(double delta)
 	{
+		
 		CalculateVelocity((float)delta);
 	}
 }

@@ -31,7 +31,7 @@ animations = [{
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_4a8ns"]
-radius = 150.0
+radius = 250.0
 
 [node name="RangedEnemyOne" type="Area2D" node_paths=PackedStringArray("_spriteBody", "_spriteEye", "_eyeMarker", "_playerDetectionArea", "_wallDetectionRay", "_hurtStaggerTimer", "_shotCooldownTimer", "_debugStateLabel", "_debugHealthLabel") groups=["Enemies"]]
 collision_layer = 32

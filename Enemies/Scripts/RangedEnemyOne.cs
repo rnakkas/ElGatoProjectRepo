@@ -4,23 +4,6 @@ using ElGatoProject.Players.Scripts;
 using ElGatoProject.Resources;
 
 namespace ElGatoProject.Enemies.Scripts;
-
-/*
-TODO: 
-Dying: DONE
-If health <= 0
-	Die - QueueFree()
-
-Shooting player: DONE
-If player is in range
-	Rotate the raycast to the player's position
-If the raycast collides with player 
-	Shoot at the player's position
-Else if the raycast collides with wall or floor
-	Don't shoot
-*/
-
-
 public partial class RangedEnemyOne : Area2D
 {
 	[Export] private EnemyStats _rangedEnemyOneStats;
@@ -152,11 +135,11 @@ public partial class RangedEnemyOne : Area2D
             		
             // Set properties for the bullet
             bulletInstance.Target = GlobalPosition.DirectionTo(_player.GlobalPosition);
-            bulletInstance.WeaponSwayAmount = rng.RandfRange(-_rangedEnemyOneStats.WeaponSwayAmount, _rangedEnemyOneStats.WeaponSwayAmount);
+            bulletInstance.RotationDegrees = rng.RandfRange(-_rangedEnemyOneStats.BulletAngle, _rangedEnemyOneStats.BulletAngle);
             bulletInstance.BulletSpeed = _rangedEnemyOneStats.BulletSpeed;
-            bulletInstance.BulletKnockback = _rangedEnemyOneStats.Knockback;
+            bulletInstance.Knockback = _rangedEnemyOneStats.Knockback;
             bulletInstance.BulletDespawnTimeSeconds = _rangedEnemyOneStats.BulletDespawnTimeSeconds;
-            bulletInstance.BulletDamage = _rangedEnemyOneStats.BulletDamage;
+            bulletInstance.AttackDamage = _rangedEnemyOneStats.AttackDamage;
             bulletInstance.GlobalPosition = _eyeMarker.GlobalPosition;
             GetTree().Root.AddChild(bulletInstance);
 		}
