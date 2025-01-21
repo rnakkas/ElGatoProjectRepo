@@ -6,14 +6,15 @@
 script = ExtResource("1_m8pnc")
 EnemyType = 4
 EnemyHealth = 40
-AttackCooldownTime = 0.2
+AttackCooldownTime = 1.5
 AttackDamage = 2
 Knockback = 20.0
 PatrolSpeed = 0.0
 ChaseSpeed = 0.0
 ChaseTime = 0.0
 HurtStaggerTime = 1.4
-BulletsPerShot = 10
+BulletsPerShot = 1
 BulletAngle = 2.0
 BulletSpeed = 350.0
 BulletDespawnTimeSeconds = 4.0
+RapidFireTime = 2.0

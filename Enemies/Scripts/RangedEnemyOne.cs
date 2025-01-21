@@ -13,6 +13,7 @@ public partial class RangedEnemyOne : Area2D
 	[Export] private RayCast2D _wallDetectionRay;
 	[Export] private Timer _hurtStaggerTimer;
 	[Export] private Timer _shotCooldownTimer;
+	[Export] private Timer _rapidFireTimer;
 	[Export] private PackedScene _bulletScene;
 	[Export] private Label _debugStateLabel;
 	[Export] private Label _debugHealthLabel;
@@ -26,7 +27,7 @@ public partial class RangedEnemyOne : Area2D
 	[Signal]
 	public delegate void DeathEventHandler();
 	
-	private bool _hurtStatus, _playerInRange, _onCooldown;
+	private bool _hurtStatus, _playerInRange, _onCooldown, _rapidFireStatus;
 	private Area2D _playerProjectile;
 	private Node2D _player;
 	
@@ -45,6 +46,13 @@ public partial class RangedEnemyOne : Area2D
 		_shotCooldownTimer.OneShot = true;
 		_shotCooldownTimer.SetWaitTime(_rangedEnemyOneStats.AttackCooldownTime);
 		_shotCooldownTimer.Timeout += ShotCooldownTimerTimedOut;
+
+		if (_rapidFireTimer != null && _rangedEnemyOneStats.EnemyType == EnemyStats.Type.RangedEnemyMachineGun)
+		{
+			_rapidFireTimer.OneShot = true;
+			_rapidFireTimer.SetWaitTime(_rangedEnemyOneStats.RapidFireTime);
+			_rapidFireTimer.Timeout += RapidFireTimerTimedOut;
+		}
 		
 		AreaEntered += HitByPlayerBullets;
 
@@ -97,8 +105,6 @@ public partial class RangedEnemyOne : Area2D
 			if (!_wallDetectionRay.IsColliding() && !_onCooldown && !_hurtStatus)
 			{
 				EmitSignal(SignalName.Shoot);
-				_onCooldown = true;
-				_shotCooldownTimer.Start();
 			}
 			else if (_hurtStatus)
 			{
@@ -127,6 +133,8 @@ public partial class RangedEnemyOne : Area2D
 		{
 			case EnemyStats.Type.RangedEnemyHeavy:
 				SpawnShotgunShells();
+				_onCooldown = true;
+				_shotCooldownTimer.Start();
 				break;
 			
 			case EnemyStats.Type.RangedEnemyMachineGun:
@@ -171,6 +179,11 @@ public partial class RangedEnemyOne : Area2D
 		bulletInstance.AttackDamage = _rangedEnemyOneStats.AttackDamage;
 		bulletInstance.GlobalPosition = _eyeMarker.GlobalPosition;
 		GetTree().Root.AddChild(bulletInstance);
+	}
+
+	private void RapidFireTimerTimedOut()
+	{
+		_shotCooldownTimer.Start();
 	}
 
 	private void OnIdle()

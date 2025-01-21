@@ -28,6 +28,7 @@ public partial class EnemyStats : Resource
     [Export] public float BulletAngle { get; set; }
     [Export] public float BulletSpeed { get; set; }
     [Export] public float BulletDespawnTimeSeconds { get; set; }
+    [Export] public float RapidFireTime { get; set; }
     
     // Methods
     public void TakeDamage(int damage)

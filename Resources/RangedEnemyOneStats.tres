@@ -17,3 +17,4 @@ BulletsPerShot = 5
 BulletAngle = 5.0
 BulletSpeed = 300.0
 BulletDespawnTimeSeconds = 3.0
+RapidFireTime = 0.0

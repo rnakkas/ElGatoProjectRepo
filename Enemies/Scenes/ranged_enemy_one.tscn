@@ -33,7 +33,7 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_4a8ns"]
 radius = 250.0
 
-[node name="RangedEnemyOne" type="Area2D" node_paths=PackedStringArray("_spriteBody", "_spriteEye", "_eyeMarker", "_playerDetectionArea", "_wallDetectionRay", "_hurtStaggerTimer", "_shotCooldownTimer", "_debugStateLabel", "_debugHealthLabel") groups=["Enemies"]]
+[node name="RangedEnemyOne" type="Area2D" node_paths=PackedStringArray("_spriteBody", "_spriteEye", "_eyeMarker", "_playerDetectionArea", "_wallDetectionRay", "_hurtStaggerTimer", "_shotCooldownTimer", "_rapidFireTimer", "_debugStateLabel", "_debugHealthLabel") groups=["Enemies"]]
 collision_layer = 32
 collision_mask = 8
 script = ExtResource("1_ej6yh")
@@ -45,6 +45,7 @@ _playerDetectionArea = NodePath("PlayerDetectionArea")
 _wallDetectionRay = NodePath("WallDetectionRaycast")
 _hurtStaggerTimer = NodePath("HurtStaggerTimer")
 _shotCooldownTimer = NodePath("ShotCooldownTimer")
+_rapidFireTimer = NodePath("RapidFireTimer")
 _bulletScene = ExtResource("3_btlh0")
 _debugStateLabel = NodePath("StateLabel")
 _debugHealthLabel = NodePath("HealthLabel")
@@ -88,7 +89,7 @@ collision_mask = 6
 
 [node name="ShotCooldownTimer" type="Timer" parent="."]
 
-[node name="AlertTimer" type="Timer" parent="."]
+[node name="RapidFireTimer" type="Timer" parent="."]
 
 [node name="StateLabel" type="Label" parent="."]
 offset_left = -8.0
