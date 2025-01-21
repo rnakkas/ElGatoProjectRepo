@@ -123,10 +123,16 @@ public partial class RangedEnemyOne : Area2D
 	private void OnShoot()
 	{
 		_debugStateLabel.SetText("Shooting");
-		SpawnBullets();
+		switch (_rangedEnemyOneStats.EnemyType)
+		{
+			case EnemyStats.Type.RangedEnemyHeavy:
+				SpawnShotgunShells();
+				break;
+		}
+		
 	}
 	
-	private void SpawnBullets()
+	private void SpawnShotgunShells()
 	{
 		var rng = new RandomNumberGenerator();
 		
