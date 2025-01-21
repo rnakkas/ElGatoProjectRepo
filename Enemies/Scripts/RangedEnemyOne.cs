@@ -81,11 +81,8 @@ public partial class RangedEnemyOne : Area2D
 			_playerInRange = true;
 			_wallDetectionRay.Enabled = true;
 			_wallDetectionRay.TargetPosition = ToLocal(_player.GlobalPosition);
-			
-			if (_rangedEnemyOneStats.EnemyType == EnemyStats.Type.RangedEnemyMachineGun)
-			{
-				_bulletCount = 0;
-			}
+
+			ResetBulletCount();
 		}
 	}
 
@@ -124,24 +121,24 @@ public partial class RangedEnemyOne : Area2D
 			}
 		}
 
-		if (_hurtStatus)
-		{
-			EmitSignal(SignalName.Hurt);
-		}
-		else
-		{
-			EmitSignal(SignalName.Idle);
-		}
+		// if (_hurtStatus)
+		// {
+		// 	EmitSignal(SignalName.Hurt);
+		// }
+		// else
+		// {
+		// 	EmitSignal(SignalName.Idle);
+		// }
 	}
 	
 	private void OnShoot()
 	{
-		_debugStateLabel.SetText("Shooting");
 		switch (_rangedEnemyOneStats.EnemyType)
 		{
 			case EnemyStats.Type.RangedEnemyHeavy:
 				if (!_onCooldown)
 				{
+					_debugStateLabel.SetText("Shooting");
 					SpawnShotgunShells();
 					_onCooldown = true;
 					_shotCooldownTimer.Start();
@@ -151,6 +148,7 @@ public partial class RangedEnemyOne : Area2D
 			case EnemyStats.Type.RangedEnemyMachineGun:
 				if (!_rapidFireCooldown && !_onCooldown)
 				{
+					_debugStateLabel.SetText("Shooting");
 					SpawnMachineGunBullets();
 					_rapidFireCooldown = true;
 					_rapidFireTimer.Start();
@@ -208,6 +206,14 @@ public partial class RangedEnemyOne : Area2D
 	private void RapidFireTimerTimedOut()
 	{
 		_rapidFireCooldown = false;
+	}
+
+	private void ResetBulletCount()
+	{
+		if (_rangedEnemyOneStats.EnemyType == EnemyStats.Type.RangedEnemyMachineGun)
+		{
+			_bulletCount = 0;
+		}
 	}
 
 	private void OnIdle()
