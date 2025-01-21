@@ -4,10 +4,10 @@
 
 [resource]
 script = ExtResource("1_m1bxb")
-CooldownTime = 0.2
+CooldownTime = 0.5
 BulletsPerShot = 1
 WeaponSwayDegrees = 0.3
 BulletSpeed = 400.0
 BulletDamage = 10
-BulletDespawnTimeSeconds = 0.3
+BulletDespawnTimeSeconds = 0.6
 BulletKnockback = 100.0

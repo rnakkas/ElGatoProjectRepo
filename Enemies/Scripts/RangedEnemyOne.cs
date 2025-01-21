@@ -56,6 +56,7 @@ public partial class RangedEnemyOne : Area2D
 		Shoot += OnShoot;
 		Idle += OnIdle;
 		Hurt += OnHurt;
+		Death += OnDeath;
 		
 		// For debug only, remove later
 		_debugStateLabel.SetText("idle");
@@ -177,7 +178,7 @@ public partial class RangedEnemyOne : Area2D
 		// Die if health reaches zero
 		if (_rangedEnemyOneStats.EnemyHealth <= 0)
 		{
-			QueueFree();
+			EmitSignal(SignalName.Death);
 		}
 		
 		_hurtStaggerTimer.Start();
@@ -194,6 +195,12 @@ public partial class RangedEnemyOne : Area2D
 	private void HurtStaggerTimerTimedOut()
 	{
 		_hurtStatus = false;
+	}
+
+	private void OnDeath()
+	{
+		_debugStateLabel.SetText("Death");
+		QueueFree();
 	}
 	
 	public override void _Process(double delta)
