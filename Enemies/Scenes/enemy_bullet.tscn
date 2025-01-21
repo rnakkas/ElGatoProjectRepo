@@ -22,12 +22,10 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ln3nw"]
 size = Vector2(4, 4)
 
-[node name="EnemyBullet" type="Area2D" node_paths=PackedStringArray("_sprite", "_despawnTimer") groups=["EnemyProjectiles"]]
+[node name="EnemyBullet" type="Area2D" groups=["EnemyProjectiles"]]
 collision_layer = 64
 collision_mask = 7
 script = ExtResource("1_dcpix")
-_sprite = NodePath("sprite")
-_despawnTimer = NodePath("despawnTimer")
 
 [node name="sprite" type="AnimatedSprite2D" parent="."]
 self_modulate = Color(1, 0, 0, 1)

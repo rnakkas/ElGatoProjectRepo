@@ -6,7 +6,7 @@
 script = ExtResource("1_se1io")
 EnemyType = 2
 EnemyHealth = 50
-AttackCooldownTime = 0.6
+AttackCooldownTime = 1.0
 AttackDamage = 15
 Knockback = 100.0
 PatrolSpeed = 0.0
@@ -14,7 +14,7 @@ ChaseSpeed = 0.0
 ChaseTime = 0.0
 HurtStaggerTime = 1.0
 BulletsPerShot = 3
-WeaponSwayDegrees = 1.2
+WeaponSwayAmount = 0.11
 BulletSpeed = 200.0
 BulletDamage = 20
 BulletDespawnTimeSeconds = 5.0

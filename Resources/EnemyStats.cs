@@ -24,7 +24,7 @@ public partial class EnemyStats : Resource
     [Export] public float ChaseTime { get; set; }
     [Export] public float HurtStaggerTime { get; set; }
     [Export] public int BulletsPerShot { get; set; }
-    [Export] public float WeaponSwayDegrees { get; set; }
+    [Export] public float WeaponSwayAmount { get; set; }
     [Export] public float BulletSpeed { get; set; }
     [Export] public int BulletDamage { get; set; }
     [Export] public float BulletDespawnTimeSeconds { get; set; }

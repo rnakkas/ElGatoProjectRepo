@@ -11,7 +11,7 @@ Dying: DONE
 If health <= 0
 	Die - QueueFree()
 
-Shooting player:
+Shooting player: DONE
 If player is in range
 	Rotate the raycast to the player's position
 If the raycast collides with player 
@@ -65,8 +65,8 @@ public partial class RangedEnemyOne : Area2D
 		
 		AreaEntered += HitByPlayerBullets;
 
-		_playerDetectionArea.BodyEntered += PlayerEnteredDetectionRange;
-		_playerDetectionArea.BodyExited += PlayerExitedDetectionRange;
+		_playerDetectionArea.AreaEntered += PlayerEnteredDetectionRange;
+		_playerDetectionArea.AreaExited += PlayerExitedDetectionRange;
 
 		_wallDetectionRay.Enabled = false;
 
@@ -80,20 +80,20 @@ public partial class RangedEnemyOne : Area2D
 	}
 	
 	// Detecting when player enters or exits detection range
-	private void PlayerEnteredDetectionRange(Node2D body)
+	private void PlayerEnteredDetectionRange(Area2D area)
 	{
-		if (body.IsInGroup("Players"))
+		if (area.IsInGroup("Players"))
 		{
-			_player = body;
+			_player = area;
 			_playerInRange = true;
 			_wallDetectionRay.Enabled = true;
 			_wallDetectionRay.TargetPosition = ToLocal(_player.GlobalPosition);
 		}
 	}
 
-	private void PlayerExitedDetectionRange(Node2D body)
+	private void PlayerExitedDetectionRange(Area2D area)
 	{
-		if (body.IsInGroup("Players"))
+		if (area.IsInGroup("Players"))
 		{
 			_playerInRange = false;
 			_wallDetectionRay.Enabled = false;
@@ -144,16 +144,22 @@ public partial class RangedEnemyOne : Area2D
 	
 	private void SpawnBullets()
 	{
-		var bulletInstance = (EnemyBullet)_bulletScene.Instantiate();
+		var rng = new RandomNumberGenerator();
 		
-		// Set properties for the bullet
-		bulletInstance.Target = GlobalPosition.DirectionTo(_player.GlobalPosition);
-		bulletInstance.BulletSpeed = _rangedEnemyOneStats.BulletSpeed;
-		bulletInstance.BulletKnockback = _rangedEnemyOneStats.Knockback;
-		bulletInstance.BulletDespawnTimeSeconds = _rangedEnemyOneStats.BulletDespawnTimeSeconds;
-		bulletInstance.BulletDamage = _rangedEnemyOneStats.BulletDamage;
-		bulletInstance.GlobalPosition = _eyeMarker.GlobalPosition;
-		GetTree().Root.AddChild(bulletInstance);
+		for (int i = 0; i < _rangedEnemyOneStats.BulletsPerShot; i++)
+		{
+			var bulletInstance = (EnemyBullet)_bulletScene.Instantiate();
+            		
+            // Set properties for the bullet
+            bulletInstance.Target = GlobalPosition.DirectionTo(_player.GlobalPosition);
+            bulletInstance.WeaponSwayAmount = rng.RandfRange(-_rangedEnemyOneStats.WeaponSwayAmount, _rangedEnemyOneStats.WeaponSwayAmount);
+            bulletInstance.BulletSpeed = _rangedEnemyOneStats.BulletSpeed;
+            bulletInstance.BulletKnockback = _rangedEnemyOneStats.Knockback;
+            bulletInstance.BulletDespawnTimeSeconds = _rangedEnemyOneStats.BulletDespawnTimeSeconds;
+            bulletInstance.BulletDamage = _rangedEnemyOneStats.BulletDamage;
+            bulletInstance.GlobalPosition = _eyeMarker.GlobalPosition;
+            GetTree().Root.AddChild(bulletInstance);
+		}
 	}
 
 	private void OnIdle()

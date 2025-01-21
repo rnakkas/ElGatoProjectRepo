@@ -97,7 +97,7 @@ tile_set = SubResource("TileSet_4l5qw")
 position = Vector2(143, -14)
 
 [node name="Camera2D" type="Camera2D" parent="player_elgato"]
-zoom = Vector2(1.5, 1.5)
+zoom = Vector2(1.8, 1.8)
 position_smoothing_enabled = true
 
 [node name="testingAreas" type="Node" parent="."]
