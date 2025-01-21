@@ -27,9 +27,10 @@ public partial class RangedEnemyOne : Area2D
 	[Signal]
 	public delegate void DeathEventHandler();
 	
-	private bool _hurtStatus, _playerInRange, _onCooldown, _rapidFireStatus;
+	private bool _hurtStatus, _playerInRange, _onCooldown, _rapidFireCooldown;
 	private Area2D _playerProjectile;
 	private Node2D _player;
+	private int _bulletCount;
 	
 	public float Direction;
 	public Vector2 Velocity;
@@ -80,6 +81,11 @@ public partial class RangedEnemyOne : Area2D
 			_playerInRange = true;
 			_wallDetectionRay.Enabled = true;
 			_wallDetectionRay.TargetPosition = ToLocal(_player.GlobalPosition);
+			
+			if (_rangedEnemyOneStats.EnemyType == EnemyStats.Type.RangedEnemyMachineGun)
+			{
+				_bulletCount = 0;
+			}
 		}
 	}
 
@@ -102,9 +108,11 @@ public partial class RangedEnemyOne : Area2D
 		{
 			_wallDetectionRay.TargetPosition = ToLocal(_player.GlobalPosition);
 
-			if (!_wallDetectionRay.IsColliding() && !_onCooldown && !_hurtStatus)
+			if (!_wallDetectionRay.IsColliding() && !_hurtStatus)
 			{
 				EmitSignal(SignalName.Shoot);
+				// _onCooldown = true;
+				// _shotCooldownTimer.Start();
 			}
 			else if (_hurtStatus)
 			{
@@ -132,13 +140,29 @@ public partial class RangedEnemyOne : Area2D
 		switch (_rangedEnemyOneStats.EnemyType)
 		{
 			case EnemyStats.Type.RangedEnemyHeavy:
-				SpawnShotgunShells();
-				_onCooldown = true;
-				_shotCooldownTimer.Start();
+				if (!_onCooldown)
+				{
+					SpawnShotgunShells();
+					_onCooldown = true;
+					_shotCooldownTimer.Start();
+				}
 				break;
 			
 			case EnemyStats.Type.RangedEnemyMachineGun:
-				SpawnMachineGunBullets();
+				if (!_rapidFireCooldown && !_onCooldown)
+				{
+					SpawnMachineGunBullets();
+					_rapidFireCooldown = true;
+					_rapidFireTimer.Start();
+					_bulletCount++;
+
+					if (_bulletCount >= _rangedEnemyOneStats.BulletsPerShot)
+					{
+						_onCooldown = true;
+						_shotCooldownTimer.Start();
+						_bulletCount = 0;
+					}
+				}
 				break;
 		}
 		
@@ -183,7 +207,7 @@ public partial class RangedEnemyOne : Area2D
 
 	private void RapidFireTimerTimedOut()
 	{
-		_shotCooldownTimer.Start();
+		_rapidFireCooldown = false;
 	}
 
 	private void OnIdle()
