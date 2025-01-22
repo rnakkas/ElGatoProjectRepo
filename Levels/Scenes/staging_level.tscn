@@ -150,4 +150,4 @@ theme_override_font_sizes/font_size = 20
 text = "RANGED ENEMIES"
 
 [node name="Elevator" parent="." instance=ExtResource("7_lg78f")]
-position = Vector2(309, 281)
+position = Vector2(310, 330)

@@ -16,14 +16,17 @@ size = Vector2(6.98659, 20.277)
 size = Vector2(103, 17)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_l5cxq"]
-size = Vector2(114, 28)
+size = Vector2(114, 13)
 
-[node name="Elevator" type="AnimatableBody2D" node_paths=PackedStringArray("_passengerDetector", "_obstructionDetector", "_debugLabel")]
+[node name="Elevator" type="AnimatableBody2D" node_paths=PackedStringArray("_passengerDetector", "_obstructionDetector", "_elevatorActivationTimer", "_debugLabel")]
 collision_layer = 2
 collision_mask = 33
 script = ExtResource("1_87xhq")
 _passengerDetector = NodePath("passengerDetector")
 _obstructionDetector = NodePath("obstructionDetector")
+_elevatorActivationTimer = NodePath("elevatorActivationTimer")
+_elevatorActivationTimeSeconds = 1.1
+_elevatorSpeed = 100.0
 _debugLabel = NodePath("debugLabel")
 
 [node name="floor" type="Sprite2D" parent="."]
@@ -64,11 +67,14 @@ debug_color = Color(0.663132, 0.513015, 1.54018e-06, 0.42)
 
 [node name="obstructionDetector" type="Area2D" parent="."]
 collision_layer = 128
+collision_mask = 3
 
 [node name="collider" type="CollisionShape2D" parent="obstructionDetector"]
-position = Vector2(0, 10)
+position = Vector2(0, 7.5)
 shape = SubResource("RectangleShape2D_l5cxq")
 debug_color = Color(0.842633, 0.260025, 0.699514, 0.42)
+
+[node name="elevatorActivationTimer" type="Timer" parent="."]
 
 [node name="debugLabel" type="Label" parent="."]
 offset_left = -56.0
