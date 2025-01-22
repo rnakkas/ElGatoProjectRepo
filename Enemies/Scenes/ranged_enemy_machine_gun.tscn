@@ -1,43 +1,41 @@
-[gd_scene load_steps=9 format=3 uid="uid://dv2u8le4n8uyn"]
+[gd_scene load_steps=9 format=3 uid="uid://dno6xbpmwsig0"]
 
-[ext_resource type="Script" path="res://Enemies/Scripts/RangedEnemyOne.cs" id="1_ej6yh"]
-[ext_resource type="Resource" uid="uid://dprn0ob8smyty" path="res://Resources/RangedEnemyOneStats.tres" id="2_cbw8e"]
-[ext_resource type="Texture2D" uid="uid://dqx6rpywerr0u" path="res://icon.svg" id="2_x0jcw"]
-[ext_resource type="PackedScene" uid="uid://c4sphn5j4wm3d" path="res://Enemies/Scenes/enemy_bullet.tscn" id="3_btlh0"]
+[ext_resource type="Script" path="res://Enemies/Scripts/RangedEnemyBase.cs" id="1_82c8r"]
+[ext_resource type="Texture2D" uid="uid://dqx6rpywerr0u" path="res://icon.svg" id="2_b1561"]
+[ext_resource type="Resource" uid="uid://iwcg0bapbqr0" path="res://Resources/RangedEnemyMachineGun.tres" id="2_u3myt"]
+[ext_resource type="PackedScene" uid="uid://c4sphn5j4wm3d" path="res://Enemies/Scenes/enemy_bullet.tscn" id="3_x7nrv"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_sel7k"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yhh80"]
 size = Vector2(14, 34)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_b4wby"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_husvp"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_x0jcw")
+"texture": ExtResource("2_b1561")
 }],
 "loop": true,
 "name": &"idle",
 "speed": 5.0
 }]
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_emv3n"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_acroc"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_x0jcw")
+"texture": ExtResource("2_b1561")
 }],
 "loop": true,
 "name": &"idle",
 "speed": 5.0
 }]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_4a8ns"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_lhoh2"]
 radius = 250.0
 
-[node name="RangedEnemyOne" type="Area2D" node_paths=PackedStringArray("_spriteBody", "_spriteEye", "_eyeMarker", "_playerDetectionArea", "_wallDetectionRay", "_hurtStaggerTimer", "_shotCooldownTimer", "_rapidFireTimer", "_debugStateLabel", "_debugHealthLabel") groups=["Enemies"]]
-collision_layer = 32
-collision_mask = 8
-script = ExtResource("1_ej6yh")
-_rangedEnemyOneStats = ExtResource("2_cbw8e")
+[node name="RangedEnemyMachineGun" type="Area2D" node_paths=PackedStringArray("_spriteBody", "_spriteEye", "_eyeMarker", "_playerDetectionArea", "_wallDetectionRay", "_hurtStaggerTimer", "_shotCooldownTimer", "_rapidFireTimer", "_debugStateLabel", "_debugHealthLabel") groups=["Enemies"]]
+script = ExtResource("1_82c8r")
+_rangedEnemyStats = ExtResource("2_u3myt")
 _spriteBody = NodePath("spriteBody")
 _spriteEye = NodePath("spriteEye")
 _eyeMarker = NodePath("eyeMarker")
@@ -46,25 +44,25 @@ _wallDetectionRay = NodePath("WallDetectionRaycast")
 _hurtStaggerTimer = NodePath("HurtStaggerTimer")
 _shotCooldownTimer = NodePath("ShotCooldownTimer")
 _rapidFireTimer = NodePath("RapidFireTimer")
-_bulletScene = ExtResource("3_btlh0")
+_bulletScene = ExtResource("3_x7nrv")
 _debugStateLabel = NodePath("StateLabel")
 _debugHealthLabel = NodePath("HealthLabel")
 
 [node name="collider" type="CollisionShape2D" parent="."]
-shape = SubResource("RectangleShape2D_sel7k")
+shape = SubResource("RectangleShape2D_yhh80")
 debug_color = Color(0.937255, 0, 0.196078, 0.419608)
 
 [node name="spriteBody" type="AnimatedSprite2D" parent="."]
 self_modulate = Color(0.0196078, 0.0196078, 0.0196078, 1)
 scale = Vector2(0.0878907, 0.267578)
-sprite_frames = SubResource("SpriteFrames_b4wby")
+sprite_frames = SubResource("SpriteFrames_husvp")
 animation = &"idle"
 
 [node name="spriteEye" type="AnimatedSprite2D" parent="."]
 modulate = Color(1, 0, 0, 1)
 position = Vector2(0, -11)
 scale = Vector2(0.0488281, 0.048828)
-sprite_frames = SubResource("SpriteFrames_emv3n")
+sprite_frames = SubResource("SpriteFrames_acroc")
 animation = &"idle"
 
 [node name="eyeMarker" type="Marker2D" parent="."]
@@ -76,7 +74,7 @@ collision_layer = 0
 monitorable = false
 
 [node name="collider" type="CollisionShape2D" parent="PlayerDetectionArea"]
-shape = SubResource("CircleShape2D_4a8ns")
+shape = SubResource("CircleShape2D_lhoh2")
 debug_color = Color(0.6, 0.545098, 0, 0.129412)
 
 [node name="WallDetectionRaycast" type="RayCast2D" parent="."]
@@ -96,6 +94,7 @@ offset_left = -8.0
 offset_top = -30.0
 offset_right = 35.0
 offset_bottom = -17.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 9
 
 [node name="HealthLabel" type="Label" parent="."]
@@ -103,4 +102,5 @@ offset_left = -8.0
 offset_top = -44.0
 offset_right = 35.0
 offset_bottom = -31.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 9

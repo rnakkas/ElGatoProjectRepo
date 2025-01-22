@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="RangedEnemyStats" load_steps=2 format=3 uid="uid://iwcg0bapbqr0"]
+
+[ext_resource type="Script" path="res://Resources/RangedEnemyStats.cs" id="1_khu1v"]
+
+[resource]
+script = ExtResource("1_khu1v")
+RangedEnemyType = 2
+Health = 40
+AttackCooldownTime = 2.0
+AttackDamage = 2
+Knockback = 20.0
+HurtStaggerTime = 1.4
+BulletsPerShot = 6
+BulletAngle = 2.3
+BulletSpeed = 380.0
+BulletDespawnTimeSeconds = 3.5
+RapidFireTime = 0.15

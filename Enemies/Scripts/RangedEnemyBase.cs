@@ -4,9 +4,11 @@ using ElGatoProject.Players.Scripts;
 using ElGatoProject.Resources;
 
 namespace ElGatoProject.Enemies.Scripts;
-public partial class RangedEnemyOne : Area2D
+
+[GlobalClass]
+public partial class RangedEnemyBase : Area2D
 {
-	[Export] private EnemyStats _rangedEnemyOneStats;
+	[Export] private RangedEnemyStats _rangedEnemyStats;
 	[Export] private AnimatedSprite2D _spriteBody, _spriteEye;
 	[Export] private Marker2D _eyeMarker;
 	[Export] private Area2D _playerDetectionArea;
@@ -38,21 +40,21 @@ public partial class RangedEnemyOne : Area2D
 		if (_hurtStaggerTimer != null)
 		{
 			_hurtStaggerTimer.OneShot = true;
-			_hurtStaggerTimer.SetWaitTime(_rangedEnemyOneStats.HurtStaggerTime);
+			_hurtStaggerTimer.SetWaitTime(_rangedEnemyStats.HurtStaggerTime);
 			_hurtStaggerTimer.Timeout += HurtStaggerTimerTimedOut;
 		}
 
 		if (_shotCooldownTimer != null)
 		{
 			_shotCooldownTimer.OneShot = true;
-            _shotCooldownTimer.SetWaitTime(_rangedEnemyOneStats.AttackCooldownTime);
+            _shotCooldownTimer.SetWaitTime(_rangedEnemyStats.AttackCooldownTime);
             _shotCooldownTimer.Timeout += ShotCooldownTimerTimedOut;
 		}
 		
-		if (_rapidFireTimer != null && _rangedEnemyOneStats.EnemyType == EnemyStats.Type.RangedEnemyMachineGun)
+		if (_rapidFireTimer != null && _rangedEnemyStats.RangedEnemyType == RangedEnemyStats.Type.RangedEnemyMachineGun)
 		{
 			_rapidFireTimer.OneShot = true;
-			_rapidFireTimer.SetWaitTime(_rangedEnemyOneStats.RapidFireTime);
+			_rapidFireTimer.SetWaitTime(_rangedEnemyStats.RapidFireTime);
 			_rapidFireTimer.Timeout += RapidFireTimerTimedOut;
 		}
 		
@@ -70,7 +72,7 @@ public partial class RangedEnemyOne : Area2D
 		
 		// For debug only, remove later
 		_debugStateLabel.SetText("idle");
-		_debugHealthLabel.SetText("HP: "+ _rangedEnemyOneStats.EnemyHealth);
+		_debugHealthLabel.SetText("HP: "+ _rangedEnemyStats.Health);
 	}
 	
 	// Detecting when player enters or exits detection range
@@ -127,9 +129,9 @@ public partial class RangedEnemyOne : Area2D
 	
 	private void OnShoot()
 	{
-		switch (_rangedEnemyOneStats.EnemyType)
+		switch (_rangedEnemyStats.RangedEnemyType)
 		{
-			case EnemyStats.Type.RangedEnemyHeavy:
+			case RangedEnemyStats.Type.RangedEnemyHeavy:
 				if (!_onCooldown)
 				{
 					_debugStateLabel.SetText("Shooting");
@@ -139,7 +141,7 @@ public partial class RangedEnemyOne : Area2D
 				}
 				break;
 			
-			case EnemyStats.Type.RangedEnemyMachineGun:
+			case RangedEnemyStats.Type.RangedEnemyMachineGun:
 				if (!_rapidFireCooldown && !_onCooldown)
 				{
 					_debugStateLabel.SetText("Shooting");
@@ -148,7 +150,7 @@ public partial class RangedEnemyOne : Area2D
 					_rapidFireTimer.Start();
 					_bulletCount++;
 
-					if (_bulletCount >= _rangedEnemyOneStats.BulletsPerShot)
+					if (_bulletCount >= _rangedEnemyStats.BulletsPerShot)
 					{
 						_onCooldown = true;
 						_shotCooldownTimer.Start();
@@ -161,7 +163,7 @@ public partial class RangedEnemyOne : Area2D
 	
 	private void SpawnShotgunShells()
 	{
-		for (int i = 0; i < _rangedEnemyOneStats.BulletsPerShot; i++)
+		for (int i = 0; i < _rangedEnemyStats.BulletsPerShot; i++)
 		{
 			InstantiateBullet();
 		}
@@ -178,11 +180,11 @@ public partial class RangedEnemyOne : Area2D
 		
 		// Set properties for the bullet
 		bulletInstance.Target = GlobalPosition.DirectionTo(_player.GlobalPosition);
-		bulletInstance.RotationDegrees = _rng.RandfRange(-_rangedEnemyOneStats.BulletAngle, _rangedEnemyOneStats.BulletAngle);
-		bulletInstance.BulletSpeed = _rangedEnemyOneStats.BulletSpeed;
-		bulletInstance.Knockback = _rangedEnemyOneStats.Knockback;
-		bulletInstance.BulletDespawnTimeSeconds = _rangedEnemyOneStats.BulletDespawnTimeSeconds;
-		bulletInstance.AttackDamage = _rangedEnemyOneStats.AttackDamage;
+		bulletInstance.RotationDegrees = _rng.RandfRange(-_rangedEnemyStats.BulletAngle, _rangedEnemyStats.BulletAngle);
+		bulletInstance.BulletSpeed = _rangedEnemyStats.BulletSpeed;
+		bulletInstance.Knockback = _rangedEnemyStats.Knockback;
+		bulletInstance.BulletDespawnTimeSeconds = _rangedEnemyStats.BulletDespawnTimeSeconds;
+		bulletInstance.AttackDamage = _rangedEnemyStats.AttackDamage;
 		bulletInstance.GlobalPosition = _eyeMarker.GlobalPosition;
 		GetTree().Root.AddChild(bulletInstance);
 	}
@@ -194,7 +196,7 @@ public partial class RangedEnemyOne : Area2D
 
 	private void ResetBulletCount()
 	{
-		if (_rangedEnemyOneStats.EnemyType == EnemyStats.Type.RangedEnemyMachineGun)
+		if (_rangedEnemyStats.RangedEnemyType == RangedEnemyStats.Type.RangedEnemyMachineGun)
 		{
 			_bulletCount = 0;
 		}
@@ -227,10 +229,10 @@ public partial class RangedEnemyOne : Area2D
 			return;
 		
 		_hurtStatus = true;
-		_rangedEnemyOneStats.TakeDamage(bullet.BulletDamage);
+		_rangedEnemyStats.TakeDamage(bullet.BulletDamage);
 		
 		// Die if health reaches zero
-		if (_rangedEnemyOneStats.EnemyHealth <= 0)
+		if (_rangedEnemyStats.Health <= 0)
 		{
 			EmitSignal(SignalName.Death);
 		}
@@ -238,7 +240,7 @@ public partial class RangedEnemyOne : Area2D
 		_hurtStaggerTimer.Start();
 		
 		// For debug only, remove later
-		_debugHealthLabel.SetText("HP: "+ _rangedEnemyOneStats.EnemyHealth);
+		_debugHealthLabel.SetText("HP: "+ _rangedEnemyStats.Health);
 	}
 
 	private void OnHurt()

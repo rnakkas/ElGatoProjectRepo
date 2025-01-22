@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dpnesat0p6sum"]
+
+[ext_resource type="Script" path="res://Enemies/Scripts/RangedEnemyBase.cs" id="1_7gl08"]
+
+[node name="RangedEnemyBase" type="Area2D"]
+script = ExtResource("1_7gl08")
