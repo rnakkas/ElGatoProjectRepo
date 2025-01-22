@@ -129,13 +129,28 @@ public partial class RangedEnemyBase : Area2D
 	
 	private void OnShoot()
 	{
+		ShootingBehaviour();
+	}
+
+	private void ShootingBehaviour()
+	{
 		switch (_rangedEnemyStats.RangedEnemyType)
 		{
+			case RangedEnemyStats.Type.RangedEnemyLight:
+				if (!_onCooldown)
+				{
+					_debugStateLabel.SetText("Shooting");
+					SpawnBullets(false);
+					_onCooldown = true;
+					_shotCooldownTimer.Start();
+				}
+				break;
+			
 			case RangedEnemyStats.Type.RangedEnemyHeavy:
 				if (!_onCooldown)
 				{
 					_debugStateLabel.SetText("Shooting");
-					SpawnShotgunShells();
+					SpawnBullets(false);
 					_onCooldown = true;
 					_shotCooldownTimer.Start();
 				}
@@ -145,7 +160,7 @@ public partial class RangedEnemyBase : Area2D
 				if (!_rapidFireCooldown && !_onCooldown)
 				{
 					_debugStateLabel.SetText("Shooting");
-					SpawnMachineGunBullets();
+					SpawnBullets(true);
 					_rapidFireCooldown = true;
 					_rapidFireTimer.Start();
 					_bulletCount++;
@@ -161,17 +176,19 @@ public partial class RangedEnemyBase : Area2D
 		}
 	}
 	
-	private void SpawnShotgunShells()
+	private void SpawnBullets(bool rapidFire)
 	{
-		for (int i = 0; i < _rangedEnemyStats.BulletsPerShot; i++)
+		if (!rapidFire)
+		{
+			for (int i = 0; i < _rangedEnemyStats.BulletsPerShot; i++)
+			{
+				InstantiateBullet();
+			}
+		}
+		else
 		{
 			InstantiateBullet();
 		}
-	}
-
-	private void SpawnMachineGunBullets()
-	{
-		InstantiateBullet();
 	}
 	
 	private void InstantiateBullet()
@@ -186,6 +203,8 @@ public partial class RangedEnemyBase : Area2D
 		bulletInstance.BulletDespawnTimeSeconds = _rangedEnemyStats.BulletDespawnTimeSeconds;
 		bulletInstance.AttackDamage = _rangedEnemyStats.AttackDamage;
 		bulletInstance.GlobalPosition = _eyeMarker.GlobalPosition;
+		
+		// Add bullet instance to scene
 		GetTree().Root.AddChild(bulletInstance);
 	}
 
