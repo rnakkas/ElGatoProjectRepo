@@ -1,0 +1,78 @@
+[gd_scene load_steps=8 format=3 uid="uid://dnqr83lhohtvv"]
+
+[ext_resource type="Texture2D" uid="uid://dqx6rpywerr0u" path="res://icon.svg" id="1_2nxov"]
+[ext_resource type="Script" path="res://Misc/Scripts/ElevatorBase.cs" id="1_87xhq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qiscj"]
+size = Vector2(114, 18)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xarab"]
+size = Vector2(6.75, 21)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pnno5"]
+size = Vector2(6.98659, 20.277)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nsefe"]
+size = Vector2(103, 17)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_l5cxq"]
+size = Vector2(114, 28)
+
+[node name="Elevator" type="AnimatableBody2D" node_paths=PackedStringArray("_passengerDetector", "_obstructionDetector", "_debugLabel")]
+collision_layer = 2
+collision_mask = 33
+script = ExtResource("1_87xhq")
+_passengerDetector = NodePath("passengerDetector")
+_obstructionDetector = NodePath("obstructionDetector")
+_debugLabel = NodePath("debugLabel")
+
+[node name="floor" type="Sprite2D" parent="."]
+modulate = Color(0, 0, 0, 1)
+scale = Vector2(0.898438, 0.140625)
+texture = ExtResource("1_2nxov")
+
+[node name="railingLeft" type="Sprite2D" parent="."]
+modulate = Color(0.0687983, 0.0687983, 0.0687983, 1)
+position = Vector2(-50.5, -18.75)
+scale = Vector2(0.0546875, 0.175781)
+texture = ExtResource("1_2nxov")
+
+[node name="railingRight" type="Sprite2D" parent="."]
+modulate = Color(0.0687983, 0.0687983, 0.0687983, 1)
+position = Vector2(52, -18)
+scale = Vector2(0.0546875, 0.175781)
+texture = ExtResource("1_2nxov")
+
+[node name="floorClollider" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_qiscj")
+
+[node name="railingLeftCollider" type="CollisionShape2D" parent="."]
+position = Vector2(-50.4797, -19.5743)
+shape = SubResource("RectangleShape2D_xarab")
+
+[node name="railingRightCollider" type="CollisionShape2D" parent="."]
+position = Vector2(51.9039, -19.1842)
+shape = SubResource("RectangleShape2D_pnno5")
+
+[node name="passengerDetector" type="Area2D" parent="."]
+collision_layer = 128
+
+[node name="collider" type="CollisionShape2D" parent="passengerDetector"]
+position = Vector2(0.5, -8.5)
+shape = SubResource("RectangleShape2D_nsefe")
+debug_color = Color(0.663132, 0.513015, 1.54018e-06, 0.42)
+
+[node name="obstructionDetector" type="Area2D" parent="."]
+collision_layer = 128
+
+[node name="collider" type="CollisionShape2D" parent="obstructionDetector"]
+position = Vector2(0, 10)
+shape = SubResource("RectangleShape2D_l5cxq")
+debug_color = Color(0.842633, 0.260025, 0.699514, 0.42)
+
+[node name="debugLabel" type="Label" parent="."]
+offset_left = -56.0
+offset_top = -8.0
+offset_right = 58.0
+offset_bottom = 15.0
+theme_override_font_sizes/font_size = 8

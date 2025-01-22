@@ -76,6 +76,7 @@ shoot={
 2d_physics/layer_5="pickups"
 2d_physics/layer_6="enemies"
 2d_physics/layer_7="enemiesAttacks"
+2d_physics/layer_8="elevator"
 
 [rendering]
 
