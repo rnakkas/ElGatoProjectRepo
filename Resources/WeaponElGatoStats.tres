@@ -9,5 +9,5 @@ BulletsPerShot = 1
 WeaponSwayDegrees = 1.2
 BulletSpeed = 400.0
 BulletDamage = 10
-BulletDespawnTimeSeconds = 0.6
+BulletDespawnTimeSeconds = 1.0
 BulletKnockback = 100.0

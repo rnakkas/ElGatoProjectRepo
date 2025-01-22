@@ -31,9 +31,7 @@ public partial class RangedEnemyOne : Area2D
 	private Area2D _playerProjectile;
 	private Node2D _player;
 	private int _bulletCount;
-	
-	public float Direction;
-	public Vector2 Velocity;
+	private RandomNumberGenerator _rng = new();
 	
 	public override void _Ready()
 	{
@@ -43,11 +41,14 @@ public partial class RangedEnemyOne : Area2D
 			_hurtStaggerTimer.SetWaitTime(_rangedEnemyOneStats.HurtStaggerTime);
 			_hurtStaggerTimer.Timeout += HurtStaggerTimerTimedOut;
 		}
-		
-		_shotCooldownTimer.OneShot = true;
-		_shotCooldownTimer.SetWaitTime(_rangedEnemyOneStats.AttackCooldownTime);
-		_shotCooldownTimer.Timeout += ShotCooldownTimerTimedOut;
 
+		if (_shotCooldownTimer != null)
+		{
+			_shotCooldownTimer.OneShot = true;
+            _shotCooldownTimer.SetWaitTime(_rangedEnemyOneStats.AttackCooldownTime);
+            _shotCooldownTimer.Timeout += ShotCooldownTimerTimedOut;
+		}
+		
 		if (_rapidFireTimer != null && _rangedEnemyOneStats.EnemyType == EnemyStats.Type.RangedEnemyMachineGun)
 		{
 			_rapidFireTimer.OneShot = true;
@@ -81,7 +82,7 @@ public partial class RangedEnemyOne : Area2D
 			_playerInRange = true;
 			_wallDetectionRay.Enabled = true;
 			_wallDetectionRay.TargetPosition = ToLocal(_player.GlobalPosition);
-
+			
 			ResetBulletCount();
 		}
 	}
@@ -108,8 +109,6 @@ public partial class RangedEnemyOne : Area2D
 			if (!_wallDetectionRay.IsColliding() && !_hurtStatus)
 			{
 				EmitSignal(SignalName.Shoot);
-				// _onCooldown = true;
-				// _shotCooldownTimer.Start();
 			}
 			else if (_hurtStatus)
 			{
@@ -120,15 +119,10 @@ public partial class RangedEnemyOne : Area2D
 				EmitSignal(SignalName.Idle);
 			}
 		}
-
-		// if (_hurtStatus)
-		// {
-		// 	EmitSignal(SignalName.Hurt);
-		// }
-		// else
-		// {
-		// 	EmitSignal(SignalName.Idle);
-		// }
+		else
+		{
+			EmitSignal(_hurtStatus ? SignalName.Hurt : SignalName.Idle);
+		}
 	}
 	
 	private void OnShoot()
@@ -163,38 +157,28 @@ public partial class RangedEnemyOne : Area2D
 				}
 				break;
 		}
-		
 	}
 	
 	private void SpawnShotgunShells()
 	{
-		var rng = new RandomNumberGenerator();
-		
 		for (int i = 0; i < _rangedEnemyOneStats.BulletsPerShot; i++)
 		{
-			var bulletInstance = (EnemyBullet)_bulletScene.Instantiate();
-            		
-            // Set properties for the bullet
-            bulletInstance.Target = GlobalPosition.DirectionTo(_player.GlobalPosition);
-            bulletInstance.RotationDegrees = rng.RandfRange(-_rangedEnemyOneStats.BulletAngle, _rangedEnemyOneStats.BulletAngle);
-            bulletInstance.BulletSpeed = _rangedEnemyOneStats.BulletSpeed;
-            bulletInstance.Knockback = _rangedEnemyOneStats.Knockback;
-            bulletInstance.BulletDespawnTimeSeconds = _rangedEnemyOneStats.BulletDespawnTimeSeconds;
-            bulletInstance.AttackDamage = _rangedEnemyOneStats.AttackDamage;
-            bulletInstance.GlobalPosition = _eyeMarker.GlobalPosition;
-            GetTree().Root.AddChild(bulletInstance);
+			InstantiateBullet();
 		}
 	}
 
 	private void SpawnMachineGunBullets()
 	{
-		var rng = new RandomNumberGenerator();
-		
+		InstantiateBullet();
+	}
+	
+	private void InstantiateBullet()
+	{
 		var bulletInstance = (EnemyBullet)_bulletScene.Instantiate();
 		
 		// Set properties for the bullet
 		bulletInstance.Target = GlobalPosition.DirectionTo(_player.GlobalPosition);
-		bulletInstance.RotationDegrees = rng.RandfRange(-_rangedEnemyOneStats.BulletAngle, _rangedEnemyOneStats.BulletAngle);
+		bulletInstance.RotationDegrees = _rng.RandfRange(-_rangedEnemyOneStats.BulletAngle, _rangedEnemyOneStats.BulletAngle);
 		bulletInstance.BulletSpeed = _rangedEnemyOneStats.BulletSpeed;
 		bulletInstance.Knockback = _rangedEnemyOneStats.Knockback;
 		bulletInstance.BulletDespawnTimeSeconds = _rangedEnemyOneStats.BulletDespawnTimeSeconds;
