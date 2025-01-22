@@ -14,8 +14,9 @@ public partial class PlayerElgato : CharacterBody2D
 	[Export] private RayCast2D _leftWallDetect;
 	[Export] private RayCast2D _rightWallDetect;
 	[Export] private Area2D _hurtbox;
-	[Export] private Timer _hurtStaggerTimer;
 	[Export] private Area2D _pickupsBox;
+	[Export] private Area2D _miscBox;
+	[Export] private Timer _hurtStaggerTimer;
 	[Export] private WeaponElgato _weapon;
 	[Export] private Label _debugHealthLabel;
 	
@@ -37,10 +38,23 @@ public partial class PlayerElgato : CharacterBody2D
 		_hurtStaggerTimer.Timeout += HurtStaggerTimerTimedOut;
 
 		_pickupsBox.AreaEntered += PlayerPickedUpItem;
+
+		_miscBox.AreaEntered += EnteredJumpPad;
 		
 		_debugHealthLabel.SetText("HP: " + _playerStats.CurrentHealth);
 	}
 
+	
+	// Jumping on jump pad
+	private void EnteredJumpPad(Area2D area)
+	{
+		if (area.IsInGroup("JumpPads"))
+		{
+			float jumpMultiplier = (float)area.Get("JumpMultiplier");
+			_velocity.Y = jumpMultiplier * _playerStats.JumpVelocity;
+		}
+	}
+	
 	
 	// Getting hit by attacks
 	private void PlayerHitByAttack(Area2D area)
@@ -144,6 +158,11 @@ public partial class PlayerElgato : CharacterBody2D
 			{
 				_playerStats.State = PlayerStats.PlayerState.Fall;
 			}
+		}
+
+		if (IsOnCeiling())
+		{
+			_velocity.Y += _playerStats.Gravity * delta;
 		}
 	}
 

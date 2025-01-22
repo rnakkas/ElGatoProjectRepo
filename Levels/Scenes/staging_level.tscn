@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bdx2vl45xi84t" path="res://Enemies/Scenes/ranged_enemy_heavy.tscn" id="4_qutbi"]
 [ext_resource type="PackedScene" uid="uid://dno6xbpmwsig0" path="res://Enemies/Scenes/ranged_enemy_machine_gun.tscn" id="5_2lgej"]
 [ext_resource type="PackedScene" uid="uid://b5nsjoi8w57tt" path="res://Enemies/Scenes/ranged_enemy_light.tscn" id="6_olgj6"]
-[ext_resource type="PackedScene" uid="uid://dnqr83lhohtvv" path="res://Misc/Scenes/elevator.tscn" id="7_lg78f"]
+[ext_resource type="PackedScene" uid="uid://d1kee8twoojg1" path="res://Misc/Scenes/jump_pad.tscn" id="7_u7qtk"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_mmxhc"]
 texture = ExtResource("1_7bkjm")
@@ -104,7 +104,7 @@ tile_map_data = PackedByteArray("AAAAAAIAAAAFAAIAAAAAAAMAAAAFAAIAAABEAAUAAAAHAAI
 tile_set = SubResource("TileSet_4l5qw")
 
 [node name="player_elgato" parent="." instance=ExtResource("2_e8fkw")]
-position = Vector2(232, 57)
+position = Vector2(431, 322)
 
 [node name="Camera2D" type="Camera2D" parent="player_elgato"]
 zoom = Vector2(2, 2)
@@ -149,5 +149,26 @@ theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 20
 text = "RANGED ENEMIES"
 
-[node name="Elevator" parent="." instance=ExtResource("7_lg78f")]
-position = Vector2(310, 330)
+[node name="JumpPad" parent="." instance=ExtResource("7_u7qtk")]
+position = Vector2(301, 333)
+
+[node name="JumpPad2" parent="." instance=ExtResource("7_u7qtk")]
+position = Vector2(1045, 333)
+
+[node name="JumpPad3" parent="." instance=ExtResource("7_u7qtk")]
+position = Vector2(1277, 333)
+
+[node name="JumpPad4" parent="." instance=ExtResource("7_u7qtk")]
+position = Vector2(2259, 333)
+
+[node name="JumpPad5" parent="." instance=ExtResource("7_u7qtk")]
+position = Vector2(2716, 61)
+
+[node name="JumpPad6" parent="." instance=ExtResource("7_u7qtk")]
+position = Vector2(2481, -136)
+
+[node name="JumpPad7" parent="." instance=ExtResource("7_u7qtk")]
+position = Vector2(2292, -296)
+
+[node name="JumpPad8" parent="." instance=ExtResource("7_u7qtk")]
+position = Vector2(2641, -329)

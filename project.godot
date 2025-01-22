@@ -28,6 +28,7 @@ PowerUpPickups="Group for power ups pickups"
 Enemies="Group for enemies"
 PlayerProjectiles="Group for player projectiles"
 Players="Group for player characters"
+JumpPads="Group for jump pads"
 
 [input]
 
@@ -76,7 +77,8 @@ shoot={
 2d_physics/layer_5="pickups"
 2d_physics/layer_6="enemies"
 2d_physics/layer_7="enemiesAttacks"
-2d_physics/layer_8="elevator"
+2d_physics/layer_8="jumpPad"
+2d_physics/layer_9="playerMisc"
 
 [rendering]
 

@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://dyan3quvr5d6s"]
-
-[ext_resource type="Script" path="res://Misc/Scripts/ElevatorBase.cs" id="1_frl65"]
-
-[node name="ElevatorBase" type="AnimatableBody2D"]
-script = ExtResource("1_frl65")
