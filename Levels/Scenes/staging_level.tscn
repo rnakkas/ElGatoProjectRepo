@@ -149,26 +149,28 @@ theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 20
 text = "RANGED ENEMIES"
 
-[node name="JumpPad" parent="." instance=ExtResource("7_u7qtk")]
+[node name="JumpPads" type="Node" parent="."]
+
+[node name="JumpPad" parent="JumpPads" instance=ExtResource("7_u7qtk")]
 position = Vector2(301, 333)
 
-[node name="JumpPad2" parent="." instance=ExtResource("7_u7qtk")]
+[node name="JumpPad2" parent="JumpPads" instance=ExtResource("7_u7qtk")]
 position = Vector2(1045, 333)
 
-[node name="JumpPad3" parent="." instance=ExtResource("7_u7qtk")]
+[node name="JumpPad3" parent="JumpPads" instance=ExtResource("7_u7qtk")]
 position = Vector2(1277, 333)
 
-[node name="JumpPad4" parent="." instance=ExtResource("7_u7qtk")]
+[node name="JumpPad4" parent="JumpPads" instance=ExtResource("7_u7qtk")]
 position = Vector2(2259, 333)
 
-[node name="JumpPad5" parent="." instance=ExtResource("7_u7qtk")]
+[node name="JumpPad5" parent="JumpPads" instance=ExtResource("7_u7qtk")]
 position = Vector2(2716, 61)
 
-[node name="JumpPad6" parent="." instance=ExtResource("7_u7qtk")]
+[node name="JumpPad6" parent="JumpPads" instance=ExtResource("7_u7qtk")]
 position = Vector2(2481, -136)
 
-[node name="JumpPad7" parent="." instance=ExtResource("7_u7qtk")]
+[node name="JumpPad7" parent="JumpPads" instance=ExtResource("7_u7qtk")]
 position = Vector2(2292, -296)
 
-[node name="JumpPad8" parent="." instance=ExtResource("7_u7qtk")]
+[node name="JumpPad8" parent="JumpPads" instance=ExtResource("7_u7qtk")]
 position = Vector2(2641, -329)
