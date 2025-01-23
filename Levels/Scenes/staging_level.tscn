@@ -179,19 +179,19 @@ position = Vector2(2641, -329)
 [node name="CoffeePickups" type="Node" parent="."]
 
 [node name="CoffeeMugPickup" parent="CoffeePickups" instance=ExtResource("8_kgmbo")]
-position = Vector2(513, 326)
+position = Vector2(362, 327)
 
 [node name="CoffeeMugPickup2" parent="CoffeePickups" instance=ExtResource("8_kgmbo")]
-position = Vector2(538, 326)
+position = Vector2(432, 274)
 
 [node name="CoffeeMugPickup3" parent="CoffeePickups" instance=ExtResource("8_kgmbo")]
-position = Vector2(561, 326)
+position = Vector2(524, 327)
 
 [node name="CoffeeMugPickup4" parent="CoffeePickups" instance=ExtResource("8_kgmbo")]
-position = Vector2(585, 326)
+position = Vector2(588, 274)
 
 [node name="CoffeeMugPickup5" parent="CoffeePickups" instance=ExtResource("8_kgmbo")]
-position = Vector2(609, 326)
+position = Vector2(652, 327)
 
 [node name="CoffeeMugPickup6" parent="CoffeePickups" instance=ExtResource("8_kgmbo")]
 position = Vector2(752, 326)

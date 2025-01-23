@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using ElGatoProject.Singletons;
 
 namespace ElGatoProject.Pickups.Scripts;
 
@@ -25,28 +26,59 @@ public partial class Pickups : Area2D
 	[Export] public int HealAmount;
 	[Export] public int ScorePoints;
 	[Export] public WeaponModType WeaponModifier;
-	
 	[Export] private AnimatedSprite2D _sprite;
+
+	private bool _canPickup;
 	
 	public override void _Ready()
 	{
 		_sprite?.Play("idle");
 
-		AreaEntered += PlayerEnteredPickupArea;
+		if (_pickupType == PickupType.Coffee)
+		{
+			EventsBus.Instance.AttemptedHealthPickup += PlayerAttemptedHealthPickup;
+		}
+		
+		AreaEntered += PlayerPickedUpItem;
 	}
 
-	private void PlayerEnteredPickupArea(Area2D area)
+	private void PlayerAttemptedHealthPickup(int currentHealth, int maxHealth)
 	{
-		if (area.IsInGroup("Players"))
+		if (currentHealth < maxHealth)
 		{
-			ItemGetsPickedUp();
+			_canPickup = true;
+			
+		}
+		else
+		{
+			_canPickup = false;
 		}
 	}
-	
+
+	private void PlayerPickedUpItem(Area2D area)
+	{
+		if (!area.IsInGroup("PlayersPickupsBox"))
+			return;
+
+		switch (_pickupType)
+		{
+			case PickupType.Coffee when _canPickup:
+				EventsBus.Instance.EmitSignal(nameof(EventsBus.HealedPlayer), HealAmount);
+				ItemGetsPickedUp();
+				break;
+			
+			case PickupType.Catnip:
+			case PickupType.WeaponMod:
+				ItemGetsPickedUp();
+				break;
+		}
+	}
+
 	private void ItemGetsPickedUp()
 	{
-		// Turn collision layer off so player cannot quickly run inside layer to heal again during despawn animation
+		// Turn collision layer and mask off so player cannot quickly run inside layer to heal again during despawn animation
 		CollisionLayer = 0;
+		CollisionMask = 0;
         
 		Tween tween1 = GetTree().CreateTween();
 		Tween tween2 = GetTree().CreateTween();

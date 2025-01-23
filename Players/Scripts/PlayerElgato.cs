@@ -2,6 +2,7 @@ using Godot;
 using System;
 using ElGatoProject.Components.Scripts;
 using ElGatoProject.Resources;
+using ElGatoProject.Singletons;
 using Godot.Collections;
 
 namespace ElGatoProject.Players.Scripts;
@@ -37,9 +38,11 @@ public partial class PlayerElgato : CharacterBody2D
 		_hurtStaggerTimer.SetWaitTime(_playerStats.HurtStaggerTime);
 		_hurtStaggerTimer.Timeout += HurtStaggerTimerTimedOut;
 
-		_pickupsBox.AreaEntered += PlayerPickedUpItem;
+		_pickupsBox.AreaEntered += PlayerEnteredPickupArea;
 
 		_miscBox.AreaEntered += EnteredJumpPad;
+
+		EventsBus.Instance.HealedPlayer += HealthRestored;
 		
 		_debugHealthLabel.SetText("HP: " + _playerStats.CurrentHealth);
 	}
@@ -76,14 +79,23 @@ public partial class PlayerElgato : CharacterBody2D
 	}
 	
 	// Picking up items
-	private void PlayerPickedUpItem(Area2D area)
+	private void PlayerEnteredPickupArea(Area2D area)
 	{
 		if (area.IsInGroup("HealthPickups"))
 		{
-			_playerStats.Heal((int)area.Get("HealAmount"));
-			
-			_debugHealthLabel.SetText("HP: " + _playerStats.CurrentHealth);
+			EventsBus.Instance.EmitSignal(
+				nameof(EventsBus.AttemptedHealthPickup),
+				_playerStats.CurrentHealth, 
+				_playerStats.MaxHealth
+			);
 		}
+	}
+	
+	// Healing items
+	private void HealthRestored(int healAmount)
+	{
+		_playerStats.Heal(healAmount);
+		_debugHealthLabel.SetText("HP: " + _playerStats.CurrentHealth);
 	}
 	
 	// Set direction

@@ -15,6 +15,10 @@ run/main_scene="res://Levels/Scenes/staging_level.tscn"
 config/features=PackedStringArray("4.3", "C#", "Mobile")
 config/icon="res://icon.svg"
 
+[autoload]
+
+EventsBus="*res://Singletons/EventsBus.cs"
+
 [dotnet]
 
 project/assembly_name="ElGatoProject"
@@ -31,6 +35,7 @@ Players="Group for player characters"
 JumpPads="Group for jump pads"
 CatnipPickups="Group for collectibles, score, catnip etc pickups "
 WeaponModPickups="Group for weapon mod pickups"
+PlayersPickupsBox="Group for player's pickups box"
 
 [input]
 

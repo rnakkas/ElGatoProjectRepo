@@ -273,7 +273,7 @@ debug_color = Color(0.897598, 0.279026, 0.387079, 0.42)
 
 [node name="HurtStaggerTimer" type="Timer" parent="."]
 
-[node name="Pickupsbox" type="Area2D" parent="." groups=["Players"]]
+[node name="Pickupsbox" type="Area2D" parent="." groups=["PlayersPickupsBox"]]
 collision_mask = 16
 
 [node name="PickupsboxCollider" type="CollisionShape2D" parent="Pickupsbox"]
