@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using ElGatoProject.Singletons;
 
 namespace ElGatoProject.Resources;
 
@@ -19,17 +20,7 @@ public partial class PlayerStats : Resource
     [Export] public float WallSlideVelocity { get; set; }
     [Export] public float HurtStaggerTime { get; set; }
 
-    public enum PlayerState
-    {
-        Idle,
-        Run,
-        Jump,
-        Fall,
-        WallSlide,
-        Hurt
-    }
-
-    public PlayerState State;
+    public Utility.EntityState State;
     
     // Methods
     public void TakeDamage(int damage)

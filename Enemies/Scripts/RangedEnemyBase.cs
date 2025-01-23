@@ -2,6 +2,7 @@ using Godot;
 using System;
 using ElGatoProject.Players.Scripts;
 using ElGatoProject.Resources;
+using ElGatoProject.Singletons;
 
 namespace ElGatoProject.Enemies.Scripts;
 
@@ -51,14 +52,15 @@ public partial class RangedEnemyBase : Area2D
             _shotCooldownTimer.Timeout += ShotCooldownTimerTimedOut;
 		}
 		
-		if (_rapidFireTimer != null && _rangedEnemyStats.RangedEnemyType == RangedEnemyStats.Type.RangedEnemyMachineGun)
+		if (_rapidFireTimer != null && _rangedEnemyStats.RangedEnemyType == Utility.RangedEnemyType.RangedEnemyMachineGun)
 		{
 			_rapidFireTimer.OneShot = true;
 			_rapidFireTimer.SetWaitTime(_rangedEnemyStats.RapidFireTime);
 			_rapidFireTimer.Timeout += RapidFireTimerTimedOut;
 		}
 		
-		AreaEntered += HitByPlayerBullets;
+		// AreaEntered += HitByPlayerBullets;
+		EventsBus.Instance.AttackHit += HitByAttack;
 
 		_playerDetectionArea.AreaEntered += PlayerEnteredDetectionRange;
 		_playerDetectionArea.AreaExited += PlayerExitedDetectionRange;
@@ -136,7 +138,8 @@ public partial class RangedEnemyBase : Area2D
 	{
 		switch (_rangedEnemyStats.RangedEnemyType)
 		{
-			case RangedEnemyStats.Type.RangedEnemyLight:
+			case Utility.RangedEnemyType.RangedEnemyLight:
+			case Utility.RangedEnemyType.RangedEnemyHeavy:
 				if (!_onCooldown)
 				{
 					_debugStateLabel.SetText("Shooting");
@@ -146,17 +149,7 @@ public partial class RangedEnemyBase : Area2D
 				}
 				break;
 			
-			case RangedEnemyStats.Type.RangedEnemyHeavy:
-				if (!_onCooldown)
-				{
-					_debugStateLabel.SetText("Shooting");
-					SpawnBullets(false);
-					_onCooldown = true;
-					_shotCooldownTimer.Start();
-				}
-				break;
-			
-			case RangedEnemyStats.Type.RangedEnemyMachineGun:
+			case Utility.RangedEnemyType.RangedEnemyMachineGun:
 				if (!_rapidFireCooldown && !_onCooldown)
 				{
 					_debugStateLabel.SetText("Shooting");
@@ -215,7 +208,7 @@ public partial class RangedEnemyBase : Area2D
 
 	private void ResetBulletCount()
 	{
-		if (_rangedEnemyStats.RangedEnemyType == RangedEnemyStats.Type.RangedEnemyMachineGun)
+		if (_rangedEnemyStats.RangedEnemyType == Utility.RangedEnemyType.RangedEnemyMachineGun)
 		{
 			_bulletCount = 0;
 		}
@@ -232,35 +225,44 @@ public partial class RangedEnemyBase : Area2D
 	}
 	
 	// Getting hit by player bullets
-	private void HitByPlayerBullets(Area2D area)
+	private void HitByAttack(Area2D area, int attackDamage, float knockback, Vector2 attackVelocity)
 	{
-		if (!area.IsInGroup("PlayerProjectiles")) 
-			return;
-
-		_playerProjectile = area;
-
-		TakeDamageFromPlayerProjectile();
-	}
-	
-	private void TakeDamageFromPlayerProjectile()
-	{
-		if (_playerProjectile is not Bullet bullet)
-			return;
-		
 		_hurtStatus = true;
-		_rangedEnemyStats.TakeDamage(bullet.BulletDamage);
-		
-		// Die if health reaches zero
-		if (_rangedEnemyStats.Health <= 0)
-		{
-			EmitSignal(SignalName.Death);
-		}
-		
 		_hurtStaggerTimer.Start();
+		_rangedEnemyStats.TakeDamage(attackDamage);
 		
-		// For debug only, remove later
 		_debugHealthLabel.SetText("HP: "+ _rangedEnemyStats.Health);
 	}
+	
+	// private void HitByPlayerBullets(Area2D area)
+	// {
+	// 	if (!area.IsInGroup("PlayerProjectiles")) 
+	// 		return;
+	//
+	// 	_playerProjectile = area;
+	//
+	// 	TakeDamageFromPlayerProjectile();
+	// }
+	//
+	// private void TakeDamageFromPlayerProjectile()
+	// {
+	// 	if (_playerProjectile is not Bullet bullet)
+	// 		return;
+	// 	
+	// 	_hurtStatus = true;
+	// 	_rangedEnemyStats.TakeDamage(bullet.BulletDamage);
+	// 	
+	// 	// Die if health reaches zero
+	// 	if (_rangedEnemyStats.Health <= 0)
+	// 	{
+	// 		EmitSignal(SignalName.Death);
+	// 	}
+	// 	
+	// 	_hurtStaggerTimer.Start();
+	// 	
+	// 	// For debug only, remove later
+	// 	_debugHealthLabel.SetText("HP: "+ _rangedEnemyStats.Health);
+	// }
 
 	private void OnHurt()
 	{

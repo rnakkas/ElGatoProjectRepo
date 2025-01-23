@@ -1,19 +1,13 @@
 using Godot;
 using System;
+using ElGatoProject.Singletons;
 
 namespace ElGatoProject.Resources;
 
 [GlobalClass]
 public partial class RangedEnemyStats : Resource
 {
-    public enum Type
-    {
-        RangedEnemyLight,
-        RangedEnemyHeavy,
-        RangedEnemyMachineGun
-    }
-    
-    [Export] public Type RangedEnemyType { get; set; }
+    [Export] public Utility.RangedEnemyType RangedEnemyType { get; set; }
     [Export] public int Health { get; set; }
     [Export] public float AttackCooldownTime { get; set; }
     [Export] public int AttackDamage { get; set; }

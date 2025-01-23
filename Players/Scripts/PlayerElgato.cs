@@ -59,6 +59,8 @@ public partial class PlayerElgato : CharacterBody2D
 
 	private void HitByAttack(Area2D area, int attackDamage, float knockback, Vector2 attackVelocity)
 	{
+		_enemyAttackArea = area;
+		
 		_playerStats.TakeDamage(attackDamage);
 		KnockbackFromAttack(area, knockback, attackVelocity);
 		_hurtStatus = true;
@@ -132,7 +134,7 @@ public partial class PlayerElgato : CharacterBody2D
 
 			if (IsOnFloor())
 			{
-				_playerStats.State = PlayerStats.PlayerState.Run;
+				_playerStats.State = Utility.EntityState.Run;
 			}
 			
 			if (IsOnFloor())
@@ -144,7 +146,7 @@ public partial class PlayerElgato : CharacterBody2D
 		{
 			_velocity.X = Mathf.MoveToward(_velocity.X, 0, _playerStats.Friction * delta);
 			_velocity.Y = 0;
-			_playerStats.State = PlayerStats.PlayerState.Idle;
+			_playerStats.State = Utility.EntityState.Idle;
 		}
 	}
 
@@ -153,7 +155,7 @@ public partial class PlayerElgato : CharacterBody2D
 		if (IsOnFloor() && _playerInputs["jump"])
 		{
 			_velocity.Y = _playerStats.JumpVelocity;
-			_playerStats.State = PlayerStats.PlayerState.Jump;
+			_playerStats.State = Utility.EntityState.Jump;
 		}
 
 		if (!IsOnFloor())
@@ -162,7 +164,7 @@ public partial class PlayerElgato : CharacterBody2D
 
 			if (_velocity.Y > 0)
 			{
-				_playerStats.State = PlayerStats.PlayerState.Fall;
+				_playerStats.State = Utility.EntityState.Fall;
 			}
 		}
 
@@ -176,7 +178,7 @@ public partial class PlayerElgato : CharacterBody2D
 	{
 		if (!IsOnFloor() && (_leftWallDetect.IsColliding() || _rightWallDetect.IsColliding()))
 		{
-			_playerStats.State = PlayerStats.PlayerState.WallSlide;
+			_playerStats.State = Utility.EntityState.WallSlide;
 			_velocity.X = 0;
 			_velocity.Y = Mathf.MoveToward(_velocity.Y, _playerStats.WallSlideVelocity, _playerStats.WallSlideGravity * delta);
 
@@ -195,7 +197,7 @@ public partial class PlayerElgato : CharacterBody2D
 			{
 				_velocity.Y = _playerStats.WallJumpVelocity;
 				_velocity.X = _direction * _playerStats.MaxSpeed;
-				_playerStats.State = PlayerStats.PlayerState.Jump;
+				_playerStats.State = Utility.EntityState.Jump;
 			}
 		}
 	}
@@ -204,7 +206,7 @@ public partial class PlayerElgato : CharacterBody2D
 	{
 		if (_hurtStatus)
 		{ 
-			_playerStats.State = PlayerStats.PlayerState.Hurt;
+			_playerStats.State = Utility.EntityState.Hurt;
 			
 			// if (!IsInstanceValid(_enemyAttackArea)) 
 			// 	return;
@@ -244,28 +246,55 @@ public partial class PlayerElgato : CharacterBody2D
 		{
 			_sprite.FlipH = false;
 		}
+		
+		// Flip sprite if hit from behind
+		if (_enemyAttackArea == null)
+			return;
+		if (!IsInstanceValid(_enemyAttackArea))
+			return;
+		
+		if ((GlobalPosition - _enemyAttackArea.GlobalPosition).Normalized().X < 0 && _sprite.IsFlippedH())
+		{
+			_sprite.FlipH = false;
+		}
+		else if ((GlobalPosition - _enemyAttackArea.GlobalPosition).Normalized().X > 0 && !_sprite.IsFlippedH())
+		{
+			_sprite.FlipH = true;
+		}
+	}
+
+	private void SetWeaponDirection()
+	{
+		if (_sprite.IsFlippedH())
+		{
+			_weapon.Direction = -1.0f;
+		}
+		else if (!_sprite.IsFlippedH())
+		{
+			_weapon.Direction = 1.0f;
+		}
 	}
 
 	private void PlayerAnimations()
 	{
 		switch (_playerStats.State)
 		{
-			case PlayerStats.PlayerState.Run:
+			case Utility.EntityState.Run:
 				_sprite.Play("run");
 				break;
-			case PlayerStats.PlayerState.Idle:
+			case Utility.EntityState.Idle:
 				_sprite.Play("idle");
 				break;
-			case PlayerStats.PlayerState.Jump:
+			case Utility.EntityState.Jump:
 				_sprite.Play("jump");
 				break;
-			case PlayerStats.PlayerState.Fall:
+			case Utility.EntityState.Fall:
 				_sprite.Play("fall");
 				break;
-			case PlayerStats.PlayerState.WallSlide:
+			case Utility.EntityState.WallSlide:
 				_sprite.Play("wall_slide");
 				break;
-			case PlayerStats.PlayerState.Hurt:
+			case Utility.EntityState.Hurt:
 				_sprite.Play("hurt");
 				break;
 		}
@@ -278,7 +307,7 @@ public partial class PlayerElgato : CharacterBody2D
 		PlayerAnimations();
 		FlipSprite();
 		
-		_weapon.Direction = _direction;
+		SetWeaponDirection();
 		_weapon.HurtStatus = _hurtStatus;
 		
 		Velocity = _velocity;
