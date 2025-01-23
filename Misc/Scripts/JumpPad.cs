@@ -23,7 +23,7 @@ public partial class JumpPad : Area2D
 	{
 		if (area.IsInGroup("Players"))
 		{
-			GD.Print("Player entered");
+			GD.Print("Play jump activation animation");
 		}
 	}
 	
@@ -31,7 +31,7 @@ public partial class JumpPad : Area2D
 	{
 		if (area.IsInGroup("Players"))
 		{
-			GD.Print("Player exited");
+			GD.Print("Play idle animation");
 		}
 	}
 	

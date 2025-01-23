@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=4 uid="uid://cne5xpx7c4fh0"]
+[gd_scene load_steps=15 format=4 uid="uid://cne5xpx7c4fh0"]
 
 [ext_resource type="Texture2D" uid="uid://o2up0ats16cc" path="res://Assets/Tilesets/tileset_background_1.png" id="1_7bkjm"]
 [ext_resource type="Texture2D" uid="uid://d2hqfvsf0rube" path="res://Assets/Tilesets/tilemap-floors-walls-1.png" id="1_l2xyl"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dno6xbpmwsig0" path="res://Enemies/Scenes/ranged_enemy_machine_gun.tscn" id="5_2lgej"]
 [ext_resource type="PackedScene" uid="uid://b5nsjoi8w57tt" path="res://Enemies/Scenes/ranged_enemy_light.tscn" id="6_olgj6"]
 [ext_resource type="PackedScene" uid="uid://d1kee8twoojg1" path="res://Misc/Scenes/jump_pad.tscn" id="7_u7qtk"]
+[ext_resource type="PackedScene" uid="uid://ov2vlvh4yw53" path="res://Pickups/Scenes/coffee_mug_pickup.tscn" id="8_kgmbo"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_mmxhc"]
 texture = ExtResource("1_7bkjm")
@@ -174,3 +175,35 @@ position = Vector2(2292, -296)
 
 [node name="JumpPad8" parent="JumpPads" instance=ExtResource("7_u7qtk")]
 position = Vector2(2641, -329)
+
+[node name="CoffeePickups" type="Node" parent="."]
+
+[node name="CoffeeMugPickup" parent="CoffeePickups" instance=ExtResource("8_kgmbo")]
+position = Vector2(513, 326)
+
+[node name="CoffeeMugPickup2" parent="CoffeePickups" instance=ExtResource("8_kgmbo")]
+position = Vector2(538, 326)
+
+[node name="CoffeeMugPickup3" parent="CoffeePickups" instance=ExtResource("8_kgmbo")]
+position = Vector2(561, 326)
+
+[node name="CoffeeMugPickup4" parent="CoffeePickups" instance=ExtResource("8_kgmbo")]
+position = Vector2(585, 326)
+
+[node name="CoffeeMugPickup5" parent="CoffeePickups" instance=ExtResource("8_kgmbo")]
+position = Vector2(609, 326)
+
+[node name="CoffeeMugPickup6" parent="CoffeePickups" instance=ExtResource("8_kgmbo")]
+position = Vector2(752, 326)
+
+[node name="CoffeeMugPickup7" parent="CoffeePickups" instance=ExtResource("8_kgmbo")]
+position = Vector2(777, 326)
+
+[node name="CoffeeMugPickup8" parent="CoffeePickups" instance=ExtResource("8_kgmbo")]
+position = Vector2(800, 326)
+
+[node name="CoffeeMugPickup9" parent="CoffeePickups" instance=ExtResource("8_kgmbo")]
+position = Vector2(824, 326)
+
+[node name="CoffeeMugPickup10" parent="CoffeePickups" instance=ExtResource("8_kgmbo")]
+position = Vector2(848, 326)

@@ -29,6 +29,8 @@ Enemies="Group for enemies"
 PlayerProjectiles="Group for player projectiles"
 Players="Group for player characters"
 JumpPads="Group for jump pads"
+CatnipPickups="Group for collectibles, score, catnip etc pickups "
+WeaponModPickups="Group for weapon mod pickups"
 
 [input]
 

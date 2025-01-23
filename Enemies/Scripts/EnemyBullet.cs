@@ -49,7 +49,6 @@ public partial class EnemyBullet : Area2D
 
 	private void BulletDespawnTimerTimedOut()
 	{
-		GD.Print("despawn");
 		QueueFree();
 	}
 

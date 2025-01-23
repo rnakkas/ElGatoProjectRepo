@@ -78,7 +78,7 @@ public partial class PlayerElgato : CharacterBody2D
 	// Picking up items
 	private void PlayerPickedUpItem(Area2D area)
 	{
-		if (area.IsInGroup("Pickups"))
+		if (area.IsInGroup("HealthPickups"))
 		{
 			_playerStats.Heal((int)area.Get("HealAmount"));
 			
