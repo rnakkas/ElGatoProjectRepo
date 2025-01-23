@@ -33,16 +33,15 @@ public partial class PlayerElgato : CharacterBody2D
 	{
 		_velocity = Velocity;
 		
-		_hurtbox.AreaEntered += PlayerHitByAttack;
+		EventsBus.Instance.AttackHit += HitByAttack;
 		_hurtStaggerTimer.OneShot = true;
 		_hurtStaggerTimer.SetWaitTime(_playerStats.HurtStaggerTime);
 		_hurtStaggerTimer.Timeout += HurtStaggerTimerTimedOut;
 
+		EventsBus.Instance.HealedPlayer += HealthRestored;
 		_pickupsBox.AreaEntered += PlayerEnteredPickupArea;
 
 		_miscBox.AreaEntered += EnteredJumpPad;
-
-		EventsBus.Instance.HealedPlayer += HealthRestored;
 		
 		_debugHealthLabel.SetText("HP: " + _playerStats.CurrentHealth);
 	}
@@ -57,20 +56,15 @@ public partial class PlayerElgato : CharacterBody2D
 			_velocity.Y = jumpMultiplier * _playerStats.JumpVelocity;
 		}
 	}
-	
-	
-	// Getting hit by attacks
-	private void PlayerHitByAttack(Area2D area)
+
+	private void HitByAttack(Area2D area, int attackDamage, float knockback, Vector2 attackVelocity)
 	{
-		if (area.IsInGroup("EnemyProjectiles") || area.IsInGroup("EnemyAttacks"))
-		{
-			_enemyAttackArea = area;
-			_playerStats.TakeDamage((int)area.Get("AttackDamage"));
-			_hurtStatus = true;
-			_hurtStaggerTimer.Start();
-			
-			_debugHealthLabel.SetText("HP: " + _playerStats.CurrentHealth);
-		}
+		_playerStats.TakeDamage(attackDamage);
+		KnockbackFromAttack(area, knockback, attackVelocity);
+		_hurtStatus = true;
+		_hurtStaggerTimer.Start();
+		
+		_debugHealthLabel.SetText("HP: " + _playerStats.CurrentHealth);
 	}
 
 	private void HurtStaggerTimerTimedOut()
@@ -212,19 +206,19 @@ public partial class PlayerElgato : CharacterBody2D
 		{ 
 			_playerStats.State = PlayerStats.PlayerState.Hurt;
 			
-			if (!IsInstanceValid(_enemyAttackArea)) 
-				return;
-			
-			// Knockback from attack
-			float knockback = (float)_enemyAttackArea.Get("Knockback");
-			Vector2 attackVelocity = (Vector2)_enemyAttackArea.Get("Velocity");
-			KnockbackFromAttack(knockback, attackVelocity);
+			// if (!IsInstanceValid(_enemyAttackArea)) 
+			// 	return;
+			//
+			// // Knockback from attack
+			// float knockback = (float)_enemyAttackArea.Get("Knockback");
+			// Vector2 attackVelocity = (Vector2)_enemyAttackArea.Get("Velocity");
+			// KnockbackFromAttack(knockback, attackVelocity);
 		}
 	}
 
-	private void KnockbackFromAttack(float knockback, Vector2 attackVelocity)
+	private void KnockbackFromAttack(Area2D enemyAttackArea, float knockback, Vector2 attackVelocity)
 	{
-		Vector2 attackPosition = _enemyAttackArea.GlobalPosition - GlobalPosition;
+		Vector2 attackPosition = enemyAttackArea.GlobalPosition - GlobalPosition;
 		
 		if (attackVelocity != Vector2.Zero)
 		{

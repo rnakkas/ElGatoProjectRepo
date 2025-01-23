@@ -9,9 +9,10 @@ public partial class EventsBus : Node
 
 	[Signal]
 	public delegate void AttemptedHealthPickupEventHandler(int currentHealth, int maxHealth);
-	
 	[Signal]
 	public delegate void HealedPlayerEventHandler(int healAmount);
+	[Signal]
+	public delegate void AttackHitEventHandler(Area2D area, int attackDamage, float knockback, Vector2 attackVelocity);
 	
 	public override void _Ready()
 	{

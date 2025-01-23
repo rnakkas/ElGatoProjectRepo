@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using ElGatoProject.Singletons;
 
 namespace ElGatoProject.Enemies.Scripts;
 public partial class EnemyBullet : Area2D
@@ -25,7 +26,7 @@ public partial class EnemyBullet : Area2D
 		_despawnTimer.Start();
 
 		BodyEntered += BulletHitWallOrFloor;
-		BodyEntered += BulletHitPlayer;
+		AreaEntered += BulletHitPlayer;
 		
 		_sprite.Play("fly");
 
@@ -39,10 +40,18 @@ public partial class EnemyBullet : Area2D
 		}
 	}
 
-	private void BulletHitPlayer(Node2D body)
+	private void BulletHitPlayer(Area2D area)
 	{
-		if (body.IsInGroup("Players"))
+		if (area.IsInGroup("PlayersHurtBox"))
 		{
+			EventsBus.Instance.EmitSignal(
+				nameof(EventsBus.AttackHit), 
+				this,
+				AttackDamage, 
+				Knockback, 
+				Velocity
+				);
+			
 			QueueFree();
 		}
 	}

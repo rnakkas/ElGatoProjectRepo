@@ -47,7 +47,6 @@ public partial class Pickups : Area2D
 		if (currentHealth < maxHealth)
 		{
 			_canPickup = true;
-			
 		}
 		else
 		{

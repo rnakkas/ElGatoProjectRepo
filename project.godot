@@ -36,6 +36,7 @@ JumpPads="Group for jump pads"
 CatnipPickups="Group for collectibles, score, catnip etc pickups "
 WeaponModPickups="Group for weapon mod pickups"
 PlayersPickupsBox="Group for player's pickups box"
+PlayersHurtBox="Group for player's hurt box"
 
 [input]
 
