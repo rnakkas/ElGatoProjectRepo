@@ -105,7 +105,7 @@ tile_map_data = PackedByteArray("AAAAAAIAAAAFAAIAAAAAAAMAAAAFAAIAAABEAAUAAAAHAAI
 tile_set = SubResource("TileSet_4l5qw")
 
 [node name="player_elgato" parent="." instance=ExtResource("2_e8fkw")]
-position = Vector2(431, 322)
+position = Vector2(936, 325)
 
 [node name="Camera2D" type="Camera2D" parent="player_elgato"]
 zoom = Vector2(2, 2)
@@ -118,27 +118,36 @@ position_smoothing_enabled = true
 [node name="RangedEnemies" type="Node" parent="."]
 
 [node name="RangedEnemyHeavy" parent="RangedEnemies" instance=ExtResource("4_qutbi")]
-position = Vector2(1521, 194)
+position = Vector2(1829, 321)
 
 [node name="RangedEnemyMachineGun" parent="RangedEnemies" instance=ExtResource("5_2lgej")]
-position = Vector2(1614, 194)
+position = Vector2(1617, 195)
+
+[node name="RangedEnemyMachineGun2" parent="RangedEnemies" instance=ExtResource("5_2lgej")]
+position = Vector2(2199, 322)
+
+[node name="RangedEnemyMachineGun3" parent="RangedEnemies" instance=ExtResource("5_2lgej")]
+position = Vector2(2480, -160)
 
 [node name="RangedEnemyLight" parent="RangedEnemies" instance=ExtResource("6_olgj6")]
 position = Vector2(1950, 194)
+
+[node name="RangedEnemyLight2" parent="RangedEnemies" instance=ExtResource("6_olgj6")]
+position = Vector2(1480, 323)
 
 [node name="MeleeEnemies" type="Node" parent="."]
 
 [node name="DebugLabels" type="Node" parent="."]
 
 [node name="MeleeEnemiesLabel" type="Label" parent="DebugLabels"]
-offset_left = 600.0
-offset_top = 101.0
-offset_right = 799.0
-offset_bottom = 137.0
+offset_left = 654.0
+offset_top = 89.0
+offset_right = 853.0
+offset_bottom = 125.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 26
-text = "MELEE ENEMIES"
+text = "PICKUPS"
 
 [node name="RangedEnemiesLabel" type="Label" parent="DebugLabels"]
 offset_left = 1438.0
@@ -148,7 +157,7 @@ offset_bottom = 136.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 20
-text = "RANGED ENEMIES"
+text = "ENEMIES"
 
 [node name="JumpPads" type="Node" parent="."]
 
@@ -161,6 +170,9 @@ position = Vector2(1045, 333)
 [node name="JumpPad3" parent="JumpPads" instance=ExtResource("7_u7qtk")]
 position = Vector2(1277, 333)
 
+[node name="JumpPad9" parent="JumpPads" instance=ExtResource("7_u7qtk")]
+position = Vector2(1776, 333)
+
 [node name="JumpPad4" parent="JumpPads" instance=ExtResource("7_u7qtk")]
 position = Vector2(2259, 333)
 
@@ -171,10 +183,10 @@ position = Vector2(2716, 61)
 position = Vector2(2481, -136)
 
 [node name="JumpPad7" parent="JumpPads" instance=ExtResource("7_u7qtk")]
-position = Vector2(2292, -296)
+position = Vector2(2337, -278)
 
 [node name="JumpPad8" parent="JumpPads" instance=ExtResource("7_u7qtk")]
-position = Vector2(2641, -329)
+position = Vector2(2641, -311)
 
 [node name="CoffeePickups" type="Node" parent="."]
 

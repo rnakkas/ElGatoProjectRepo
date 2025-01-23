@@ -33,7 +33,9 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_i87js"]
 radius = 250.0
 
-[node name="RangedEnemyLight" type="Area2D" node_paths=PackedStringArray("_spriteBody", "_spriteEye", "_eyeMarker", "_playerDetectionArea", "_wallDetectionRay", "_hurtStaggerTimer", "_shotCooldownTimer", "_debugStateLabel", "_debugHealthLabel")]
+[node name="RangedEnemyLight" type="Area2D" node_paths=PackedStringArray("_spriteBody", "_spriteEye", "_eyeMarker", "_playerDetectionArea", "_wallDetectionRay", "_hurtStaggerTimer", "_shotCooldownTimer", "_debugStateLabel", "_debugHealthLabel") groups=["Enemies"]]
+collision_layer = 32
+collision_mask = 8
 script = ExtResource("1_cq63g")
 _rangedEnemyStats = ExtResource("2_fkrq2")
 _spriteBody = NodePath("spriteBody")
