@@ -11,7 +11,7 @@ public partial class RangedEnemyStats : Resource
     [Export] public Utility.RangedEnemyType RangedEnemyType { get; set; }
     [Export] public int Health { get; set; }
     [Export] public float AttackCooldownTime { get; set; }
-    [Export] public int AttackDamage { get; set; }
+    [Export] public int BulletDamage { get; set; }
     [Export] public float Knockback { get; set; }
     [Export] public float HurtStaggerTime { get; set; }
     [Export] public int BulletsPerShot { get; set; }

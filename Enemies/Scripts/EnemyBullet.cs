@@ -10,9 +10,9 @@ public partial class EnemyBullet : Area2D
 	private Timer _despawnTimer;
 
 	public Vector2 Target;
-	public float BulletSpeed, Knockback, BulletDespawnTimeSeconds, WeaponSwayAmount;
-	public int AttackDamage;
-	public Vector2 Velocity;
+	public float BulletSpeed, Knockback, BulletDespawnTimeSeconds;
+	public int BulletDamage;
+	private Vector2 _velocity;
 	
 	public override void _Ready()
 	{
@@ -40,20 +40,13 @@ public partial class EnemyBullet : Area2D
 		}
 	}
 
-	private void BulletHitPlayer(Area2D area)
+	private void BulletHitPlayer(Area2D playerArea)
 	{
-		if (!area.IsInGroup("PlayersHurtBox")) 
-			return;
-		GD.Print("hit player");
-		EventsBus.Instance.EmitSignal(
-			nameof(EventsBus.AttackHit), 
-			this,
-			AttackDamage, 
-			Knockback, 
-			Velocity
-		);
-			
-		QueueFree();
+		if (playerArea.IsInGroup("PlayersHurtBox"))
+		{
+			EventsBus.Instance.EmitAttackHit(this, playerArea, BulletDamage, Knockback, _velocity);
+			QueueFree();
+		}
 	}
 
 	private void BulletDespawnTimerTimedOut()
@@ -63,13 +56,13 @@ public partial class EnemyBullet : Area2D
 
 	private void CalculateVelocity(float delta)
 	{
-		Velocity = new Vector2(
+		_velocity = new Vector2(
 			delta * BulletSpeed * Target.X,
 			delta * BulletSpeed * Target.Y
 		);
 		
-		MoveLocalX(Velocity.X, true);
-		MoveLocalY(Velocity.Y, true);
+		MoveLocalX(_velocity.X, true);
+		MoveLocalY(_velocity.Y, true);
 		
 		// Position += Velocity;
 	}

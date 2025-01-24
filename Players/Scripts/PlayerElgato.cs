@@ -33,7 +33,7 @@ public partial class PlayerElgato : CharacterBody2D
 	{
 		_velocity = Velocity;
 		
-		EventsBus.Instance.AttackHit += HitByAttack;
+		EventsBus.Instance.OnAttackHit += HitByAttack;
 		_hurtStaggerTimer.OneShot = true;
 		_hurtStaggerTimer.SetWaitTime(_playerStats.HurtStaggerTime);
 		_hurtStaggerTimer.Timeout += HurtStaggerTimerTimedOut;
@@ -57,15 +57,21 @@ public partial class PlayerElgato : CharacterBody2D
 		}
 	}
 
-	private void HitByAttack(Area2D area, int attackDamage, float knockback, Vector2 attackVelocity)
+	private void HitByAttack(Area2D attackArea, Area2D entityArea, int attackDamage, float knockback, Vector2 attackVelocity)
 	{
-		if (!area.IsInGroup("EnemyAttacks") || !area.IsInGroup("EnemyProjectiles"))
+		if (!IsInstanceValid(attackArea))
+			return;
+		if (!attackArea.IsInGroup("EnemyAttacks") || !attackArea.IsInGroup("EnemyProjectiles"))
+			return;
+		if (entityArea != _hurtbox)
 			return;
 		
-		_enemyAttackArea = area;
-		
 		_playerStats.TakeDamage(attackDamage);
-		KnockbackFromAttack(area, knockback, attackVelocity);
+		
+		KnockbackFromAttack(attackArea, knockback, attackVelocity);
+		
+		FlipSpriteToFaceHitDirection(attackArea);
+		
 		_hurtStatus = true;
 		_hurtStaggerTimer.Start();
 		
@@ -249,18 +255,16 @@ public partial class PlayerElgato : CharacterBody2D
 		{
 			_sprite.FlipH = false;
 		}
-		
+	}
+
+	private void FlipSpriteToFaceHitDirection(Area2D attackArea)
+	{
 		// Flip sprite if hit from behind
-		if (_enemyAttackArea == null)
-			return;
-		if (!IsInstanceValid(_enemyAttackArea))
-			return;
-		
-		if ((GlobalPosition - _enemyAttackArea.GlobalPosition).Normalized().X < 0 && _sprite.IsFlippedH())
+		if ((GlobalPosition - attackArea.GlobalPosition).Normalized().X < 0 && _sprite.IsFlippedH())
 		{
 			_sprite.FlipH = false;
 		}
-		else if ((GlobalPosition - _enemyAttackArea.GlobalPosition).Normalized().X > 0 && !_sprite.IsFlippedH())
+		else if ((GlobalPosition - attackArea.GlobalPosition).Normalized().X > 0 && !_sprite.IsFlippedH())
 		{
 			_sprite.FlipH = true;
 		}
@@ -316,5 +320,11 @@ public partial class PlayerElgato : CharacterBody2D
 		
 		Velocity = _velocity;
 		MoveAndSlide();
+	}
+
+	// Unsubscribe from events on exiting tree
+	public override void _ExitTree()
+	{
+		EventsBus.Instance.OnAttackHit -= HitByAttack;
 	}
 }

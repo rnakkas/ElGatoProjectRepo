@@ -1,6 +1,4 @@
 using Godot;
-using System;
-using ElGatoProject.Players.Scripts;
 using ElGatoProject.Resources;
 using ElGatoProject.Singletons;
 
@@ -176,7 +174,7 @@ public partial class RangedEnemyBase : Area2D
 		bulletInstance.BulletSpeed = _rangedEnemyStats.BulletSpeed;
 		bulletInstance.Knockback = _rangedEnemyStats.Knockback;
 		bulletInstance.BulletDespawnTimeSeconds = _rangedEnemyStats.BulletDespawnTimeSeconds;
-		bulletInstance.AttackDamage = _rangedEnemyStats.AttackDamage;
+		bulletInstance.BulletDamage = _rangedEnemyStats.BulletDamage;
 		bulletInstance.GlobalPosition = _eyeMarker.GlobalPosition;
 		
 		// Add bullet instance to scene

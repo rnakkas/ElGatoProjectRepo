@@ -43,9 +43,8 @@ public partial class Bullet : Area2D
 		if (enemyArea.IsInGroup("Enemies"))
 		{
 			EventsBus.Instance.EmitAttackHit(this, enemyArea, BulletDamage, BulletKnockback, Velocity);
+			QueueFree();
 		}
-			
-		QueueFree();
 	}
 
 	private void BulletDespawnTimerTimedOut()
