@@ -31,21 +31,32 @@ public partial class PlayerElgato : CharacterBody2D
 	
 	public override void _Ready()
 	{
+		SubscribeToEvents();
+		
 		_velocity = Velocity;
 		
-		EventsBus.Instance.OnAttackHit += HitByAttack;
 		_hurtStaggerTimer.OneShot = true;
 		_hurtStaggerTimer.SetWaitTime(_playerStats.HurtStaggerTime);
 		_hurtStaggerTimer.Timeout += HurtStaggerTimerTimedOut;
 
-		EventsBus.Instance.HealedPlayer += HealthRestored;
 		_pickupsBox.AreaEntered += PlayerEnteredPickupArea;
-
+		
 		_miscBox.AreaEntered += EnteredJumpPad;
 		
 		_debugHealthLabel.SetText("HP: " + _playerStats.CurrentHealth);
 	}
 
+	private void SubscribeToEvents()
+	{
+		EventsBus.Instance.OnAttackHit += HitByAttack;
+		EventsBus.Instance.OnHealthPickupSuccess += HealthRestored;
+	}
+
+	private void UnsubscribeFromEvents()
+	{
+		EventsBus.Instance.OnAttackHit -= HitByAttack;
+		EventsBus.Instance.OnHealthPickupSuccess -= HealthRestored;
+	}
 	
 	// Jumping on jump pad
 	private void EnteredJumpPad(Area2D area)
@@ -76,7 +87,6 @@ public partial class PlayerElgato : CharacterBody2D
 		_hurtStaggerTimer.Start();
             
 		_debugHealthLabel.SetText("HP: " + _playerStats.CurrentHealth);
-
 	}
 
 	private void HurtStaggerTimerTimedOut()
@@ -85,21 +95,22 @@ public partial class PlayerElgato : CharacterBody2D
 	}
 	
 	// Picking up items
-	private void PlayerEnteredPickupArea(Area2D area)
+	private void PlayerEnteredPickupArea(Area2D pickupArea)
 	{
-		if (area.IsInGroup("HealthPickups"))
+		if (!pickupArea.IsInGroup("HealthPickups"))
+			return;
+		if (_playerStats.CurrentHealth < _playerStats.MaxHealth)
 		{
-			EventsBus.Instance.EmitSignal(
-				nameof(EventsBus.AttemptedHealthPickup),
-				_playerStats.CurrentHealth, 
-				_playerStats.MaxHealth
-			);
+			EventsBus.Instance.EmitHealthPickupAttempt(pickupArea, _pickupsBox, true);
 		}
 	}
 	
 	// Healing items
-	private void HealthRestored(int healAmount)
+	private void HealthRestored(Area2D entityArea, int healAmount)
 	{
+		if (entityArea != _pickupsBox)
+			return;
+		
 		_playerStats.Heal(healAmount);
 		_debugHealthLabel.SetText("HP: " + _playerStats.CurrentHealth);
 	}
@@ -217,14 +228,6 @@ public partial class PlayerElgato : CharacterBody2D
 		if (_hurtStatus)
 		{ 
 			_playerStats.State = Utility.EntityState.Hurt;
-			
-			// if (!IsInstanceValid(_enemyAttackArea)) 
-			// 	return;
-			//
-			// // Knockback from attack
-			// float knockback = (float)_enemyAttackArea.Get("Knockback");
-			// Vector2 attackVelocity = (Vector2)_enemyAttackArea.Get("Velocity");
-			// KnockbackFromAttack(knockback, attackVelocity);
 		}
 	}
 
@@ -323,9 +326,9 @@ public partial class PlayerElgato : CharacterBody2D
 		MoveAndSlide();
 	}
 
-	// Unsubscribe from events on exiting tree
+	// Unsubscribe from events
 	public override void _ExitTree()
 	{
-		EventsBus.Instance.OnAttackHit -= HitByAttack;
+		UnsubscribeFromEvents();
 	}
 }

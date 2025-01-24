@@ -25,6 +25,21 @@ public partial class Utility : Node
         RangedEnemyMachineGun
     }
 
+    public enum PickupType
+    {
+        Coffee,
+        Catnip,
+        WeaponMod
+    }
+    
+    public enum WeaponModType
+    {
+    	None,
+    	Shotgun,
+    	MachineGun,
+    	Railgun
+    }
+
     public override void _Ready()
     {
         Instance = this;

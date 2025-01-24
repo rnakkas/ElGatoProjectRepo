@@ -27,6 +27,8 @@ public partial class RangedEnemyBase : Area2D
 	
 	public override void _Ready()
 	{
+		SubscribeToEvents();
+		
 		if (_hurtStaggerTimer != null)
 		{
 			_hurtStaggerTimer.OneShot = true;
@@ -48,9 +50,6 @@ public partial class RangedEnemyBase : Area2D
 			_rapidFireTimer.Timeout += RapidFireTimerTimedOut;
 		}
 		
-		// Subscribe to events
-		EventsBus.Instance.OnAttackHit += HitByAttack;
-
 		_playerDetectionArea.AreaEntered += PlayerEnteredDetectionRange;
 		_playerDetectionArea.AreaExited += PlayerExitedDetectionRange;
 
@@ -59,6 +58,16 @@ public partial class RangedEnemyBase : Area2D
 		// For debug only, remove later
 		_debugStateLabel.SetText("idle");
 		_debugHealthLabel.SetText("HP: "+ _rangedEnemyStats.Health);
+	}
+
+	private void SubscribeToEvents()
+	{
+		EventsBus.Instance.OnAttackHit += HitByAttack;
+	}
+
+	private void UnsubscribeFromEvents()
+	{
+		EventsBus.Instance.OnAttackHit -= HitByAttack;
 	}
 	
 	// Detecting when player enters or exits detection range
@@ -260,6 +269,6 @@ public partial class RangedEnemyBase : Area2D
 	// Unsubscribe to events when exiting scene tree to prevent memory leaks
 	public override void _ExitTree()
 	{
-		EventsBus.Instance.OnAttackHit -= HitByAttack;
+		UnsubscribeFromEvents();
 	}
 }
