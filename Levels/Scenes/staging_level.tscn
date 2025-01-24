@@ -132,8 +132,8 @@ position = Vector2(2480, -160)
 [node name="RangedEnemyLight" parent="RangedEnemies" instance=ExtResource("6_olgj6")]
 position = Vector2(1950, 194)
 
-[node name="RangedEnemyLight2" parent="RangedEnemies" instance=ExtResource("6_olgj6")]
-position = Vector2(1480, 323)
+[node name="RangedEnemyLight3" parent="RangedEnemies" instance=ExtResource("6_olgj6")]
+position = Vector2(1462, 322)
 
 [node name="MeleeEnemies" type="Node" parent="."]
 

@@ -38,20 +38,14 @@ public partial class Bullet : Area2D
 		}
 	}
 
-	private void BulletHitEnemy(Area2D area)
+	private void BulletHitEnemy(Area2D enemyArea)
 	{
-		if (area.IsInGroup("Enemies"))
+		if (enemyArea.IsInGroup("Enemies"))
 		{
-			EventsBus.Instance.EmitSignal(
-				nameof(EventsBus.AttackHit), 
-				this,
-				BulletDamage, 
-				BulletKnockback, 
-				Velocity
-			);
-			
-			QueueFree();
+			EventsBus.Instance.EmitAttackHit(this, enemyArea, BulletDamage, BulletKnockback, Velocity);
 		}
+			
+		QueueFree();
 	}
 
 	private void BulletDespawnTimerTimedOut()

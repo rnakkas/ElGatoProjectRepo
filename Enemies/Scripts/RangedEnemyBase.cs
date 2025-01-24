@@ -21,15 +21,6 @@ public partial class RangedEnemyBase : Area2D
 	[Export] private Label _debugStateLabel;
 	[Export] private Label _debugHealthLabel;
 	
-	// [Signal]
-	// public delegate void ShootEventHandler();
-	// [Signal]
-	// public delegate void IdleEventHandler();
-	// [Signal]
-	// public delegate void HurtEventHandler();
-	// [Signal]
-	// public delegate void DeathEventHandler();
-	
 	private bool _hurtStatus, _playerInRange, _onCooldown, _rapidFireCooldown;
 	private Area2D _playerProjectile;
 	private Node2D _player;
@@ -59,18 +50,13 @@ public partial class RangedEnemyBase : Area2D
 			_rapidFireTimer.Timeout += RapidFireTimerTimedOut;
 		}
 		
-		// AreaEntered += HitByPlayerBullets;
-		EventsBus.Instance.AttackHit += HitByAttack;
+		// Subscribe to events
+		EventsBus.Instance.OnAttackHit += HitByAttack;
 
 		_playerDetectionArea.AreaEntered += PlayerEnteredDetectionRange;
 		_playerDetectionArea.AreaExited += PlayerExitedDetectionRange;
 
 		_wallDetectionRay.Enabled = false;
-
-		// Shoot += OnShoot;
-		// Idle += OnIdle;
-		// Hurt += OnHurt;
-		// Death += OnDeath;
 		
 		// For debug only, remove later
 		_debugStateLabel.SetText("idle");
@@ -129,11 +115,6 @@ public partial class RangedEnemyBase : Area2D
 			_rangedEnemyStats.State = _hurtStatus ? Utility.EntityState.Hurt : Utility.EntityState.Idle;
 		}
 	}
-	//
-	// private void OnShoot()
-	// {
-	// 	ShootingBehaviour();
-	// }
 
 	private void Shoot()
 	{
@@ -214,24 +195,20 @@ public partial class RangedEnemyBase : Area2D
 			_bulletCount = 0;
 		}
 	}
-
-	private void OnIdle()
-	{
-		_debugStateLabel.SetText("Idle");
-	}
-
+	
 	private void ShotCooldownTimerTimedOut()
 	{
 		_onCooldown = false;
 	}
 	
 	// Getting hit by player bullets
-	private void HitByAttack(Area2D area, int attackDamage, float knockback, Vector2 attackVelocity)
+	private void HitByAttack(Area2D attackArea, Area2D entityArea, int attackDamage, float knockback, Vector2 attackVelocity)
 	{
-		if (!area.IsInGroup("PlayerProjectiles"))
+		if (!attackArea.IsInGroup("PlayerProjectiles"))
+			return;
+		if (entityArea != this)
 			return;
 		
-		GD.Print(attackDamage);
 		_hurtStatus = true;
 		_hurtStaggerTimer.Start();
 		_rangedEnemyStats.TakeDamage(attackDamage);
@@ -239,50 +216,9 @@ public partial class RangedEnemyBase : Area2D
 		_debugHealthLabel.SetText("HP: "+ _rangedEnemyStats.Health);
 	}
 	
-	// private void HitByPlayerBullets(Area2D area)
-	// {
-	// 	if (!area.IsInGroup("PlayerProjectiles")) 
-	// 		return;
-	//
-	// 	_playerProjectile = area;
-	//
-	// 	TakeDamageFromPlayerProjectile();
-	// }
-	//
-	// private void TakeDamageFromPlayerProjectile()
-	// {
-	// 	if (_playerProjectile is not Bullet bullet)
-	// 		return;
-	// 	
-	// 	_hurtStatus = true;
-	// 	_rangedEnemyStats.TakeDamage(bullet.BulletDamage);
-	// 	
-	// 	// Die if health reaches zero
-	// 	if (_rangedEnemyStats.Health <= 0)
-	// 	{
-	// 		EmitSignal(SignalName.Death);
-	// 	}
-	// 	
-	// 	_hurtStaggerTimer.Start();
-	// 	
-	// 	// For debug only, remove later
-	// 	_debugHealthLabel.SetText("HP: "+ _rangedEnemyStats.Health);
-	// }
-
-	private void OnHurt()
-	{
-		_debugStateLabel.SetText("Hurt");
-	}
-	
 	private void HurtStaggerTimerTimedOut()
 	{
 		_hurtStatus = false;
-	}
-
-	private void OnDeath()
-	{
-		_debugStateLabel.SetText("Death");
-		QueueFree();
 	}
 	
 	private void Animations()
@@ -316,10 +252,16 @@ public partial class RangedEnemyBase : Area2D
 				break;
 		}
 	}
-	
+
 	public override void _Process(double delta)
 	{
 		EnemyBehaviour();
 		Animations();
+	}
+	
+	// Unsubscribe to events when exiting scene tree to prevent memory leaks
+	public override void _ExitTree()
+	{
+		EventsBus.Instance.OnAttackHit -= HitByAttack;
 	}
 }

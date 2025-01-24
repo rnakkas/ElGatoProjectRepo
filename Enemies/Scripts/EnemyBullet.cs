@@ -42,18 +42,18 @@ public partial class EnemyBullet : Area2D
 
 	private void BulletHitPlayer(Area2D area)
 	{
-		if (area.IsInGroup("PlayersHurtBox"))
-		{
-			EventsBus.Instance.EmitSignal(
-				nameof(EventsBus.AttackHit), 
-				this,
-				AttackDamage, 
-				Knockback, 
-				Velocity
-				);
+		if (!area.IsInGroup("PlayersHurtBox")) 
+			return;
+		GD.Print("hit player");
+		EventsBus.Instance.EmitSignal(
+			nameof(EventsBus.AttackHit), 
+			this,
+			AttackDamage, 
+			Knockback, 
+			Velocity
+		);
 			
-			QueueFree();
-		}
+		QueueFree();
 	}
 
 	private void BulletDespawnTimerTimedOut()
