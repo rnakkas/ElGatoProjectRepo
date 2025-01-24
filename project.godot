@@ -17,6 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+Globals="*res://Singletons/Globals.cs"
 Utility="*res://Singletons/Utility.cs"
 EventsBus="*res://Singletons/EventsBus.cs"
 

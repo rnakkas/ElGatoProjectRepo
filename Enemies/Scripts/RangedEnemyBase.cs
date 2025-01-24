@@ -23,7 +23,6 @@ public partial class RangedEnemyBase : Area2D
 	private Area2D _playerProjectile;
 	private Node2D _player;
 	private int _bulletCount;
-	private RandomNumberGenerator _rng = new();
 	
 	public override void _Ready()
 	{
@@ -179,7 +178,7 @@ public partial class RangedEnemyBase : Area2D
 		
 		// Set properties for the bullet
 		bulletInstance.Target = GlobalPosition.DirectionTo(_player.GlobalPosition);
-		bulletInstance.RotationDegrees = _rng.RandfRange(-_rangedEnemyStats.BulletAngle, _rangedEnemyStats.BulletAngle);
+		bulletInstance.RotationDegrees = Globals.Instance.Rng.RandfRange(-_rangedEnemyStats.BulletAngle, _rangedEnemyStats.BulletAngle);
 		bulletInstance.BulletSpeed = _rangedEnemyStats.BulletSpeed;
 		bulletInstance.Knockback = _rangedEnemyStats.Knockback;
 		bulletInstance.BulletDespawnTimeSeconds = _rangedEnemyStats.BulletDespawnTimeSeconds;
