@@ -61,21 +61,22 @@ public partial class PlayerElgato : CharacterBody2D
 	{
 		if (!IsInstanceValid(attackArea))
 			return;
-		if (!attackArea.IsInGroup("EnemyAttacks") || !attackArea.IsInGroup("EnemyProjectiles"))
-			return;
 		if (entityArea != _hurtbox)
+			return;
+		if (!attackArea.IsInGroup("EnemyProjectiles") && !attackArea.IsInGroup("EnemyAttacks")) 
 			return;
 		
 		_playerStats.TakeDamage(attackDamage);
-		
+            		
 		KnockbackFromAttack(attackArea, knockback, attackVelocity);
-		
+            
 		FlipSpriteToFaceHitDirection(attackArea);
-		
+            
 		_hurtStatus = true;
 		_hurtStaggerTimer.Start();
-		
+            
 		_debugHealthLabel.SetText("HP: " + _playerStats.CurrentHealth);
+
 	}
 
 	private void HurtStaggerTimerTimedOut()
