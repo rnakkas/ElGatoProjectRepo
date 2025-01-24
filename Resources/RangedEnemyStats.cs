@@ -7,6 +7,7 @@ namespace ElGatoProject.Resources;
 [GlobalClass]
 public partial class RangedEnemyStats : Resource
 {
+    public Utility.EntityState State;
     [Export] public Utility.RangedEnemyType RangedEnemyType { get; set; }
     [Export] public int Health { get; set; }
     [Export] public float AttackCooldownTime { get; set; }

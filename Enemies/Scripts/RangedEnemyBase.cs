@@ -21,14 +21,14 @@ public partial class RangedEnemyBase : Area2D
 	[Export] private Label _debugStateLabel;
 	[Export] private Label _debugHealthLabel;
 	
-	[Signal]
-	public delegate void ShootEventHandler();
-	[Signal]
-	public delegate void IdleEventHandler();
-	[Signal]
-	public delegate void HurtEventHandler();
-	[Signal]
-	public delegate void DeathEventHandler();
+	// [Signal]
+	// public delegate void ShootEventHandler();
+	// [Signal]
+	// public delegate void IdleEventHandler();
+	// [Signal]
+	// public delegate void HurtEventHandler();
+	// [Signal]
+	// public delegate void DeathEventHandler();
 	
 	private bool _hurtStatus, _playerInRange, _onCooldown, _rapidFireCooldown;
 	private Area2D _playerProjectile;
@@ -67,10 +67,10 @@ public partial class RangedEnemyBase : Area2D
 
 		_wallDetectionRay.Enabled = false;
 
-		Shoot += OnShoot;
-		Idle += OnIdle;
-		Hurt += OnHurt;
-		Death += OnDeath;
+		// Shoot += OnShoot;
+		// Idle += OnIdle;
+		// Hurt += OnHurt;
+		// Death += OnDeath;
 		
 		// For debug only, remove later
 		_debugStateLabel.SetText("idle");
@@ -112,29 +112,30 @@ public partial class RangedEnemyBase : Area2D
 
 			if (!_wallDetectionRay.IsColliding() && !_hurtStatus)
 			{
-				EmitSignal(SignalName.Shoot);
+				Shoot();
 			}
 			else if (_hurtStatus)
 			{
-				EmitSignal(SignalName.Hurt);
+				_rangedEnemyStats.State = Utility.EntityState.Hurt;
+				ResetBulletCount();
 			}
 			else
 			{
-				EmitSignal(SignalName.Idle);
+				_rangedEnemyStats.State = Utility.EntityState.Idle;
 			}
 		}
 		else
 		{
-			EmitSignal(_hurtStatus ? SignalName.Hurt : SignalName.Idle);
+			_rangedEnemyStats.State = _hurtStatus ? Utility.EntityState.Hurt : Utility.EntityState.Idle;
 		}
 	}
-	
-	private void OnShoot()
-	{
-		ShootingBehaviour();
-	}
+	//
+	// private void OnShoot()
+	// {
+	// 	ShootingBehaviour();
+	// }
 
-	private void ShootingBehaviour()
+	private void Shoot()
 	{
 		switch (_rangedEnemyStats.RangedEnemyType)
 		{
@@ -227,6 +228,10 @@ public partial class RangedEnemyBase : Area2D
 	// Getting hit by player bullets
 	private void HitByAttack(Area2D area, int attackDamage, float knockback, Vector2 attackVelocity)
 	{
+		if (!area.IsInGroup("PlayerProjectiles"))
+			return;
+		
+		GD.Print(attackDamage);
 		_hurtStatus = true;
 		_hurtStaggerTimer.Start();
 		_rangedEnemyStats.TakeDamage(attackDamage);
@@ -280,8 +285,41 @@ public partial class RangedEnemyBase : Area2D
 		QueueFree();
 	}
 	
+	private void Animations()
+	{
+		switch (_rangedEnemyStats.State)
+		{
+			case Utility.EntityState.Idle:
+				_spriteBody.Play("idle");
+				_spriteEye.Play("idle");
+				
+				_debugStateLabel.SetText("idle");
+				break;
+			case Utility.EntityState.Shoot:
+				_spriteBody.Play("shoot");
+				_spriteEye.Play("shoot");
+				
+				_debugStateLabel.SetText("shoot");
+				break;
+			case Utility.EntityState.Hurt:
+				_spriteBody.Play("hurt");
+				_spriteEye.Play("hurt");
+				
+				_debugStateLabel.SetText("hurt");
+				break;
+			case Utility.EntityState.Death:
+				_spriteBody.Play("death");
+				_spriteEye.Play("death");
+				
+				_debugStateLabel.SetText("death");
+				QueueFree();
+				break;
+		}
+	}
+	
 	public override void _Process(double delta)
 	{
 		EnemyBehaviour();
+		Animations();
 	}
 }

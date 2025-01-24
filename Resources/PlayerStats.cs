@@ -8,6 +8,8 @@ namespace ElGatoProject.Resources;
 public partial class PlayerStats : Resource
 {
     // Player stats variables
+    
+    public Utility.EntityState State;
     [Export] public float MaxSpeed { get; set; }
     [Export] public float Acceleration { get; set; }
     [Export] public float Friction { get; set; }
@@ -19,8 +21,6 @@ public partial class PlayerStats : Resource
     [Export] public float WallJumpVelocity { get; set; }
     [Export] public float WallSlideVelocity { get; set; }
     [Export] public float HurtStaggerTime { get; set; }
-
-    public Utility.EntityState State;
     
     // Methods
     public void TakeDamage(int damage)

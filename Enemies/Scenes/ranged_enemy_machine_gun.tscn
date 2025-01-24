@@ -15,7 +15,31 @@ animations = [{
 "texture": ExtResource("2_b1561")
 }],
 "loop": true,
+"name": &"death",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_b1561")
+}],
+"loop": true,
+"name": &"hurt",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_b1561")
+}],
+"loop": true,
 "name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_b1561")
+}],
+"loop": true,
+"name": &"shoot",
 "speed": 5.0
 }]
 
@@ -26,7 +50,31 @@ animations = [{
 "texture": ExtResource("2_b1561")
 }],
 "loop": true,
+"name": &"death",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_b1561")
+}],
+"loop": true,
+"name": &"hurt",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_b1561")
+}],
+"loop": true,
 "name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_b1561")
+}],
+"loop": true,
+"name": &"shoot",
 "speed": 5.0
 }]
 
@@ -58,14 +106,14 @@ debug_color = Color(0.937255, 0, 0.196078, 0.419608)
 self_modulate = Color(0.0196078, 0.0196078, 0.0196078, 1)
 scale = Vector2(0.0878907, 0.267578)
 sprite_frames = SubResource("SpriteFrames_husvp")
-animation = &"idle"
+animation = &"shoot"
 
 [node name="spriteEye" type="AnimatedSprite2D" parent="."]
 modulate = Color(1, 0, 0, 1)
 position = Vector2(0, -11)
 scale = Vector2(0.0488281, 0.048828)
 sprite_frames = SubResource("SpriteFrames_acroc")
-animation = &"idle"
+animation = &"shoot"
 
 [node name="eyeMarker" type="Marker2D" parent="."]
 position = Vector2(0, -11)

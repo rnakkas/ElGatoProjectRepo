@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using ElGatoProject.Resources;
+using ElGatoProject.Singletons;
 
 namespace ElGatoProject.Players.Scripts;
 
@@ -41,6 +42,14 @@ public partial class Bullet : Area2D
 	{
 		if (area.IsInGroup("Enemies"))
 		{
+			EventsBus.Instance.EmitSignal(
+				nameof(EventsBus.AttackHit), 
+				this,
+				BulletDamage, 
+				BulletKnockback, 
+				Velocity
+			);
+			
 			QueueFree();
 		}
 	}

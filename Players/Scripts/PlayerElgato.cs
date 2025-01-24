@@ -59,6 +59,9 @@ public partial class PlayerElgato : CharacterBody2D
 
 	private void HitByAttack(Area2D area, int attackDamage, float knockback, Vector2 attackVelocity)
 	{
+		if (!area.IsInGroup("EnemyAttacks") || !area.IsInGroup("EnemyProjectiles"))
+			return;
+		
 		_enemyAttackArea = area;
 		
 		_playerStats.TakeDamage(attackDamage);
@@ -263,8 +266,10 @@ public partial class PlayerElgato : CharacterBody2D
 		}
 	}
 
-	private void SetWeaponDirection()
+	private void SetWeaponProperties()
 	{
+		_weapon.HurtStatus = _hurtStatus;
+		
 		if (_sprite.IsFlippedH())
 		{
 			_weapon.Direction = -1.0f;
@@ -307,8 +312,7 @@ public partial class PlayerElgato : CharacterBody2D
 		PlayerAnimations();
 		FlipSprite();
 		
-		SetWeaponDirection();
-		_weapon.HurtStatus = _hurtStatus;
+		SetWeaponProperties();
 		
 		Velocity = _velocity;
 		MoveAndSlide();
