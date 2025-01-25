@@ -61,7 +61,7 @@ public partial class PlayerElgato : CharacterBody2D
 		if (area.IsInGroup("JumpPads"))
 		{
 			float jumpMultiplier = (float)area.Get("JumpMultiplier");
-			_velocity.Y = jumpMultiplier * _playerStats.JumpVelocity;
+			_velocity.Y = _velocityComponent.JumpOnJumpPad(jumpMultiplier, _playerStats.JumpVelocity);
 		}
 	}
 

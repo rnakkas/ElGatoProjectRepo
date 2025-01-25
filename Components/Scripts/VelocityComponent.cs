@@ -28,5 +28,11 @@ public partial class VelocityComponent : Node2D
 
 		return Velocity;
 	}
+
+	public float JumpOnJumpPad(float jumpMultiplier, float jumpVelocity)
+	{
+		Velocity.Y = jumpMultiplier * jumpVelocity;
+		return Velocity.Y;
+	}
 	
 }
