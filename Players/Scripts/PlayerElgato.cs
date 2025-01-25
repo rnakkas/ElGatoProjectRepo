@@ -43,10 +43,6 @@ public partial class PlayerElgato : CharacterBody2D
 		_health.MaxHealth = _playerStats.MaxHealth;
 		
 		_hurtbox.GotHit += GotHitByAttack;
-			
-		_hurtStaggerTimer.OneShot = true;
-		_hurtStaggerTimer.SetWaitTime(_playerStats.HurtStaggerTime);
-		_hurtStaggerTimer.Timeout += HurtStaggerTimerTimedOut;
 
 		_pickupsBox.AreaEntered += PlayerEnteredPickupArea;
 		
@@ -60,8 +56,9 @@ public partial class PlayerElgato : CharacterBody2D
 	{
 		if (area.IsInGroup("JumpPads"))
 		{
-			float jumpMultiplier = (float)area.Get("JumpMultiplier");
-			_velocity.Y = _velocityComponent.JumpOnJumpPad(jumpMultiplier, _playerStats.JumpVelocity);
+			_velocity.Y = _velocityComponent.JumpOnJumpPad(
+				(float)area.Get("JumpMultiplier"), 
+				_playerStats.JumpVelocity);
 		}
 	}
 
@@ -96,11 +93,7 @@ public partial class PlayerElgato : CharacterBody2D
  //            
 	// 	_debugHealthLabel.SetText("HP: " + _playerStats.CurrentHealth);
 	// }
-
-	private void HurtStaggerTimerTimedOut()
-	{
-		_hurtStatus = false;
-	}
+	
 	
 	// Picking up items
 	private void PlayerEnteredPickupArea(Area2D pickupArea)
