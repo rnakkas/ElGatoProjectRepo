@@ -9,134 +9,24 @@ namespace ElGatoProject.Components.Scripts;
 [GlobalClass]
 public partial class VelocityComponent : Node2D
 {
-	[Export] private PlayerStats _playerStats;
+	public Vector2 Velocity;
 	
-	private Vector2 _velocity = Vector2.Zero;
-	public float Direction;
-	
-	public Vector2 CalculatePlayerVelocity(
-		Dictionary<string, bool> input, 
-		float delta, 
-		bool isOnFloor,
-		bool isOnWall,
-		RayCast2D leftWallDetect,
-		RayCast2D rightWallDetect,
-		bool hurtStatus,
-		float knockback,
-		Vector2 attackVelocity
-		)
+	public Vector2 KnockbackFromAttack(Vector2 attackPosition, float knockback, Vector2 attackVelocity)
 	{
-		// Set directions for velocity
-		if (input["move_left"])
+		if (attackVelocity != Vector2.Zero)
 		{
-			Direction = -1;
-		}
-		else if (input["move_right"])
+			Velocity.X = knockback * attackVelocity.X;	
+		} 
+		else if (attackVelocity == Vector2.Zero && attackPosition.X < 0)
 		{
-			Direction = 1;
+			Velocity.X = knockback;
 		}
-		
-		// Running and stopping
-		if ((input["move_left"] || input["move_right"]))
+		else if (attackVelocity == Vector2.Zero && attackPosition.X > 0)
 		{
-			AccelerateToMaxSpeed(Direction, _playerStats.MaxSpeed, _playerStats.Acceleration);
-
-			if (isOnFloor)
-			{
-				VerticalVelocityStoppedOnGround();
-			}
-		}
-		else if (isOnFloor && (!input["move_left"] || !input["move_right"]))
-		{
-			SlowdownToZeroSpeed(_playerStats.Friction);
-			VerticalVelocityStoppedOnGround();
+			Velocity.X = -knockback;
 		}
 
-		// Jumping
-		if (isOnFloor && input["jump"])
-		{
-			JumpVelocity(_playerStats.JumpVelocity);
-		}
-
-		if (!isOnFloor)
-		{
-			FallDueToGravity(delta, _playerStats.Gravity);
-		}
-		
-		// Wall sliding
-		if (!isOnFloor && (leftWallDetect.IsColliding() || rightWallDetect.IsColliding()))
-		{
-			WallSlide(_playerStats.WallSlideVelocity, _playerStats.WallSlideGravity);
-
-			if (leftWallDetect.IsColliding())
-			{
-				Direction = 1;
-			} 
-			
-			if (rightWallDetect.IsColliding())
-			{
-				Direction = -1;
-			}
-			
-			// Wall Jump
-			if (input["jump_justPressed"])
-			{
-				JumpVelocity(_playerStats.WallJumpVelocity);
-				WallJumpHorizontalVelocity(Direction, _playerStats.MaxSpeed);
-			}
-		}
-		
-		// Hurt, don't allow movement
-		if (hurtStatus)
-		{ 
-			_velocity = Vector2.Zero;
-			KnockbackFromAttack(knockback, attackVelocity);
-			return _velocity;
-		}
-		
-		return _velocity;
-	}
-
-	private void KnockbackFromAttack(float knockback, Vector2 attackVelocity)
-	{
-		_velocity.X = knockback * attackVelocity.X;
-	}
-	
-	public Vector2 AccelerateToMaxSpeed(float direction, float maxSpeed, float acceleration)
-	{
-		_velocity.X =  Mathf.MoveToward(_velocity.X, direction * maxSpeed, acceleration);
-		return _velocity;
-	}
-
-	private void SlowdownToZeroSpeed(float friction)
-	{
-		_velocity.X = Mathf.MoveToward(_velocity.X, 0, friction);
-	}
-
-	private void JumpVelocity(float jumpVelocity)
-	{
-		_velocity.Y = jumpVelocity;
-	}
-
-	private void FallDueToGravity(float delta, float gravity)
-	{
-		_velocity.Y += gravity * delta;
-	}
-
-	private void VerticalVelocityStoppedOnGround()
-	{
-		_velocity.Y = 0;
-	}
-
-	private void WallSlide(float wallSlideVelocity, float wallSlideGravity)
-	{
-		_velocity.X = 0;
-		_velocity.Y = Mathf.MoveToward(_velocity.Y, wallSlideVelocity, wallSlideGravity);
-	}
-
-	private void WallJumpHorizontalVelocity(float direction, float maxSpeed)
-	{
-		_velocity.X = direction * maxSpeed;
+		return Velocity;
 	}
 	
 }

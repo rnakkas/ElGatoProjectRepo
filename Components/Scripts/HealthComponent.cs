@@ -7,18 +7,23 @@ namespace ElGatoProject.Components.Scripts;
 [GlobalClass]
 public partial class HealthComponent : Node2D
 {
-	[Export] private PlayerStats _playerStats;
+	[Export] private Label _debugHealthLabel;
+	
+	public int CurrentHealth { get; set; }
+	public int MaxHealth { get; set; }
 	
 	public void TakeDamage(int damage)
 	{
-		_playerStats.CurrentHealth -= damage;
-		GD.Print("health: " +_playerStats.CurrentHealth);
+		CurrentHealth -= damage;
+		GD.Print("health: " + CurrentHealth);
+		
+		_debugHealthLabel.SetText("HP:" + CurrentHealth);
 	}
 
 	public void Heal(int heal)
 	{
-		if (_playerStats.CurrentHealth >= _playerStats.MaxHealth)
+		if (CurrentHealth >= MaxHealth)
 			return;
-		Mathf.Min(_playerStats.CurrentHealth + heal, _playerStats.MaxHealth);
+		Mathf.Min(CurrentHealth + heal, MaxHealth);
 	}
 }

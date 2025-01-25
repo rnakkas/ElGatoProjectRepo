@@ -2,59 +2,49 @@ using Godot;
 using System;
 using ElGatoProject.Resources;
 using ElGatoProject.TestingStuff;
+using Godot.Collections;
 
 namespace ElGatoProject.Components.Scripts;
 
 [GlobalClass]
 public partial class HurtboxComponent : Area2D
 {
-	[Export] private PlayerStats _playerStats;
-	[Export] private Timer _hurtStatusTimer;
+	[Export] private Timer _hurtStaggerTimer;
 	
 	[Signal]
-	public delegate void HitByAttackEventHandler(
-		int damage, 
-		float knockback, 
-		Vector2 attackVelocity, 
-		float attackDirection
-		);
+	public delegate void GotHitEventHandler(Dictionary attackData);
 
 	private bool _hurtStatus;
 	
+	
 	public override void _Ready()
 	{
-		_hurtStatusTimer.OneShot = true;
-		_hurtStatusTimer.SetWaitTime(_playerStats.HurtStaggerTime);
-		_hurtStatusTimer.Timeout += HurtStatusTimerTimedOut;
-		
-		AreaEntered += GotHitByEnemyAttack;
+		_hurtStaggerTimer.Timeout += HurtStatusTimerTimedOut;
 	}
 
 	private void HurtStatusTimerTimedOut()
 	{
 		_hurtStatus = false;
 	}
-
-	private void GotHitByEnemyAttack(Area2D area)
+	
+	public void HitByAttack(Area2D attackArea, int attackDamage, float knockback, Vector2 attackVelocity)
 	{
-		if (area is TestArea testArea)
+		_hurtStatus = true;
+		_hurtStaggerTimer.Start();
+		
+		Vector2 attackPosition = attackArea.GlobalPosition - GlobalPosition;
+		
+		Dictionary attackData = new Dictionary()
 		{
-			_hurtStatus = true;
-			_hurtStatusTimer.Start();
-			
-			EmitSignal(
-				SignalName.HitByAttack,
-				testArea.AttackDamage,
-				testArea.Knockback,
-				testArea.Velocity,
-				testArea.Direction
-				);
-		}
+			{ "HurtStatus", _hurtStatus },
+			{ "AttackPosition", attackPosition },
+			{ "AttackDamage", attackDamage },
+			{ "Knockback", knockback },
+			{ "AttackVelocity", attackVelocity }
+		};
+
+		EmitSignal(SignalName.GotHit, attackData);
 	}
 
-	public bool GetHurtStatus()
-	{
-		return _hurtStatus;
-	}
 
 }

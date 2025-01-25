@@ -9,12 +9,18 @@ namespace ElGatoProject.Players.Scripts;
 
 public partial class PlayerElgato : CharacterBody2D
 {
+	// Resource
 	[Export] private PlayerStats _playerStats;
+	
+	// Components
+	[Export] private HealthComponent _health;
+	[Export] private HurtboxComponent _hurtbox;
+	[Export] private VelocityComponent _velocityComponent;
 	[Export] private PlayerControllerComponent _playerController;
+	
 	[Export] private AnimatedSprite2D _sprite;
 	[Export] private RayCast2D _leftWallDetect;
 	[Export] private RayCast2D _rightWallDetect;
-	[Export] private Area2D _hurtbox;
 	[Export] private Area2D _pickupsBox;
 	[Export] private Area2D _miscBox;
 	[Export] private Timer _hurtStaggerTimer;
@@ -31,10 +37,13 @@ public partial class PlayerElgato : CharacterBody2D
 	
 	public override void _Ready()
 	{
-		SubscribeToEvents();
-		
 		_velocity = Velocity;
+
+		_health.CurrentHealth = _playerStats.CurrentHealth;
+		_health.MaxHealth = _playerStats.MaxHealth;
 		
+		_hurtbox.GotHit += GotHitByAttack;
+			
 		_hurtStaggerTimer.OneShot = true;
 		_hurtStaggerTimer.SetWaitTime(_playerStats.HurtStaggerTime);
 		_hurtStaggerTimer.Timeout += HurtStaggerTimerTimedOut;
@@ -44,18 +53,6 @@ public partial class PlayerElgato : CharacterBody2D
 		_miscBox.AreaEntered += EnteredJumpPad;
 		
 		_debugHealthLabel.SetText("HP: " + _playerStats.CurrentHealth);
-	}
-
-	private void SubscribeToEvents()
-	{
-		EventsBus.Instance.OnAttackHit += HitByAttack;
-		EventsBus.Instance.OnHealthPickupSuccess += HealthRestored;
-	}
-
-	private void UnsubscribeFromEvents()
-	{
-		EventsBus.Instance.OnAttackHit -= HitByAttack;
-		EventsBus.Instance.OnHealthPickupSuccess -= HealthRestored;
 	}
 	
 	// Jumping on jump pad
@@ -68,26 +65,37 @@ public partial class PlayerElgato : CharacterBody2D
 		}
 	}
 
-	private void HitByAttack(Area2D attackArea, Area2D entityArea, int attackDamage, float knockback, Vector2 attackVelocity)
+	private void GotHitByAttack(Dictionary attackData)
 	{
-		if (!IsInstanceValid(attackArea))
-			return;
-		if (entityArea != _hurtbox)
-			return;
-		if (!attackArea.IsInGroup("EnemyProjectiles") && !attackArea.IsInGroup("EnemyAttacks")) 
-			return;
-		
-		_playerStats.TakeDamage(attackDamage);
-            		
-		KnockbackFromAttack(attackArea, knockback, attackVelocity);
-            
-		FlipSpriteToFaceHitDirection(attackArea);
-            
-		_hurtStatus = true;
-		_hurtStaggerTimer.Start();
-            
-		_debugHealthLabel.SetText("HP: " + _playerStats.CurrentHealth);
+		_health.TakeDamage((int)attackData["AttackDamage"]);
+
+		_velocity = _velocityComponent.KnockbackFromAttack(
+			(Vector2)attackData["AttackPosition"],
+			(float)attackData["Knockback"],
+			(Vector2)attackData["AttackVelocity"]
+			);
 	}
+
+	// private void OnHitByAttack(Area2D attackArea)
+	// {
+	// 	if (!IsInstanceValid(attackArea))
+	// 		return;
+	// 	if (!attackArea.IsInGroup("EnemyProjectiles") && !attackArea.IsInGroup("EnemyAttacks")) 
+	// 		return;
+	// 	
+	// 	int attackDamage = (int)attackArea.Get("BulletDamage");
+	// 	
+	// 	_playerStats.TakeDamage(attackDamage);
+ //            		
+	// 	KnockbackFromAttack(attackArea, knockback, attackVelocity);
+ //            
+	// 	FlipSpriteToFaceHitDirection(attackArea);
+ //            
+	// 	_hurtStatus = true;
+	// 	_hurtStaggerTimer.Start();
+ //            
+	// 	_debugHealthLabel.SetText("HP: " + _playerStats.CurrentHealth);
+	// }
 
 	private void HurtStaggerTimerTimedOut()
 	{
@@ -329,6 +337,6 @@ public partial class PlayerElgato : CharacterBody2D
 	// Unsubscribe from events
 	public override void _ExitTree()
 	{
-		UnsubscribeFromEvents();
+		
 	}
 }

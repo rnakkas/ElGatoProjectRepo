@@ -42,9 +42,15 @@ public partial class EnemyBullet : Area2D
 
 	private void BulletHitPlayer(Area2D playerArea)
 	{
-		if (playerArea.IsInGroup("PlayersHurtBox"))
+		if (!playerArea.IsInGroup("PlayersHurtBox"))
+			return;
+		
+		if (playerArea.HasMethod("HitByAttack"))
 		{
-			EventsBus.Instance.EmitAttackHit(this, playerArea, BulletDamage, Knockback, _velocity);
+			// EventsBus.Instance.EmitAttackHit(this, playerArea, BulletDamage, Knockback, _velocity);
+
+			playerArea.Call("HitByAttack", this, BulletDamage, Knockback, _velocity);
+			
 			QueueFree();
 		}
 	}

@@ -1,10 +1,13 @@
-[gd_scene load_steps=32 format=3 uid="uid://dkjcbiyswrxb7"]
+[gd_scene load_steps=35 format=3 uid="uid://dkjcbiyswrxb7"]
 
 [ext_resource type="Script" path="res://Players/Scripts/PlayerElgato.cs" id="1_q6xoq"]
 [ext_resource type="Resource" uid="uid://cdhnfups52naf" path="res://Resources/PlayerElGatoStats.tres" id="2_2pill"]
 [ext_resource type="Texture2D" uid="uid://lo3w8s4ichdj" path="res://Assets/Players/cat_fingerGun-2.png" id="3_wgayd"]
 [ext_resource type="Script" path="res://Components/Scripts/PlayerControllerComponent.cs" id="4_afk48"]
+[ext_resource type="Script" path="res://Components/Scripts/HealthComponent.cs" id="5_b0fly"]
 [ext_resource type="PackedScene" uid="uid://bec21vtufstsw" path="res://Players/Scenes/weapon_elgato.tscn" id="5_c0mry"]
+[ext_resource type="Script" path="res://Components/Scripts/HurtboxComponent.cs" id="5_eodsp"]
+[ext_resource type="Script" path="res://Components/Scripts/VelocityComponent.cs" id="7_45r2u"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dfscj"]
 atlas = ExtResource("3_wgayd")
@@ -214,10 +217,10 @@ animations = [{
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dci6a"]
 radius = 7.0
-height = 16.0
+height = 20.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_owtt2"]
-size = Vector2(20.4, 18.43)
+size = Vector2(16, 18)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_6qqgf"]
 radius = 9.0
@@ -227,20 +230,22 @@ size = Vector2(5, 5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hwqex"]
 
-[node name="player_elgato" type="CharacterBody2D" node_paths=PackedStringArray("_playerController", "_sprite", "_leftWallDetect", "_rightWallDetect", "_hurtbox", "_pickupsBox", "_miscBox", "_hurtStaggerTimer", "_weapon", "_debugHealthLabel") groups=["Players"]]
+[node name="player_elgato" type="CharacterBody2D" node_paths=PackedStringArray("_health", "_hurtbox", "_velocityComponent", "_playerController", "_sprite", "_leftWallDetect", "_rightWallDetect", "_pickupsBox", "_miscBox", "_hurtStaggerTimer", "_weapon", "_debugHealthLabel") groups=["Players"]]
 z_index = 1
 collision_mask = 6
 safe_margin = 2.5
 script = ExtResource("1_q6xoq")
 _playerStats = ExtResource("2_2pill")
+_health = NodePath("HealthComponent")
+_hurtbox = NodePath("HurtboxComponent")
+_velocityComponent = NodePath("VelocityComponent")
 _playerController = NodePath("PlayerControllerComponent")
 _sprite = NodePath("sprite")
 _leftWallDetect = NodePath("LeftWallDetect")
 _rightWallDetect = NodePath("RightWallDetect")
-_hurtbox = NodePath("Hurtbox")
 _pickupsBox = NodePath("Pickupsbox")
 _miscBox = NodePath("MiscBox")
-_hurtStaggerTimer = NodePath("HurtStaggerTimer")
+_hurtStaggerTimer = NodePath("HurtboxComponent/HurtStaggerTimer")
 _weapon = NodePath("Weapon_ElGato")
 _debugHealthLabel = NodePath("HealthLabel")
 
@@ -250,10 +255,32 @@ sprite_frames = SubResource("SpriteFrames_nl62c")
 animation = &"idle"
 
 [node name="collider" type="CollisionShape2D" parent="."]
+self_modulate = Color(1, 1, 1, 0.403922)
+position = Vector2(0, -1)
 shape = SubResource("CapsuleShape2D_dci6a")
 
 [node name="PlayerControllerComponent" type="Node2D" parent="."]
 script = ExtResource("4_afk48")
+
+[node name="HealthComponent" type="Node2D" parent="." node_paths=PackedStringArray("_debugHealthLabel")]
+script = ExtResource("5_b0fly")
+_debugHealthLabel = NodePath("../HealthLabel")
+
+[node name="HurtboxComponent" type="Area2D" parent="." node_paths=PackedStringArray("_hurtStaggerTimer") groups=["PlayersHurtBox"]]
+position = Vector2(0, 3)
+script = ExtResource("5_eodsp")
+_hurtStaggerTimer = NodePath("HurtStaggerTimer")
+
+[node name="HurtboxCollider" type="CollisionShape2D" parent="HurtboxComponent"]
+position = Vector2(0, -3)
+shape = SubResource("RectangleShape2D_owtt2")
+debug_color = Color(0.897598, 0.279026, 0.387079, 0.42)
+
+[node name="HurtStaggerTimer" type="Timer" parent="HurtboxComponent"]
+one_shot = true
+
+[node name="VelocityComponent" type="Node2D" parent="."]
+script = ExtResource("7_45r2u")
 
 [node name="LeftWallDetect" type="RayCast2D" parent="."]
 self_modulate = Color(1, 0, 1, 1)
@@ -267,21 +294,13 @@ position = Vector2(0, 4)
 target_position = Vector2(12, 0)
 collision_mask = 4
 
-[node name="Hurtbox" type="Area2D" parent="." groups=["PlayersHurtBox"]]
-visible = false
-collision_mask = 64
-
-[node name="HurtboxCollider" type="CollisionShape2D" parent="Hurtbox"]
-shape = SubResource("RectangleShape2D_owtt2")
-debug_color = Color(0.897598, 0.279026, 0.387079, 0.42)
-
-[node name="HurtStaggerTimer" type="Timer" parent="."]
-
 [node name="Pickupsbox" type="Area2D" parent="." groups=["PlayersPickupsBox"]]
-visible = false
+position = Vector2(0, 3)
 collision_mask = 16
 
 [node name="PickupsboxCollider" type="CollisionShape2D" parent="Pickupsbox"]
+self_modulate = Color(1, 1, 1, 0.737255)
+position = Vector2(0, -3)
 shape = SubResource("CircleShape2D_6qqgf")
 debug_color = Color(0, 0.65098, 0, 0.419608)
 
@@ -295,11 +314,13 @@ shape = SubResource("RectangleShape2D_uprlr")
 debug_color = Color(0.932818, 0.259544, 0, 0.42)
 
 [node name="MiscBox" type="Area2D" parent="." groups=["Players"]]
-visible = false
+position = Vector2(0, 3)
 collision_layer = 256
 collision_mask = 128
 
 [node name="MiscCollider" type="CollisionShape2D" parent="MiscBox"]
+self_modulate = Color(1, 1, 1, 0.27451)
+position = Vector2(0, -3)
 shape = SubResource("RectangleShape2D_hwqex")
 
 [node name="Weapon_ElGato" parent="." node_paths=PackedStringArray("_playerController") instance=ExtResource("5_c0mry")]
