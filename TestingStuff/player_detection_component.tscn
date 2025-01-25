@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dyisu8tgoh6y6"]
+
+[ext_resource type="Script" path="res://TestingStuff/PlayerDetectionComponent.cs" id="1_23vjb"]
+
+[node name="PlayerDetectionComponent" type="Area2D"]
+script = ExtResource("1_23vjb")

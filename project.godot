@@ -39,6 +39,7 @@ CatnipPickups="Group for collectibles, score, catnip etc pickups "
 WeaponModPickups="Group for weapon mod pickups"
 PlayersPickupsBox="Group for player's pickups box"
 PlayersHurtBox="Group for player's hurt box"
+PlayerTargetBox="Group for the target on player that enemies will aim to"
 
 [input]
 

@@ -227,7 +227,7 @@ size = Vector2(5, 5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hwqex"]
 
-[node name="player_elgato" type="CharacterBody2D" node_paths=PackedStringArray("_playerController", "_sprite", "_leftWallDetect", "_rightWallDetect", "_hurtbox", "_pickupsBox", "_miscBox", "_hurtStaggerTimer", "_weapon", "_debugHealthLabel") groups=["Players"]]
+[node name="player_elgato" type="CharacterBody2D" node_paths=PackedStringArray("_playerController", "_sprite", "_leftWallDetect", "_rightWallDetect", "_hurtbox", "_pickupsBox", "_miscBox", "_hurtStaggerTimer", "_weapon", "_debugHealthLabel")]
 z_index = 1
 collision_mask = 6
 safe_margin = 2.5
@@ -268,7 +268,6 @@ target_position = Vector2(12, 0)
 collision_mask = 4
 
 [node name="Hurtbox" type="Area2D" parent="." groups=["PlayersHurtBox"]]
-visible = false
 collision_mask = 64
 
 [node name="HurtboxCollider" type="CollisionShape2D" parent="Hurtbox"]
@@ -285,8 +284,8 @@ collision_mask = 16
 shape = SubResource("CircleShape2D_6qqgf")
 debug_color = Color(0, 0.65098, 0, 0.419608)
 
-[node name="TargetBox" type="Area2D" parent="." groups=["Players"]]
-position = Vector2(0, 5.465)
+[node name="TargetBox" type="Area2D" parent="." groups=["PlayerTargetBox"]]
+position = Vector2(0, 7.465)
 collision_mask = 0
 monitoring = false
 

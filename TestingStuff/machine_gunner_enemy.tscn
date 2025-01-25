@@ -1,0 +1,123 @@
+[gd_scene load_steps=7 format=3 uid="uid://dd2mdkyln1c3f"]
+
+[ext_resource type="Texture2D" uid="uid://dqx6rpywerr0u" path="res://icon.svg" id="1_nlg03"]
+[ext_resource type="Script" path="res://TestingStuff/PlayerDetectionComponent.cs" id="2_oaleq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_45j4p"]
+size = Vector2(14, 34)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_un02k"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_nlg03")
+}],
+"loop": true,
+"name": &"death",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_nlg03")
+}],
+"loop": true,
+"name": &"hurt",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_nlg03")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_nlg03")
+}],
+"loop": true,
+"name": &"shoot",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_xtyeg"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_nlg03")
+}],
+"loop": true,
+"name": &"death",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_nlg03")
+}],
+"loop": true,
+"name": &"hurt",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_nlg03")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_nlg03")
+}],
+"loop": true,
+"name": &"shoot",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_r8vqf"]
+radius = 180.0
+
+[node name="MachineGunnerEnemy" type="Area2D"]
+
+[node name="collider" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_45j4p")
+debug_color = Color(0.937255, 0, 0.196078, 0.419608)
+
+[node name="spriteBody" type="AnimatedSprite2D" parent="."]
+self_modulate = Color(0.0196078, 0.0196078, 0.0196078, 1)
+scale = Vector2(0.0878907, 0.267578)
+sprite_frames = SubResource("SpriteFrames_un02k")
+animation = &"shoot"
+
+[node name="spriteEye" type="AnimatedSprite2D" parent="."]
+modulate = Color(1, 0, 0, 1)
+position = Vector2(0, -11)
+scale = Vector2(0.0488281, 0.048828)
+sprite_frames = SubResource("SpriteFrames_xtyeg")
+animation = &"shoot"
+
+[node name="eyeMarker" type="Marker2D" parent="."]
+position = Vector2(0, -11)
+
+[node name="HurtStaggerTimer" type="Timer" parent="."]
+
+[node name="ShotCooldownTimer" type="Timer" parent="."]
+
+[node name="RapidFireTimer" type="Timer" parent="."]
+
+[node name="PlayerDetectionComponent" type="Area2D" parent="." node_paths=PackedStringArray("_detectionRaycast")]
+collision_layer = 0
+script = ExtResource("2_oaleq")
+_detectionRaycast = NodePath("DetectionRaycast")
+
+[node name="collider" type="CollisionShape2D" parent="PlayerDetectionComponent"]
+shape = SubResource("CircleShape2D_r8vqf")
+debug_color = Color(0.631662, 0.52763, 0.0955895, 0.42)
+
+[node name="DetectionRaycast" type="RayCast2D" parent="PlayerDetectionComponent"]
+self_modulate = Color(0, 0, 0, 1)
+position = Vector2(0, -11)
+target_position = Vector2(-145, 0)
+collision_mask = 6
