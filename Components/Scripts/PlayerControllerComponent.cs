@@ -7,9 +7,6 @@ namespace ElGatoProject.Components.Scripts;
 [GlobalClass]
 public partial class PlayerControllerComponent : Node2D
 {
-	private Vector2 _direction = Vector2.Zero;
-	private Vector2 _velocity = Vector2.Zero;
-	
 	public Dictionary<string, bool> GetInputs()
 	{
 		return new Dictionary<string, bool>

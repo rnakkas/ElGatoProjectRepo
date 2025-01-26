@@ -47,8 +47,6 @@ public partial class EnemyBullet : Area2D
 		
 		if (playerArea.HasMethod("HitByAttack"))
 		{
-			// EventsBus.Instance.EmitAttackHit(this, playerArea, BulletDamage, Knockback, _velocity);
-
 			playerArea.Call("HitByAttack", this, BulletDamage, Knockback, _velocity);
 			
 			QueueFree();

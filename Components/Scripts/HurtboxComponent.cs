@@ -27,6 +27,7 @@ public partial class HurtboxComponent : Area2D
 		_hurtStatus = false;
 	}
 	
+	// Called by the attacking area, for example enemy bullet calls this method to pass the attack data
 	public void HitByAttack(Area2D attackArea, int attackDamage, float knockback, Vector2 attackVelocity)
 	{
 		_hurtStatus = true;

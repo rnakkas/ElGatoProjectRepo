@@ -31,9 +31,6 @@ public partial class PlayerElgato : CharacterBody2D
 	private Dictionary<string, bool> _playerInputs;
 	private float _direction;
 	private bool _hurtStatus;
-	private float _knockback;
-	private Vector2 _attackVelocity;
-	private Area2D _enemyAttackArea;
 	
 	public override void _Ready()
 	{
@@ -95,7 +92,7 @@ public partial class PlayerElgato : CharacterBody2D
 	// }
 	
 	
-	// Picking up items
+	// Picking up items - make pickups component handle it
 	private void PlayerEnteredPickupArea(Area2D pickupArea)
 	{
 		if (!pickupArea.IsInGroup("HealthPickups"))
@@ -106,7 +103,7 @@ public partial class PlayerElgato : CharacterBody2D
 		}
 	}
 	
-	// Healing items
+	// Healing items - make health component handle it
 	private void HealthRestored(Area2D entityArea, int healAmount)
 	{
 		if (entityArea != _pickupsBox)
@@ -114,6 +111,30 @@ public partial class PlayerElgato : CharacterBody2D
 		
 		_playerStats.Heal(healAmount);
 		_debugHealthLabel.SetText("HP: " + _playerStats.CurrentHealth);
+	}
+	
+	// Sending data for velocity calculations
+	private void SetVelocityComponentValues()
+	{
+		_velocityComponent.PlayerInputs = _playerController.GetInputs();
+		_velocityComponent.EntityMovementData = new Dictionary<string, float>
+		{
+			{"MaxSpeed", _playerStats.MaxSpeed},
+			{"Acceleration", _playerStats.Acceleration},
+			{"Friction", _playerStats.Friction},
+			{"JumpVelocity", _playerStats.JumpVelocity},
+			{"Gravity", _playerStats.Gravity},
+			{"WallSlideGravity", _playerStats.WallSlideGravity},
+			{"WallJumpVelocity", _playerStats.WallJumpVelocity},
+			{"WallSlideVelocity", _playerStats.WallSlideVelocity}
+		};
+		_velocityComponent.EntityBools = new Dictionary<string, bool>
+		{
+			{"IsOnFloor", IsOnFloor()},
+			{"IsOnCeiling", IsOnCeiling()},
+			{"IsLeftWallDetected", _leftWallDetect.IsColliding()},
+			{"IsRightWallDetected", _rightWallDetect.IsColliding()}
+		};
 	}
 	
 	// Set direction
@@ -299,7 +320,13 @@ public partial class PlayerElgato : CharacterBody2D
 	public override void _PhysicsProcess(double delta)
 	{
 		_playerInputs = _playerController.GetInputs();
-		PlayerMovements((float)delta);
+
+		SetVelocityComponentValues();
+		_velocity = _velocityComponent.CalculateVelocity((float)delta);
+		
+		
+		
+		// PlayerMovements((float)delta);
 		PlayerAnimations();
 		FlipSprite();
 		
