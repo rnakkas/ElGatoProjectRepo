@@ -9,6 +9,19 @@ namespace ElGatoProject.Components.Scripts;
 [GlobalClass]
 public partial class VelocityComponent : Node2D
 {
+	[Export] public float MaxSpeed { get; set; }
+	[Export] public float Acceleration { get; set; }
+	[Export] public float Friction { get; set; }
+	[Export] public float JumpVelocity{ get; set; }
+	[Export] public float Gravity { get; set; }
+	[Export] public float WallSlideGravity { get; set; }
+	[Export] public float WallJumpVelocity { get; set; }
+	[Export] public float WallSlideVelocity { get; set; }
+	[Export] public bool IsOnFloor { get; set; }
+	[Export] public bool IsOnCeiling { get; set; }
+	[Export] public bool IsLeftWallDetected {get; set;}
+	[Export] public bool IsRightWallDetected {get; set;}
+	
 	public Vector2 Velocity;
 	public Dictionary<string, bool> PlayerInputs;
 	public Dictionary<string, float> EntityVelocityFields;
@@ -42,55 +55,46 @@ public partial class VelocityComponent : Node2D
 	{
 		if (direction != 0)
 		{
-			Velocity.X = Mathf.MoveToward(
-				Velocity.X, direction * EntityVelocityFields["MaxSpeed"], 
-				EntityVelocityFields["Acceleration"] * delta);
+			Velocity.X = Mathf.MoveToward(Velocity.X, direction * MaxSpeed, Acceleration * delta);
 		
-			if (SurfaceDetectionFields["IsOnFloor"])
+			if (IsOnFloor)
 			{
 				Velocity.Y = 0;
 			}
 		}
-		else if (SurfaceDetectionFields["IsOnFloor"] && direction == 0)
+		else if (IsOnFloor && direction == 0)
 		{
-			Velocity.X = Mathf.MoveToward(
-				Velocity.X, 
-				0, 
-				EntityVelocityFields["Friction"] * delta);
+			Velocity.X = Mathf.MoveToward(Velocity.X, 0, Friction * delta);
 			Velocity.Y = 0;
 		}
 		
-		if (SurfaceDetectionFields["IsOnFloor"] && PlayerInputs["jump"])
+		if (IsOnFloor && PlayerInputs["jump"])
 		{
-			Velocity.Y = EntityVelocityFields["JumpVelocity"];
+			Velocity.Y = JumpVelocity;
 		}
 
-		if (!SurfaceDetectionFields["IsOnFloor"])
+		if (!IsOnFloor)
 		{
-			Velocity.Y += EntityVelocityFields["Gravity"] * delta;
+			Velocity.Y += Gravity * delta;
 			
 		}
 
-		if (SurfaceDetectionFields["IsOnCeiling"])
+		if (IsOnCeiling)
 		{
-			Velocity.Y += EntityVelocityFields["Gravity"] * delta;
+			Velocity.Y += Gravity * delta;
 		}
 		
-		if (!SurfaceDetectionFields["IsOnFloor"] && 
-		    (SurfaceDetectionFields["IsLeftWallDetected"] || SurfaceDetectionFields["IsRightWallDetected"])
-		    )
+		if (!IsOnFloor && (IsLeftWallDetected || IsRightWallDetected))
 		{
 			Velocity.X = 0;
-			Velocity.Y = Mathf.MoveToward(Velocity.Y, 
-				EntityVelocityFields["WallSlideVelocity"], 
-				EntityVelocityFields["WallSlideGravity"] * delta);
+			Velocity.Y = Mathf.MoveToward(Velocity.Y, WallSlideVelocity, WallSlideGravity * delta);
 
-			if (SurfaceDetectionFields["IsLeftWallDetected"])
+			if (IsLeftWallDetected)
 			{
 				direction = 1.0f;
 			} 
 			
-			if (SurfaceDetectionFields["IsRightWallDetected"])
+			if (IsRightWallDetected)
 			{
 				direction = -1.0f;
 			}
@@ -98,8 +102,8 @@ public partial class VelocityComponent : Node2D
 			// Wall Jump
 			if (PlayerInputs["jump_justPressed"])
 			{
-				Velocity.Y = EntityVelocityFields["WallJumpVelocity"];
-				Velocity.X = direction * EntityVelocityFields["MaxSpeed"];
+				Velocity.Y = WallJumpVelocity;
+				Velocity.X = direction * MaxSpeed;
 			}
 		}
 		

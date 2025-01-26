@@ -40,7 +40,7 @@ public partial class PlayerElgato : CharacterBody2D
 		_health.CurrentHealth = _playerStats.CurrentHealth;
 		_health.MaxHealth = _playerStats.MaxHealth;
 		
-		_hurtbox.GotHit += GotHitByAttack;
+		_hurtbox.GotHit += OnHitByAttack;
 		_hurtbox.HurtStatusCleared += OnHurtStatusCleared; 
 
 		_pickupsBox.AreaEntered += PlayerEnteredPickupArea;
@@ -76,7 +76,7 @@ public partial class PlayerElgato : CharacterBody2D
 	}
 
 	// Getting hit by enemy attacks
-	private void GotHitByAttack(Dictionary attackData)
+	private void OnHitByAttack(Dictionary attackData)
 	{
 		_hurtStatus = (bool)attackData["HurtStatus"];
 		
@@ -117,19 +117,43 @@ public partial class PlayerElgato : CharacterBody2D
 		_debugHealthLabel.SetText("HP: " + _playerStats.CurrentHealth);
 	}
 	
-	// Sending data for velocity calculations
-	private void SetVelocityComponentValues()
+	// Setting data for velocity calculations
+	private Vector2 CalculateVelocity(float delta)
 	{
-		_velocityComponent.PlayerInputs = _playerController.GetInputs();
-		_velocityComponent.EntityVelocityFields = _playerStats.GetVelocityStats();
+		if (_velocityComponent == null) 
+			return Vector2.Zero;
 		
-		_velocityComponent.SurfaceDetectionFields = new Dictionary<string, bool>
-		{
-			{"IsOnFloor", IsOnFloor()},
-			{"IsOnCeiling", IsOnCeiling()},
-			{"IsLeftWallDetected", _leftWallDetect.IsColliding()},
-			{"IsRightWallDetected", _rightWallDetect.IsColliding()}
-		};
+		_velocityComponent.PlayerInputs = _playerController.GetInputs();
+		_velocityComponent.MaxSpeed = _playerStats.MaxSpeed;
+		_velocityComponent.Acceleration = _playerStats.Acceleration;
+		_velocityComponent.Friction = _playerStats.Friction;
+		_velocityComponent.JumpVelocity = _playerStats.JumpVelocity;
+		_velocityComponent.Gravity = _playerStats.Gravity;
+		_velocityComponent.WallSlideGravity = _playerStats.WallSlideGravity;
+		_velocityComponent.WallJumpVelocity = _playerStats.WallJumpVelocity;
+		_velocityComponent.WallSlideVelocity = _playerStats.WallSlideVelocity;
+		_velocityComponent.IsOnFloor = IsOnFloor();
+		_velocityComponent.IsOnCeiling = IsOnCeiling();
+		_velocityComponent.IsLeftWallDetected = _leftWallDetect.IsColliding();
+		_velocityComponent.IsRightWallDetected = _rightWallDetect.IsColliding();
+		
+		return _velocityComponent.CalculateVelocity(delta, _direction);
+	}
+
+	// Setting data for animations
+	private void PlayerAnimations()
+	{
+		if (_animation == null)
+			return;
+
+		_animation.Direction = _direction;
+		_animation.Velocity = _velocity;
+		_animation.IsOnFloor = IsOnFloor();
+		_animation.IsLeftWallDetected = _leftWallDetect.IsColliding();
+		_animation.IsRightWallDetected = _rightWallDetect.IsColliding();
+		_animation.HurtStatus = _hurtStatus;
+		
+		_animation.PlayAnimations();
 	}
 	
 	private void SetWeaponProperties()
@@ -145,43 +169,15 @@ public partial class PlayerElgato : CharacterBody2D
 			_weapon.Direction = 1.0f;
 		}
 	}
-
-	private void PlayerAnimations()
-	{
-		switch (_playerStats.State)
-		{
-			case Utility.EntityState.Run:
-				_sprite.Play("run");
-				break;
-			case Utility.EntityState.Idle:
-				_sprite.Play("idle");
-				break;
-			case Utility.EntityState.Jump:
-				_sprite.Play("jump");
-				break;
-			case Utility.EntityState.Fall:
-				_sprite.Play("fall");
-				break;
-			case Utility.EntityState.WallSlide:
-				_sprite.Play("wall_slide");
-				break;
-			case Utility.EntityState.Hurt:
-				_sprite.Play("hurt");
-				break;
-		}
-	}
 	
 	public override void _PhysicsProcess(double delta)
 	{
 		_playerInputs = _playerController.GetInputs();
 		SetDirection();
 
-		SetVelocityComponentValues();
-		_velocity = _velocityComponent.CalculateVelocity((float)delta, _direction);
+		_velocity = CalculateVelocity((float)delta);
 
-		_animation.FlipSprite(_direction);
-		
-		// PlayerAnimations();
+		PlayerAnimations();
 		
 		SetWeaponProperties();
 		
