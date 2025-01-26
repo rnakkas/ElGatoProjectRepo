@@ -76,19 +76,21 @@ public partial class PlayerElgato : CharacterBody2D
 	}
 
 	// Getting hit by enemy attacks
-	private void OnHitByAttack(Dictionary attackData)
+	private void OnHitByAttack(
+		bool hurtStatus, 
+		Vector2 attackPosition, 
+		int attackDamage,
+		float knockback, 
+		Vector2 attackVelocity
+		)
 	{
-		_hurtStatus = (bool)attackData["HurtStatus"];
+		_hurtStatus = hurtStatus;
 		
-		_health.TakeDamage((int)attackData["AttackDamage"]);
+		_health.TakeDamage(attackDamage);
 
-		_velocity.X = _velocityComponent.KnockbackFromAttack(
-			(Vector2)attackData["AttackPosition"],
-			(float)attackData["Knockback"],
-			(Vector2)attackData["AttackVelocity"]
-			);
+		_velocity.X = _velocityComponent.KnockbackFromAttack(attackPosition, knockback, attackVelocity);
 		
-		_animation.FlipSpriteToFaceHitDirection((Vector2)attackData["AttackPosition"]);
+		_animation.FlipSpriteToFaceHitDirection(attackPosition);
 	}
 
 	private void OnHurtStatusCleared(bool hurtStatus)
