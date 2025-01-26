@@ -18,13 +18,12 @@ public partial class PlayerElgato : CharacterBody2D
 	[Export] private VelocityComponent _velocityComponent;
 	[Export] private PlayerControllerComponent _playerController;
 	[Export] private AnimationComponent _animation;
+	[Export] private PickupsComponent _pickupsBox;
 	
 	[Export] private AnimatedSprite2D _sprite;
 	[Export] private RayCast2D _leftWallDetect;
 	[Export] private RayCast2D _rightWallDetect;
-	[Export] private Area2D _pickupsBox;
 	[Export] private Area2D _miscBox;
-	[Export] private Timer _hurtStaggerTimer;
 	[Export] private WeaponElgato _weapon;
 	[Export] private Label _debugHealthLabel;
 	
