@@ -41,6 +41,7 @@ public partial class PlayerElgato : CharacterBody2D
 		_health.MaxHealth = _playerStats.MaxHealth;
 		
 		_hurtbox.GotHit += GotHitByAttack;
+		_hurtbox.HurtStatusCleared += OnHurtStatusCleared; 
 
 		_pickupsBox.AreaEntered += PlayerEnteredPickupArea;
 		
@@ -77,6 +78,8 @@ public partial class PlayerElgato : CharacterBody2D
 	// Getting hit by enemy attacks
 	private void GotHitByAttack(Dictionary attackData)
 	{
+		_hurtStatus = (bool)attackData["HurtStatus"];
+		
 		_health.TakeDamage((int)attackData["AttackDamage"]);
 
 		_velocity.X = _velocityComponent.KnockbackFromAttack(
@@ -86,6 +89,11 @@ public partial class PlayerElgato : CharacterBody2D
 			);
 		
 		_animation.FlipSpriteToFaceHitDirection((Vector2)attackData["AttackPosition"]);
+	}
+
+	private void OnHurtStatusCleared(bool hurtStatus)
+	{
+		_hurtStatus = hurtStatus;
 	}
 	
 	// Picking up items - make pickups component handle it
@@ -124,19 +132,6 @@ public partial class PlayerElgato : CharacterBody2D
 		};
 	}
 	
-	private void FlipSpriteToFaceHitDirection(Area2D attackArea)
-	{
-		// Flip sprite if hit from behind
-		if ((GlobalPosition - attackArea.GlobalPosition).Normalized().X < 0 && _sprite.IsFlippedH())
-		{
-			_sprite.FlipH = false;
-		}
-		else if ((GlobalPosition - attackArea.GlobalPosition).Normalized().X > 0 && !_sprite.IsFlippedH())
-		{
-			_sprite.FlipH = true;
-		}
-	}
-
 	private void SetWeaponProperties()
 	{
 		_weapon.HurtStatus = _hurtStatus;

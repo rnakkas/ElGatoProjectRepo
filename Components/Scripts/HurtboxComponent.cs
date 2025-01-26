@@ -13,6 +13,8 @@ public partial class HurtboxComponent : Area2D
 	
 	[Signal]
 	public delegate void GotHitEventHandler(Dictionary attackData);
+	[Signal]
+	public delegate void HurtStatusClearedEventHandler(bool hurtStatus);
 
 	private bool _hurtStatus;
 	
@@ -25,6 +27,7 @@ public partial class HurtboxComponent : Area2D
 	private void HurtStatusTimerTimedOut()
 	{
 		_hurtStatus = false;
+		EmitSignal(SignalName.HurtStatusCleared, _hurtStatus);
 	}
 	
 	// Called by the attacking area, for example enemy bullet calls this method to pass the attack data
