@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using ElGatoProject.Singletons;
+using Godot.Collections;
 
 namespace ElGatoProject.Resources;
 
@@ -21,6 +22,23 @@ public partial class PlayerStats : Resource
     [Export] public float WallJumpVelocity { get; set; }
     [Export] public float WallSlideVelocity { get; set; }
     [Export] public float HurtStaggerTime { get; set; }
+
+    public Dictionary<string, float> GetVelocityStats()
+    {
+        return new Dictionary<string, float>
+        {
+            {"MaxSpeed", MaxSpeed },
+            {"Acceleration", Acceleration },
+            {"Friction", Friction },
+            {"JumpVelocity", JumpVelocity },
+            {"Gravity", Gravity },
+            {"WallSlideGravity", WallSlideGravity },
+            {"WallJumpVelocity", WallJumpVelocity },
+            {"WallSlideVelocity", WallSlideVelocity },
+        };
+    }
+        
+    
     
     // Methods
     public void TakeDamage(int damage)

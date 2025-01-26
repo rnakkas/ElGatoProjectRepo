@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://dkjcbiyswrxb7"]
+[gd_scene load_steps=36 format=3 uid="uid://dkjcbiyswrxb7"]
 
 [ext_resource type="Script" path="res://Players/Scripts/PlayerElgato.cs" id="1_q6xoq"]
 [ext_resource type="Resource" uid="uid://cdhnfups52naf" path="res://Resources/PlayerElGatoStats.tres" id="2_2pill"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://bec21vtufstsw" path="res://Players/Scenes/weapon_elgato.tscn" id="5_c0mry"]
 [ext_resource type="Script" path="res://Components/Scripts/HurtboxComponent.cs" id="5_eodsp"]
 [ext_resource type="Script" path="res://Components/Scripts/VelocityComponent.cs" id="7_45r2u"]
+[ext_resource type="Script" path="res://Components/Scripts/AnimationComponent.cs" id="8_gdubi"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dfscj"]
 atlas = ExtResource("3_wgayd")
@@ -230,7 +231,7 @@ size = Vector2(5, 5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hwqex"]
 
-[node name="player_elgato" type="CharacterBody2D" node_paths=PackedStringArray("_health", "_hurtbox", "_velocityComponent", "_playerController", "_sprite", "_leftWallDetect", "_rightWallDetect", "_pickupsBox", "_miscBox", "_hurtStaggerTimer", "_weapon", "_debugHealthLabel") groups=["Players"]]
+[node name="player_elgato" type="CharacterBody2D" node_paths=PackedStringArray("_health", "_hurtbox", "_velocityComponent", "_playerController", "_animation", "_sprite", "_leftWallDetect", "_rightWallDetect", "_pickupsBox", "_miscBox", "_hurtStaggerTimer", "_weapon", "_debugHealthLabel") groups=["Players"]]
 z_index = 1
 collision_mask = 6
 safe_margin = 2.5
@@ -240,6 +241,7 @@ _health = NodePath("HealthComponent")
 _hurtbox = NodePath("HurtboxComponent")
 _velocityComponent = NodePath("VelocityComponent")
 _playerController = NodePath("PlayerControllerComponent")
+_animation = NodePath("AnimationComponent")
 _sprite = NodePath("sprite")
 _leftWallDetect = NodePath("LeftWallDetect")
 _rightWallDetect = NodePath("RightWallDetect")
@@ -281,6 +283,10 @@ one_shot = true
 
 [node name="VelocityComponent" type="Node2D" parent="."]
 script = ExtResource("7_45r2u")
+
+[node name="AnimationComponent" type="Node2D" parent="." node_paths=PackedStringArray("_sprite")]
+script = ExtResource("8_gdubi")
+_sprite = NodePath("../sprite")
 
 [node name="LeftWallDetect" type="RayCast2D" parent="."]
 self_modulate = Color(1, 0, 1, 1)

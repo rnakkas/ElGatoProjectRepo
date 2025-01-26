@@ -17,6 +17,7 @@ public partial class PlayerElgato : CharacterBody2D
 	[Export] private HurtboxComponent _hurtbox;
 	[Export] private VelocityComponent _velocityComponent;
 	[Export] private PlayerControllerComponent _playerController;
+	[Export] private AnimationComponent _animation;
 	
 	[Export] private AnimatedSprite2D _sprite;
 	[Export] private RayCast2D _leftWallDetect;
@@ -48,6 +49,20 @@ public partial class PlayerElgato : CharacterBody2D
 		_debugHealthLabel.SetText("HP: " + _playerStats.CurrentHealth);
 	}
 	
+	private void SetDirection()
+	{
+		if (_playerInputs["move_left"])
+		{
+			_direction = -1.0f;
+		}
+		else if (_playerInputs["move_right"])
+			_direction = 1.0f;
+		else if (!_playerInputs["move_left"] || !_playerInputs["move_right"])
+		{
+			_direction = 0;
+		}
+	}
+	
 	// Jumping on jump pad
 	private void EnteredJumpPad(Area2D area)
 	{
@@ -59,6 +74,7 @@ public partial class PlayerElgato : CharacterBody2D
 		}
 	}
 
+	// Getting hit by enemy attacks
 	private void GotHitByAttack(Dictionary attackData)
 	{
 		_health.TakeDamage((int)attackData["AttackDamage"]);
@@ -68,29 +84,9 @@ public partial class PlayerElgato : CharacterBody2D
 			(float)attackData["Knockback"],
 			(Vector2)attackData["AttackVelocity"]
 			);
+		
+		_animation.FlipSpriteToFaceHitDirection((Vector2)attackData["AttackPosition"]);
 	}
-
-	// private void OnHitByAttack(Area2D attackArea)
-	// {
-	// 	if (!IsInstanceValid(attackArea))
-	// 		return;
-	// 	if (!attackArea.IsInGroup("EnemyProjectiles") && !attackArea.IsInGroup("EnemyAttacks")) 
-	// 		return;
-	// 	
-	// 	int attackDamage = (int)attackArea.Get("BulletDamage");
-	// 	
-	// 	_playerStats.TakeDamage(attackDamage);
- //            		
-	// 	KnockbackFromAttack(attackArea, knockback, attackVelocity);
- //            
-	// 	FlipSpriteToFaceHitDirection(attackArea);
- //            
-	// 	_hurtStatus = true;
-	// 	_hurtStaggerTimer.Start();
- //            
-	// 	_debugHealthLabel.SetText("HP: " + _playerStats.CurrentHealth);
-	// }
-	
 	
 	// Picking up items - make pickups component handle it
 	private void PlayerEnteredPickupArea(Area2D pickupArea)
@@ -117,18 +113,9 @@ public partial class PlayerElgato : CharacterBody2D
 	private void SetVelocityComponentValues()
 	{
 		_velocityComponent.PlayerInputs = _playerController.GetInputs();
-		_velocityComponent.EntityMovementData = new Dictionary<string, float>
-		{
-			{"MaxSpeed", _playerStats.MaxSpeed},
-			{"Acceleration", _playerStats.Acceleration},
-			{"Friction", _playerStats.Friction},
-			{"JumpVelocity", _playerStats.JumpVelocity},
-			{"Gravity", _playerStats.Gravity},
-			{"WallSlideGravity", _playerStats.WallSlideGravity},
-			{"WallJumpVelocity", _playerStats.WallJumpVelocity},
-			{"WallSlideVelocity", _playerStats.WallSlideVelocity}
-		};
-		_velocityComponent.EntityBools = new Dictionary<string, bool>
+		_velocityComponent.EntityVelocityFields = _playerStats.GetVelocityStats();
+		
+		_velocityComponent.SurfaceDetectionFields = new Dictionary<string, bool>
 		{
 			{"IsOnFloor", IsOnFloor()},
 			{"IsOnCeiling", IsOnCeiling()},
@@ -137,134 +124,6 @@ public partial class PlayerElgato : CharacterBody2D
 		};
 	}
 	
-	// Set direction
-	private void SetDirection()
-	{
-		if (_playerInputs["move_left"])
-		{
-			_direction = -1.0f;
-		}
-		else if (_playerInputs["move_right"])
-			_direction = 1.0f;
-		else if (!_playerInputs["move_left"] || !_playerInputs["move_right"])
-		{
-			_direction = 0;
-		}
-	}
-	private void PlayerMovements(float delta)
-	{
-		SetDirection();
-		
-		// Run and idle
-		RunAndIdle(delta);
-		
-		// Jumping and falling
-		JumpingAndFalling(delta);
-		
-		// Wall Sliding and wall jumping
-		WallSlideAndWallJump(delta);
-		
-		// Hurt
-		PlayerHurt();
-
-	}
-
-	private void RunAndIdle(float delta)
-	{
-		if (_direction != 0)
-		{
-			_velocity.X = Mathf.MoveToward(_velocity.X, _direction * _playerStats.MaxSpeed, _playerStats.Acceleration * delta);
-
-			if (IsOnFloor())
-			{
-				_playerStats.State = Utility.EntityState.Run;
-			}
-			
-			if (IsOnFloor())
-			{
-				_velocity.Y = 0;
-			}
-		}
-		else if (IsOnFloor() && _direction == 0)
-		{
-			_velocity.X = Mathf.MoveToward(_velocity.X, 0, _playerStats.Friction * delta);
-			_velocity.Y = 0;
-			_playerStats.State = Utility.EntityState.Idle;
-		}
-	}
-
-	private void JumpingAndFalling(float delta)
-	{
-		if (IsOnFloor() && _playerInputs["jump"])
-		{
-			_velocity.Y = _playerStats.JumpVelocity;
-			_playerStats.State = Utility.EntityState.Jump;
-		}
-
-		if (!IsOnFloor())
-		{
-			_velocity.Y += _playerStats.Gravity * delta;
-
-			if (_velocity.Y > 0)
-			{
-				_playerStats.State = Utility.EntityState.Fall;
-			}
-		}
-
-		if (IsOnCeiling())
-		{
-			_velocity.Y += _playerStats.Gravity * delta;
-		}
-	}
-
-	private void WallSlideAndWallJump(float delta)
-	{
-		if (!IsOnFloor() && (_leftWallDetect.IsColliding() || _rightWallDetect.IsColliding()))
-		{
-			_playerStats.State = Utility.EntityState.WallSlide;
-			_velocity.X = 0;
-			_velocity.Y = Mathf.MoveToward(_velocity.Y, _playerStats.WallSlideVelocity, _playerStats.WallSlideGravity * delta);
-
-			if (_leftWallDetect.IsColliding())
-			{
-				_direction = 1.0f;
-			} 
-			
-			if (_rightWallDetect.IsColliding())
-			{
-				_direction = -1.0f;
-			}
-			
-			// Wall Jump
-			if (_playerInputs["jump_justPressed"])
-			{
-				_velocity.Y = _playerStats.WallJumpVelocity;
-				_velocity.X = _direction * _playerStats.MaxSpeed;
-				_playerStats.State = Utility.EntityState.Jump;
-			}
-		}
-	}
-	
-	private void PlayerHurt()
-	{
-		if (_hurtStatus)
-		{ 
-			_playerStats.State = Utility.EntityState.Hurt;
-		}
-	}
-
-	private void FlipSprite()
-	{
-		if (_direction < 0)
-		{
-			_sprite.FlipH = true;
-		}
-		else if (_direction > 0)
-		{
-			_sprite.FlipH = false;
-		}
-	}
-
 	private void FlipSpriteToFaceHitDirection(Area2D attackArea)
 	{
 		// Flip sprite if hit from behind
@@ -320,25 +179,18 @@ public partial class PlayerElgato : CharacterBody2D
 	public override void _PhysicsProcess(double delta)
 	{
 		_playerInputs = _playerController.GetInputs();
+		SetDirection();
 
 		SetVelocityComponentValues();
-		_velocity = _velocityComponent.CalculateVelocity((float)delta);
+		_velocity = _velocityComponent.CalculateVelocity((float)delta, _direction);
+
+		_animation.FlipSprite(_direction);
 		
-		
-		
-		// PlayerMovements((float)delta);
-		PlayerAnimations();
-		FlipSprite();
+		// PlayerAnimations();
 		
 		SetWeaponProperties();
 		
 		Velocity = _velocity;
 		MoveAndSlide();
-	}
-
-	// Unsubscribe from events
-	public override void _ExitTree()
-	{
-		
 	}
 }

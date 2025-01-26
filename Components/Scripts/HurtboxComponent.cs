@@ -33,7 +33,7 @@ public partial class HurtboxComponent : Area2D
 		_hurtStatus = true;
 		_hurtStaggerTimer.Start();
 		
-		Vector2 attackPosition = attackArea.GlobalPosition - GlobalPosition;
+		Vector2 attackPosition = (attackArea.GlobalPosition - GlobalPosition).Normalized();
 		
 		Dictionary attackData = new Dictionary()
 		{
