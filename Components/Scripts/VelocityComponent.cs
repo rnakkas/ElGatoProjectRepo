@@ -11,7 +11,7 @@ public partial class VelocityComponent : Node2D
 {
 	public Vector2 Velocity;
 	
-	public Vector2 KnockbackFromAttack(Vector2 attackPosition, float knockback, Vector2 attackVelocity)
+	public float KnockbackFromAttack(Vector2 attackPosition, float knockback, Vector2 attackVelocity)
 	{
 		if (attackVelocity != Vector2.Zero)
 		{
@@ -26,7 +26,7 @@ public partial class VelocityComponent : Node2D
 			Velocity.X = -knockback;
 		}
 
-		return Velocity;
+		return Velocity.X;
 	}
 
 	public float JumpOnJumpPad(float jumpMultiplier, float jumpVelocity)

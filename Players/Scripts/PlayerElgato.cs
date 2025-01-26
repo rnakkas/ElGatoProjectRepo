@@ -66,7 +66,7 @@ public partial class PlayerElgato : CharacterBody2D
 	{
 		_health.TakeDamage((int)attackData["AttackDamage"]);
 
-		_velocity = _velocityComponent.KnockbackFromAttack(
+		_velocity.X = _velocityComponent.KnockbackFromAttack(
 			(Vector2)attackData["AttackPosition"],
 			(float)attackData["Knockback"],
 			(Vector2)attackData["AttackVelocity"]
@@ -229,24 +229,6 @@ public partial class PlayerElgato : CharacterBody2D
 		if (_hurtStatus)
 		{ 
 			_playerStats.State = Utility.EntityState.Hurt;
-		}
-	}
-
-	private void KnockbackFromAttack(Area2D enemyAttackArea, float knockback, Vector2 attackVelocity)
-	{
-		Vector2 attackPosition = enemyAttackArea.GlobalPosition - GlobalPosition;
-		
-		if (attackVelocity != Vector2.Zero)
-		{
-			_velocity.X = knockback * attackVelocity.X;	
-		} 
-		else if (attackVelocity == Vector2.Zero && attackPosition.X < 0)
-		{
-			_velocity.X = knockback;
-		}
-		else if (attackVelocity == Vector2.Zero && attackPosition.X > 0)
-		{
-			_velocity.X = -knockback;
 		}
 	}
 
