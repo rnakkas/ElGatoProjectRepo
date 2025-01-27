@@ -28,7 +28,6 @@ public partial class PlayerElgato : CharacterBody2D
 	[Export] private Label _debugHealthLabel;
 	
 	private Vector2 _velocity = Vector2.Zero;
-	private Dictionary<string, bool> _playerInputs;
 	private float _direction;
 	private bool _hurtStatus;
 	
@@ -36,30 +35,39 @@ public partial class PlayerElgato : CharacterBody2D
 	{
 		_velocity = Velocity;
 
-		_health.CurrentHealth = _playerStats.CurrentHealth;
+		if (_health == null)
+			return;
 		_health.MaxHealth = _playerStats.MaxHealth;
+		_health.CurrentHealth = _playerStats.CurrentHealth;
 		
+		if (_pickupsBox == null)
+			return;
+		_pickupsBox.MaxHealth = _playerStats.MaxHealth;
+		_pickupsBox.CurrentHealth = _playerStats.CurrentHealth;
+		_pickupsBox.PickedUpHealth += OnHealthPickedUp;
+		
+		if (_hurtbox == null)
+			return;
 		_hurtbox.GotHit += OnHitByAttack;
 		_hurtbox.HurtStatusCleared += OnHurtStatusCleared; 
-
-		_pickupsBox.MaxHealth = _health.MaxHealth;
-		// _pickupsBox.AreaEntered += PlayerEnteredPickupArea;
-		_pickupsBox.PickedUpHealth += OnHealthPickedUp;
 		
 		_miscBox.AreaEntered += EnteredJumpPad;
 		
 		_debugHealthLabel.SetText("HP: " + _health.CurrentHealth);
 	}
 	
-	private void SetDirection()
+	private void SetDirections()
 	{
-		if (_playerInputs["move_left"])
+		if (_playerController == null)
+			return;
+		
+		if (_playerController.GetInputs()["move_left"])
 		{
 			_direction = -1.0f;
 		}
-		else if (_playerInputs["move_right"])
+		else if (_playerController.GetInputs()["move_right"])
 			_direction = 1.0f;
-		else if (!_playerInputs["move_left"] || !_playerInputs["move_right"])
+		else if (!_playerController.GetInputs()["move_left"] || !_playerController.GetInputs()["move_right"])
 		{
 			_direction = 0;
 		}
@@ -85,9 +93,19 @@ public partial class PlayerElgato : CharacterBody2D
 		Vector2 attackVelocity
 		)
 	{
+		if (_health == null)
+			return;
+		if (_pickupsBox == null)
+			return;
+		if (_velocityComponent == null)
+			return;
+		if (_animation == null)
+			return;
+		
 		_hurtStatus = hurtStatus;
 		
 		_health.TakeDamage(attackDamage);
+		_pickupsBox.CurrentHealth = _health.CurrentHealth;
 
 		_velocity.X = _velocityComponent.KnockbackFromAttack(attackPosition, knockback, attackVelocity);
 		
@@ -99,27 +117,16 @@ public partial class PlayerElgato : CharacterBody2D
 		_hurtStatus = hurtStatus;
 	}
 	
-	// Picking up items - make pickups component handle it
-	// private void PlayerEnteredPickupArea(Area2D pickupArea)
-	// {
-	// 	if (pickupArea.IsInGroup("HealthPickups"))
-	// 	{
-	// 		_pickupsBox.CurrentHealth = _health.CurrentHealth;
-	// 	}
-	// 	
-	// 	// if (!pickupArea.IsInGroup("HealthPickups"))
-	// 	// 	return;
-	// 	// if (_playerStats.CurrentHealth < _playerStats.MaxHealth)
-	// 	// {
-	// 	// 	EventsBus.Instance.EmitHealthPickupAttempt(pickupArea, _pickupsBox, true);
-	// 	// }
-	// }
-	
-	// Healing items - make health component handle it
-	
+	// Healing items
 	private void OnHealthPickedUp(int healAmount)
 	{
+		if (_health == null)
+			return;
+		if (_pickupsBox == null)
+			return;
+		
 		_health.Heal(healAmount);
+		_pickupsBox.CurrentHealth = _health.CurrentHealth;
 	}
 	
 	// Setting data for velocity calculations
@@ -163,6 +170,9 @@ public partial class PlayerElgato : CharacterBody2D
 	
 	private void SetWeaponProperties()
 	{
+		if (_weapon == null)
+			return;
+		
 		_weapon.HurtStatus = _hurtStatus;
 		
 		if (_sprite.IsFlippedH())
@@ -177,12 +187,9 @@ public partial class PlayerElgato : CharacterBody2D
 	
 	public override void _PhysicsProcess(double delta)
 	{
-		_playerInputs = _playerController.GetInputs();
-		SetDirection();
+		SetDirections();
 
 		_velocity = CalculateVelocity((float)delta);
-
-		_pickupsBox.CurrentHealth = _health.CurrentHealth;
 
 		PlayerAnimations();
 		

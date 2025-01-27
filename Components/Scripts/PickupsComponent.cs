@@ -15,20 +15,13 @@ public partial class PickupsComponent : Area2D
 	public int CurrentHealth { get; set; }
 	public int MaxHealth { get; set; }
 
-
-	public override void _Ready()
+	public bool PickupHealthItem(int healAmount)
 	{
+		if (CurrentHealth >= MaxHealth) 
+			return false;
 		
-	}
-	
-	private bool CanPlayerPickupHealth()
-	{
-		return CurrentHealth < MaxHealth;
-	}
-
-	private void PickupHealthItem(int healAmount)
-	{
 		EmitSignal(SignalName.PickedUpHealth, healAmount);
+		return true;
 	}
 
 }

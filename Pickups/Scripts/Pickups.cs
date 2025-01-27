@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using ElGatoProject.Components.Scripts;
 using ElGatoProject.Singletons;
 
 namespace ElGatoProject.Pickups.Scripts;
@@ -26,54 +27,25 @@ public partial class Pickups : Area2D
 	{
 		if (!playerArea.IsInGroup("PlayersPickupsBox"))
 			return;
+		if (playerArea is not PickupsComponent pickupsComponent)
+			return;
 		
 		switch (_pickupType)
 		{
 			case Utility.PickupType.Coffee:
-				if (playerArea.HasMethod("CanPlayerPickupHealth"))
-				{
-					_canPickup = (bool)playerArea.Call("CanPlayerPickupHealth");
-
-					if (playerArea.HasMethod("PickupHealthItem") && _canPickup)
-					{
-						playerArea.Call("PickupHealthItem", _healAmount);
-						ItemGetsPickedUp();
-					}
-				}
+				_canPickup = pickupsComponent.PickupHealthItem(_healAmount);
 				break;
 			
 			case Utility.PickupType.Catnip:
 			case Utility.PickupType.WeaponMod:
 				break;
 		}
+		
+		if (_canPickup)
+		{
+			ItemGetsPickedUp();
+		}
 	}
-	
-
-	// private void SubscribeToEvents()
-	// {
-	// 	if (_pickupType == Utility.PickupType.Coffee)
-	// 	{
-	// 		EventsBus.Instance.OnHealthPickupAttempt += PlayerAttemptedHealthPickup;
-	// 	}
-	// }
-
-	// private void UnsubscribeFromEvents()
-	// {
-	// 	EventsBus.Instance.OnHealthPickupAttempt -= PlayerAttemptedHealthPickup;
-	// }
-	
-	// private void PlayerAttemptedHealthPickup(Area2D pickupArea, Area2D entityArea, bool canPickup)
-	// {
-	// 	if (pickupArea != this)
-	// 		return;
-	//
-	// 	if (canPickup)
-	// 	{
-	// 		EventsBus.Instance.EmitHealthPickupSuccess(entityArea, _healAmount);
-	// 		ItemGetsPickedUp();
-	// 	}
-	// }
-	
 	
 	private void ItemGetsPickedUp()
 	{

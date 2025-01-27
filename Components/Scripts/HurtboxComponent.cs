@@ -37,7 +37,7 @@ public partial class HurtboxComponent : Area2D
 	}
 	
 	// Called by the attacking area, for example enemy bullet calls this method to pass the attack data
-	private void HitByAttack(Area2D attackArea, int attackDamage, float knockback, Vector2 attackVelocity)
+	public void HitByAttack(Area2D attackArea, int attackDamage, float knockback, Vector2 attackVelocity)
 	{
 		_hurtStatus = true;
 		_hurtStaggerTimer.Start();

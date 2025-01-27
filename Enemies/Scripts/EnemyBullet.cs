@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using ElGatoProject.Components.Scripts;
 
 namespace ElGatoProject.Enemies.Scripts;
 public partial class EnemyBullet : Area2D
@@ -43,13 +44,10 @@ public partial class EnemyBullet : Area2D
 	{
 		if (!playerArea.IsInGroup("PlayersHurtBox"))
 			return;
-		
-		if (playerArea.HasMethod("HitByAttack"))
-		{
-			playerArea.Call("HitByAttack", this, BulletDamage, Knockback, _velocity);
-			
-			QueueFree();
-		}
+		if (playerArea is not HurtboxComponent hurtboxComponent)
+			return;
+		hurtboxComponent.HitByAttack(this, BulletDamage, Knockback, _velocity);
+		QueueFree();
 	}
 
 	private void BulletDespawnTimerTimedOut()
