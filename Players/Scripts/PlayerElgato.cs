@@ -42,11 +42,13 @@ public partial class PlayerElgato : CharacterBody2D
 		_hurtbox.GotHit += OnHitByAttack;
 		_hurtbox.HurtStatusCleared += OnHurtStatusCleared; 
 
-		_pickupsBox.AreaEntered += PlayerEnteredPickupArea;
+		_pickupsBox.MaxHealth = _health.MaxHealth;
+		// _pickupsBox.AreaEntered += PlayerEnteredPickupArea;
+		_pickupsBox.PickedUpHealth += OnHealthPickedUp;
 		
 		_miscBox.AreaEntered += EnteredJumpPad;
 		
-		_debugHealthLabel.SetText("HP: " + _playerStats.CurrentHealth);
+		_debugHealthLabel.SetText("HP: " + _health.CurrentHealth);
 	}
 	
 	private void SetDirection()
@@ -98,24 +100,26 @@ public partial class PlayerElgato : CharacterBody2D
 	}
 	
 	// Picking up items - make pickups component handle it
-	private void PlayerEnteredPickupArea(Area2D pickupArea)
-	{
-		if (!pickupArea.IsInGroup("HealthPickups"))
-			return;
-		if (_playerStats.CurrentHealth < _playerStats.MaxHealth)
-		{
-			EventsBus.Instance.EmitHealthPickupAttempt(pickupArea, _pickupsBox, true);
-		}
-	}
+	// private void PlayerEnteredPickupArea(Area2D pickupArea)
+	// {
+	// 	if (pickupArea.IsInGroup("HealthPickups"))
+	// 	{
+	// 		_pickupsBox.CurrentHealth = _health.CurrentHealth;
+	// 	}
+	// 	
+	// 	// if (!pickupArea.IsInGroup("HealthPickups"))
+	// 	// 	return;
+	// 	// if (_playerStats.CurrentHealth < _playerStats.MaxHealth)
+	// 	// {
+	// 	// 	EventsBus.Instance.EmitHealthPickupAttempt(pickupArea, _pickupsBox, true);
+	// 	// }
+	// }
 	
 	// Healing items - make health component handle it
-	private void HealthRestored(Area2D entityArea, int healAmount)
+	
+	private void OnHealthPickedUp(int healAmount)
 	{
-		if (entityArea != _pickupsBox)
-			return;
-		
-		_playerStats.Heal(healAmount);
-		_debugHealthLabel.SetText("HP: " + _playerStats.CurrentHealth);
+		_health.Heal(healAmount);
 	}
 	
 	// Setting data for velocity calculations
@@ -178,11 +182,15 @@ public partial class PlayerElgato : CharacterBody2D
 
 		_velocity = CalculateVelocity((float)delta);
 
+		_pickupsBox.CurrentHealth = _health.CurrentHealth;
+
 		PlayerAnimations();
 		
 		SetWeaponProperties();
 		
 		Velocity = _velocity;
 		MoveAndSlide();
+		
+		_debugHealthLabel.SetText("HP:" + _health.CurrentHealth);
 	}
 }

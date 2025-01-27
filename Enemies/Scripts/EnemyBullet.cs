@@ -1,6 +1,5 @@
 using Godot;
 using System;
-using ElGatoProject.Singletons;
 
 namespace ElGatoProject.Enemies.Scripts;
 public partial class EnemyBullet : Area2D

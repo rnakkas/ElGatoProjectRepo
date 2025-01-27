@@ -17,35 +17,63 @@ public partial class Pickups : Area2D
 	
 	public override void _Ready()
 	{
-		SubscribeToEvents();
-			
 		_sprite?.Play("idle");
+		
+		AreaEntered += OnPlayerEntered;
 	}
 
-	private void SubscribeToEvents()
+	private void OnPlayerEntered(Area2D playerArea)
 	{
-		if (_pickupType == Utility.PickupType.Coffee)
+		if (!playerArea.IsInGroup("PlayersPickupsBox"))
+			return;
+		
+		switch (_pickupType)
 		{
-			EventsBus.Instance.OnHealthPickupAttempt += PlayerAttemptedHealthPickup;
-		}
-	}
+			case Utility.PickupType.Coffee:
+				if (playerArea.HasMethod("CanPlayerPickupHealth"))
+				{
+					_canPickup = (bool)playerArea.Call("CanPlayerPickupHealth");
 
-	private void UnsubscribeFromEvents()
-	{
-		EventsBus.Instance.OnHealthPickupAttempt -= PlayerAttemptedHealthPickup;
+					if (playerArea.HasMethod("PickupHealthItem") && _canPickup)
+					{
+						playerArea.Call("PickupHealthItem", _healAmount);
+						ItemGetsPickedUp();
+					}
+				}
+				break;
+			
+			case Utility.PickupType.Catnip:
+			case Utility.PickupType.WeaponMod:
+				break;
+		}
 	}
 	
-	private void PlayerAttemptedHealthPickup(Area2D pickupArea, Area2D entityArea, bool canPickup)
-	{
-		if (pickupArea != this)
-			return;
 
-		if (canPickup)
-		{
-			EventsBus.Instance.EmitHealthPickupSuccess(entityArea, _healAmount);
-			ItemGetsPickedUp();
-		}
-	}
+	// private void SubscribeToEvents()
+	// {
+	// 	if (_pickupType == Utility.PickupType.Coffee)
+	// 	{
+	// 		EventsBus.Instance.OnHealthPickupAttempt += PlayerAttemptedHealthPickup;
+	// 	}
+	// }
+
+	// private void UnsubscribeFromEvents()
+	// {
+	// 	EventsBus.Instance.OnHealthPickupAttempt -= PlayerAttemptedHealthPickup;
+	// }
+	
+	// private void PlayerAttemptedHealthPickup(Area2D pickupArea, Area2D entityArea, bool canPickup)
+	// {
+	// 	if (pickupArea != this)
+	// 		return;
+	//
+	// 	if (canPickup)
+	// 	{
+	// 		EventsBus.Instance.EmitHealthPickupSuccess(entityArea, _healAmount);
+	// 		ItemGetsPickedUp();
+	// 	}
+	// }
+	
 	
 	private void ItemGetsPickedUp()
 	{
@@ -61,8 +89,4 @@ public partial class Pickups : Area2D
 		tween2.TweenCallback(Callable.From(QueueFree));
 	}
 	
-	public override void _ExitTree()
-	{
-		UnsubscribeFromEvents();
-	}
 }

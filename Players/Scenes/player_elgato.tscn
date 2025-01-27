@@ -232,7 +232,7 @@ size = Vector2(5, 5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hwqex"]
 
-[node name="player_elgato" type="CharacterBody2D" node_paths=PackedStringArray("_health", "_hurtbox", "_velocityComponent", "_playerController", "_animation", "_pickupsBox", "_sprite", "_leftWallDetect", "_rightWallDetect", "_miscBox", "_hurtStaggerTimer", "_weapon", "_debugHealthLabel") groups=["Players"]]
+[node name="player_elgato" type="CharacterBody2D" node_paths=PackedStringArray("_health", "_hurtbox", "_velocityComponent", "_playerController", "_animation", "_pickupsBox", "_sprite", "_leftWallDetect", "_rightWallDetect", "_miscBox", "_weapon", "_debugHealthLabel") groups=["Players"]]
 z_index = 1
 collision_mask = 6
 safe_margin = 2.5
@@ -248,7 +248,6 @@ _sprite = NodePath("sprite")
 _leftWallDetect = NodePath("LeftWallDetect")
 _rightWallDetect = NodePath("RightWallDetect")
 _miscBox = NodePath("MiscBox")
-_hurtStaggerTimer = NodePath("HurtboxComponent/HurtStaggerTimer")
 _weapon = NodePath("Weapon_ElGato")
 _debugHealthLabel = NodePath("HealthLabel")
 
@@ -265,9 +264,8 @@ shape = SubResource("CapsuleShape2D_dci6a")
 [node name="PlayerControllerComponent" type="Node2D" parent="."]
 script = ExtResource("4_afk48")
 
-[node name="HealthComponent" type="Node2D" parent="." node_paths=PackedStringArray("_debugHealthLabel")]
+[node name="HealthComponent" type="Node2D" parent="."]
 script = ExtResource("5_b0fly")
-_debugHealthLabel = NodePath("../HealthLabel")
 
 [node name="HurtboxComponent" type="Area2D" parent="." node_paths=PackedStringArray("_hurtStaggerTimer") groups=["PlayersHurtBox"]]
 position = Vector2(0, 3)

@@ -8,6 +8,27 @@ namespace ElGatoProject.Components.Scripts;
 public partial class PickupsComponent : Area2D
 {
 	[Signal]
-	public delegate void PickupAttemptedEventHandler(Area2D pickupType, int healAmount);
+	public delegate void CheckCurrentHealthEventHandler();
+	[Signal]
+	public delegate void PickedUpHealthEventHandler(int healAmount);
 	
+	public int CurrentHealth { get; set; }
+	public int MaxHealth { get; set; }
+
+
+	public override void _Ready()
+	{
+		
+	}
+	
+	private bool CanPlayerPickupHealth()
+	{
+		return CurrentHealth < MaxHealth;
+	}
+
+	private void PickupHealthItem(int healAmount)
+	{
+		EmitSignal(SignalName.PickedUpHealth, healAmount);
+	}
+
 }

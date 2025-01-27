@@ -17,6 +17,9 @@ public partial class AnimationComponent : Node2D
 	
 	public void FlipSprite(float direction)
 	{
+		if (_sprite == null) 
+			return;
+		
 		if (direction < 0)
 		{
 			_sprite.FlipH = true;
@@ -29,6 +32,9 @@ public partial class AnimationComponent : Node2D
 	
 	public void FlipSpriteToFaceHitDirection(Vector2 attackPosition)
 	{
+		if (_sprite == null)
+			return;
+		
 		// Flip sprite if hit from behind
 		if (attackPosition.X > 0 && _sprite.IsFlippedH())
 		{
@@ -42,6 +48,9 @@ public partial class AnimationComponent : Node2D
 
 	public void PlayAnimations()
 	{
+		if (_sprite == null)
+			return;
+		
 		FlipSprite(Direction);
 
 		if (!HurtStatus)
