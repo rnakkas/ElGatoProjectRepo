@@ -5,7 +5,7 @@ namespace ElGatoProject.Components.Scripts;
 
 // This component allows player control over entities
 [GlobalClass]
-public partial class PlayerControllerComponent : Node2D
+public partial class PlayerControllerComponent : Node
 {
 	public Dictionary<string, bool> GetInputs()
 	{

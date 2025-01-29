@@ -1,8 +1,5 @@
 using Godot;
 using System;
-using ElGatoProject.Resources;
-using ElGatoProject.TestingStuff;
-using Godot.Collections;
 
 namespace ElGatoProject.Components.Scripts;
 

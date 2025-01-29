@@ -1,20 +1,15 @@
 using Godot;
 using System;
 using ElGatoProject.Components.Scripts;
-using ElGatoProject.Resources;
 
 namespace ElGatoProject.Players.Scripts;
 
 public partial class PlayerElgato : CharacterBody2D
 {
-	// Resource
-	[Export] private PlayerStats _playerStats;
-	
 	// Components
 	[Export] private HealthComponent _health;
 	[Export] private HurtboxComponent _hurtbox;
 	[Export] private VelocityComponent _velocityComponent;
-	[Export] private PlayerControllerComponent _playerController;
 	[Export] private AnimationComponent _animation;
 	[Export] private PickupsComponent _pickupsBox;
 	
@@ -32,16 +27,11 @@ public partial class PlayerElgato : CharacterBody2D
 	public override void _Ready()
 	{
 		_velocity = Velocity;
-
-		if (_health == null)
-			return;
-		_health.MaxHealth = _playerStats.MaxHealth;
-		_health.CurrentHealth = _playerStats.CurrentHealth;
 		
 		if (_pickupsBox == null)
 			return;
-		_pickupsBox.MaxHealth = _playerStats.MaxHealth;
-		_pickupsBox.CurrentHealth = _playerStats.CurrentHealth;
+		_pickupsBox.MaxHealth = _health.MaxHealth;
+		_pickupsBox.CurrentHealth = _health.CurrentHealth;
 		_pickupsBox.PickedUpHealth += OnHealthPickedUp;
 		
 		if (_hurtbox == null)
@@ -56,16 +46,13 @@ public partial class PlayerElgato : CharacterBody2D
 	
 	private void SetDirections()
 	{
-		if (_playerController == null)
-			return;
-		
-		if (_playerController.GetInputs()["move_left"])
+		if (Input.IsActionPressed("move_left"))
 		{
 			_direction = -1.0f;
 		}
-		else if (_playerController.GetInputs()["move_right"])
+		else if (Input.IsActionPressed("move_right"))
 			_direction = 1.0f;
-		else if (!_playerController.GetInputs()["move_left"] || !_playerController.GetInputs()["move_right"])
+		else if (!Input.IsActionPressed("move_left") || !Input.IsActionPressed("move_right"))
 		{
 			_direction = 0;
 		}
@@ -76,9 +63,7 @@ public partial class PlayerElgato : CharacterBody2D
 	{
 		if (area.IsInGroup("JumpPads"))
 		{
-			_velocity.Y = _velocityComponent.JumpOnJumpPad(
-				(float)area.Get("JumpMultiplier"), 
-				_playerStats.JumpVelocity);
+			_velocity.Y = _velocityComponent.JumpOnJumpPad((float)area.Get("JumpMultiplier"));
 		}
 	}
 
@@ -127,33 +112,12 @@ public partial class PlayerElgato : CharacterBody2D
 		_pickupsBox.CurrentHealth = _health.CurrentHealth;
 	}
 	
-	// Setting data for velocity calculations
-	private Vector2 CalculateVelocity(float delta)
-	{
-		if (_velocityComponent == null) 
-			return Vector2.Zero;
-		
-		_velocityComponent.PlayerInputs = _playerController.GetInputs();
-		_velocityComponent.MaxSpeed = _playerStats.MaxSpeed;
-		_velocityComponent.Acceleration = _playerStats.Acceleration;
-		_velocityComponent.Friction = _playerStats.Friction;
-		_velocityComponent.JumpVelocity = _playerStats.JumpVelocity;
-		_velocityComponent.Gravity = _playerStats.Gravity;
-		_velocityComponent.WallSlideGravity = _playerStats.WallSlideGravity;
-		_velocityComponent.WallJumpVelocity = _playerStats.WallJumpVelocity;
-		_velocityComponent.WallSlideVelocity = _playerStats.WallSlideVelocity;
-		_velocityComponent.IsOnFloor = IsOnFloor();
-		_velocityComponent.IsOnCeiling = IsOnCeiling();
-		_velocityComponent.IsLeftWallDetected = _leftWallDetect.IsColliding();
-		_velocityComponent.IsRightWallDetected = _rightWallDetect.IsColliding();
-		
-		return _velocityComponent.CalculateVelocity(delta, _direction);
-	}
-
-	// Setting data for animations
-	private void PlayerAnimations()
+	// Setting data for components
+	private void SetComponentProperties()
 	{
 		if (_animation == null)
+			return;
+		if (_velocityComponent == null)
 			return;
 
 		_animation.Direction = _direction;
@@ -163,7 +127,10 @@ public partial class PlayerElgato : CharacterBody2D
 		_animation.IsRightWallDetected = _rightWallDetect.IsColliding();
 		_animation.HurtStatus = _hurtStatus;
 		
-		_animation.PlayAnimations();
+		_velocityComponent.IsOnFloor = IsOnFloor();
+		_velocityComponent.IsOnCeiling = IsOnCeiling();
+		_velocityComponent.IsLeftWallDetected = _leftWallDetect.IsColliding();
+		_velocityComponent.IsRightWallDetected = _rightWallDetect.IsColliding();
 	}
 	
 	private void SetWeaponProperties()
@@ -186,14 +153,14 @@ public partial class PlayerElgato : CharacterBody2D
 	public override void _PhysicsProcess(double delta)
 	{
 		SetDirections();
-
-		_velocity = CalculateVelocity((float)delta);
-
-		PlayerAnimations();
-		
+		SetComponentProperties();
 		SetWeaponProperties();
-		
+
+		_velocity = _velocityComponent.CalculateVelocity((float)delta, _direction);
 		Velocity = _velocity;
+
+		_animation.PlayAnimations();
+		
 		MoveAndSlide();
 		
 		_debugHealthLabel.SetText("HP:" + _health.CurrentHealth);

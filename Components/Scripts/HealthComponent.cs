@@ -5,10 +5,10 @@ using ElGatoProject.Resources;
 namespace ElGatoProject.Components.Scripts;
 
 [GlobalClass]
-public partial class HealthComponent : Node2D
+public partial class HealthComponent : Node
 {
-	public int CurrentHealth { get; set; }
-	public int MaxHealth { get; set; }
+	[Export] public int CurrentHealth { get; set; }
+	[Export] public int MaxHealth { get; set; }
 	
 	public void TakeDamage(int damage)
 	{

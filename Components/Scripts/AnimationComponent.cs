@@ -1,11 +1,10 @@
 using Godot;
 using System;
-using Godot.Collections;
 
 namespace ElGatoProject.Components.Scripts;
 
 [GlobalClass]
-public partial class AnimationComponent : Node2D
+public partial class AnimationComponent : Node
 {
 	[Export] private AnimatedSprite2D _sprite;
 	[Export] public float Direction { get; set; }

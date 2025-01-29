@@ -10,7 +10,6 @@ namespace ElGatoProject.Players.Scripts;
 
 public partial class WeaponElgato : Node2D
 {
-	[Export] private PlayerControllerComponent _playerController;
 	[Export] private WeaponStats _weaponStats;
 	[Export] private PackedScene _bulletScene;
 
@@ -19,7 +18,6 @@ public partial class WeaponElgato : Node2D
 	[Signal]
 	public delegate void IdleEventHandler();
 	
-	private Dictionary<string, bool> _playerInputs;
 	private AnimatedSprite2D _sprite;
 	private Marker2D _muzzle;
 	private Timer _shotCooldownTimer;
@@ -56,7 +54,7 @@ public partial class WeaponElgato : Node2D
 	private void WeaponBehaviour()
 	{
 		// player can only shoot if not on cooldown and not hurt
-		if (_playerInputs["shoot"] && !_onCooldown && !HurtStatus)
+		if (Input.IsActionPressed("shoot") && !_onCooldown && !HurtStatus)
 		{
 			EmitSignal(SignalName.Shoot);
 			_onCooldown = true;
@@ -125,7 +123,6 @@ public partial class WeaponElgato : Node2D
 	
 	public override void _Process(double delta)
 	{
-		_playerInputs = _playerController.GetInputs();
 		WeaponBehaviour();
 		FlipSprite();
 	}
