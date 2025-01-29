@@ -88,7 +88,5 @@ public partial class AnimationComponent : Node2D
 			_sprite.Play("hurt");
 		}
 		
-		
-		
 	}
 }

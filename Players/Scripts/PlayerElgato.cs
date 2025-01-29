@@ -2,8 +2,6 @@ using Godot;
 using System;
 using ElGatoProject.Components.Scripts;
 using ElGatoProject.Resources;
-using ElGatoProject.Singletons;
-using Godot.Collections;
 
 namespace ElGatoProject.Players.Scripts;
 

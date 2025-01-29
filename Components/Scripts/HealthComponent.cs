@@ -21,4 +21,9 @@ public partial class HealthComponent : Node2D
 			return;
 		CurrentHealth = Mathf.Min(CurrentHealth + heal, MaxHealth);
 	}
+
+	public void Die()
+	{
+		
+	}
 }
