@@ -259,7 +259,7 @@ shape = SubResource("CapsuleShape2D_dci6a")
 
 [node name="HealthComponent" type="Node" parent="."]
 script = ExtResource("5_b0fly")
-CurrentHealth = 75
+CurrentHealth = 80
 MaxHealth = 100
 
 [node name="HurtboxComponent" type="Area2D" parent="." node_paths=PackedStringArray("_hurtStaggerTimer") groups=["PlayersHurtBox"]]

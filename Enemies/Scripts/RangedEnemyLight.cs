@@ -63,9 +63,10 @@ public partial class RangedEnemyLight : Node2D
 		QueueFree();
 	}
 	
-	public override void _Process(double delta)
+	public override void _PhysicsProcess(double delta)
 	{
 		_canSeePlayer = _playerDetection.PlayerDetectionBehaviour();
+		
 		
 		_debugHealthLabel.SetText("HP: " + _health.CurrentHealth);
 	}
