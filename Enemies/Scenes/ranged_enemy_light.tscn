@@ -11,6 +11,9 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_h2awu"]
 size = Vector2(14, 34)
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_i87js"]
+radius = 250.0
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_morde"]
 animations = [{
 "frames": [{
@@ -81,9 +84,6 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_i87js"]
-radius = 250.0
-
 [node name="RangedEnemyLight" type="Node2D" node_paths=PackedStringArray("_health", "_hurtbox", "_playerDetection", "_shooting", "_animation", "_debugHealthLabel")]
 script = ExtResource("1_0ts2v")
 _health = NodePath("HealthComponent")
@@ -112,8 +112,25 @@ debug_color = Color(0.937255, 0, 0.196078, 0.419608)
 wait_time = 0.9
 one_shot = true
 
-[node name="PlayerDetectionComponent" type="Node2D" parent="."]
+[node name="PlayerDetectionComponent" type="Node2D" parent="." node_paths=PackedStringArray("_playerDetectionArea", "_playerDetectionRay")]
 script = ExtResource("4_o6tum")
+_playerDetectionArea = NodePath("PlayerDetectionArea")
+_playerDetectionRay = NodePath("PlayerDetectionRay")
+
+[node name="PlayerDetectionArea" type="Area2D" parent="PlayerDetectionComponent"]
+position = Vector2(0, -11)
+collision_layer = 0
+monitorable = false
+
+[node name="collider" type="CollisionShape2D" parent="PlayerDetectionComponent/PlayerDetectionArea"]
+shape = SubResource("CircleShape2D_i87js")
+debug_color = Color(0.6, 0.545098, 0, 0.129412)
+
+[node name="PlayerDetectionRay" type="RayCast2D" parent="PlayerDetectionComponent"]
+self_modulate = Color(0, 0, 0, 1)
+position = Vector2(0, -11)
+target_position = Vector2(-145, 0)
+collision_mask = 6
 
 [node name="ShootingComponent" type="Node2D" parent="."]
 script = ExtResource("4_wi2mm")
@@ -136,21 +153,6 @@ animation = &"shoot"
 
 [node name="eyeMarker" type="Marker2D" parent="."]
 position = Vector2(0, -11)
-
-[node name="PlayerDetectionArea" type="Area2D" parent="."]
-position = Vector2(0, -11)
-collision_layer = 0
-monitorable = false
-
-[node name="collider" type="CollisionShape2D" parent="PlayerDetectionArea"]
-shape = SubResource("CircleShape2D_i87js")
-debug_color = Color(0.6, 0.545098, 0, 0.129412)
-
-[node name="PlayerDetectionRay" type="RayCast2D" parent="."]
-self_modulate = Color(0, 0, 0, 1)
-position = Vector2(0, -11)
-target_position = Vector2(-145, 0)
-collision_mask = 6
 
 [node name="ShotCooldownTimer" type="Timer" parent="."]
 

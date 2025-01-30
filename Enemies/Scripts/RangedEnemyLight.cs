@@ -15,7 +15,7 @@ public partial class RangedEnemyLight : Node2D
 	
 	[Export] private Label _debugHealthLabel;
 
-	private bool _hurtStatus;
+	private bool _hurtStatus, _canSeePlayer;
 	
 	public override void _Ready()
 	{
@@ -65,6 +65,7 @@ public partial class RangedEnemyLight : Node2D
 	
 	public override void _Process(double delta)
 	{
+		_canSeePlayer = _playerDetection.PlayerDetectionBehaviour();
 		
 		_debugHealthLabel.SetText("HP: " + _health.CurrentHealth);
 	}
