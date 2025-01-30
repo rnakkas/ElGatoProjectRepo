@@ -64,8 +64,6 @@ public partial class EnemyBullet : Area2D
 		
 		MoveLocalX(_velocity.X, true);
 		MoveLocalY(_velocity.Y, true);
-		
-		// Position += Velocity;
 	}
 	
 	public override void _Process(double delta)

@@ -4,7 +4,7 @@ using System;
 namespace ElGatoProject.Components.Scripts;
 
 [GlobalClass]
-public partial class AttackComponent : Node2D
+public partial class ShootingComponent : Node2D
 {
 	
 }

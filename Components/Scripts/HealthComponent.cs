@@ -10,9 +10,17 @@ public partial class HealthComponent : Node
 	[Export] public int CurrentHealth { get; set; }
 	[Export] public int MaxHealth { get; set; }
 	
+	[Signal]
+	public delegate void HealthDepletedEventHandler();
+	
 	public void TakeDamage(int damage)
 	{
 		CurrentHealth -= damage;
+
+		if (CurrentHealth <= 0)
+		{
+			EmitSignal(SignalName.HealthDepleted);
+		}
 	}
 
 	public void Heal(int heal)
@@ -20,10 +28,5 @@ public partial class HealthComponent : Node
 		if (CurrentHealth >= MaxHealth)
 			return;
 		CurrentHealth = Mathf.Min(CurrentHealth + heal, MaxHealth);
-	}
-
-	public void Die()
-	{
-		
 	}
 }

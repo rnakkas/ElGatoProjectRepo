@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using ElGatoProject.Components.Scripts;
 using ElGatoProject.Resources;
 using ElGatoProject.Singletons;
 
@@ -12,7 +13,7 @@ public partial class Bullet : Area2D
 
 	public float Direction, BulletSpeed, BulletKnockback, BulletDespawnTimeSeconds;
 	public int BulletDamage;
-	public Vector2 Velocity;
+	private Vector2 _velocity;
 	
 	public override void _Ready()
 	{
@@ -40,11 +41,13 @@ public partial class Bullet : Area2D
 
 	private void BulletHitEnemy(Area2D enemyArea)
 	{
-		if (enemyArea.IsInGroup("Enemies"))
-		{
-			EventsBus.Instance.EmitAttackHit(this, enemyArea, BulletDamage, BulletKnockback, Velocity);
-			QueueFree();
-		}
+		if (!enemyArea.IsInGroup("Enemies"))
+			return;
+		if (enemyArea is not HurtboxComponent hurtboxComponent)
+			return;
+		
+		hurtboxComponent.HitByAttack(this, BulletDamage, BulletKnockback, _velocity);
+		QueueFree();
 	}
 
 	private void BulletDespawnTimerTimedOut()
@@ -54,8 +57,8 @@ public partial class Bullet : Area2D
 	
 	public override void _Process(double delta)
 	{
-		Velocity.X = (float)delta * BulletSpeed * Direction;
+		_velocity.X = (float)delta * BulletSpeed * Direction;
 
-		MoveLocalX(Velocity.X, true);
+		MoveLocalX(_velocity.X, true);
 	}
 }
