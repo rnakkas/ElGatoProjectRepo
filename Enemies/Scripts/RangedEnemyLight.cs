@@ -67,7 +67,6 @@ public partial class RangedEnemyLight : Node2D
 	{
 		_canSeePlayer = _playerDetection.PlayerDetectionBehaviour();
 		
-		
 		_debugHealthLabel.SetText("HP: " + _health.CurrentHealth);
 	}
 }

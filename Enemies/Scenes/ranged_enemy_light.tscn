@@ -129,7 +129,7 @@ debug_color = Color(0.6, 0.545098, 0, 0.129412)
 [node name="PlayerDetectionRay" type="RayCast2D" parent="PlayerDetectionComponent"]
 self_modulate = Color(0, 0, 0, 1)
 position = Vector2(0, -11)
-target_position = Vector2(-145, 0)
+target_position = Vector2(230, 0)
 collision_mask = 6
 
 [node name="ShootingComponent" type="Node2D" parent="."]

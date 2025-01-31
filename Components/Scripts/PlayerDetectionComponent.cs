@@ -3,6 +3,17 @@ using System;
 
 namespace ElGatoProject.Components.Scripts;
 
+/*
+ * IF player is in detection area
+	- playerInRange = true
+	- activate the player detection ray
+	- set the player detection ray to point towards player's position
+	- IF player detection ray is not colliding with wall
+		- canSeePlayer = true
+
+	Pass the canSeePlayer values back to parent
+ */
+
 [GlobalClass]
 public partial class PlayerDetectionComponent : Node2D
 {
@@ -44,40 +55,29 @@ public partial class PlayerDetectionComponent : Node2D
 	    if (!_playerInRange)
 	    {
 		    _canSeePlayer = false;
-		    return _canSeePlayer;
 	    } 
-	    
-	    _playerDetectionRay.TargetPosition = ToLocal(_player.GlobalPosition);
-	    if (_playerDetectionRay.IsColliding())
+	    else if (_playerInRange)
 	    {
-		    _canSeePlayer = false;
-		    GD.Print("can see player > " + _canSeePlayer);
-		    return _canSeePlayer;
-	    } 
-		    
-	    _canSeePlayer = true;
-	    GD.Print("can see player > " + _canSeePlayer);
-	    PlayerPosition = ToLocal(_player.GlobalPosition);
+		    _playerDetectionRay.Rotation = GetAngleTo(_player.GlobalPosition);
+		    PlayerPosition = ToLocal(_player.GlobalPosition);
+
+		    // Since rotation is being applied, Delay the checking of the raycasts collisions to the next frame
+		    CallDeferred(nameof(CheckRaycast));
+	    }
+	    
 	    return _canSeePlayer;
     }
+
+    private void CheckRaycast()
+    {
+	    if (!_playerDetectionRay.IsColliding())
+	    {
+		    _canSeePlayer = true;
+	    }
+	    else
+	    {
+		    _canSeePlayer = false;
+	    }
+	    
+    }
 }
-
-
-/*
- * For melee enemies
- * IF player detection area is null
- *	- set the player detection ray to a certain range value (set this value as an [export], for melee enemies
- *	- IF player detection ray collides with player
- *		- _canSeePlayer = true
- * 
- * For ranged enemies
- * IF player is in detection area
-	- playerInRange = true
-	- activate the player detection ray
-	- set the player detection ray to point towards player's position
-	- IF player detection ray is not colliding with wall
-		- canSeePlayer = true
-		
-	Pass the playerInRange and canSeePlayer values back to parent
- * 
- */
