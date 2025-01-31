@@ -134,6 +134,13 @@ collision_mask = 6
 
 [node name="ShootingComponent" type="Node2D" parent="."]
 script = ExtResource("4_wi2mm")
+ShootingCooldownTime = 0.9
+BulletDamage = 5
+BulletKnockback = 30.0
+BulletsPerShot = 1.0
+BulletSwayAngle = 2.3
+BulletSpeed = 320.0
+BulletLifeTime = 3.0
 
 [node name="AnimationComponent" type="Node" parent="."]
 script = ExtResource("2_fc56g")
