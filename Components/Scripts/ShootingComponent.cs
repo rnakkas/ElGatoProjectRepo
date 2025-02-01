@@ -57,6 +57,7 @@ public partial class ShootingComponent : Node2D
 			case Utility.WeaponType.EnemyPistol:
 			case Utility.WeaponType.EnemyMachineGun:
 			case Utility.WeaponType.EnemyRailGun:
+				
 				var bulletInstance = (EnemyBullet)Globals.Instance.EnemyBullet.Instantiate();
 		
 				// Set properties for the bullet
@@ -64,7 +65,7 @@ public partial class ShootingComponent : Node2D
 				bulletInstance.RotationDegrees = Globals.Instance.Rng.RandfRange(-_bulletSwayAngle, _bulletSwayAngle);
 				bulletInstance.BulletSpeed = _bulletSpeed;
 				bulletInstance.Knockback = _bulletKnockback;
-				bulletInstance.BulletDespawnTimeSeconds = _bulletLifeTime;
+				bulletInstance.BulletDespawnTimeSeconds = _bulletLifeTime; // change to BulletLifeTime
 				bulletInstance.BulletDamage = _bulletDamage;
 				bulletInstance.GlobalPosition = _muzzle.GlobalPosition;
 		
@@ -77,14 +78,15 @@ public partial class ShootingComponent : Node2D
 			case Utility.WeaponType.PlayerPistol:
 			case Utility.WeaponType.PlayerMachineGun:
 			case Utility.WeaponType.PlayerRailGun:	
-				var playerBulletInstance = (Bullet)Globals.Instance.EnemyBullet.Instantiate();
+				
+				var playerBulletInstance = (Bullet)Globals.Instance.PlayerBullet.Instantiate();
 		
 				// Set properties for the bullet
 				playerBulletInstance.Target = GlobalPosition.DirectionTo(TargetVector);
 				playerBulletInstance.RotationDegrees = Globals.Instance.Rng.RandfRange(-_bulletSwayAngle, _bulletSwayAngle);
 				playerBulletInstance.BulletSpeed = _bulletSpeed;
 				playerBulletInstance.Knockback = _bulletKnockback;
-				playerBulletInstance.BulletDespawnTimeSeconds = _bulletLifeTime;
+				playerBulletInstance.BulletDespawnTimeSeconds = _bulletLifeTime; // change to BulletLifeTime
 				playerBulletInstance.BulletDamage = _bulletDamage;
 				playerBulletInstance.GlobalPosition = _muzzle.GlobalPosition;
 		

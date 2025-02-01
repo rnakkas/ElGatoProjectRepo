@@ -1,0 +1,40 @@
+[gd_scene load_steps=5 format=3 uid="uid://b061rx1dqmjpb"]
+
+[ext_resource type="Texture2D" uid="uid://dqx6rpywerr0u" path="res://icon.svg" id="1_1ts8e"]
+[ext_resource type="Script" path="res://Components/Scripts/ProjectileHitboxComponent.cs" id="2_g5lfy"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ww87r"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_1ts8e")
+}],
+"loop": true,
+"name": &"fly",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"hit",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vrq6s"]
+size = Vector2(4, 4)
+
+[node name="bulletProjectile" type="Node2D"]
+
+[node name="sprite" type="AnimatedSprite2D" parent="."]
+self_modulate = Color(0, 0, 1, 1)
+position = Vector2(-2.98023e-08, -2.98023e-08)
+scale = Vector2(0.035, 0.035)
+sprite_frames = SubResource("SpriteFrames_ww87r")
+animation = &"fly"
+
+[node name="despawnTimer" type="Timer" parent="."]
+
+[node name="ProjectileHitboxComponent" type="Area2D" parent="."]
+script = ExtResource("2_g5lfy")
+
+[node name="collider" type="CollisionShape2D" parent="ProjectileHitboxComponent"]
+shape = SubResource("RectangleShape2D_vrq6s")

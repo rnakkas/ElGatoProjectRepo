@@ -52,6 +52,12 @@ public partial class Utility : Node
         PlayerRailGun
     }
 
+    public enum PlayerOrEnemy
+    {
+        Player,
+        Enemy
+    }
+
     public override void _Ready()
     {
         Instance = this;
