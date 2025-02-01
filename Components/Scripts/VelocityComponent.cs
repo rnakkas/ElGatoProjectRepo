@@ -107,5 +107,4 @@ public partial class VelocityComponent : Node
 		
 		return _velocity;
 	}
-	
 }

@@ -285,9 +285,9 @@ WallSlideGravity = 500.0
 WallJumpVelocity = -230.0
 WallSlideVelocity = 100.0
 
-[node name="AnimationComponent" type="Node" parent="." node_paths=PackedStringArray("_sprite")]
+[node name="AnimationComponent" type="Node" parent="." node_paths=PackedStringArray("Sprite")]
 script = ExtResource("8_gdubi")
-_sprite = NodePath("../sprite")
+Sprite = NodePath("../sprite")
 
 [node name="PickupsComponent" type="Area2D" parent="." groups=["PlayersPickupsBox"]]
 collision_mask = 16

@@ -149,8 +149,9 @@ position = Vector2(0, -11)
 
 [node name="ShotCooldownTimer" type="Timer" parent="ShootingComponent"]
 
-[node name="AnimationComponent" type="Node" parent="."]
+[node name="AnimationComponent" type="Node" parent="." node_paths=PackedStringArray("Sprite")]
 script = ExtResource("2_fc56g")
+Sprite = NodePath("../spriteBody")
 
 [node name="spriteBody" type="AnimatedSprite2D" parent="."]
 self_modulate = Color(0.0196078, 0.0196078, 0.0196078, 1)

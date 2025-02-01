@@ -1,12 +1,13 @@
 using Godot;
 using System;
+using ElGatoProject.Singletons;
 
 namespace ElGatoProject.Components.Scripts;
 
 [GlobalClass]
 public partial class AnimationComponent : Node
 {
-	[Export] private AnimatedSprite2D _sprite;
+	[Export] public AnimatedSprite2D Sprite;
 	[Export] public float Direction { get; set; }
 	[Export] public Vector2 Velocity {get; set;}
 	[Export] public bool IsOnFloor {get; set;}
@@ -16,38 +17,38 @@ public partial class AnimationComponent : Node
 	
 	public void FlipSprite(float direction)
 	{
-		if (_sprite == null) 
+		if (Sprite == null) 
 			return;
 		
 		if (direction < 0)
 		{
-			_sprite.FlipH = true;
+			Sprite.FlipH = true;
 		}
 		else if (direction > 0)
 		{
-			_sprite.FlipH = false;
+			Sprite.FlipH = false;
 		}
 	}
 	
 	public void FlipSpriteToFaceHitDirection(Vector2 attackPosition)
 	{
-		if (_sprite == null)
+		if (Sprite == null)
 			return;
 		
 		// Flip sprite if hit from behind
-		if (attackPosition.X > 0 && _sprite.IsFlippedH())
+		if (attackPosition.X > 0 && Sprite.IsFlippedH())
 		{
-			_sprite.FlipH = false;
+			Sprite.FlipH = false;
 		}
-		else if (attackPosition.X < 0 && !_sprite.IsFlippedH())
+		else if (attackPosition.X < 0 && !Sprite.IsFlippedH())
 		{
-			_sprite.FlipH = true;
+			Sprite.FlipH = true;
 		}
 	}
 
 	public void PlayAnimations()
 	{
-		if (_sprite == null)
+		if (Sprite == null)
 			return;
 		
 		FlipSprite(Direction);
@@ -56,36 +57,61 @@ public partial class AnimationComponent : Node
 		{
 			if (Velocity.X == 0 && IsOnFloor)
 			{
-				_sprite.Play("idle");
+				Sprite.Play("idle");
 			}
 			else if (Velocity.X != 0 && IsOnFloor)
 			{
-				_sprite.Play("run");
+				Sprite.Play("run");
 			}
 			else if (Velocity.Y < 0 && !IsOnFloor)
 			{
-				_sprite.Play("jump");
+				Sprite.Play("jump");
 			}
 			else if (Velocity.Y > 0 && !IsOnFloor)
 			{
-				_sprite.Play("fall");
+				Sprite.Play("fall");
 			}
 		
 			if (!IsOnFloor && IsLeftWallDetected)
 			{
 				FlipSprite(1.0f);
-				_sprite.Play("wall_slide");
+				Sprite.Play("wall_slide");
 			}
 			else if (!IsOnFloor && IsRightWallDetected)
 			{
 				FlipSprite(-1.0f);
-				_sprite.Play("wall_slide");
+				Sprite.Play("wall_slide");
 			}
 		}
 		else
 		{
-			_sprite.Play("hurt");
+			Sprite.Play("hurt");
 		}
+	}
+
+	public void PlayProjectileAnimations(Utility.WeaponType weaponType)
+	{
+		Sprite.SetVisible(true);
 		
+		switch (weaponType)
+		{
+			case Utility.WeaponType.EnemyPistol:
+			case Utility.WeaponType.PlayerPistol:
+				Sprite.Play("pistol_fly");
+				GD.Print("pistol");
+				break;
+			case Utility.WeaponType.EnemyShotgun:
+			case Utility.WeaponType.PlayerShotgun:
+				Sprite.Play("shotgun_fly");
+				break;
+			case Utility.WeaponType.EnemyMachineGun:
+			case Utility.WeaponType.PlayerMachineGun:
+				Sprite.Play("machinegun_fly");
+				break;
+			case Utility.WeaponType.EnemyRailGun:
+			case Utility.WeaponType.PlayerRailGun:
+				Sprite.Play("railgun_fly");
+				break;
+		}
 	}
 }
