@@ -57,7 +57,7 @@ public partial class ShootingComponent : Node2D
 			case Utility.WeaponType.EnemyPistol:
 			case Utility.WeaponType.EnemyMachineGun:
 			case Utility.WeaponType.EnemyRailGun:
-				var bulletInstance = (EnemyBullet)Globals.Instance.EnemyPistolBullet.Instantiate();
+				var bulletInstance = (EnemyBullet)Globals.Instance.EnemyBullet.Instantiate();
 		
 				// Set properties for the bullet
 				bulletInstance.Target = GlobalPosition.DirectionTo(TargetVector);
@@ -77,7 +77,7 @@ public partial class ShootingComponent : Node2D
 			case Utility.WeaponType.PlayerPistol:
 			case Utility.WeaponType.PlayerMachineGun:
 			case Utility.WeaponType.PlayerRailGun:	
-				var playerBulletInstance = (Bullet)Globals.Instance.EnemyPistolBullet.Instantiate();
+				var playerBulletInstance = (Bullet)Globals.Instance.EnemyBullet.Instantiate();
 		
 				// Set properties for the bullet
 				playerBulletInstance.Target = GlobalPosition.DirectionTo(TargetVector);
@@ -94,3 +94,12 @@ public partial class ShootingComponent : Node2D
 		}
 	}
 }
+
+/*
+ * NOTES:
+ * Make the bullets a generic scene with multiple sprite sheets in the AnimatedSprite2D node
+ * This way can Instantiate that generic bullet scene and pass the properties to it
+ * In the bullet scene, change out the sprite based on the bullet/weapon type,
+ *	for example shotgun bullets will play different fly and hit animations to pistol bullets
+ *
+ */
