@@ -62,10 +62,20 @@ public partial class RangedEnemyLight : Node2D
 	{
 		QueueFree();
 	}
+
+	private void SetComponentProperties()
+	{
+		_shooting.TargetVector = _playerDetection.PlayerPosition;
+		_shooting.HurtStatus = _hurtStatus;
+		_shooting.CanSeePlayer = _canSeePlayer;
+	}
 	
 	public override void _PhysicsProcess(double delta)
 	{
 		_canSeePlayer = _playerDetection.PlayerDetectionBehaviour();
+		_shooting.Shoot();
+		
+		SetComponentProperties();
 		
 		_debugHealthLabel.SetText("HP: " + _health.CurrentHealth);
 	}

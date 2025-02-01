@@ -109,7 +109,7 @@ public partial class TestArea : Area2D
 			if (_playerProjectile is not Bullet bullet)
 				return;
 				
-			Velocity.X = delta * bullet.BulletKnockback * 10;
+			Velocity.X = delta * bullet.Knockback * 10;
 		}
 	}
 

@@ -7,7 +7,7 @@ namespace ElGatoProject.Components.Scripts;
  * IF player is in detection area
 	- playerInRange = true
 	- activate the player detection ray
-	- set the player detection ray to point towards player's position
+	- rotate the player detection ray to point towards player's position
 	- IF player detection ray is not colliding with wall
 		- canSeePlayer = true
 
@@ -58,10 +58,10 @@ public partial class PlayerDetectionComponent : Node2D
 	    } 
 	    else if (_playerInRange)
 	    {
-		    _playerDetectionRay.Rotation = GetAngleTo(_player.GlobalPosition);
-		    PlayerPosition = ToLocal(_player.GlobalPosition);
+		    _playerDetectionRay.TargetPosition = ToLocal(_player.GlobalPosition);
+		    PlayerPosition = _player.GlobalPosition;
 
-		    // Since rotation is being applied, Delay the checking of the raycasts collisions to the next frame
+		    // Since target position is being changed this frame, Delay checking of raycasts collisions to the next frame
 		    CallDeferred(nameof(CheckRaycast));
 	    }
 	    
@@ -70,14 +70,6 @@ public partial class PlayerDetectionComponent : Node2D
 
     private void CheckRaycast()
     {
-	    if (!_playerDetectionRay.IsColliding())
-	    {
-		    _canSeePlayer = true;
-	    }
-	    else
-	    {
-		    _canSeePlayer = false;
-	    }
-	    
+	    _canSeePlayer = !_playerDetectionRay.IsColliding();
     }
 }

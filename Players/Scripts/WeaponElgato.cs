@@ -89,9 +89,10 @@ public partial class WeaponElgato : Node2D
 		
 		// Set properties for the bullet
 		bulletInstance.Direction = Direction;
+		bulletInstance.Target = new Vector2(Direction, 0);
 		bulletInstance.RotationDegrees = Globals.Instance.Rng.RandfRange(-_weaponStats.WeaponSwayDegrees, _weaponStats.WeaponSwayDegrees);
 		bulletInstance.BulletSpeed = _weaponStats.BulletSpeed;
-		bulletInstance.BulletKnockback = _weaponStats.BulletKnockback;
+		bulletInstance.Knockback = _weaponStats.BulletKnockback;
 		bulletInstance.BulletDespawnTimeSeconds = _weaponStats.BulletDespawnTimeSeconds;
 		bulletInstance.BulletDamage = _weaponStats.BulletDamage;
 		bulletInstance.GlobalPosition = _muzzle.GlobalPosition;

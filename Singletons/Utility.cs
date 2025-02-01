@@ -37,7 +37,19 @@ public partial class Utility : Node
     	None,
     	Shotgun,
     	MachineGun,
-    	Railgun
+        RailGun
+    }
+
+    public enum WeaponType
+    {
+        EnemyPistol,
+        EnemyShotgun,
+        EnemyMachineGun,
+        EnemyRailGun,
+        PlayerPistol,
+        PlayerShotgun,
+        PlayerMachineGun,
+        PlayerRailGun
     }
 
     public override void _Ready()

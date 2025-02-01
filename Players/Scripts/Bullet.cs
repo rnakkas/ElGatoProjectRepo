@@ -11,7 +11,8 @@ public partial class Bullet : Area2D
 	[Export] private AnimatedSprite2D _sprite;
 	[Export] private Timer _despawnTimer;
 
-	public float Direction, BulletSpeed, BulletKnockback, BulletDespawnTimeSeconds;
+	public float Direction, BulletSpeed, Knockback, BulletDespawnTimeSeconds;
+	public Vector2 Target;
 	public int BulletDamage;
 	private Vector2 _velocity;
 	
@@ -46,7 +47,7 @@ public partial class Bullet : Area2D
 		if (enemyArea is not HurtboxComponent hurtboxComponent)
 			return;
 		
-		hurtboxComponent.HitByAttack(this, BulletDamage, BulletKnockback, _velocity);
+		hurtboxComponent.HitByAttack(this, BulletDamage, Knockback, _velocity);
 		QueueFree();
 	}
 
@@ -57,7 +58,7 @@ public partial class Bullet : Area2D
 	
 	public override void _Process(double delta)
 	{
-		_velocity.X = (float)delta * BulletSpeed * Direction;
+		_velocity.X = (float)delta * BulletSpeed * Target.X;
 
 		MoveLocalX(_velocity.X, true);
 	}

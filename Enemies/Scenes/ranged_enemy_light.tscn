@@ -132,15 +132,22 @@ position = Vector2(0, -11)
 target_position = Vector2(230, 0)
 collision_mask = 6
 
-[node name="ShootingComponent" type="Node2D" parent="."]
+[node name="ShootingComponent" type="Node2D" parent="." node_paths=PackedStringArray("_muzzle", "_shotCooldownTimer")]
 script = ExtResource("4_wi2mm")
-ShootingCooldownTime = 0.9
-BulletDamage = 5
-BulletKnockback = 30.0
-BulletsPerShot = 1.0
-BulletSwayAngle = 2.3
-BulletSpeed = 320.0
-BulletLifeTime = 3.0
+_shootingCooldownTime = 0.9
+_bulletDamage = 5
+_bulletKnockback = 35.0
+_bulletsPerShot = 1.0
+_bulletSwayAngle = 2.3
+_bulletSpeed = 350.0
+_bulletLifeTime = 3.0
+_muzzle = NodePath("eyeMarker")
+_shotCooldownTimer = NodePath("ShotCooldownTimer")
+
+[node name="eyeMarker" type="Marker2D" parent="ShootingComponent"]
+position = Vector2(0, -11)
+
+[node name="ShotCooldownTimer" type="Timer" parent="ShootingComponent"]
 
 [node name="AnimationComponent" type="Node" parent="."]
 script = ExtResource("2_fc56g")
@@ -157,11 +164,6 @@ position = Vector2(0, -11)
 scale = Vector2(0.0488281, 0.048828)
 sprite_frames = SubResource("SpriteFrames_cd87g")
 animation = &"shoot"
-
-[node name="eyeMarker" type="Marker2D" parent="."]
-position = Vector2(0, -11)
-
-[node name="ShotCooldownTimer" type="Timer" parent="."]
 
 [node name="RapidFireTimer" type="Timer" parent="."]
 
