@@ -54,6 +54,10 @@ public partial class ShootingComponent : Node2D
 		switch (_weaponType)
 		{
 			case Utility.WeaponType.EnemyShotgun:
+				for (int i = 0; i < _bulletsPerShot; i++)
+				{
+					CreateAndSetBulletProperties(Utility.PlayerOrEnemy.Enemy, _weaponType);
+				}
 				break;
 			case Utility.WeaponType.EnemyPistol:
 			case Utility.WeaponType.EnemyMachineGun:
@@ -62,6 +66,10 @@ public partial class ShootingComponent : Node2D
 				break;
 			
 			case Utility.WeaponType.PlayerShotgun:
+				for (int i = 0; i < _bulletsPerShot; i++)
+				{
+					CreateAndSetBulletProperties(Utility.PlayerOrEnemy.Player, _weaponType);
+				}
 				break;
 			case Utility.WeaponType.PlayerPistol:
 			case Utility.WeaponType.PlayerMachineGun:
