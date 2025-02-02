@@ -98,7 +98,6 @@ public partial class AnimationComponent : Node
 			case Utility.WeaponType.EnemyPistol:
 			case Utility.WeaponType.PlayerPistol:
 				Sprite.Play("pistol_fly");
-				GD.Print("pistol_fly animation");
 				break;
 			case Utility.WeaponType.EnemyShotgun:
 			case Utility.WeaponType.PlayerShotgun:
@@ -115,3 +114,4 @@ public partial class AnimationComponent : Node
 		}
 	}
 }
+//TODO: Create the animation names for the different bullet types in the godot editor

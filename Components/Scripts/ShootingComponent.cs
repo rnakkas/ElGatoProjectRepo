@@ -49,6 +49,20 @@ public partial class ShootingComponent : Node2D
 		}
 	}
 
+	//TODO: Create shooting logic for machine gun
+	/*
+	 * Option 1:
+	 * Use an int maxBullets variable
+	 * After each shot/cooldown timeout increment the bullet count
+	 * If bulletCount == maxBullets start a reload cooldown timer
+	 * When reload cooldown timer timesout, reset bulletCount to 0 to be able to start shooting again
+	 *
+	 * Option 2:
+	 * Use a shooting timer
+	 * Enemy can only shoot while the timer is ruuning
+	 * When timer times out, stop shooting and start reload timer
+	 * When reload timer runs out, start shooting timer and start shooting again
+	 */
 	private void ShootingLogic()
 	{
 		switch (_weaponType)

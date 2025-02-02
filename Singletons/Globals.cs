@@ -11,8 +11,6 @@ public partial class Globals : Node
     
     public PackedScene BulletProjectile = ResourceLoader.Load<PackedScene>("res://Projectiles/Scenes/bullet_projectile.tscn");
     
-    public PackedScene PlayerBullet = ResourceLoader.Load<PackedScene>("res://Players/Scenes/bullet.tscn");
-    
     public override void _Ready()
     {
         Instance = this;
