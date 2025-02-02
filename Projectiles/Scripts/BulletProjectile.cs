@@ -18,8 +18,9 @@ public partial class BulletProjectile : Node2D
 	public float BulletSpeed, Knockback, BulletLifeTime; 
 	public Vector2 Target;
 	public int BulletDamage;
+	public Utility.WeaponType BulletWeaponType;
+	
 	private Vector2 _velocity;
-	private Utility.WeaponType _weaponType;
 	private AnimatedSprite2D _sprite;
 	
 	public override void _Ready()
@@ -28,7 +29,25 @@ public partial class BulletProjectile : Node2D
 		_despawnTimer.SetWaitTime(BulletLifeTime);
 		_despawnTimer.Timeout += BulletDespawnTimerTimedOut;
 		_despawnTimer.Start();
+
+		_hitbox.HitboxCollided += OnHitBoxCollision;
 		
+		SetComponentProperties();
+		_animation.PlayProjectileAnimations(BulletWeaponType);
+	}
+
+	private void OnHitBoxCollision()
+	{
+		QueueFree();
+	}
+	
+	private void BulletDespawnTimerTimedOut()
+	{
+		QueueFree();
+	}
+
+	private void SetComponentProperties()
+	{
 		switch (PlayerOrEnemyBullet)
 		{
 			case Utility.PlayerOrEnemy.Player:
@@ -40,22 +59,11 @@ public partial class BulletProjectile : Node2D
 				break;
 		}
 		
-		_animation.Sprite = _sprite;
-		_animation.PlayProjectileAnimations(_weaponType);
-		
-	}
-
-	private void BulletDespawnTimerTimedOut()
-	{
-		QueueFree();
-	}
-
-	private void SetComponentProperties()
-	{
-		_hitbox.PlayerOrEnemyBullet = PlayerOrEnemyBullet;
+		_hitbox.PlayerOrEnemyProjectile = PlayerOrEnemyBullet;
 		_hitbox.BulletDamage = BulletDamage;
 		_hitbox.Knockback = Knockback;
-		_hitbox.Velocity = _velocity;
+		
+		_animation.Sprite = _sprite;
 	}
 	
 	private void ApplyVelocity(float delta)
@@ -67,12 +75,12 @@ public partial class BulletProjectile : Node2D
 		
 		MoveLocalX(_velocity.X, true);
 		MoveLocalY(_velocity.Y, true);
+		
+		_hitbox.Velocity = _velocity;
 	}
 	
 	public override void _PhysicsProcess(double delta)
 	{
-		SetComponentProperties();
-		
 		ApplyVelocity((float)delta);
 	}
 }

@@ -89,16 +89,16 @@ public partial class AnimationComponent : Node
 		}
 	}
 
-	public void PlayProjectileAnimations(Utility.WeaponType weaponType)
+	public void PlayProjectileAnimations(Utility.WeaponType bulletWeaponType)
 	{
 		Sprite.SetVisible(true);
 		
-		switch (weaponType)
+		switch (bulletWeaponType)
 		{
 			case Utility.WeaponType.EnemyPistol:
 			case Utility.WeaponType.PlayerPistol:
 				Sprite.Play("pistol_fly");
-				GD.Print("pistol");
+				GD.Print("pistol_fly animation");
 				break;
 			case Utility.WeaponType.EnemyShotgun:
 			case Utility.WeaponType.PlayerShotgun:

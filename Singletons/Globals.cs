@@ -9,7 +9,7 @@ public partial class Globals : Node
 
     public RandomNumberGenerator Rng = new();
     
-    public PackedScene EnemyBullet = ResourceLoader.Load<PackedScene>("res://Enemies/Scenes/enemy_bullet.tscn");
+    public PackedScene BulletProjectile = ResourceLoader.Load<PackedScene>("res://Projectiles/Scenes/bullet_projectile.tscn");
     
     public PackedScene PlayerBullet = ResourceLoader.Load<PackedScene>("res://Players/Scenes/bullet.tscn");
     

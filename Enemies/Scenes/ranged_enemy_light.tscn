@@ -141,17 +141,16 @@ _bulletsPerShot = 1.0
 _bulletSwayAngle = 2.3
 _bulletSpeed = 350.0
 _bulletLifeTime = 3.0
-_muzzle = NodePath("eyeMarker")
+_muzzle = NodePath("muzzle")
 _shotCooldownTimer = NodePath("ShotCooldownTimer")
 
-[node name="eyeMarker" type="Marker2D" parent="ShootingComponent"]
+[node name="muzzle" type="Marker2D" parent="ShootingComponent"]
 position = Vector2(0, -11)
 
 [node name="ShotCooldownTimer" type="Timer" parent="ShootingComponent"]
 
-[node name="AnimationComponent" type="Node" parent="." node_paths=PackedStringArray("Sprite")]
+[node name="AnimationComponent" type="Node" parent="."]
 script = ExtResource("2_fc56g")
-Sprite = NodePath("../spriteBody")
 
 [node name="spriteBody" type="AnimatedSprite2D" parent="."]
 self_modulate = Color(0.0196078, 0.0196078, 0.0196078, 1)

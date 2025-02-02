@@ -7,33 +7,33 @@
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ww87r"]
 animations = [{
+"frames": [],
+"loop": true,
+"name": &"hit",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("1_1ts8e")
 }],
 "loop": true,
-"name": &"fly",
-"speed": 5.0
-}, {
-"frames": [],
-"loop": true,
-"name": &"hit",
+"name": &"pistol_fly",
 "speed": 5.0
 }]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_grr3d"]
 animations = [{
+"frames": [],
+"loop": true,
+"name": &"hit",
+"speed": 5.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("1_1ts8e")
 }],
 "loop": true,
-"name": &"fly",
-"speed": 5.0
-}, {
-"frames": [],
-"loop": true,
-"name": &"hit",
+"name": &"pistol_fly",
 "speed": 5.0
 }]
 
@@ -52,7 +52,7 @@ self_modulate = Color(0, 0, 1, 1)
 position = Vector2(-2.98023e-08, -2.98023e-08)
 scale = Vector2(0.035, 0.035)
 sprite_frames = SubResource("SpriteFrames_ww87r")
-animation = &"fly"
+animation = &"pistol_fly"
 
 [node name="sprite_enemy" type="AnimatedSprite2D" parent="."]
 visible = false
@@ -60,7 +60,7 @@ self_modulate = Color(1, 0, 0, 1)
 position = Vector2(-2.98023e-08, -2.98023e-08)
 scale = Vector2(0.035, 0.035)
 sprite_frames = SubResource("SpriteFrames_grr3d")
-animation = &"fly"
+animation = &"pistol_fly"
 
 [node name="despawnTimer" type="Timer" parent="."]
 

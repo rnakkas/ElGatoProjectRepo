@@ -2,6 +2,7 @@ using Godot;
 using System;
 using ElGatoProject.Enemies.Scripts;
 using ElGatoProject.Players.Scripts;
+using ElGatoProject.Projectiles.Scripts;
 using ElGatoProject.Singletons;
 
 namespace ElGatoProject.Components.Scripts;
@@ -57,22 +58,7 @@ public partial class ShootingComponent : Node2D
 			case Utility.WeaponType.EnemyPistol:
 			case Utility.WeaponType.EnemyMachineGun:
 			case Utility.WeaponType.EnemyRailGun:
-				
-				var bulletInstance = (EnemyBullet)Globals.Instance.EnemyBullet.Instantiate();
-		
-				// Set properties for the bullet
-				//TODO: Set PlayerOrEnemyBullet
-				//TODO: Set the WeaponType for animations
-				bulletInstance.Target = GlobalPosition.DirectionTo(TargetVector);
-				bulletInstance.RotationDegrees = Globals.Instance.Rng.RandfRange(-_bulletSwayAngle, _bulletSwayAngle);
-				bulletInstance.BulletSpeed = _bulletSpeed;
-				bulletInstance.Knockback = _bulletKnockback;
-				bulletInstance.BulletDespawnTimeSeconds = _bulletLifeTime; //TODO:  change to BulletLifeTime
-				bulletInstance.BulletDamage = _bulletDamage;
-				bulletInstance.GlobalPosition = _muzzle.GlobalPosition;
-		
-				// Add bullet instance to scene
-				GetTree().Root.AddChild(bulletInstance);
+				CreateAndSetBulletProperties(Utility.PlayerOrEnemy.Enemy, _weaponType);
 				break;
 			
 			case Utility.WeaponType.PlayerShotgun:
@@ -80,24 +66,26 @@ public partial class ShootingComponent : Node2D
 			case Utility.WeaponType.PlayerPistol:
 			case Utility.WeaponType.PlayerMachineGun:
 			case Utility.WeaponType.PlayerRailGun:	
-				
-				var playerBulletInstance = (Bullet)Globals.Instance.PlayerBullet.Instantiate();
-		
-				// Set properties for the bullet
-				//TODO: Set PlayerOrEnemyBullet
-				//TODO: Set the player weapon's direction vector instead of target
-				//TODO: Set the WeaponType for animations
-				playerBulletInstance.Target = GlobalPosition.DirectionTo(TargetVector); 
-				playerBulletInstance.RotationDegrees = Globals.Instance.Rng.RandfRange(-_bulletSwayAngle, _bulletSwayAngle);
-				playerBulletInstance.BulletSpeed = _bulletSpeed;
-				playerBulletInstance.Knockback = _bulletKnockback;
-				playerBulletInstance.BulletDespawnTimeSeconds = _bulletLifeTime; //TODO:  change to BulletLifeTime
-				playerBulletInstance.BulletDamage = _bulletDamage;
-				playerBulletInstance.GlobalPosition = _muzzle.GlobalPosition;
-		
-				// Add bullet instance to scene
-				GetTree().Root.AddChild(playerBulletInstance);
+				CreateAndSetBulletProperties(Utility.PlayerOrEnemy.Player, _weaponType);
 				break;
 		}
+	}
+
+	private void CreateAndSetBulletProperties(Utility.PlayerOrEnemy playerOrEnemy, Utility.WeaponType projectileWeaponType)
+	{
+		var projectileInstance = (BulletProjectile)Globals.Instance.BulletProjectile.Instantiate();
+		
+		projectileInstance.PlayerOrEnemyBullet = playerOrEnemy;
+		projectileInstance.BulletWeaponType = projectileWeaponType;
+		
+		projectileInstance.Target = GlobalPosition.DirectionTo(TargetVector);
+		projectileInstance.RotationDegrees = Globals.Instance.Rng.RandfRange(-_bulletSwayAngle, _bulletSwayAngle);
+		projectileInstance.BulletSpeed = _bulletSpeed;
+		projectileInstance.Knockback = _bulletKnockback;
+		projectileInstance.BulletLifeTime = _bulletLifeTime;
+		projectileInstance.BulletDamage = _bulletDamage;
+		projectileInstance.GlobalPosition = _muzzle.GlobalPosition;
+		
+		GetTree().Root.AddChild(projectileInstance);
 	}
 }

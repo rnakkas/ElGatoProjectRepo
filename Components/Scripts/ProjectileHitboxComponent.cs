@@ -14,10 +14,13 @@ namespace ElGatoProject.Components.Scripts;
 [GlobalClass]
 public partial class ProjectileHitboxComponent : Area2D
 {
-	[Export] public Utility.PlayerOrEnemy PlayerOrEnemyBullet { get; set; }
 	[Export] public int BulletDamage { get; set; }
 	[Export] public float Knockback { get; set; }
 	[Export] public Vector2 Velocity { get; set; }
+	
+	[Signal] public delegate void HitboxCollidedEventHandler();
+	
+	public Utility.PlayerOrEnemy PlayerOrEnemyProjectile { get; set; }
 
 	public override void _Ready()
 	{
@@ -29,21 +32,22 @@ public partial class ProjectileHitboxComponent : Area2D
 	{
 		if (body is TileMapLayer)
 		{
-			QueueFree();
+			EmitSignal(SignalName.HitboxCollided);
 		}
 	}
 	
 	private void BulletHitEntity(Area2D entityArea)
 	{
 		if (
-			entityArea.IsInGroup("PlayersHurtBox") && PlayerOrEnemyBullet == Utility.PlayerOrEnemy.Enemy ||
-			entityArea.IsInGroup("Enemies") && PlayerOrEnemyBullet == Utility.PlayerOrEnemy.Player
+			(entityArea.IsInGroup("PlayersHurtBox") && PlayerOrEnemyProjectile == Utility.PlayerOrEnemy.Enemy) ||
+			(entityArea.IsInGroup("Enemies") && PlayerOrEnemyProjectile == Utility.PlayerOrEnemy.Player)
 			)
 		{
 			if (entityArea is not HurtboxComponent hurtboxComponent)
 				return;
+			GD.Print(Velocity);
 			hurtboxComponent.HitByAttack(this, BulletDamage, Knockback, Velocity);
-			QueueFree();
+			EmitSignal(SignalName.HitboxCollided);
 		}
 	}
 }
