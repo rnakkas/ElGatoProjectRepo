@@ -12,6 +12,7 @@ public partial class BulletProjectile : Node2D
 	// Components
 	[Export] private ProjectileHitboxComponent _hitbox;
 	[Export] private AnimationComponent _animation;
+	[Export] private AnimatedSprite2D _sprite;	
 	
 	[Export] private Timer _despawnTimer;
 	
@@ -21,7 +22,6 @@ public partial class BulletProjectile : Node2D
 	public Utility.WeaponType BulletWeaponType;
 	
 	private Vector2 _velocity;
-	private AnimatedSprite2D _sprite;
 	
 	public override void _Ready()
 	{
@@ -33,11 +33,12 @@ public partial class BulletProjectile : Node2D
 		_hitbox.HitboxCollided += OnHitBoxCollision;
 		
 		SetComponentProperties();
-		_animation.PlayProjectileAnimations(BulletWeaponType);
+		_animation.PlayProjectileAnimations(BulletWeaponType, false);
 	}
 
 	private void OnHitBoxCollision()
 	{
+		_animation.PlayProjectileAnimations(BulletWeaponType, true);
 		QueueFree();
 	}
 	
@@ -48,19 +49,8 @@ public partial class BulletProjectile : Node2D
 
 	private void SetComponentProperties()
 	{
-		switch (PlayerOrEnemyBullet)
-		{
-			case Utility.PlayerOrEnemy.Player:
-				_sprite = GetNodeOrNull<AnimatedSprite2D>("sprite_player");
-				break;
-			
-			case Utility.PlayerOrEnemy.Enemy:
-				_sprite = GetNodeOrNull<AnimatedSprite2D>("sprite_enemy");
-				break;
-		}
-		
 		_hitbox.PlayerOrEnemyProjectile = PlayerOrEnemyBullet;
-		_hitbox.BulletDamage = BulletDamage;
+		_hitbox.Damage = BulletDamage;
 		_hitbox.Knockback = Knockback;
 		
 		_animation.Sprite = _sprite;

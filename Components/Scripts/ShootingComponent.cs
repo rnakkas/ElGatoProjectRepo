@@ -95,7 +95,7 @@ public partial class ShootingComponent : Node2D
 
 	private void CreateAndSetBulletProperties(Utility.PlayerOrEnemy playerOrEnemy, Utility.WeaponType projectileWeaponType)
 	{
-		var projectileInstance = (BulletProjectile)Globals.Instance.BulletProjectile.Instantiate();
+		var projectileInstance = Globals.Instance.BulletProjectile.Instantiate<BulletProjectile>();
 		
 		projectileInstance.PlayerOrEnemyBullet = playerOrEnemy;
 		projectileInstance.BulletWeaponType = projectileWeaponType;

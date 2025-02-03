@@ -89,29 +89,34 @@ public partial class AnimationComponent : Node
 		}
 	}
 
-	public void PlayProjectileAnimations(Utility.WeaponType bulletWeaponType)
+	public void PlayProjectileAnimations(Utility.WeaponType bulletWeaponType, bool hitStatus)
 	{
-		Sprite.SetVisible(true);
-		
 		switch (bulletWeaponType)
 		{
 			case Utility.WeaponType.EnemyPistol:
+				Sprite.Play(!hitStatus ? Utility.Instance.EnemyPistolFly : Utility.Instance.EnemyPistolHit);
+				break;
 			case Utility.WeaponType.PlayerPistol:
-				Sprite.Play("pistol_fly");
+				Sprite.Play(!hitStatus ?  Utility.Instance.PlayerPistolFly : Utility.Instance.EnemyPistolHit);
 				break;
 			case Utility.WeaponType.EnemyShotgun:
+				Sprite.Play(!hitStatus ? Utility.Instance.EnemyShotgunFly : Utility.Instance.EnemyShotgunHit);
+				break;
 			case Utility.WeaponType.PlayerShotgun:
-				Sprite.Play("shotgun_fly");
+				Sprite.Play(!hitStatus ? Utility.Instance.PlayerShotgunFly : Utility.Instance.PlayerShotgunHit);
 				break;
 			case Utility.WeaponType.EnemyMachineGun:
+				Sprite.Play(!hitStatus ? Utility.Instance.EnemyMachineGunFly : Utility.Instance.EnemyMachineGunHit);
+				break;
 			case Utility.WeaponType.PlayerMachineGun:
-				Sprite.Play("machinegun_fly");
+				Sprite.Play(!hitStatus ? Utility.Instance.PlayerMachineGunFly : Utility.Instance.PlayerMachineGunHit);
 				break;
 			case Utility.WeaponType.EnemyRailGun:
+				Sprite.Play(!hitStatus ? Utility.Instance.EnemyRailGunFly : Utility.Instance.EnemyRailGunHit);
+				break;
 			case Utility.WeaponType.PlayerRailGun:
-				Sprite.Play("railgun_fly");
+				Sprite.Play(!hitStatus ? Utility.Instance.PlayerRailGunFly : Utility.Instance.PlayerRailGunHit);
 				break;
 		}
 	}
 }
-//TODO: Create the animation names for the different bullet types in the godot editor

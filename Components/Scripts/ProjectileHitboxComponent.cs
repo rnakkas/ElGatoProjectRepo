@@ -14,7 +14,7 @@ namespace ElGatoProject.Components.Scripts;
 [GlobalClass]
 public partial class ProjectileHitboxComponent : Area2D
 {
-	[Export] public int BulletDamage { get; set; }
+	[Export] public int Damage { get; set; }
 	[Export] public float Knockback { get; set; }
 	[Export] public Vector2 Velocity { get; set; }
 	
@@ -24,11 +24,11 @@ public partial class ProjectileHitboxComponent : Area2D
 
 	public override void _Ready()
 	{
-		BodyEntered += BulletHitWallOrFloor;
-		AreaEntered += BulletHitEntity;
+		BodyEntered += OnWallOrFloorHit;
+		AreaEntered += OnEntityHit;
 	}
 	
-	private void BulletHitWallOrFloor(Node body)
+	private void OnWallOrFloorHit(Node body)
 	{
 		if (body is TileMapLayer)
 		{
@@ -36,7 +36,7 @@ public partial class ProjectileHitboxComponent : Area2D
 		}
 	}
 	
-	private void BulletHitEntity(Area2D entityArea)
+	private void OnEntityHit(Area2D entityArea)
 	{
 		if (
 			(entityArea.IsInGroup("PlayersHurtBox") && PlayerOrEnemyProjectile == Utility.PlayerOrEnemy.Enemy) ||
@@ -46,7 +46,7 @@ public partial class ProjectileHitboxComponent : Area2D
 			if (entityArea is not HurtboxComponent hurtboxComponent)
 				return;
 			GD.Print(Velocity);
-			hurtboxComponent.HitByAttack(this, BulletDamage, Knockback, Velocity);
+			hurtboxComponent.HitByAttack(this, Damage, Knockback, Velocity);
 			EmitSignal(SignalName.HitboxCollided);
 		}
 	}
