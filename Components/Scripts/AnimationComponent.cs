@@ -46,7 +46,7 @@ public partial class AnimationComponent : Node
 		}
 	}
 
-	public void PlayAnimations()
+	public void PlayCharacterAnimations()
 	{
 		if (Sprite == null)
 			return;
@@ -97,7 +97,7 @@ public partial class AnimationComponent : Node
 				Sprite.Play(!hitStatus ? Utility.Instance.EnemyPistolFly : Utility.Instance.EnemyPistolHit);
 				break;
 			case Utility.WeaponType.PlayerPistol:
-				Sprite.Play(!hitStatus ?  Utility.Instance.PlayerPistolFly : Utility.Instance.EnemyPistolHit);
+				Sprite.Play(!hitStatus ?  Utility.Instance.PlayerPistolFly : Utility.Instance.PlayerPistolHit);
 				break;
 			case Utility.WeaponType.EnemyShotgun:
 				Sprite.Play(!hitStatus ? Utility.Instance.EnemyShotgunFly : Utility.Instance.EnemyShotgunHit);

@@ -132,22 +132,26 @@ position = Vector2(0, -11)
 target_position = Vector2(230, 0)
 collision_mask = 6
 
-[node name="ShootingComponent" type="Node2D" parent="." node_paths=PackedStringArray("_muzzle", "_shotCooldownTimer")]
+[node name="ShootingComponent" type="Node2D" parent="." node_paths=PackedStringArray("_muzzle", "_shotCooldownTimer", "_reloadTimer")]
 script = ExtResource("4_wi2mm")
 _shootingCooldownTime = 0.9
+_reloadTime = 1.5
 _bulletDamage = 5
 _bulletKnockback = 25.0
-_bulletsPerShot = 1.0
+_bulletsPerShot = 5.0
 _bulletSwayAngle = 2.3
 _bulletSpeed = 350.0
 _bulletLifeTime = 3.0
 _muzzle = NodePath("muzzle")
 _shotCooldownTimer = NodePath("ShotCooldownTimer")
+_reloadTimer = NodePath("ReloadTimer")
 
 [node name="muzzle" type="Marker2D" parent="ShootingComponent"]
 position = Vector2(0, -11)
 
 [node name="ShotCooldownTimer" type="Timer" parent="ShootingComponent"]
+
+[node name="ReloadTimer" type="Timer" parent="ShootingComponent"]
 
 [node name="AnimationComponent" type="Node" parent="."]
 script = ExtResource("2_fc56g")
@@ -164,8 +168,6 @@ position = Vector2(0, -11)
 scale = Vector2(0.0488281, 0.048828)
 sprite_frames = SubResource("SpriteFrames_cd87g")
 animation = &"shoot"
-
-[node name="RapidFireTimer" type="Timer" parent="."]
 
 [node name="StateLabel" type="Label" parent="."]
 offset_left = -8.0

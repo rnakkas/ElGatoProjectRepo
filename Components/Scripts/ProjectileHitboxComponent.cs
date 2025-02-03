@@ -45,7 +45,6 @@ public partial class ProjectileHitboxComponent : Area2D
 		{
 			if (entityArea is not HurtboxComponent hurtboxComponent)
 				return;
-			GD.Print(Velocity);
 			hurtboxComponent.HitByAttack(this, Damage, Knockback, Velocity);
 			EmitSignal(SignalName.HitboxCollided);
 		}

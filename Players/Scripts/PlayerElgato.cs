@@ -159,7 +159,7 @@ public partial class PlayerElgato : CharacterBody2D
 		_velocity = _velocityComponent.CalculateVelocity((float)delta, _direction);
 		Velocity = _velocity;
 
-		_animation.PlayAnimations();
+		_animation.PlayCharacterAnimations();
 		
 		MoveAndSlide();
 		

@@ -97,11 +97,10 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vrq6s"]
 size = Vector2(4, 4)
 
-[node name="bulletProjectile" type="Node2D" node_paths=PackedStringArray("_hitbox", "_animation", "_sprite", "_despawnTimer")]
+[node name="bulletProjectile" type="Node2D" node_paths=PackedStringArray("_hitbox", "_animation", "_despawnTimer")]
 script = ExtResource("1_d133d")
 _hitbox = NodePath("ProjectileHitboxComponent")
 _animation = NodePath("AnimationComponent")
-_sprite = NodePath("sprite")
 _despawnTimer = NodePath("despawnTimer")
 
 [node name="sprite" type="AnimatedSprite2D" parent="."]
@@ -122,5 +121,6 @@ script = ExtResource("2_g5lfy")
 shape = SubResource("RectangleShape2D_vrq6s")
 debug_color = Color(0.67451, 0.498039, 0.286275, 0.329412)
 
-[node name="AnimationComponent" type="Node" parent="."]
+[node name="AnimationComponent" type="Node" parent="." node_paths=PackedStringArray("Sprite")]
 script = ExtResource("4_g5xvd")
+Sprite = NodePath("../sprite")

@@ -12,6 +12,7 @@ public partial class ShootingComponent : Node2D
 {
 	[Export] private Utility.WeaponType _weaponType;
 	[Export] private float _shootingCooldownTime;
+	[Export] private float _reloadTime;
 	[Export] private int _bulletDamage;
 	[Export] private float _bulletKnockback;
 	[Export] private float _bulletsPerShot;
@@ -20,10 +21,12 @@ public partial class ShootingComponent : Node2D
 	[Export] private float _bulletLifeTime;
 	[Export] private Marker2D _muzzle;
 	[Export] private Timer _shotCooldownTimer;
+	[Export] private Timer _reloadTimer;
 
 	public bool HurtStatus, CanSeePlayer;
 	public Vector2 TargetVector;
-	private bool _onCooldown;
+	private bool _onCooldown, _reloading;
+	private int _bulletCount;
 
 	public override void _Ready()
 	{
@@ -31,12 +34,24 @@ public partial class ShootingComponent : Node2D
 			return;
 		_shotCooldownTimer.OneShot = true;
 		_shotCooldownTimer.WaitTime = _shootingCooldownTime;
-		_shotCooldownTimer.Timeout += ShotCoolDownTimerTimeout;
+		_shotCooldownTimer.Timeout += OnShotCoolDownTimerTimeout;
+		
+		if (_reloadTimer == null)
+			return;
+		_reloadTimer.OneShot = true;
+		_reloadTimer.WaitTime = _reloadTime;
+		_reloadTimer.Timeout += OnReloadTimerTimeout;
 	}
 
-	private void ShotCoolDownTimerTimeout()
+	private void OnShotCoolDownTimerTimeout()
 	{
 		_onCooldown = false;
+	}
+
+	private void OnReloadTimerTimeout()
+	{
+		_reloading = false;
+		_bulletCount = 0;
 	}
 
 	public void Shoot()
@@ -48,21 +63,7 @@ public partial class ShootingComponent : Node2D
 			_shotCooldownTimer.Start();
 		}
 	}
-
-	//TODO: Create shooting logic for machine gun
-	/*
-	 * Option 1:
-	 * Use an int maxBullets variable
-	 * After each shot/cooldown timeout increment the bullet count
-	 * If bulletCount == maxBullets start a reload cooldown timer
-	 * When reload cooldown timer timesout, reset bulletCount to 0 to be able to start shooting again
-	 *
-	 * Option 2:
-	 * Use a shooting timer
-	 * Enemy can only shoot while the timer is ruuning
-	 * When timer times out, stop shooting and start reload timer
-	 * When reload timer runs out, start shooting timer and start shooting again
-	 */
+	
 	private void ShootingLogic()
 	{
 		switch (_weaponType)
@@ -76,7 +77,17 @@ public partial class ShootingComponent : Node2D
 			case Utility.WeaponType.EnemyPistol:
 			case Utility.WeaponType.EnemyMachineGun:
 			case Utility.WeaponType.EnemyRailGun:
-				CreateAndSetBulletProperties(Utility.PlayerOrEnemy.Enemy, _weaponType);
+				if (!_reloading)
+				{
+					CreateAndSetBulletProperties(Utility.PlayerOrEnemy.Enemy, _weaponType);
+					_bulletCount++;
+					
+					if (_bulletCount >= _bulletsPerShot)
+					{
+						_reloading = true;
+						_reloadTimer.Start();
+					}
+				}
 				break;
 			
 			case Utility.WeaponType.PlayerShotgun:

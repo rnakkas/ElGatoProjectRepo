@@ -59,7 +59,7 @@ public partial class Utility : Node
         Enemy
     }
 
-    // Bullet animation names
+    // Projectile animation names
     public string EnemyMachineGunFly = "enemy_machinegun_fly";
     public string EnemyMachineGunHit = "enemy_machinegun_hit";
     public string EnemyPistolFly = "enemy_pistol_fly";

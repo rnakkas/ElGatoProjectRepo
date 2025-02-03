@@ -12,7 +12,6 @@ public partial class BulletProjectile : Node2D
 	// Components
 	[Export] private ProjectileHitboxComponent _hitbox;
 	[Export] private AnimationComponent _animation;
-	[Export] private AnimatedSprite2D _sprite;	
 	
 	[Export] private Timer _despawnTimer;
 	
@@ -52,8 +51,6 @@ public partial class BulletProjectile : Node2D
 		_hitbox.PlayerOrEnemyProjectile = PlayerOrEnemyBullet;
 		_hitbox.Damage = BulletDamage;
 		_hitbox.Knockback = Knockback;
-		
-		_animation.Sprite = _sprite;
 	}
 	
 	private void ApplyVelocity(float delta)
