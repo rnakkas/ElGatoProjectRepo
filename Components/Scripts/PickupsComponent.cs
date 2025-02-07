@@ -16,6 +16,8 @@ public partial class PickupsComponent : Area2D
 
 	public bool PickupHealthItem(int healAmount)
 	{
+		EmitSignal(SignalName.CheckCurrentHealth);
+		
 		if (CurrentHealth >= MaxHealth) 
 			return false;
 		

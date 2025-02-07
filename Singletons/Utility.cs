@@ -24,14 +24,6 @@ public partial class Utility : Node
         Melee,
         Ranged
     }
-    
-    //TODO: Remove this
-    public enum RangedEnemyType
-    {
-        RangedEnemyLight,
-        RangedEnemyHeavy,
-        RangedEnemyMachineGun
-    }
 
     public enum PickupType
     {
