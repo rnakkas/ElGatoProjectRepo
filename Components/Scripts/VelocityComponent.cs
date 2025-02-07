@@ -1,6 +1,5 @@
 using Godot;
 using System;
-using ElGatoProject.Resources;
 using Godot.Collections;
 
 namespace ElGatoProject.Components.Scripts;
