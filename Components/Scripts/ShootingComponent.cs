@@ -1,7 +1,5 @@
 using Godot;
 using System;
-using ElGatoProject.Enemies.Scripts;
-using ElGatoProject.Players.Scripts;
 using ElGatoProject.Projectiles.Scripts;
 using ElGatoProject.Singletons;
 
@@ -13,12 +11,12 @@ public partial class ShootingComponent : Node2D
 	[Export] private Utility.WeaponType _weaponType;
 	[Export] private float _shootingCooldownTime;
 	[Export] private float _reloadTime;
+	[Export] private int _magazineSize;
 	[Export] private int _bulletDamage;
 	[Export] private float _bulletKnockback;
-	[Export] private float _bulletsPerShot;
+	[Export] private int _bulletsPerShot;
 	[Export] private float _bulletSwayAngle;
 	[Export] private float _bulletSpeed;
-	[Export] private float _bulletLifeTime;
 	[Export] private Marker2D _muzzle;
 	[Export] private Timer _shotCooldownTimer;
 	[Export] private Timer _reloadTimer;
@@ -30,16 +28,38 @@ public partial class ShootingComponent : Node2D
 
 	public override void _Ready()
 	{
+		SetTimerValues();
+		ConnectToSignals();
+	}
+	
+	// Public method
+	public void Shoot()
+	{
+		if (CanSeePlayer && !HurtStatus && !_onCooldown)
+		{
+			ShootingLogic();
+			_onCooldown = true;
+			_shotCooldownTimer.Start();
+		}
+	}
+
+	// Helper functions
+	private void SetTimerValues()
+	{
 		if (_shotCooldownTimer == null)
 			return;
 		_shotCooldownTimer.OneShot = true;
 		_shotCooldownTimer.WaitTime = _shootingCooldownTime;
-		_shotCooldownTimer.Timeout += OnShotCoolDownTimerTimeout;
 		
 		if (_reloadTimer == null)
 			return;
 		_reloadTimer.OneShot = true;
 		_reloadTimer.WaitTime = _reloadTime;
+	}
+
+	private void ConnectToSignals()
+	{
+		_shotCooldownTimer.Timeout += OnShotCoolDownTimerTimeout;
 		_reloadTimer.Timeout += OnReloadTimerTimeout;
 	}
 
@@ -52,16 +72,6 @@ public partial class ShootingComponent : Node2D
 	{
 		_reloading = false;
 		_bulletCount = 0;
-	}
-
-	public void Shoot()
-	{
-		if (CanSeePlayer && !HurtStatus && !_onCooldown)
-		{
-			ShootingLogic();
-			_onCooldown = true;
-			_shotCooldownTimer.Start();
-		}
 	}
 	
 	private void ShootingLogic()
@@ -82,7 +92,7 @@ public partial class ShootingComponent : Node2D
 					CreateAndSetBulletProperties(Utility.PlayerOrEnemy.Enemy, _weaponType);
 					_bulletCount++;
 					
-					if (_bulletCount >= _bulletsPerShot)
+					if (_bulletCount >= _magazineSize)
 					{
 						_reloading = true;
 						_reloadTimer.Start();
@@ -115,7 +125,6 @@ public partial class ShootingComponent : Node2D
 		projectileInstance.RotationDegrees = Globals.Instance.Rng.RandfRange(-_bulletSwayAngle, _bulletSwayAngle);
 		projectileInstance.BulletSpeed = _bulletSpeed;
 		projectileInstance.Knockback = _bulletKnockback;
-		projectileInstance.BulletLifeTime = _bulletLifeTime;
 		projectileInstance.BulletDamage = _bulletDamage;
 		projectileInstance.GlobalPosition = _muzzle.GlobalPosition;
 		

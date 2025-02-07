@@ -1,24 +1,24 @@
-[gd_scene load_steps=12 format=3 uid="uid://b5nsjoi8w57tt"]
+[gd_scene load_steps=12 format=3 uid="uid://cswtvyds80uje"]
 
-[ext_resource type="Script" path="res://Enemies/Scripts/RangedEnemyLight.cs" id="1_0ts2v"]
-[ext_resource type="Script" path="res://Components/Scripts/HurtboxComponent.cs" id="1_cshv5"]
-[ext_resource type="Script" path="res://Components/Scripts/AnimationComponent.cs" id="2_fc56g"]
-[ext_resource type="Script" path="res://Components/Scripts/HealthComponent.cs" id="3_osnui"]
-[ext_resource type="Script" path="res://Components/Scripts/PlayerDetectionComponent.cs" id="4_o6tum"]
-[ext_resource type="Texture2D" uid="uid://dqx6rpywerr0u" path="res://icon.svg" id="4_svavx"]
-[ext_resource type="Script" path="res://Components/Scripts/ShootingComponent.cs" id="4_wi2mm"]
+[ext_resource type="Script" path="res://Enemies/Scripts/RangedEnemyHeavyMachineGunner.cs" id="1_itndo"]
+[ext_resource type="Script" path="res://Components/Scripts/HealthComponent.cs" id="1_xwoja"]
+[ext_resource type="Script" path="res://Components/Scripts/HurtboxComponent.cs" id="2_dk7sr"]
+[ext_resource type="Script" path="res://Components/Scripts/PlayerDetectionComponent.cs" id="3_tk62a"]
+[ext_resource type="Script" path="res://Components/Scripts/ShootingComponent.cs" id="4_ukard"]
+[ext_resource type="Script" path="res://Components/Scripts/AnimationComponent.cs" id="5_46qp2"]
+[ext_resource type="Texture2D" uid="uid://dqx6rpywerr0u" path="res://icon.svg" id="6_1sfgy"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_h2awu"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_aud4t"]
 size = Vector2(14, 34)
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_i87js"]
-radius = 250.0
+[sub_resource type="CircleShape2D" id="CircleShape2D_852hi"]
+radius = 300.0
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_morde"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_3cuf2"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("4_svavx")
+"texture": ExtResource("6_1sfgy")
 }],
 "loop": true,
 "name": &"death",
@@ -26,7 +26,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("4_svavx")
+"texture": ExtResource("6_1sfgy")
 }],
 "loop": true,
 "name": &"hurt",
@@ -34,7 +34,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("4_svavx")
+"texture": ExtResource("6_1sfgy")
 }],
 "loop": true,
 "name": &"idle",
@@ -42,18 +42,18 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("4_svavx")
+"texture": ExtResource("6_1sfgy")
 }],
 "loop": true,
 "name": &"shoot",
 "speed": 5.0
 }]
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_cd87g"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_2k87p"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("4_svavx")
+"texture": ExtResource("6_1sfgy")
 }],
 "loop": true,
 "name": &"death",
@@ -61,7 +61,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("4_svavx")
+"texture": ExtResource("6_1sfgy")
 }],
 "loop": true,
 "name": &"hurt",
@@ -69,7 +69,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("4_svavx")
+"texture": ExtResource("6_1sfgy")
 }],
 "loop": true,
 "name": &"idle",
@@ -77,15 +77,15 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("4_svavx")
+"texture": ExtResource("6_1sfgy")
 }],
 "loop": true,
 "name": &"shoot",
 "speed": 5.0
 }]
 
-[node name="RangedEnemyLight" type="Node2D" node_paths=PackedStringArray("_health", "_hurtbox", "_playerDetection", "_shooting", "_animation", "_debugHealthLabel")]
-script = ExtResource("1_0ts2v")
+[node name="RangedEnemyHeavyMachineGunner" type="Node2D" node_paths=PackedStringArray("_health", "_hurtbox", "_playerDetection", "_shooting", "_animation", "_debugHealthLabel")]
+script = ExtResource("1_itndo")
 _health = NodePath("HealthComponent")
 _hurtbox = NodePath("HurtboxComponent")
 _playerDetection = NodePath("PlayerDetectionComponent")
@@ -94,26 +94,26 @@ _animation = NodePath("AnimationComponent")
 _debugHealthLabel = NodePath("HealthLabel")
 
 [node name="HealthComponent" type="Node" parent="."]
-script = ExtResource("3_osnui")
-CurrentHealth = 30
-MaxHealth = 30
+script = ExtResource("1_xwoja")
+CurrentHealth = 60
+MaxHealth = 60
 
 [node name="HurtboxComponent" type="Area2D" parent="." node_paths=PackedStringArray("_hurtStaggerTimer") groups=["Enemies"]]
 collision_layer = 32
 collision_mask = 8
-script = ExtResource("1_cshv5")
+script = ExtResource("2_dk7sr")
 _hurtStaggerTimer = NodePath("HurtStaggerTimer")
 
 [node name="collider" type="CollisionShape2D" parent="HurtboxComponent"]
-shape = SubResource("RectangleShape2D_h2awu")
+shape = SubResource("RectangleShape2D_aud4t")
 debug_color = Color(0.937255, 0, 0.196078, 0.419608)
 
 [node name="HurtStaggerTimer" type="Timer" parent="HurtboxComponent"]
-wait_time = 0.9
+wait_time = 0.4
 one_shot = true
 
 [node name="PlayerDetectionComponent" type="Node2D" parent="." node_paths=PackedStringArray("_playerDetectionArea", "_playerDetectionRay")]
-script = ExtResource("4_o6tum")
+script = ExtResource("3_tk62a")
 _playerDetectionArea = NodePath("PlayerDetectionArea")
 _playerDetectionRay = NodePath("PlayerDetectionRay")
 
@@ -123,8 +123,8 @@ collision_layer = 0
 monitorable = false
 
 [node name="collider" type="CollisionShape2D" parent="PlayerDetectionComponent/PlayerDetectionArea"]
-shape = SubResource("CircleShape2D_i87js")
-debug_color = Color(0.6, 0.545098, 0, 0.129412)
+shape = SubResource("CircleShape2D_852hi")
+debug_color = Color(0.806739, 0.415537, 0.0885346, 0.129412)
 
 [node name="PlayerDetectionRay" type="RayCast2D" parent="PlayerDetectionComponent"]
 self_modulate = Color(0, 0, 0, 1)
@@ -133,15 +133,16 @@ target_position = Vector2(230, 0)
 collision_mask = 6
 
 [node name="ShootingComponent" type="Node2D" parent="." node_paths=PackedStringArray("_muzzle", "_shotCooldownTimer", "_reloadTimer")]
-script = ExtResource("4_wi2mm")
-_shootingCooldownTime = 0.5
-_reloadTime = 1.5
-_magazineSize = 6
-_bulletDamage = 5
-_bulletKnockback = 25.0
+script = ExtResource("4_ukard")
+_weaponType = 2
+_shootingCooldownTime = 0.15
+_reloadTime = 2.0
+_magazineSize = 15
+_bulletDamage = 3
+_bulletKnockback = 30.0
 _bulletsPerShot = 1
-_bulletSwayAngle = 2.3
-_bulletSpeed = 350.0
+_bulletSwayAngle = 3.0
+_bulletSpeed = 400.0
 _muzzle = NodePath("muzzle")
 _shotCooldownTimer = NodePath("ShotCooldownTimer")
 _reloadTimer = NodePath("ReloadTimer")
@@ -154,20 +155,20 @@ position = Vector2(0, -11)
 [node name="ReloadTimer" type="Timer" parent="ShootingComponent"]
 
 [node name="AnimationComponent" type="Node" parent="." node_paths=PackedStringArray("Sprite")]
-script = ExtResource("2_fc56g")
+script = ExtResource("5_46qp2")
 Sprite = NodePath("../spriteBody")
 
 [node name="spriteBody" type="AnimatedSprite2D" parent="."]
 self_modulate = Color(0.0196078, 0.0196078, 0.0196078, 1)
 scale = Vector2(0.0878907, 0.267578)
-sprite_frames = SubResource("SpriteFrames_morde")
+sprite_frames = SubResource("SpriteFrames_3cuf2")
 animation = &"shoot"
 
 [node name="spriteEye" type="AnimatedSprite2D" parent="."]
 modulate = Color(1, 0, 0, 1)
 position = Vector2(0, -11)
 scale = Vector2(0.0488281, 0.048828)
-sprite_frames = SubResource("SpriteFrames_cd87g")
+sprite_frames = SubResource("SpriteFrames_2k87p")
 animation = &"shoot"
 
 [node name="StateLabel" type="Label" parent="."]

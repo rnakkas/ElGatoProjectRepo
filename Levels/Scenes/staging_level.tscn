@@ -1,10 +1,9 @@
-[gd_scene load_steps=15 format=4 uid="uid://cne5xpx7c4fh0"]
+[gd_scene load_steps=14 format=4 uid="uid://cne5xpx7c4fh0"]
 
 [ext_resource type="Texture2D" uid="uid://o2up0ats16cc" path="res://Assets/Tilesets/tileset_background_1.png" id="1_7bkjm"]
 [ext_resource type="Texture2D" uid="uid://d2hqfvsf0rube" path="res://Assets/Tilesets/tilemap-floors-walls-1.png" id="1_l2xyl"]
 [ext_resource type="PackedScene" uid="uid://dkjcbiyswrxb7" path="res://Players/Scenes/player_elgato.tscn" id="2_e8fkw"]
-[ext_resource type="PackedScene" uid="uid://bdx2vl45xi84t" path="res://Enemies/Scenes/ranged_enemy_heavy.tscn" id="4_qutbi"]
-[ext_resource type="PackedScene" uid="uid://dno6xbpmwsig0" path="res://Enemies/Scenes/ranged_enemy_machine_gun.tscn" id="5_2lgej"]
+[ext_resource type="PackedScene" uid="uid://cswtvyds80uje" path="res://Enemies/Scenes/ranged_enemy_heavy_machine_gunner.tscn" id="5_4x5nj"]
 [ext_resource type="PackedScene" uid="uid://b5nsjoi8w57tt" path="res://Enemies/Scenes/ranged_enemy_light.tscn" id="6_olgj6"]
 [ext_resource type="PackedScene" uid="uid://d1kee8twoojg1" path="res://Misc/Scenes/jump_pad.tscn" id="7_u7qtk"]
 [ext_resource type="PackedScene" uid="uid://ov2vlvh4yw53" path="res://Pickups/Scenes/coffee_mug_pickup.tscn" id="8_kgmbo"]
@@ -117,23 +116,11 @@ position_smoothing_enabled = true
 
 [node name="RangedEnemies" type="Node" parent="."]
 
-[node name="RangedEnemyHeavy" parent="RangedEnemies" instance=ExtResource("4_qutbi")]
-position = Vector2(1770, -218)
-
-[node name="RangedEnemyMachineGun" parent="RangedEnemies" instance=ExtResource("5_2lgej")]
-position = Vector2(1050, -242)
-
-[node name="RangedEnemyMachineGun2" parent="RangedEnemies" instance=ExtResource("5_2lgej")]
-position = Vector2(2199, 322)
-
-[node name="RangedEnemyMachineGun3" parent="RangedEnemies" instance=ExtResource("5_2lgej")]
-position = Vector2(2480, -160)
-
-[node name="RangedEnemyLight" parent="RangedEnemies" instance=ExtResource("6_olgj6")]
-position = Vector2(2101, -216)
-
 [node name="RangedEnemyLight3" parent="RangedEnemies" instance=ExtResource("6_olgj6")]
 position = Vector2(1462, 322)
+
+[node name="RangedEnemyHeavyMachineGunner" parent="RangedEnemies" instance=ExtResource("5_4x5nj")]
+position = Vector2(2095, 323)
 
 [node name="MeleeEnemies" type="Node" parent="."]
 

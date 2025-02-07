@@ -4,7 +4,7 @@ using ElGatoProject.Components.Scripts;
 
 namespace ElGatoProject.Enemies.Scripts;
 
-public partial class RangedEnemyLight : Node2D
+public partial class RangedEnemyHeavyMachineGunner : Node2D
 {
 	// Get components
 	[Export] private HealthComponent _health;
