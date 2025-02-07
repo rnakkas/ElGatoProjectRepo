@@ -3,8 +3,7 @@ using System;
 using ElGatoProject.Components.Scripts;
 
 namespace ElGatoProject.Enemies.Scripts;
-
-public partial class RangedEnemyHeavyMachineGunner : Node2D
+public partial class RangedEnemyLightMachineGunner : Node2D
 {
 	// Get components
 	[Export] private EnemyControllerComponent _enemyController;

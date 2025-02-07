@@ -18,7 +18,14 @@ public partial class Utility : Node
         Hurt,
         Death
     }
+
+    public enum EnemyType
+    {
+        Melee,
+        Ranged
+    }
     
+    //TODO: Remove this
     public enum RangedEnemyType
     {
         RangedEnemyLight,

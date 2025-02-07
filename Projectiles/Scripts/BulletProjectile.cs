@@ -34,7 +34,7 @@ public partial class BulletProjectile : Node2D
 	// Helper functions
 	private void ConnectToSignals()
 	{
-		_despawnTimer.Timeout += BulletDespawnTimerTimedOut;
+		_despawnTimer.Timeout += OmBulletDespawnTimerTimedOut;
 		_hitbox.HitboxCollided += OnHitBoxCollision;
 	}
 	
@@ -52,7 +52,7 @@ public partial class BulletProjectile : Node2D
 		QueueFree();
 	}
 	
-	private void BulletDespawnTimerTimedOut()
+	private void OmBulletDespawnTimerTimedOut()
 	{
 		QueueFree();
 	}
