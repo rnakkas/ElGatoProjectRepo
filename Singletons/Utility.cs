@@ -6,19 +6,7 @@ namespace ElGatoProject.Singletons;
 public partial class Utility : Node
 {
     public static Utility Instance { get; private set; }
-
-    public enum EntityState
-    {
-        Idle,
-        Run,
-        Jump,
-        Fall,
-        WallSlide,
-        Shoot,
-        Hurt,
-        Death
-    }
-
+    
     public enum EnemyType
     {
         Melee,
@@ -58,7 +46,16 @@ public partial class Utility : Node
         Enemy
     }
 
-    // Projectile animation names
+    // Character animation string names
+    public string EntityIdleAnimation = "idle";
+    public string EntityRunAnimation = "run";
+    public string EntityJumpAnimation = "jump";
+    public string EntityFallAnimation = "fall";
+    public string EntityWallSlideAnimation = "wall_slide";
+    public string EntityHurtAnimation = "hurt";
+    public string EntityShootAnimation = "shoot";
+    
+    // Projectile animation string names
     public string EnemyMachineGunFly = "enemy_machinegun_fly";
     public string EnemyMachineGunHit = "enemy_machinegun_hit";
     public string EnemyPistolFly = "enemy_pistol_fly";

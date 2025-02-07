@@ -57,35 +57,35 @@ public partial class AnimationComponent : Node
 		{
 			if (Velocity.X == 0 && IsOnFloor)
 			{
-				Sprite.Play("idle");
+				Sprite.Play(Utility.Instance.EntityIdleAnimation);
 			}
 			else if (Velocity.X != 0 && IsOnFloor)
 			{
-				Sprite.Play("run");
+				Sprite.Play(Utility.Instance.EntityRunAnimation);
 			}
 			else if (Velocity.Y < 0 && !IsOnFloor)
 			{
-				Sprite.Play("jump");
+				Sprite.Play(Utility.Instance.EntityJumpAnimation);
 			}
 			else if (Velocity.Y > 0 && !IsOnFloor)
 			{
-				Sprite.Play("fall");
+				Sprite.Play(Utility.Instance.EntityFallAnimation);
 			}
 		
 			if (!IsOnFloor && IsLeftWallDetected)
 			{
 				FlipSprite(1.0f);
-				Sprite.Play("wall_slide");
+				Sprite.Play(Utility.Instance.EntityWallSlideAnimation);
 			}
 			else if (!IsOnFloor && IsRightWallDetected)
 			{
 				FlipSprite(-1.0f);
-				Sprite.Play("wall_slide");
+				Sprite.Play(Utility.Instance.EntityWallSlideAnimation);
 			}
 		}
 		else
 		{
-			Sprite.Play("hurt");
+			Sprite.Play(Utility.Instance.EntityHurtAnimation);
 		}
 	}
 
@@ -126,13 +126,13 @@ public partial class AnimationComponent : Node
 
 		if (isShooting)
 		{
-			Sprite.Play("shoot");
+			Sprite.Play(Utility.Instance.EntityShootAnimation);
 		}
 		else
 		{
 			if (!Sprite.IsPlaying())
 			{
-				Sprite.Play("idle");
+				Sprite.Play(Utility.Instance.EntityIdleAnimation);
 			}
 		}
 	}
