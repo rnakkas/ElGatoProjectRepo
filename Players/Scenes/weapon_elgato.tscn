@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" path="res://Players/Scripts/WeaponElgato.cs" id="1_704rr"]
 [ext_resource type="Texture2D" uid="uid://lo3w8s4ichdj" path="res://Assets/Players/cat_fingerGun-2.png" id="1_e4hys"]
-[ext_resource type="Resource" uid="uid://de75230qm47lm" path="res://Resources/WeaponElGatoStats.tres" id="2_x2bf0"]
-[ext_resource type="PackedScene" uid="uid://c8xcg4nidmij2" path="res://Players/Scenes/bullet.tscn" id="3_hoq5c"]
+[ext_resource type="Script" path="res://Components/Scripts/ShootingComponent.cs" id="5_liu8t"]
+[ext_resource type="Script" path="res://Components/Scripts/AnimationComponent.cs" id="6_nupb6"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_n7jid"]
 atlas = ExtResource("1_e4hys")
@@ -84,17 +84,35 @@ animations = [{
 "speed": 10.0
 }]
 
-[node name="Weapon_ElGato" type="Node2D"]
+[node name="Weapon_ElGato" type="Node2D" node_paths=PackedStringArray("_shooting", "_animation")]
 position = Vector2(-0.5, 2.3)
 script = ExtResource("1_704rr")
-_weaponStats = ExtResource("2_x2bf0")
-_bulletScene = ExtResource("3_hoq5c")
+_shooting = NodePath("ShootingComponent")
+_animation = NodePath("AnimationComponent")
 
 [node name="sprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_ld3wl")
 animation = &"idle"
 
-[node name="muzzle" type="Marker2D" parent="."]
+[node name="ShootingComponent" type="Node2D" parent="." node_paths=PackedStringArray("_muzzle", "_shotCooldownTimer")]
+script = ExtResource("5_liu8t")
+_weaponType = 4
+_shootingCooldownTime = 0.5
+_reloadTime = 0.5
+_magazineSize = 1
+_bulletDamage = 10
+_bulletKnockback = 100.0
+_bulletsPerShot = 1
+_bulletSwayAngle = 2.0
+_bulletSpeed = 420.0
+_muzzle = NodePath("muzzle")
+_shotCooldownTimer = NodePath("shotCooldownTimer")
+
+[node name="muzzle" type="Marker2D" parent="ShootingComponent"]
 position = Vector2(18.305, -5.045)
 
-[node name="shotCooldownTimer" type="Timer" parent="."]
+[node name="shotCooldownTimer" type="Timer" parent="ShootingComponent"]
+
+[node name="AnimationComponent" type="Node" parent="." node_paths=PackedStringArray("Sprite")]
+script = ExtResource("6_nupb6")
+Sprite = NodePath("../sprite")

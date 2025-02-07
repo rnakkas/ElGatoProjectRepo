@@ -17,6 +17,8 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+Globals="*res://Singletons/Globals.cs"
+Utility="*res://Singletons/Utility.cs"
 EventsBus="*res://Singletons/EventsBus.cs"
 
 [dotnet]
@@ -36,6 +38,7 @@ JumpPads="Group for jump pads"
 CatnipPickups="Group for collectibles, score, catnip etc pickups "
 WeaponModPickups="Group for weapon mod pickups"
 PlayersPickupsBox="Group for player's pickups box"
+PlayersHurtBox="Group for player's hurt box"
 
 [input]
 

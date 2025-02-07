@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using ElGatoProject.Components.Scripts;
 using ElGatoProject.Singletons;
 
 namespace ElGatoProject.Pickups.Scripts;
@@ -7,25 +8,10 @@ namespace ElGatoProject.Pickups.Scripts;
 [GlobalClass]
 public partial class Pickups : Area2D
 {
-	private enum PickupType
-	{
-		Coffee,
-		Catnip,
-		WeaponMod
-	}
-
-	public enum WeaponModType
-	{
-		None,
-		Shotgun,
-		MachineGun,
-		Railgun
-	}
-	
-	[Export] private PickupType _pickupType;
-	[Export] public int HealAmount;
-	[Export] public int ScorePoints;
-	[Export] public WeaponModType WeaponModifier;
+	[Export] private Utility.PickupType _pickupType;
+	[Export] private int _healAmount;
+	[Export] private int _scorePoints;
+	[Export] private Utility.WeaponModType _weaponModifier;
 	[Export] private AnimatedSprite2D _sprite;
 
 	private bool _canPickup;
@@ -33,47 +19,34 @@ public partial class Pickups : Area2D
 	public override void _Ready()
 	{
 		_sprite?.Play("idle");
-
-		if (_pickupType == PickupType.Coffee)
-		{
-			EventsBus.Instance.AttemptedHealthPickup += PlayerAttemptedHealthPickup;
-		}
 		
-		AreaEntered += PlayerPickedUpItem;
+		AreaEntered += OnPlayerEntered;
 	}
 
-	private void PlayerAttemptedHealthPickup(int currentHealth, int maxHealth)
+	private void OnPlayerEntered(Area2D playerArea)
 	{
-		if (currentHealth < maxHealth)
-		{
-			_canPickup = true;
-			
-		}
-		else
-		{
-			_canPickup = false;
-		}
-	}
-
-	private void PlayerPickedUpItem(Area2D area)
-	{
-		if (!area.IsInGroup("PlayersPickupsBox"))
+		if (!playerArea.IsInGroup("PlayersPickupsBox"))
 			return;
-
+		if (playerArea is not PickupsComponent pickupsComponent)
+			return;
+		
 		switch (_pickupType)
 		{
-			case PickupType.Coffee when _canPickup:
-				EventsBus.Instance.EmitSignal(nameof(EventsBus.HealedPlayer), HealAmount);
-				ItemGetsPickedUp();
+			case Utility.PickupType.Coffee:
+				_canPickup = pickupsComponent.PickupHealthItem(_healAmount);
 				break;
 			
-			case PickupType.Catnip:
-			case PickupType.WeaponMod:
-				ItemGetsPickedUp();
+			case Utility.PickupType.Catnip:
+			case Utility.PickupType.WeaponMod:
 				break;
 		}
+		
+		if (_canPickup)
+		{
+			ItemGetsPickedUp();
+		}
 	}
-
+	
 	private void ItemGetsPickedUp()
 	{
 		// Turn collision layer and mask off so player cannot quickly run inside layer to heal again during despawn animation
@@ -87,5 +60,5 @@ public partial class Pickups : Area2D
 		tween2.TweenProperty(_sprite, "position", _sprite.Position - new Vector2(0, 75), 0.5);
 		tween2.TweenCallback(Callable.From(QueueFree));
 	}
-
+	
 }

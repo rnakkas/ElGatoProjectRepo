@@ -88,7 +88,7 @@ animations = [{
 scale = Vector2(0.28, 0.28)
 collision_layer = 16
 script = ExtResource("1_0j1uh")
-HealAmount = 10
+_healAmount = 10
 _sprite = NodePath("sprite")
 
 [node name="collider" type="CollisionShape2D" parent="."]

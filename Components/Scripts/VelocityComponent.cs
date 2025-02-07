@@ -1,142 +1,109 @@
 using Godot;
 using System;
-using ElGatoProject.Resources;
 using Godot.Collections;
 
 namespace ElGatoProject.Components.Scripts;
 
 // This component sets velocity for entities
 [GlobalClass]
-public partial class VelocityComponent : Node2D
+public partial class VelocityComponent : Node
 {
-	[Export] private PlayerStats _playerStats;
-	
-	private Vector2 _velocity = Vector2.Zero;
-	public float Direction;
-	
-	public Vector2 CalculatePlayerVelocity(
-		Dictionary<string, bool> input, 
-		float delta, 
-		bool isOnFloor,
-		bool isOnWall,
-		RayCast2D leftWallDetect,
-		RayCast2D rightWallDetect,
-		bool hurtStatus,
-		float knockback,
-		Vector2 attackVelocity
-		)
-	{
-		// Set directions for velocity
-		if (input["move_left"])
-		{
-			Direction = -1;
-		}
-		else if (input["move_right"])
-		{
-			Direction = 1;
-		}
-		
-		// Running and stopping
-		if ((input["move_left"] || input["move_right"]))
-		{
-			AccelerateToMaxSpeed(Direction, _playerStats.MaxSpeed, _playerStats.Acceleration);
+	[Export] public float MaxSpeed { get; set; }
+	[Export] public float Acceleration { get; set; }
+	[Export] public float Friction { get; set; }
+	[Export] public float JumpVelocity{ get; set; }
+	[Export] public float Gravity { get; set; }
+	[Export] public float WallSlideGravity { get; set; }
+	[Export] public float WallJumpVelocity { get; set; }
+	[Export] public float WallSlideVelocity { get; set; }
+	[Export] public bool IsOnFloor { get; set; }
+	[Export] public bool IsOnCeiling { get; set; }
+	[Export] public bool IsLeftWallDetected {get; set;}
+	[Export] public bool IsRightWallDetected {get; set;}
 
-			if (isOnFloor)
+	private Vector2 _velocity;
+	public Dictionary<string, bool> PlayerInputs;
+	
+	public float KnockbackFromAttack(Vector2 attackPosition, float knockback, Vector2 attackVelocity)
+	{
+		if (attackVelocity != Vector2.Zero)
+		{
+			_velocity.X = knockback * attackVelocity.X;	
+		} 
+		else if (attackVelocity == Vector2.Zero && attackPosition.X < 0)
+		{
+			_velocity.X = knockback;
+		}
+		else if (attackVelocity == Vector2.Zero && attackPosition.X > 0)
+		{
+			_velocity.X = -knockback;
+		}
+
+		return _velocity.X;
+	}
+
+	public float JumpOnJumpPad(float jumpMultiplier)
+	{
+		_velocity.Y = jumpMultiplier * JumpVelocity;
+		return _velocity.Y;
+	}
+	
+	public Vector2 CalculateVelocity(float delta, float direction)
+	{
+		if (direction != 0)
+		{
+			_velocity.X = Mathf.MoveToward(_velocity.X, direction * MaxSpeed, Acceleration * delta);
+		
+			if (IsOnFloor)
 			{
-				VerticalVelocityStoppedOnGround();
+				_velocity.Y = 0;
 			}
 		}
-		else if (isOnFloor && (!input["move_left"] || !input["move_right"]))
+		else if (IsOnFloor && direction == 0)
 		{
-			SlowdownToZeroSpeed(_playerStats.Friction);
-			VerticalVelocityStoppedOnGround();
-		}
-
-		// Jumping
-		if (isOnFloor && input["jump"])
-		{
-			JumpVelocity(_playerStats.JumpVelocity);
-		}
-
-		if (!isOnFloor)
-		{
-			FallDueToGravity(delta, _playerStats.Gravity);
+			_velocity.X = Mathf.MoveToward(_velocity.X, 0, Friction * delta);
+			_velocity.Y = 0;
 		}
 		
-		// Wall sliding
-		if (!isOnFloor && (leftWallDetect.IsColliding() || rightWallDetect.IsColliding()))
+		if (IsOnFloor && Input.IsActionPressed("jump"))
 		{
-			WallSlide(_playerStats.WallSlideVelocity, _playerStats.WallSlideGravity);
+			_velocity.Y = JumpVelocity;
+		}
 
-			if (leftWallDetect.IsColliding())
+		if (!IsOnFloor)
+		{
+			_velocity.Y += Gravity * delta;
+			
+		}
+
+		if (IsOnCeiling)
+		{
+			_velocity.Y += Gravity * delta;
+		}
+		
+		if (!IsOnFloor && (IsLeftWallDetected || IsRightWallDetected))
+		{
+			_velocity.X = 0;
+			_velocity.Y = Mathf.MoveToward(_velocity.Y, WallSlideVelocity, WallSlideGravity * delta);
+
+			if (IsLeftWallDetected)
 			{
-				Direction = 1;
+				direction = 1.0f;
 			} 
 			
-			if (rightWallDetect.IsColliding())
+			if (IsRightWallDetected)
 			{
-				Direction = -1;
+				direction = -1.0f;
 			}
 			
 			// Wall Jump
-			if (input["jump_justPressed"])
+			if (Input.IsActionJustPressed("jump"))
 			{
-				JumpVelocity(_playerStats.WallJumpVelocity);
-				WallJumpHorizontalVelocity(Direction, _playerStats.MaxSpeed);
+				_velocity.Y = WallJumpVelocity;
+				_velocity.X = direction * MaxSpeed;
 			}
 		}
 		
-		// Hurt, don't allow movement
-		if (hurtStatus)
-		{ 
-			_velocity = Vector2.Zero;
-			KnockbackFromAttack(knockback, attackVelocity);
-			return _velocity;
-		}
-		
 		return _velocity;
 	}
-
-	private void KnockbackFromAttack(float knockback, Vector2 attackVelocity)
-	{
-		_velocity.X = knockback * attackVelocity.X;
-	}
-	
-	public Vector2 AccelerateToMaxSpeed(float direction, float maxSpeed, float acceleration)
-	{
-		_velocity.X =  Mathf.MoveToward(_velocity.X, direction * maxSpeed, acceleration);
-		return _velocity;
-	}
-
-	private void SlowdownToZeroSpeed(float friction)
-	{
-		_velocity.X = Mathf.MoveToward(_velocity.X, 0, friction);
-	}
-
-	private void JumpVelocity(float jumpVelocity)
-	{
-		_velocity.Y = jumpVelocity;
-	}
-
-	private void FallDueToGravity(float delta, float gravity)
-	{
-		_velocity.Y += gravity * delta;
-	}
-
-	private void VerticalVelocityStoppedOnGround()
-	{
-		_velocity.Y = 0;
-	}
-
-	private void WallSlide(float wallSlideVelocity, float wallSlideGravity)
-	{
-		_velocity.X = 0;
-		_velocity.Y = Mathf.MoveToward(_velocity.Y, wallSlideVelocity, wallSlideGravity);
-	}
-
-	private void WallJumpHorizontalVelocity(float direction, float maxSpeed)
-	{
-		_velocity.X = direction * maxSpeed;
-	}
-	
 }

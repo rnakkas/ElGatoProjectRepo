@@ -1,0 +1,194 @@
+[gd_scene load_steps=13 format=3 uid="uid://bpf8t5pfaxap1"]
+
+[ext_resource type="Script" path="res://Enemies/Scripts/RangedEnemyLightMachineGunner.cs" id="1_0w3h1"]
+[ext_resource type="Script" path="res://Components/Scripts/HealthComponent.cs" id="1_dtnyv"]
+[ext_resource type="Script" path="res://Components/Scripts/EnemyControllerComponent.cs" id="2_1f331"]
+[ext_resource type="Script" path="res://Components/Scripts/HurtboxComponent.cs" id="2_os101"]
+[ext_resource type="Script" path="res://Components/Scripts/PlayerDetectionComponent.cs" id="3_rkye1"]
+[ext_resource type="Script" path="res://Components/Scripts/ShootingComponent.cs" id="4_n4hd3"]
+[ext_resource type="Script" path="res://Components/Scripts/AnimationComponent.cs" id="5_ccdcm"]
+[ext_resource type="Texture2D" uid="uid://dqx6rpywerr0u" path="res://icon.svg" id="6_p4ihc"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_acwc3"]
+size = Vector2(14, 34)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_mjmnr"]
+radius = 300.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_2c044"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_p4ihc")
+}],
+"loop": true,
+"name": &"death",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_p4ihc")
+}],
+"loop": true,
+"name": &"hurt",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_p4ihc")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_p4ihc")
+}],
+"loop": true,
+"name": &"shoot",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_qf20o"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_p4ihc")
+}],
+"loop": true,
+"name": &"death",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_p4ihc")
+}],
+"loop": true,
+"name": &"hurt",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_p4ihc")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_p4ihc")
+}],
+"loop": true,
+"name": &"shoot",
+"speed": 5.0
+}]
+
+[node name="RangedEnemyLightMachineGunner" type="Node2D" node_paths=PackedStringArray("_enemyController")]
+script = ExtResource("1_0w3h1")
+_enemyController = NodePath("EnemyControllerComponent")
+
+[node name="EnemyControllerComponent" type="Node" parent="." node_paths=PackedStringArray("_health", "_hurtbox", "_playerDetection", "_shooting", "_animation", "_debugHealthLabel")]
+script = ExtResource("2_1f331")
+_enemyType = 1
+_health = NodePath("../HealthComponent")
+_hurtbox = NodePath("../HurtboxComponent")
+_playerDetection = NodePath("../PlayerDetectionComponent")
+_shooting = NodePath("../ShootingComponent")
+_animation = NodePath("../AnimationComponent")
+_debugHealthLabel = NodePath("../HealthLabel")
+
+[node name="HealthComponent" type="Node" parent="."]
+script = ExtResource("1_dtnyv")
+CurrentHealth = 30
+MaxHealth = 30
+
+[node name="HurtboxComponent" type="Area2D" parent="." node_paths=PackedStringArray("_hurtStaggerTimer") groups=["Enemies"]]
+collision_layer = 32
+collision_mask = 8
+script = ExtResource("2_os101")
+_hurtStaggerTimer = NodePath("HurtStaggerTimer")
+
+[node name="collider" type="CollisionShape2D" parent="HurtboxComponent"]
+shape = SubResource("RectangleShape2D_acwc3")
+debug_color = Color(0.937255, 0, 0.196078, 0.419608)
+
+[node name="HurtStaggerTimer" type="Timer" parent="HurtboxComponent"]
+wait_time = 0.4
+one_shot = true
+
+[node name="PlayerDetectionComponent" type="Node2D" parent="." node_paths=PackedStringArray("_playerDetectionArea", "_playerDetectionRay")]
+script = ExtResource("3_rkye1")
+_playerDetectionArea = NodePath("PlayerDetectionArea")
+_playerDetectionRay = NodePath("PlayerDetectionRay")
+
+[node name="PlayerDetectionArea" type="Area2D" parent="PlayerDetectionComponent"]
+position = Vector2(0, -11)
+collision_layer = 0
+monitorable = false
+
+[node name="collider" type="CollisionShape2D" parent="PlayerDetectionComponent/PlayerDetectionArea"]
+shape = SubResource("CircleShape2D_mjmnr")
+debug_color = Color(0.806739, 0.415537, 0.0885346, 0.129412)
+
+[node name="PlayerDetectionRay" type="RayCast2D" parent="PlayerDetectionComponent"]
+self_modulate = Color(0, 0, 0, 1)
+position = Vector2(0, -11)
+target_position = Vector2(230, 0)
+collision_mask = 6
+
+[node name="ShootingComponent" type="Node2D" parent="." node_paths=PackedStringArray("_muzzle", "_shotCooldownTimer", "_reloadTimer")]
+script = ExtResource("4_n4hd3")
+_weaponType = 2
+_shootingCooldownTime = 0.05
+_reloadTime = 1.7
+_magazineSize = 15
+_bulletDamage = 2
+_bulletKnockback = 25.0
+_bulletsPerShot = 1
+_bulletSwayAngle = 5.0
+_bulletSpeed = 400.0
+_muzzle = NodePath("muzzle")
+_shotCooldownTimer = NodePath("ShotCooldownTimer")
+_reloadTimer = NodePath("ReloadTimer")
+
+[node name="muzzle" type="Marker2D" parent="ShootingComponent"]
+position = Vector2(0, -11)
+
+[node name="ShotCooldownTimer" type="Timer" parent="ShootingComponent"]
+
+[node name="ReloadTimer" type="Timer" parent="ShootingComponent"]
+
+[node name="AnimationComponent" type="Node" parent="." node_paths=PackedStringArray("Sprite")]
+script = ExtResource("5_ccdcm")
+Sprite = NodePath("../spriteBody")
+
+[node name="spriteBody" type="AnimatedSprite2D" parent="."]
+self_modulate = Color(0.0196078, 0.0196078, 0.0196078, 1)
+scale = Vector2(0.0878907, 0.267578)
+sprite_frames = SubResource("SpriteFrames_2c044")
+animation = &"shoot"
+
+[node name="spriteEye" type="AnimatedSprite2D" parent="."]
+modulate = Color(1, 0, 0, 1)
+position = Vector2(0, -11)
+scale = Vector2(0.0488281, 0.048828)
+sprite_frames = SubResource("SpriteFrames_qf20o")
+animation = &"shoot"
+
+[node name="StateLabel" type="Label" parent="."]
+offset_left = -8.0
+offset_top = -30.0
+offset_right = 35.0
+offset_bottom = -17.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 9
+
+[node name="HealthLabel" type="Label" parent="."]
+offset_left = -8.0
+offset_top = -44.0
+offset_right = 35.0
+offset_bottom = -31.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 9

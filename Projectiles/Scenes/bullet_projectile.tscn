@@ -1,0 +1,128 @@
+[gd_scene load_steps=7 format=3 uid="uid://b061rx1dqmjpb"]
+
+[ext_resource type="Texture2D" uid="uid://dqx6rpywerr0u" path="res://icon.svg" id="1_1ts8e"]
+[ext_resource type="Script" path="res://Projectiles/Scripts/BulletProjectile.cs" id="1_d133d"]
+[ext_resource type="Script" path="res://Components/Scripts/ProjectileHitboxComponent.cs" id="2_g5lfy"]
+[ext_resource type="Script" path="res://Components/Scripts/AnimationComponent.cs" id="4_g5xvd"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ww87r"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"enemy_machinegun_fly",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"enemy_machinegun_hit",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_1ts8e")
+}],
+"loop": true,
+"name": &"enemy_pistol_fly",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"enemy_pistol_hit",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"enemy_railgun_fly",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"enemy_railgun_hit",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"enemy_shotgun_fly",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"enemy_shotgun_hit",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"player_machinegun_fly",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"player_machinegun_hit",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_1ts8e")
+}],
+"loop": true,
+"name": &"player_pistol_fly",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"player_pistol_hit",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"player_railgun_fly",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"player_railgun_hit",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"player_shotgun_fly",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"player_shotgun_hit",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vrq6s"]
+size = Vector2(4, 4)
+
+[node name="bulletProjectile" type="Node2D" node_paths=PackedStringArray("_hitbox", "_animation", "_despawnTimer")]
+script = ExtResource("1_d133d")
+_hitbox = NodePath("ProjectileHitboxComponent")
+_animation = NodePath("AnimationComponent")
+_despawnTimer = NodePath("despawnTimer")
+
+[node name="sprite" type="AnimatedSprite2D" parent="."]
+self_modulate = Color(0, 0, 1, 1)
+position = Vector2(-2.98023e-08, -2.98023e-08)
+scale = Vector2(0.035, 0.035)
+sprite_frames = SubResource("SpriteFrames_ww87r")
+animation = &"enemy_pistol_fly"
+
+[node name="despawnTimer" type="Timer" parent="."]
+wait_time = 3.0
+one_shot = true
+
+[node name="ProjectileHitboxComponent" type="Area2D" parent="."]
+collision_layer = 72
+collision_mask = 39
+script = ExtResource("2_g5lfy")
+
+[node name="collider" type="CollisionShape2D" parent="ProjectileHitboxComponent"]
+shape = SubResource("RectangleShape2D_vrq6s")
+debug_color = Color(0.67451, 0.498039, 0.286275, 0.329412)
+
+[node name="AnimationComponent" type="Node" parent="." node_paths=PackedStringArray("Sprite")]
+script = ExtResource("4_g5xvd")
+Sprite = NodePath("../sprite")

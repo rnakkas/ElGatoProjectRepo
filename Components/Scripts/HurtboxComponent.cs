@@ -1,60 +1,55 @@
 using Godot;
 using System;
-using ElGatoProject.Resources;
-using ElGatoProject.TestingStuff;
 
 namespace ElGatoProject.Components.Scripts;
 
 [GlobalClass]
 public partial class HurtboxComponent : Area2D
 {
-	[Export] private PlayerStats _playerStats;
-	[Export] private Timer _hurtStatusTimer;
+	[Export] private Timer _hurtStaggerTimer;
 	
 	[Signal]
-	public delegate void HitByAttackEventHandler(
-		int damage, 
+	public delegate void GotHitEventHandler(
+		bool hurtStatus, 
+		Vector2 attackPosition, 
+		int attackDamage, 
 		float knockback, 
-		Vector2 attackVelocity, 
-		float attackDirection
+		Vector2 attackVelocity
 		);
+	[Signal]
+	public delegate void HurtStatusClearedEventHandler(bool hurtStatus);
 
 	private bool _hurtStatus;
 	
+	
 	public override void _Ready()
 	{
-		_hurtStatusTimer.OneShot = true;
-		_hurtStatusTimer.SetWaitTime(_playerStats.HurtStaggerTime);
-		_hurtStatusTimer.Timeout += HurtStatusTimerTimedOut;
-		
-		AreaEntered += GotHitByEnemyAttack;
+		_hurtStaggerTimer.Timeout += HurtStatusTimerTimedOut;
 	}
 
 	private void HurtStatusTimerTimedOut()
 	{
 		_hurtStatus = false;
+		EmitSignal(SignalName.HurtStatusCleared, _hurtStatus);
+	}
+	
+	// Called by the attacking area, for example attacking bullet calls this method to pass the attack data
+	public void HitByAttack(Area2D attackArea, int attackDamage, float knockback, Vector2 attackVelocity)
+	{
+		_hurtStatus = true;
+		_hurtStaggerTimer.Start();
+		
+		Vector2 attackPosition = (attackArea.GlobalPosition - GlobalPosition).Normalized();
+
+		EmitSignal(
+			SignalName.GotHit, 
+			_hurtStatus,
+			attackPosition,
+			attackDamage,
+			knockback,
+			attackVelocity
+			);
 	}
 
-	private void GotHitByEnemyAttack(Area2D area)
-	{
-		if (area is TestArea testArea)
-		{
-			_hurtStatus = true;
-			_hurtStatusTimer.Start();
-			
-			EmitSignal(
-				SignalName.HitByAttack,
-				testArea.AttackDamage,
-				testArea.Knockback,
-				testArea.Velocity,
-				testArea.Direction
-				);
-		}
-	}
-
-	public bool GetHurtStatus()
-	{
-		return _hurtStatus;
-	}
 
 }
