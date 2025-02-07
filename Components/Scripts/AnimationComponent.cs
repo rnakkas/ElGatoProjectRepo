@@ -119,4 +119,21 @@ public partial class AnimationComponent : Node
 				break;
 		}
 	}
+
+	public void PlayWeaponAnimations(bool isShooting, float direction)
+	{
+		FlipSprite(direction);
+
+		if (isShooting)
+		{
+			Sprite.Play("shoot");
+		}
+		else
+		{
+			if (!Sprite.IsPlaying())
+			{
+				Sprite.Play("idle");
+			}
+		}
+	}
 }

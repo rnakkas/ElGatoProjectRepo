@@ -35,7 +35,6 @@ public partial class EnemyControllerComponent : Node
     {
     	_shooting.TargetVector = _playerDetection.PlayerPosition;
     	_shooting.HurtStatus = _hurtStatus;
-    	_shooting.CanSeePlayer = _canSeePlayer;
     }
 
     private void SetAttackType()
@@ -43,7 +42,8 @@ public partial class EnemyControllerComponent : Node
 	    switch (_enemyType)
 	    {
 		    case Utility.EnemyType.Ranged:
-			    _shooting.Shoot();
+			    if (_canSeePlayer)
+					_shooting.Shoot();
 			    break;
 		    
 		    case Utility.EnemyType.Melee:

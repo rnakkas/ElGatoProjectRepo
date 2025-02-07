@@ -129,11 +129,11 @@ public partial class PlayerControllerComponent : Node
 		
 		if (_sprite.IsFlippedH())
 		{
-			_weapon.Direction = -1.0f;
+			_weapon.Direction.X = -1.0f;
 		}
 		else if (!_sprite.IsFlippedH())
 		{
-			_weapon.Direction = 1.0f;
+			_weapon.Direction.X = 1.0f;
 		}
 	}
 

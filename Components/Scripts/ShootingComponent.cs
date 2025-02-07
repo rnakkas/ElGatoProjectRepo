@@ -20,25 +20,28 @@ public partial class ShootingComponent : Node2D
 	[Export] private Marker2D _muzzle;
 	[Export] private Timer _shotCooldownTimer;
 	[Export] private Timer _reloadTimer;
-
-	public bool HurtStatus, CanSeePlayer;
+	
+	public bool HurtStatus, OnCooldown;
 	public Vector2 TargetVector;
-	private bool _onCooldown, _reloading;
+	private bool _reloading;
 	private int _bulletCount;
-
+	private Vector2 _muzzlePosition;
+	
 	public override void _Ready()
 	{
 		SetTimerValues();
 		ConnectToSignals();
+		
+		_muzzlePosition = _muzzle.Position;
 	}
 	
 	// Public method
 	public void Shoot()
 	{
-		if (CanSeePlayer && !HurtStatus && !_onCooldown)
+		if (!HurtStatus && !OnCooldown)
 		{
 			ShootingLogic();
-			_onCooldown = true;
+			OnCooldown = true;
 			_shotCooldownTimer.Start();
 		}
 	}
@@ -59,13 +62,18 @@ public partial class ShootingComponent : Node2D
 
 	private void ConnectToSignals()
 	{
+		if (_shotCooldownTimer == null)
+			return;
 		_shotCooldownTimer.Timeout += OnShotCoolDownTimerTimeout;
+		
+		if (_reloadTimer == null)
+			return;
 		_reloadTimer.Timeout += OnReloadTimerTimeout;
 	}
 
 	private void OnShotCoolDownTimerTimeout()
 	{
-		_onCooldown = false;
+		OnCooldown = false;
 	}
 
 	private void OnReloadTimerTimeout()
@@ -73,7 +81,19 @@ public partial class ShootingComponent : Node2D
 		_reloading = false;
 		_bulletCount = 0;
 	}
-	
+
+	private void FlipMuzzle()
+	{
+		if (TargetVector.X < 0)
+		{
+			_muzzle.Position = new Vector2(-_muzzlePosition.X, _muzzlePosition.Y);
+		}
+		else if (TargetVector.X > 0)
+		{
+			_muzzle.Position = new Vector2(_muzzlePosition.X, _muzzlePosition.Y);
+		}
+	}
+
 	private void ShootingLogic()
 	{
 		switch (_weaponType)
@@ -81,7 +101,11 @@ public partial class ShootingComponent : Node2D
 			case Utility.WeaponType.EnemyShotgun:
 				for (int i = 0; i < _bulletsPerShot; i++)
 				{
-					CreateAndSetBulletProperties(Utility.PlayerOrEnemy.Enemy, _weaponType);
+					CreateAndSetBulletProperties(
+						Utility.PlayerOrEnemy.Enemy, 
+						_weaponType, 
+						GlobalPosition.DirectionTo(TargetVector)
+						);
 				}
 				break;
 			case Utility.WeaponType.EnemyPistol:
@@ -89,7 +113,12 @@ public partial class ShootingComponent : Node2D
 			case Utility.WeaponType.EnemyRailGun:
 				if (!_reloading)
 				{
-					CreateAndSetBulletProperties(Utility.PlayerOrEnemy.Enemy, _weaponType);
+					CreateAndSetBulletProperties(
+						Utility.PlayerOrEnemy.Enemy, 
+						_weaponType, 
+						GlobalPosition.DirectionTo(TargetVector)
+						);
+					
 					_bulletCount++;
 					
 					if (_bulletCount >= _magazineSize)
@@ -101,27 +130,41 @@ public partial class ShootingComponent : Node2D
 				break;
 			
 			case Utility.WeaponType.PlayerShotgun:
+				FlipMuzzle();
 				for (int i = 0; i < _bulletsPerShot; i++)
 				{
-					CreateAndSetBulletProperties(Utility.PlayerOrEnemy.Player, _weaponType);
+					CreateAndSetBulletProperties(
+						Utility.PlayerOrEnemy.Player, 
+						_weaponType, 
+						new Vector2(TargetVector.X, TargetVector.Y)
+						);
 				}
 				break;
 			case Utility.WeaponType.PlayerPistol:
 			case Utility.WeaponType.PlayerMachineGun:
 			case Utility.WeaponType.PlayerRailGun:	
-				CreateAndSetBulletProperties(Utility.PlayerOrEnemy.Player, _weaponType);
+				FlipMuzzle();
+				CreateAndSetBulletProperties(
+					Utility.PlayerOrEnemy.Player, 
+					_weaponType,
+					new Vector2(TargetVector.X, TargetVector.Y)
+					);
 				break;
 		}
 	}
 
-	private void CreateAndSetBulletProperties(Utility.PlayerOrEnemy playerOrEnemy, Utility.WeaponType projectileWeaponType)
+	private void CreateAndSetBulletProperties(
+		Utility.PlayerOrEnemy playerOrEnemy, 
+		Utility.WeaponType projectileWeaponType,
+		Vector2 directionToTarget
+		)
 	{
 		var projectileInstance = Globals.Instance.BulletProjectile.Instantiate<BulletProjectile>();
 		
 		projectileInstance.PlayerOrEnemyBullet = playerOrEnemy;
 		projectileInstance.BulletWeaponType = projectileWeaponType;
 		
-		projectileInstance.Target = GlobalPosition.DirectionTo(TargetVector);
+		projectileInstance.Target = directionToTarget;
 		projectileInstance.RotationDegrees = Globals.Instance.Rng.RandfRange(-_bulletSwayAngle, _bulletSwayAngle);
 		projectileInstance.BulletSpeed = _bulletSpeed;
 		projectileInstance.Knockback = _bulletKnockback;
