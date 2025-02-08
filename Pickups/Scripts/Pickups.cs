@@ -18,7 +18,7 @@ public partial class Pickups : Area2D
 	
 	public override void _Ready()
 	{
-		_sprite?.Play("idle");
+		_sprite?.Play(Utility.Instance.EntityIdleAnimation);
 		
 		AreaEntered += OnPlayerEntered;
 	}
@@ -37,6 +37,10 @@ public partial class Pickups : Area2D
 				break;
 			
 			case Utility.PickupType.Catnip:
+				_canPickup = true;
+				pickupsComponent.PickUpScoreItem(_scorePoints);
+				break;
+			
 			case Utility.PickupType.WeaponMod:
 				break;
 		}

@@ -85,8 +85,9 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="RangedEnemyHeavyShotgunner" type="Node2D"]
+[node name="RangedEnemyHeavyShotgunner" type="Node2D" node_paths=PackedStringArray("_enemyController")]
 script = ExtResource("1_w2m5o")
+_enemyController = NodePath("EnemyControllerComponent")
 
 [node name="EnemyControllerComponent" type="Node" parent="." node_paths=PackedStringArray("_health", "_hurtbox", "_playerDetection", "_shooting", "_animation", "_debugHealthLabel")]
 script = ExtResource("1_o3boa")

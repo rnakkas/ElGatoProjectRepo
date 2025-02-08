@@ -19,12 +19,16 @@ public partial class PlayerControllerComponent : Node
 	[Export] private RayCast2D _rightWallDetect;
 	[Export] private Area2D _miscBox;
 	[Export] private WeaponElgato _weapon;
+	
+	// Debug labels
 	[Export] private Label _debugHealthLabel;
+	[Export] private Label _debugScoreLabel;
 	
 	public Vector2 Velocity = Vector2.Zero;
 	private float _direction;
 	private bool _hurtStatus;
 	public bool IsOnFloor, IsOnCeiling;
+	private int _score;
 	
 	public void ConnectSignals()
 	{
@@ -32,6 +36,7 @@ public partial class PlayerControllerComponent : Node
 			return;
 		_pickupsBox.CheckCurrentHealth += OnHealthCheck;
 		_pickupsBox.PickedUpHealth += OnHealthPickedUp;
+		_pickupsBox.PickedUpScoreItem += OnScoreItemPickup;
 		
 		if (_hurtbox == null)
 			return;
@@ -83,6 +88,11 @@ public partial class PlayerControllerComponent : Node
 		{
 			Velocity.Y = _velocityComponent.JumpOnJumpPad((float)area.Get("JumpMultiplier"));
 		}
+	}
+
+	private void OnScoreItemPickup(int scorePoints)
+	{
+		_score += scorePoints;
 	}
 	
 	// Helper functions
@@ -148,5 +158,6 @@ public partial class PlayerControllerComponent : Node
 		_animation.PlayCharacterAnimations();
 		
 		_debugHealthLabel.SetText("HP: " + _health.CurrentHealth);
+		_debugScoreLabel.SetText("Score: " + _score);
 	}
 }

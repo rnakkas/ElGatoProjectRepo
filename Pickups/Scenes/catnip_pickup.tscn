@@ -1,0 +1,41 @@
+[gd_scene load_steps=5 format=3 uid="uid://bqk2spqxeu6g7"]
+
+[ext_resource type="Script" path="res://Pickups/Scripts/Pickups.cs" id="1_ak4fa"]
+[ext_resource type="Texture2D" uid="uid://dqx6rpywerr0u" path="res://icon.svg" id="1_r40ek"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_rq7o2"]
+radius = 92.9258
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_28voq"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_r40ek")
+}, {
+"duration": 1.0,
+"texture": null
+}, {
+"duration": 1.0,
+"texture": ExtResource("1_r40ek")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 4.0
+}]
+
+[node name="CatnipPickup" type="Area2D" node_paths=PackedStringArray("_sprite") groups=["CatnipPickups"]]
+scale = Vector2(0.28, 0.28)
+collision_layer = 16
+script = ExtResource("1_ak4fa")
+_pickupType = 1
+_scorePoints = 500
+_sprite = NodePath("sprite")
+
+[node name="collider" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_rq7o2")
+debug_color = Color(0.756576, 0.21038, 0.656196, 0.42)
+
+[node name="sprite" type="AnimatedSprite2D" parent="."]
+self_modulate = Color(0.864609, 7.64316e-05, 0.678003, 1)
+sprite_frames = SubResource("SpriteFrames_28voq")
+animation = &"idle"
