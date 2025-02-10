@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://dnkd8nwcia0in"]
+[gd_scene load_steps=14 format=3 uid="uid://dnkd8nwcia0in"]
 
 [ext_resource type="Script" path="res://Enemies/Scripts/RangedEnemyLightPistol.cs" id="1_djtq4"]
 [ext_resource type="Script" path="res://Components/Scripts/EnemyControllerComponent.cs" id="2_jd8vp"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://Components/Scripts/PlayerDetectionComponent.cs" id="5_ost8k"]
 [ext_resource type="Script" path="res://Components/Scripts/ShootingComponent.cs" id="6_lo5xk"]
 [ext_resource type="Script" path="res://Components/Scripts/AnimationComponent.cs" id="7_765es"]
+[ext_resource type="Resource" uid="uid://dc1g7eyd6beey" path="res://Resources/EnemyPistolShootingProperties.tres" id="7_ddrk6"]
 [ext_resource type="Texture2D" uid="uid://dqx6rpywerr0u" path="res://icon.svg" id="8_wqfqs"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_oa4wd"]
@@ -140,6 +141,8 @@ collision_mask = 6
 
 [node name="ShootingComponent" type="Node2D" parent="." node_paths=PackedStringArray("_muzzle", "_shotCooldownTimer", "_reloadTimer")]
 script = ExtResource("6_lo5xk")
+WeaponType = 1
+ShootingProperties = ExtResource("7_ddrk6")
 _shootingCooldownTime = 0.5
 _reloadTime = 1.5
 _magazineSize = 6
@@ -159,9 +162,8 @@ position = Vector2(0, -11)
 
 [node name="ReloadTimer" type="Timer" parent="ShootingComponent"]
 
-[node name="AnimationComponent" type="Node" parent="." node_paths=PackedStringArray("Sprite")]
+[node name="AnimationComponent" type="Node" parent="."]
 script = ExtResource("7_765es")
-Sprite = NodePath("")
 
 [node name="spriteBody" type="AnimatedSprite2D" parent="."]
 self_modulate = Color(0.0196078, 0.0196078, 0.0196078, 1)

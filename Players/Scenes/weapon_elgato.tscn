@@ -1,7 +1,8 @@
-[gd_scene load_steps=13 format=3 uid="uid://bec21vtufstsw"]
+[gd_scene load_steps=14 format=3 uid="uid://bec21vtufstsw"]
 
 [ext_resource type="Script" path="res://Players/Scripts/WeaponElgato.cs" id="1_704rr"]
 [ext_resource type="Texture2D" uid="uid://lo3w8s4ichdj" path="res://Assets/Players/cat_fingerGun-2.png" id="1_e4hys"]
+[ext_resource type="Resource" uid="uid://cs6j3p5h3n34h" path="res://Resources/PlayerPistolShootingProperties.tres" id="4_230cw"]
 [ext_resource type="Script" path="res://Components/Scripts/ShootingComponent.cs" id="5_liu8t"]
 [ext_resource type="Script" path="res://Components/Scripts/AnimationComponent.cs" id="6_nupb6"]
 
@@ -96,15 +97,8 @@ animation = &"idle"
 
 [node name="ShootingComponent" type="Node2D" parent="." node_paths=PackedStringArray("_muzzle", "_shotCooldownTimer")]
 script = ExtResource("5_liu8t")
-_weaponType = 4
-_shootingCooldownTime = 0.5
-_reloadTime = 0.5
-_magazineSize = 1
-_bulletDamage = 10
-_bulletKnockback = 100.0
-_bulletsPerShot = 1
-_bulletSwayAngle = 2.0
-_bulletSpeed = 420.0
+WeaponType = 5
+ShootingProperties = ExtResource("4_230cw")
 _muzzle = NodePath("muzzle")
 _shotCooldownTimer = NodePath("shotCooldownTimer")
 

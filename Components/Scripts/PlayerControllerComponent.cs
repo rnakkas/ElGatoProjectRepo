@@ -1,4 +1,6 @@
+using System;
 using ElGatoProject.Players.Scripts;
+using ElGatoProject.Singletons;
 using Godot;
 using Godot.Collections;
 
@@ -37,6 +39,7 @@ public partial class PlayerControllerComponent : Node
 		_pickupsBox.CheckCurrentHealth += OnHealthCheck;
 		_pickupsBox.PickedUpHealth += OnHealthPickedUp;
 		_pickupsBox.PickedUpScoreItem += OnScoreItemPickup;
+		_pickupsBox.PickedUpWeaponMod += OnWeaponModPickup;
 		
 		if (_hurtbox == null)
 			return;
@@ -93,6 +96,14 @@ public partial class PlayerControllerComponent : Node
 	private void OnScoreItemPickup(int scorePoints)
 	{
 		_score += scorePoints;
+	}
+
+	private void OnWeaponModPickup(string modType)
+	{
+		if (Enum.TryParse(modType, out Utility.WeaponType weaponType))
+		{
+			_weapon.WeaponType = weaponType;
+		}
 	}
 	
 	// Helper functions

@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=4 uid="uid://cne5xpx7c4fh0"]
+[gd_scene load_steps=19 format=4 uid="uid://cne5xpx7c4fh0"]
 
 [ext_resource type="Texture2D" uid="uid://o2up0ats16cc" path="res://Assets/Tilesets/tileset_background_1.png" id="1_7bkjm"]
 [ext_resource type="Texture2D" uid="uid://d2hqfvsf0rube" path="res://Assets/Tilesets/tilemap-floors-walls-1.png" id="1_l2xyl"]
@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" uid="uid://cswtvyds80uje" path="res://Enemies/Scenes/ranged_enemy_heavy_machine_gunner.tscn" id="8_c6t2q"]
 [ext_resource type="PackedScene" uid="uid://ov2vlvh4yw53" path="res://Pickups/Scenes/coffee_mug_pickup.tscn" id="8_kgmbo"]
 [ext_resource type="PackedScene" uid="uid://bqk2spqxeu6g7" path="res://Pickups/Scenes/catnip_pickup.tscn" id="11_v8v8e"]
+[ext_resource type="PackedScene" uid="uid://bvfln655yll0j" path="res://Pickups/Scenes/weapon_mod_shotgun.tscn" id="12_jqfr8"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_mmxhc"]
 texture = ExtResource("1_7bkjm")
@@ -108,7 +109,7 @@ tile_map_data = PackedByteArray("AAAAAAIAAAAFAAIAAAAAAAMAAAAFAAIAAABEAAUAAAAHAAI
 tile_set = SubResource("TileSet_4l5qw")
 
 [node name="player_elgato" parent="." instance=ExtResource("2_e8fkw")]
-position = Vector2(124, 58)
+position = Vector2(60, 55)
 
 [node name="Camera2D" type="Camera2D" parent="player_elgato"]
 zoom = Vector2(1.7, 1.7)
@@ -226,16 +227,23 @@ position = Vector2(1206, 52)
 [node name="CatnipPickups" type="Node" parent="."]
 
 [node name="CatnipPickup" parent="CatnipPickups" instance=ExtResource("11_v8v8e")]
-position = Vector2(215, 45)
+position = Vector2(237, 49)
 
 [node name="CatnipPickup2" parent="CatnipPickups" instance=ExtResource("11_v8v8e")]
 position = Vector2(410, 139)
+scale = Vector2(0.16, 0.16)
 
 [node name="CatnipPickup3" parent="CatnipPickups" instance=ExtResource("11_v8v8e")]
 position = Vector2(647, 309)
+scale = Vector2(0.16, 0.16)
 
 [node name="CatnipPickup4" parent="CatnipPickups" instance=ExtResource("11_v8v8e")]
 position = Vector2(1032, 137)
 
 [node name="CatnipPickup5" parent="CatnipPickups" instance=ExtResource("11_v8v8e")]
 position = Vector2(825, 305)
+
+[node name="WeaponModPickups" type="Node" parent="."]
+
+[node name="WeaponModShotgun" parent="WeaponModPickups" instance=ExtResource("12_jqfr8")]
+position = Vector2(175, 49)

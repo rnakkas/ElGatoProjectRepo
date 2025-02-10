@@ -24,7 +24,7 @@ animations = [{
 }]
 
 [node name="CatnipPickup" type="Area2D" node_paths=PackedStringArray("_sprite") groups=["CatnipPickups"]]
-scale = Vector2(0.28, 0.28)
+scale = Vector2(0.15, 0.15)
 collision_layer = 16
 script = ExtResource("1_ak4fa")
 _pickupType = 1
@@ -39,3 +39,13 @@ debug_color = Color(0.756576, 0.21038, 0.656196, 0.42)
 self_modulate = Color(0.864609, 7.64316e-05, 0.678003, 1)
 sprite_frames = SubResource("SpriteFrames_28voq")
 animation = &"idle"
+
+[node name="Label" type="Label" parent="."]
+offset_left = -80.0
+offset_top = -160.0
+offset_right = 77.0
+offset_bottom = -91.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 50
+text = "Catnip"

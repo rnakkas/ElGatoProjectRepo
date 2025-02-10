@@ -17,7 +17,7 @@ public partial class Utility : Node
     {
         Coffee,
         Catnip,
-        WeaponMod
+        WeaponTypeModifier
     }
     
     public enum WeaponModType
@@ -30,6 +30,7 @@ public partial class Utility : Node
 
     public enum WeaponType
     {
+        None,
         EnemyPistol,
         EnemyShotgun,
         EnemyMachineGun,
