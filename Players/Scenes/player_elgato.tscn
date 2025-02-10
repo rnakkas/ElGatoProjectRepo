@@ -238,7 +238,7 @@ safe_margin = 2.5
 script = ExtResource("1_q6xoq")
 _playerController = NodePath("PlayerControllerComponent")
 
-[node name="PlayerControllerComponent" type="Node" parent="." node_paths=PackedStringArray("_health", "_hurtbox", "_velocityComponent", "_animation", "_pickupsBox", "_sprite", "_leftWallDetect", "_rightWallDetect", "_miscBox", "_weapon", "_debugHealthLabel", "_debugScoreLabel")]
+[node name="PlayerControllerComponent" type="Node" parent="." node_paths=PackedStringArray("_health", "_hurtbox", "_velocityComponent", "_animation", "_pickupsBox", "_sprite", "_leftWallDetect", "_rightWallDetect", "_miscBox", "_weapon", "_debugHealthLabel", "_debugScoreLabel", "_debugWeaponLabel")]
 script = ExtResource("2_40482")
 _health = NodePath("../HealthComponent")
 _hurtbox = NodePath("../HurtboxComponent")
@@ -252,6 +252,7 @@ _miscBox = NodePath("../MiscBox")
 _weapon = NodePath("../Weapon_ElGato")
 _debugHealthLabel = NodePath("../HealthLabel")
 _debugScoreLabel = NodePath("../ScoreLabel")
+_debugWeaponLabel = NodePath("../WeaponAmmoLabel")
 
 [node name="sprite" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, 3)
@@ -350,5 +351,13 @@ offset_left = -12.0
 offset_top = -36.0
 offset_right = 31.0
 offset_bottom = -23.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 9
+
+[node name="WeaponAmmoLabel" type="Label" parent="."]
+offset_left = -12.0
+offset_top = -46.0
+offset_right = 31.0
+offset_bottom = -33.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 9

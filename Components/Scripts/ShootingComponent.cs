@@ -19,7 +19,8 @@ public partial class ShootingComponent : Node2D
 	public bool HurtStatus, OnCooldown;
 	public Vector2 TargetVector;
 	private bool _reloading;
-	private int _bulletCount;
+	public int BulletCount;
+	public int Ammo;
 	private Vector2 _muzzlePosition;
 	
 	public override void _Ready()
@@ -74,7 +75,7 @@ public partial class ShootingComponent : Node2D
 	private void OnReloadTimerTimeout()
 	{
 		_reloading = false;
-		_bulletCount = 0;
+		BulletCount = 0;
 	}
 
 	private void FlipMuzzle()
@@ -117,9 +118,9 @@ public partial class ShootingComponent : Node2D
 						GlobalPosition.DirectionTo(TargetVector)
 						);
 					
-					_bulletCount++;
+					BulletCount++;
 					
-					if (_bulletCount >= ShootingProperties.MagazineSize)
+					if (BulletCount >= ShootingProperties.MagazineSize)
 					{
 						_reloading = true;
 						_reloadTimer.Start();

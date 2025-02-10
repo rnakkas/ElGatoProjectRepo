@@ -12,7 +12,8 @@ public partial class WeaponElgato : Node2D
 	
 	public Vector2 Direction;
 	public bool HurtStatus;
-	public Utility.WeaponType WeaponType;
+	public Utility.WeaponType WeaponType = Utility.WeaponType.PlayerPistol;
+	public int WeaponAmmo;
 	
 	public override void _Ready()
 	{
@@ -41,6 +42,8 @@ public partial class WeaponElgato : Node2D
 			case Utility.WeaponType.PlayerShotgun:
 				_shooting.WeaponType = WeaponType;
 				_shooting.ShootingProperties = Globals.Instance.PlayerShotgunShootingProperties;
+				
+				WeaponAmmo = _shooting.ShootingProperties.MagazineSize;
 				break;
 			
 			case Utility.WeaponType.PlayerMachineGun:
@@ -63,6 +66,7 @@ public partial class WeaponElgato : Node2D
 		if (Input.IsActionPressed("shoot") && !_shooting.OnCooldown)
 		{
 			_shooting.Shoot();
+			WeaponAmmo--;
 			_animation.PlayWeaponAnimations(!HurtStatus, Direction.X);
 		}
 		else
@@ -76,5 +80,9 @@ public partial class WeaponElgato : Node2D
 		SetComponentProperties();
 		WeaponActions();
 		
+		if (WeaponAmmo <= 0)
+		{
+			WeaponType = Utility.WeaponType.PlayerPistol;
+		}
 	}
 }
