@@ -63,7 +63,7 @@ public partial class WeaponElgato : Node2D
 		if (Input.IsActionPressed("shoot") && !_shooting.OnCooldown)
 		{
 			_shooting.Shoot();
-			_animation.PlayWeaponAnimations(true, Direction.X);
+			_animation.PlayWeaponAnimations(!HurtStatus, Direction.X);
 		}
 		else
 		{
