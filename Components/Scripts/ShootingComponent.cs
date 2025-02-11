@@ -14,6 +14,9 @@ public partial class ShootingComponent : Node2D
 	[Export] private Marker2D _muzzle;
 	[Export] private Timer _shotCooldownTimer;
 	[Export] private Timer _reloadTimer;
+
+	[Signal]
+	public delegate void ShootingEventHandler();
 	
 	public bool HurtStatus, OnCooldown;
 	public Vector2 TargetVector;
@@ -34,6 +37,7 @@ public partial class ShootingComponent : Node2D
 	{
 		if (!HurtStatus && !OnCooldown)
 		{
+			EmitSignal(SignalName.Shooting);
 			ShootingLogic();
 			OnCooldown = true;
 			_shotCooldownTimer.Start();

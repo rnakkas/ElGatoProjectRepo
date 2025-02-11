@@ -18,7 +18,22 @@ public partial class WeaponElgato : Node2D
 	
 	public override void _Ready()
 	{
+		ConnectToSignals();
+	}
+
+	private void ConnectToSignals()
+	{
+		_shooting.Shooting += OnShooting;
+	}
+
+	// Shooting signal connection
+	private void OnShooting()
+	{
+		_animation.PlayWeaponAnimations(true);
 		
+		// Only reduce ammo for power-up weapons
+		if (_shooting.WeaponType != Utility.WeaponType.PlayerPistol)
+			_weaponAmmo--;
 	}
 	
 	private void SetComponentProperties()
@@ -65,19 +80,19 @@ public partial class WeaponElgato : Node2D
 
 	private void WeaponActions()
 	{
-		if (Input.IsActionPressed("shoot") && !_shooting.OnCooldown)
+		if (Input.IsActionPressed("shoot"))
 		{
 			_shooting.Shoot();
-			
-			// Only reduce ammo for power-up weapons
-			if (_shooting.WeaponType != Utility.WeaponType.PlayerPistol)
-				_weaponAmmo--;
-			
-			_animation.PlayWeaponAnimations(!HurtStatus, Direction.X);
 		}
 		else
 		{
-			_animation.PlayWeaponAnimations(false, Direction.X);
+			_animation.PlayWeaponAnimations(false);
+		}
+		
+		// If weapon power-up ammo runs out, return to pistol
+		if (_weaponAmmo <= 0)
+		{
+			SwitchWeapon(Utility.WeaponType.PlayerPistol);
 		}
 	}
 	
@@ -86,11 +101,7 @@ public partial class WeaponElgato : Node2D
 		SetComponentProperties();
 		WeaponActions();
 		
-		// If weapon power-up ammo runs out, return to pistol
-		if (_weaponAmmo <= 0)
-		{
-			SwitchWeapon(Utility.WeaponType.PlayerPistol);
-		}
+		_animation.FlipSprite(Direction.X);
 		
 		_debugWeaponLabel.SetText(_shooting.WeaponType + ": " + _weaponAmmo);
 	}

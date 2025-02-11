@@ -120,10 +120,8 @@ public partial class AnimationComponent : Node
 		}
 	}
 
-	public void PlayWeaponAnimations(bool isShooting, float direction)
+	public void PlayWeaponAnimations(bool isShooting)
 	{
-		FlipSprite(direction);
-
 		if (isShooting)
 		{
 			Sprite.Play(Utility.Instance.EntityShootAnimation);
