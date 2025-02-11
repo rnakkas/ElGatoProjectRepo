@@ -81,8 +81,50 @@ animations = [{
 "texture": SubResource("AtlasTexture_awbom")
 }],
 "loop": false,
-"name": &"shoot",
+"name": &"shoot_machineGun",
+"speed": 30.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0m5ln")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v1p3e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_awbom")
+}],
+"loop": false,
+"name": &"shoot_pistol",
 "speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0m5ln")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v1p3e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_awbom")
+}],
+"loop": false,
+"name": &"shoot_railGun",
+"speed": 7.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0m5ln")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v1p3e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_awbom")
+}],
+"loop": false,
+"name": &"shoot_shotgun",
+"speed": 8.0
 }]
 
 [node name="Weapon_ElGato" type="Node2D" node_paths=PackedStringArray("_shooting", "_animation")]
@@ -93,7 +135,7 @@ _animation = NodePath("AnimationComponent")
 
 [node name="sprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_ld3wl")
-animation = &"run"
+animation = &"shoot_machineGun"
 
 [node name="ShootingComponent" type="Node2D" parent="." node_paths=PackedStringArray("_muzzle", "_shotCooldownTimer")]
 script = ExtResource("5_liu8t")

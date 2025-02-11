@@ -29,7 +29,7 @@ public partial class WeaponElgato : Node2D
 	// Shooting signal connection
 	private void OnShooting()
 	{
-		_animation.PlayWeaponAnimations(true);
+		_animation.PlayWeaponAnimations(true, _shooting.WeaponType);
 		
 		// Only reduce ammo for power-up weapons
 		if (_shooting.WeaponType != Utility.WeaponType.PlayerPistol)
@@ -89,7 +89,7 @@ public partial class WeaponElgato : Node2D
 		}
 		else
 		{
-			_animation.PlayWeaponAnimations(false);
+			_animation.PlayWeaponAnimations(false, _shooting.WeaponType);
 		}
 		
 		// If weapon power-up ammo runs out, return to pistol

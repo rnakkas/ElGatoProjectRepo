@@ -6,9 +6,9 @@
 script = ExtResource("1_evcgf")
 ShootingCooldownTime = 1.7
 ReloadTime = 1.7
-MagazineSize = 1
+MagazineSize = 10
 BulletDamage = 20
 BulletKnockback = 150.0
 BulletsPerShot = 1
 BulletSwayAngle = 2.0
-BulletSpeed = 570.0
+BulletSpeed = 800.0

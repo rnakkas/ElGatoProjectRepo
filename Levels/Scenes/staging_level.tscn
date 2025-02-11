@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=4 uid="uid://cne5xpx7c4fh0"]
+[gd_scene load_steps=21 format=4 uid="uid://cne5xpx7c4fh0"]
 
 [ext_resource type="Texture2D" uid="uid://o2up0ats16cc" path="res://Assets/Tilesets/tileset_background_1.png" id="1_7bkjm"]
 [ext_resource type="Texture2D" uid="uid://d2hqfvsf0rube" path="res://Assets/Tilesets/tilemap-floors-walls-1.png" id="1_l2xyl"]
@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://bqk2spqxeu6g7" path="res://Pickups/Scenes/catnip_pickup.tscn" id="11_v8v8e"]
 [ext_resource type="PackedScene" uid="uid://bvfln655yll0j" path="res://Pickups/Scenes/weapon_mod_shotgun.tscn" id="12_jqfr8"]
 [ext_resource type="PackedScene" uid="uid://cgnak73pe3qi7" path="res://Pickups/Scenes/weapon_mod_machine_gun.tscn" id="13_osyl6"]
+[ext_resource type="PackedScene" uid="uid://bkx2ap7o8frrj" path="res://Pickups/Scenes/weapon_mod_rail_gun.tscn" id="14_ux4hp"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_mmxhc"]
 texture = ExtResource("1_7bkjm")
@@ -251,3 +252,6 @@ position = Vector2(175, 49)
 
 [node name="WeaponModMachineGun" parent="WeaponModPickups" instance=ExtResource("13_osyl6")]
 position = Vector2(570, 323)
+
+[node name="WeaponModRailGun" parent="WeaponModPickups" instance=ExtResource("14_ux4hp")]
+position = Vector2(302, 303)
