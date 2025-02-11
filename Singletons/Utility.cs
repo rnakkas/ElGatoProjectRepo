@@ -19,14 +19,6 @@ public partial class Utility : Node
         Catnip,
         WeaponTypeModifier
     }
-    
-    public enum WeaponModType
-    {
-    	None,
-    	Shotgun,
-    	MachineGun,
-        RailGun
-    }
 
     public enum WeaponType
     {

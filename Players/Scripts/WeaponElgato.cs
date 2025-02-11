@@ -10,10 +10,11 @@ public partial class WeaponElgato : Node2D
 	[Export] private ShootingComponent _shooting;
 	[Export] private AnimationComponent _animation;
 	
+	[Export] private Label _debugWeaponLabel;
+	
 	public Vector2 Direction;
 	public bool HurtStatus;
-	public Utility.WeaponType WeaponType = Utility.WeaponType.PlayerPistol;
-	public int WeaponAmmo;
+	private int _weaponAmmo;
 	
 	public override void _Ready()
 	{
@@ -24,8 +25,13 @@ public partial class WeaponElgato : Node2D
 	{
 		_shooting.TargetVector = Direction;
 		_shooting.HurtStatus = HurtStatus;
+	}
+
+	public void SwitchWeapon(Utility.WeaponType weaponType)
+	{
+		_shooting.WeaponType = weaponType;
 		
-		switch (WeaponType)
+		switch (weaponType)
 		{
 			case Utility.WeaponType.None:
 			case Utility.WeaponType.EnemyPistol:
@@ -35,30 +41,26 @@ public partial class WeaponElgato : Node2D
 				return;
 			
 			case Utility.WeaponType.PlayerPistol:
-				_shooting.WeaponType = WeaponType;
 				_shooting.ShootingProperties = Globals.Instance.PlayerPistolShootingProperties;
 				break;
 			
 			case Utility.WeaponType.PlayerShotgun:
-				_shooting.WeaponType = WeaponType;
 				_shooting.ShootingProperties = Globals.Instance.PlayerShotgunShootingProperties;
-				
-				WeaponAmmo = _shooting.ShootingProperties.MagazineSize;
 				break;
 			
 			case Utility.WeaponType.PlayerMachineGun:
-				_shooting.WeaponType = WeaponType;
 				_shooting.ShootingProperties = Globals.Instance.PlayerMachineGunShootingProperties;
 				break;
 			
 			case Utility.WeaponType.PlayerRailGun:
-				_shooting.WeaponType = WeaponType;
 				_shooting.ShootingProperties = Globals.Instance.PlayerRailGunShootingProperties;
 				break;
 			
 			default:
 				throw new ArgumentOutOfRangeException($"Weapon type does not exist");
 		}
+
+		_weaponAmmo = _shooting.ShootingProperties.MagazineSize;
 	}
 
 	private void WeaponActions()
@@ -66,7 +68,11 @@ public partial class WeaponElgato : Node2D
 		if (Input.IsActionPressed("shoot") && !_shooting.OnCooldown)
 		{
 			_shooting.Shoot();
-			WeaponAmmo--;
+			
+			// Only reduce ammo for power-up weapons
+			if (_shooting.WeaponType != Utility.WeaponType.PlayerPistol)
+				_weaponAmmo--;
+			
 			_animation.PlayWeaponAnimations(!HurtStatus, Direction.X);
 		}
 		else
@@ -80,9 +86,12 @@ public partial class WeaponElgato : Node2D
 		SetComponentProperties();
 		WeaponActions();
 		
-		if (WeaponAmmo <= 0)
+		// If weapon power-up ammo runs out, return to pistol
+		if (_weaponAmmo <= 0)
 		{
-			WeaponType = Utility.WeaponType.PlayerPistol;
+			SwitchWeapon(Utility.WeaponType.PlayerPistol);
 		}
+		
+		_debugWeaponLabel.SetText(_shooting.WeaponType + ": " + _weaponAmmo);
 	}
 }

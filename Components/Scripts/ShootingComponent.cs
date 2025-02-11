@@ -1,5 +1,4 @@
 using Godot;
-using System;
 using ElGatoProject.Projectiles.Scripts;
 using ElGatoProject.Resources;
 using ElGatoProject.Singletons;
@@ -19,8 +18,7 @@ public partial class ShootingComponent : Node2D
 	public bool HurtStatus, OnCooldown;
 	public Vector2 TargetVector;
 	private bool _reloading;
-	public int BulletCount;
-	public int Ammo;
+	private int _bulletCount;
 	private Vector2 _muzzlePosition;
 	
 	public override void _Ready()
@@ -75,7 +73,7 @@ public partial class ShootingComponent : Node2D
 	private void OnReloadTimerTimeout()
 	{
 		_reloading = false;
-		BulletCount = 0;
+		_bulletCount = 0;
 	}
 
 	private void FlipMuzzle()
@@ -118,9 +116,9 @@ public partial class ShootingComponent : Node2D
 						GlobalPosition.DirectionTo(TargetVector)
 						);
 					
-					BulletCount++;
+					_bulletCount++;
 					
-					if (BulletCount >= ShootingProperties.MagazineSize)
+					if (_bulletCount >= ShootingProperties.MagazineSize)
 					{
 						_reloading = true;
 						_reloadTimer.Start();

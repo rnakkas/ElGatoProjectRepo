@@ -25,7 +25,6 @@ public partial class PlayerControllerComponent : Node
 	// Debug labels
 	[Export] private Label _debugHealthLabel;
 	[Export] private Label _debugScoreLabel;
-	[Export] private Label _debugWeaponLabel;
 	
 	public Vector2 Velocity = Vector2.Zero;
 	private float _direction;
@@ -103,7 +102,7 @@ public partial class PlayerControllerComponent : Node
 	{
 		if (Enum.TryParse(modType, out Utility.WeaponType weaponType))
 		{
-			_weapon.WeaponType = weaponType;
+			_weapon.SwitchWeapon(weaponType);
 		}
 	}
 	
@@ -171,6 +170,5 @@ public partial class PlayerControllerComponent : Node
 		
 		_debugHealthLabel.SetText("HP: " + _health.CurrentHealth);
 		_debugScoreLabel.SetText("Score: " + _score);
-		_debugWeaponLabel.SetText(_weapon.WeaponType + ": " + _weapon.WeaponAmmo);
 	}
 }
