@@ -74,8 +74,11 @@ public partial class WeaponElgato : Node2D
 			default:
 				throw new ArgumentOutOfRangeException($"Weapon type does not exist");
 		}
-
+		
 		_weaponAmmo = _shooting.ShootingProperties.MagazineSize;
+		
+		// Set the updated timer values for the new weapon type
+		_shooting.SetTimerValues(); 
 	}
 
 	private void WeaponActions()

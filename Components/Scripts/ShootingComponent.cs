@@ -45,7 +45,7 @@ public partial class ShootingComponent : Node2D
 	}
 
 	// Helper functions
-	private void SetTimerValues()
+	public void SetTimerValues()
 	{
 		if (_shotCooldownTimer == null)
 			return;
