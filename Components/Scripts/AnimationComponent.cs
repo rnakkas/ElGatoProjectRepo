@@ -120,13 +120,28 @@ public partial class AnimationComponent : Node
 		}
 	}
 
-	public void PlayWeaponAnimations(bool isShooting, float direction)
+	public void PlayWeaponAnimations(bool isShooting, Utility.WeaponType weaponType)
 	{
-		FlipSprite(direction);
-
 		if (isShooting)
 		{
-			Sprite.Play(Utility.Instance.EntityShootAnimation);
+			switch (weaponType)
+			{
+				case Utility.WeaponType.PlayerPistol:
+					Sprite.Play(Utility.Instance.PistolShootAnimation);
+					break;
+				
+				case Utility.WeaponType.PlayerShotgun:
+					Sprite.Play(Utility.Instance.ShotgunShootAnimation);
+					break;
+				
+				case Utility.WeaponType.PlayerMachineGun:
+					Sprite.Play(Utility.Instance.MachineGunShootAnimation);
+					break;
+				
+				case Utility.WeaponType.PlayerRailGun:
+					Sprite.Play(Utility.Instance.RailGunShootAnimation);
+					break;
+			}
 		}
 		else
 		{

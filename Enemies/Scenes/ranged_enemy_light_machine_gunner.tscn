@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bpf8t5pfaxap1"]
+[gd_scene load_steps=14 format=3 uid="uid://bpf8t5pfaxap1"]
 
 [ext_resource type="Script" path="res://Enemies/Scripts/RangedEnemyLightMachineGunner.cs" id="1_0w3h1"]
 [ext_resource type="Script" path="res://Components/Scripts/HealthComponent.cs" id="1_dtnyv"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://Components/Scripts/ShootingComponent.cs" id="4_n4hd3"]
 [ext_resource type="Script" path="res://Components/Scripts/AnimationComponent.cs" id="5_ccdcm"]
 [ext_resource type="Texture2D" uid="uid://dqx6rpywerr0u" path="res://icon.svg" id="6_p4ihc"]
+[ext_resource type="Resource" uid="uid://bpul4q06ue3xf" path="res://Resources/EnemyLightMachineGunShootingProperties.tres" id="7_2ysa6"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_acwc3"]
 size = Vector2(14, 34)
@@ -140,7 +141,8 @@ collision_mask = 6
 
 [node name="ShootingComponent" type="Node2D" parent="." node_paths=PackedStringArray("_muzzle", "_shotCooldownTimer", "_reloadTimer")]
 script = ExtResource("4_n4hd3")
-_weaponType = 2
+WeaponType = 3
+ShootingProperties = ExtResource("7_2ysa6")
 _shootingCooldownTime = 0.05
 _reloadTime = 1.7
 _magazineSize = 15

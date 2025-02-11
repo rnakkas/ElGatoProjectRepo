@@ -1,6 +1,6 @@
 using Godot;
-using System;
 using ElGatoProject.Projectiles.Scripts;
+using ElGatoProject.Resources;
 using ElGatoProject.Singletons;
 
 namespace ElGatoProject.Components.Scripts;
@@ -8,18 +8,15 @@ namespace ElGatoProject.Components.Scripts;
 [GlobalClass]
 public partial class ShootingComponent : Node2D
 {
-	[Export] private Utility.WeaponType _weaponType;
-	[Export] private float _shootingCooldownTime;
-	[Export] private float _reloadTime;
-	[Export] private int _magazineSize;
-	[Export] private int _bulletDamage;
-	[Export] private float _bulletKnockback;
-	[Export] private int _bulletsPerShot;
-	[Export] private float _bulletSwayAngle;
-	[Export] private float _bulletSpeed;
+	[Export] public Utility.WeaponType WeaponType;
+	[Export] public ShootingProperties ShootingProperties;
+	
 	[Export] private Marker2D _muzzle;
 	[Export] private Timer _shotCooldownTimer;
 	[Export] private Timer _reloadTimer;
+
+	[Signal]
+	public delegate void ShootingEventHandler();
 	
 	public bool HurtStatus, OnCooldown;
 	public Vector2 TargetVector;
@@ -40,6 +37,7 @@ public partial class ShootingComponent : Node2D
 	{
 		if (!HurtStatus && !OnCooldown)
 		{
+			EmitSignal(SignalName.Shooting);
 			ShootingLogic();
 			OnCooldown = true;
 			_shotCooldownTimer.Start();
@@ -47,17 +45,17 @@ public partial class ShootingComponent : Node2D
 	}
 
 	// Helper functions
-	private void SetTimerValues()
+	public void SetTimerValues()
 	{
 		if (_shotCooldownTimer == null)
 			return;
 		_shotCooldownTimer.OneShot = true;
-		_shotCooldownTimer.WaitTime = _shootingCooldownTime;
+		_shotCooldownTimer.WaitTime = ShootingProperties.ShootingCooldownTime;
 		
 		if (_reloadTimer == null)
 			return;
 		_reloadTimer.OneShot = true;
-		_reloadTimer.WaitTime = _reloadTime;
+		_reloadTimer.WaitTime = ShootingProperties.ReloadTime;
 	}
 
 	private void ConnectToSignals()
@@ -96,14 +94,17 @@ public partial class ShootingComponent : Node2D
 
 	private void ShootingLogic()
 	{
-		switch (_weaponType)
+		switch (WeaponType)
 		{
+			case Utility.WeaponType.None:
+				break;
+			
 			case Utility.WeaponType.EnemyShotgun:
-				for (int i = 0; i < _bulletsPerShot; i++)
+				for (int i = 0; i < ShootingProperties.BulletsPerShot; i++)
 				{
 					CreateAndSetBulletProperties(
 						Utility.PlayerOrEnemy.Enemy, 
-						_weaponType, 
+						WeaponType, 
 						GlobalPosition.DirectionTo(TargetVector)
 						);
 				}
@@ -115,13 +116,13 @@ public partial class ShootingComponent : Node2D
 				{
 					CreateAndSetBulletProperties(
 						Utility.PlayerOrEnemy.Enemy, 
-						_weaponType, 
+						WeaponType, 
 						GlobalPosition.DirectionTo(TargetVector)
 						);
 					
 					_bulletCount++;
 					
-					if (_bulletCount >= _magazineSize)
+					if (_bulletCount >= ShootingProperties.MagazineSize)
 					{
 						_reloading = true;
 						_reloadTimer.Start();
@@ -131,11 +132,11 @@ public partial class ShootingComponent : Node2D
 			
 			case Utility.WeaponType.PlayerShotgun:
 				FlipMuzzle();
-				for (int i = 0; i < _bulletsPerShot; i++)
+				for (int i = 0; i < ShootingProperties.BulletsPerShot; i++)
 				{
 					CreateAndSetBulletProperties(
 						Utility.PlayerOrEnemy.Player, 
-						_weaponType, 
+						WeaponType, 
 						new Vector2(TargetVector.X, TargetVector.Y)
 						);
 				}
@@ -146,7 +147,7 @@ public partial class ShootingComponent : Node2D
 				FlipMuzzle();
 				CreateAndSetBulletProperties(
 					Utility.PlayerOrEnemy.Player, 
-					_weaponType,
+					WeaponType,
 					new Vector2(TargetVector.X, TargetVector.Y)
 					);
 				break;
@@ -165,10 +166,12 @@ public partial class ShootingComponent : Node2D
 		projectileInstance.BulletWeaponType = projectileWeaponType;
 		
 		projectileInstance.Target = directionToTarget;
-		projectileInstance.RotationDegrees = Globals.Instance.Rng.RandfRange(-_bulletSwayAngle, _bulletSwayAngle);
-		projectileInstance.BulletSpeed = _bulletSpeed;
-		projectileInstance.Knockback = _bulletKnockback;
-		projectileInstance.BulletDamage = _bulletDamage;
+		projectileInstance.RotationDegrees = 
+			Globals.Instance.Rng.RandfRange(-ShootingProperties.BulletSwayAngle, ShootingProperties.BulletSwayAngle);
+		
+		projectileInstance.BulletSpeed = ShootingProperties.BulletSpeed;
+		projectileInstance.Knockback = ShootingProperties.BulletKnockback; 
+		projectileInstance.BulletDamage = ShootingProperties.BulletDamage;
 		projectileInstance.GlobalPosition = _muzzle.GlobalPosition;
 		
 		GetTree().Root.AddChild(projectileInstance);

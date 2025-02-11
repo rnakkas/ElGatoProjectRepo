@@ -1,0 +1,49 @@
+[gd_scene load_steps=5 format=3 uid="uid://bvfln655yll0j"]
+
+[ext_resource type="Script" path="res://Pickups/Scripts/Pickups.cs" id="1_73aop"]
+[ext_resource type="Texture2D" uid="uid://dqx6rpywerr0u" path="res://icon.svg" id="2_o2i3w"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_k6d8b"]
+radius = 92.9258
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_83dga"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_o2i3w")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_o2i3w")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 4.0
+}]
+
+[node name="WeaponModShotgun" type="Area2D" node_paths=PackedStringArray("_sprite") groups=["WeaponModPickups"]]
+scale = Vector2(0.15, 0.15)
+collision_layer = 16
+script = ExtResource("1_73aop")
+_pickupType = 2
+_scorePoints = 200
+_weaponType = 6
+_sprite = NodePath("sprite")
+
+[node name="collider" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_k6d8b")
+debug_color = Color(0, 0.529937, 0.660283, 0.42)
+
+[node name="sprite" type="AnimatedSprite2D" parent="."]
+self_modulate = Color(2.21401e-06, 0.561276, 0.690783, 1)
+sprite_frames = SubResource("SpriteFrames_83dga")
+animation = &"idle"
+
+[node name="Label" type="Label" parent="."]
+offset_left = -233.333
+offset_top = -166.667
+offset_right = 300.667
+offset_bottom = -97.6667
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 50
+text = "WeaponMod: Shotgun"

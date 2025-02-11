@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ShootingProperties" load_steps=2 format=3 uid="uid://bpq8bl17chhy6"]
+
+[ext_resource type="Script" path="res://Resources/ShootingProperties.cs" id="1_neu3v"]
+
+[resource]
+script = ExtResource("1_neu3v")
+ShootingCooldownTime = 1.3
+ReloadTime = 2.1
+MagazineSize = 4
+BulletDamage = 5
+BulletKnockback = 35.0
+BulletsPerShot = 5
+BulletSwayAngle = 5.0
+BulletSpeed = 380.0

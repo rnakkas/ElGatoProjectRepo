@@ -11,14 +11,14 @@ public partial class Pickups : Area2D
 	[Export] private Utility.PickupType _pickupType;
 	[Export] private int _healAmount;
 	[Export] private int _scorePoints;
-	[Export] private Utility.WeaponModType _weaponModifier;
+	[Export] private Utility.WeaponType _weaponType;
 	[Export] private AnimatedSprite2D _sprite;
 
 	private bool _canPickup;
 	
 	public override void _Ready()
 	{
-		_sprite?.Play("idle");
+		_sprite?.Play(Utility.Instance.EntityIdleAnimation);
 		
 		AreaEntered += OnPlayerEntered;
 	}
@@ -37,7 +37,14 @@ public partial class Pickups : Area2D
 				break;
 			
 			case Utility.PickupType.Catnip:
-			case Utility.PickupType.WeaponMod:
+				_canPickup = true;
+				pickupsComponent.PickUpScoreItem(_scorePoints);
+				break;
+			
+			case Utility.PickupType.WeaponTypeModifier:
+				_canPickup = true;
+				pickupsComponent.PickupWeaponMod(_weaponType);
+				pickupsComponent.PickUpScoreItem(_scorePoints);
 				break;
 		}
 		

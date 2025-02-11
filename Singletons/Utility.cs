@@ -17,19 +17,12 @@ public partial class Utility : Node
     {
         Coffee,
         Catnip,
-        WeaponMod
-    }
-    
-    public enum WeaponModType
-    {
-    	None,
-    	Shotgun,
-    	MachineGun,
-        RailGun
+        WeaponTypeModifier
     }
 
     public enum WeaponType
     {
+        None,
         EnemyPistol,
         EnemyShotgun,
         EnemyMachineGun,
@@ -54,6 +47,12 @@ public partial class Utility : Node
     public string EntityWallSlideAnimation = "wall_slide";
     public string EntityHurtAnimation = "hurt";
     public string EntityShootAnimation = "shoot";
+    
+    // Player Weapon animation string names
+    public string PistolShootAnimation = "shoot_pistol";
+    public string ShotgunShootAnimation = "shoot_shotgun";
+    public string MachineGunShootAnimation = "shoot_machineGun";
+    public string RailGunShootAnimation = "shoot_railGun";
     
     // Projectile animation string names
     public string EnemyMachineGunFly = "enemy_machinegun_fly";

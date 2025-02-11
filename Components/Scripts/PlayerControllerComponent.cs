@@ -1,4 +1,6 @@
+using System;
 using ElGatoProject.Players.Scripts;
+using ElGatoProject.Singletons;
 using Godot;
 using Godot.Collections;
 
@@ -19,12 +21,16 @@ public partial class PlayerControllerComponent : Node
 	[Export] private RayCast2D _rightWallDetect;
 	[Export] private Area2D _miscBox;
 	[Export] private WeaponElgato _weapon;
+	
+	// Debug labels
 	[Export] private Label _debugHealthLabel;
+	[Export] private Label _debugScoreLabel;
 	
 	public Vector2 Velocity = Vector2.Zero;
 	private float _direction;
 	private bool _hurtStatus;
 	public bool IsOnFloor, IsOnCeiling;
+	private int _score;
 	
 	public void ConnectSignals()
 	{
@@ -32,6 +38,8 @@ public partial class PlayerControllerComponent : Node
 			return;
 		_pickupsBox.CheckCurrentHealth += OnHealthCheck;
 		_pickupsBox.PickedUpHealth += OnHealthPickedUp;
+		_pickupsBox.PickedUpScoreItem += OnScoreItemPickup;
+		_pickupsBox.PickedUpWeaponMod += OnWeaponModPickup;
 		
 		if (_hurtbox == null)
 			return;
@@ -82,6 +90,19 @@ public partial class PlayerControllerComponent : Node
 		if (area.IsInGroup("JumpPads"))
 		{
 			Velocity.Y = _velocityComponent.JumpOnJumpPad((float)area.Get("JumpMultiplier"));
+		}
+	}
+
+	private void OnScoreItemPickup(int scorePoints)
+	{
+		_score += scorePoints;
+	}
+
+	private void OnWeaponModPickup(string modType)
+	{
+		if (Enum.TryParse(modType, out Utility.WeaponType weaponType))
+		{
+			_weapon.SwitchWeapon(weaponType);
 		}
 	}
 	
@@ -148,5 +169,6 @@ public partial class PlayerControllerComponent : Node
 		_animation.PlayCharacterAnimations();
 		
 		_debugHealthLabel.SetText("HP: " + _health.CurrentHealth);
+		_debugScoreLabel.SetText("Score: " + _score);
 	}
 }

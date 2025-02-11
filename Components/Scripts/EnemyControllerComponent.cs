@@ -81,6 +81,7 @@ public partial class EnemyControllerComponent : Node
     private void OnHealthDepleted()
     {
     	GetParent().QueueFree();
+	    
     }
 
     public void EnemyControllerActions(float delta)
