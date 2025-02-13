@@ -21,6 +21,7 @@ public partial class PlayerControllerComponent : Node
 	[Export] private RayCast2D _rightWallDetect;
 	[Export] private Area2D _miscBox;
 	[Export] private WeaponElgato _weapon;
+	[Export] private Timer _dashCooldownTimer;
 	
 	// Debug labels
 	[Export] private Label _debugHealthLabel;
@@ -28,7 +29,7 @@ public partial class PlayerControllerComponent : Node
 	
 	public Vector2 Velocity = Vector2.Zero;
 	private float _direction;
-	private bool _hurtStatus;
+	private bool _hurtStatus, _onDashCooldown;
 	public bool IsOnFloor, IsOnCeiling;
 	private int _score;
 	
@@ -47,6 +48,8 @@ public partial class PlayerControllerComponent : Node
 		_hurtbox.HurtStatusCleared += OnHurtStatusCleared; 
 		
 		_miscBox.AreaEntered += EnteredJumpPad;
+
+		_dashCooldownTimer.Timeout += OnDashTimerTimeout;
 	}
 	
 	// Connected signal methods
@@ -105,6 +108,11 @@ public partial class PlayerControllerComponent : Node
 			_weapon.SwitchWeapon(weaponType);
 		}
 	}
+
+	private void OnDashTimerTimeout()
+	{
+		_onDashCooldown = false;
+	}
 	
 	// Helper functions
 	private void SetDirections()
@@ -118,6 +126,21 @@ public partial class PlayerControllerComponent : Node
 		else if (!Input.IsActionPressed("move_left") || !Input.IsActionPressed("move_right"))
 		{
 			_direction = 0;
+		}
+		
+		if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown)
+		{
+			_onDashCooldown = true;
+			_dashCooldownTimer.Start();
+			
+			if (!_animation.Sprite.IsFlippedH())
+			{
+				_direction = 1.0f;
+			}
+			else if (_animation.Sprite.IsFlippedH())
+			{
+				_direction = -1.0f;
+			}
 		}
 	}
 	
@@ -139,6 +162,8 @@ public partial class PlayerControllerComponent : Node
 		_velocityComponent.IsOnCeiling = IsOnCeiling;
 		_velocityComponent.IsLeftWallDetected = _leftWallDetect.IsColliding();
 		_velocityComponent.IsRightWallDetected = _rightWallDetect.IsColliding();
+		_velocityComponent.HurtStatus = _hurtStatus;
+		_velocityComponent.OnDashCooldown = _onDashCooldown;
 	}
 	
 	private void SetWeaponProperties()
@@ -164,7 +189,7 @@ public partial class PlayerControllerComponent : Node
 		SetComponentProperties();
 		SetWeaponProperties();
 
-		Velocity = _velocityComponent.CalculateVelocity(delta, _direction);
+		Velocity = _velocityComponent.CalculateVelocity(delta, _direction, _hurtStatus);
 
 		_animation.PlayCharacterAnimations();
 		

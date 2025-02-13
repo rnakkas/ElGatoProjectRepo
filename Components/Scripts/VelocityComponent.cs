@@ -9,6 +9,7 @@ namespace ElGatoProject.Components.Scripts;
 public partial class VelocityComponent : Node
 {
 	[Export] public float MaxSpeed { get; set; }
+	[Export] public float DashSpeed { get; set; }
 	[Export] public float Acceleration { get; set; }
 	[Export] public float Friction { get; set; }
 	[Export] public float JumpVelocity{ get; set; }
@@ -22,7 +23,8 @@ public partial class VelocityComponent : Node
 	[Export] public bool IsRightWallDetected {get; set;}
 
 	private Vector2 _velocity;
-	public Dictionary<string, bool> PlayerInputs;
+	public bool HurtStatus;
+	public bool OnDashCooldown;
 	
 	public float KnockbackFromAttack(Vector2 attackPosition, float knockback, Vector2 attackVelocity)
 	{
@@ -48,8 +50,21 @@ public partial class VelocityComponent : Node
 		return _velocity.Y;
 	}
 	
-	public Vector2 CalculateVelocity(float delta, float direction)
+	public Vector2 CalculateVelocity(float delta, float direction, bool hurtStatus)
 	{
+		RunStopAndIdleCalculations(delta, direction);
+		JumpCalculations();
+		FallCalculations(delta);
+		HittingCeilingsCalculations(delta);
+		WallSlideAndWallJumpCalculations(delta, direction);
+		DashCalculations(direction);
+		
+		return _velocity;
+	}
+
+	private void RunStopAndIdleCalculations(float delta, float direction)
+	{
+		// Running, stopping and idle
 		if (direction != 0)
 		{
 			_velocity.X = Mathf.MoveToward(_velocity.X, direction * MaxSpeed, Acceleration * delta);
@@ -64,23 +79,39 @@ public partial class VelocityComponent : Node
 			_velocity.X = Mathf.MoveToward(_velocity.X, 0, Friction * delta);
 			_velocity.Y = 0;
 		}
-		
+	}
+
+	private void JumpCalculations()
+	{
+		// Jump
 		if (IsOnFloor && Input.IsActionPressed("jump"))
 		{
 			_velocity.Y = JumpVelocity;
 		}
+	}
 
+	private void FallCalculations(float delta)
+	{
+		// Fall
 		if (!IsOnFloor)
 		{
 			_velocity.Y += Gravity * delta;
 			
 		}
+	}
 
+	private void HittingCeilingsCalculations(float delta)
+	{
+		// Hitting ceilings
 		if (IsOnCeiling)
 		{
 			_velocity.Y += Gravity * delta;
 		}
-		
+	}
+
+	private void WallSlideAndWallJumpCalculations(float delta, float direction)
+	{
+		// Wall slide and wall jump
 		if (!IsOnFloor && (IsLeftWallDetected || IsRightWallDetected))
 		{
 			_velocity.X = 0;
@@ -103,7 +134,16 @@ public partial class VelocityComponent : Node
 				_velocity.X = direction * MaxSpeed;
 			}
 		}
+	}
+
+	private void DashCalculations(float direction)
+	{
+		if (HurtStatus || OnDashCooldown)
+			return;
 		
-		return _velocity;
+		if (Input.IsActionJustPressed("dashDodge"))
+		{
+			_velocity.X = DashSpeed * direction;
+		}
 	}
 }
