@@ -104,7 +104,7 @@ public partial class WeaponElgato : Node2D
 		SetComponentProperties();
 		WeaponActions();
 		
-		_animation.FlipSprite(Direction.X);
+		_animation.FlipSprite(Direction);
 		
 		_debugWeaponLabel.SetText(_shooting.WeaponType + ": " + _weaponAmmo);
 	}

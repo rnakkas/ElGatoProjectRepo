@@ -8,41 +8,27 @@ namespace ElGatoProject.Components.Scripts;
 public partial class AnimationComponent : Node
 {
 	[Export] public AnimatedSprite2D Sprite;
-	[Export] public float Direction { get; set; }
+	[Export] public Vector2 Direction { get; set; }
 	[Export] public Vector2 Velocity {get; set;}
 	[Export] public bool IsOnFloor {get; set;}
 	[Export] public bool IsLeftWallDetected {get; set;}
 	[Export] public bool IsRightWallDetected {get; set;}
 	[Export] public bool HurtStatus { get; set; }
+	[Export] public bool IsDashing { get; set; }
 	
-	public void FlipSprite(float direction)
+	public void FlipSprite(Vector2 direction)
 	{
 		if (Sprite == null) 
 			return;
-		
-		if (direction < 0)
+
+		switch (direction.X)
 		{
-			Sprite.FlipH = true;
-		}
-		else if (direction > 0)
-		{
-			Sprite.FlipH = false;
-		}
-	}
-	
-	public void FlipSpriteToFaceHitDirection(Vector2 attackPosition)
-	{
-		if (Sprite == null)
-			return;
-		
-		// Flip sprite if hit from behind
-		if (attackPosition.X > 0 && Sprite.IsFlippedH())
-		{
-			Sprite.FlipH = false;
-		}
-		else if (attackPosition.X < 0 && !Sprite.IsFlippedH())
-		{
-			Sprite.FlipH = true;
+			case < 0:
+				Sprite.FlipH = true;
+				break;
+			case > 0:
+				Sprite.FlipH = false;
+				break;
 		}
 	}
 
@@ -74,13 +60,18 @@ public partial class AnimationComponent : Node
 		
 			if (!IsOnFloor && IsLeftWallDetected)
 			{
-				FlipSprite(1.0f);
+				FlipSprite(new Vector2(1.0f, 0f));
 				Sprite.Play(Utility.Instance.EntityWallSlideAnimation);
 			}
 			else if (!IsOnFloor && IsRightWallDetected)
 			{
-				FlipSprite(-1.0f);
+				FlipSprite(new Vector2(-1.0f, 0f));
 				Sprite.Play(Utility.Instance.EntityWallSlideAnimation);
+			}
+
+			if (IsDashing)
+			{
+				Sprite.Play(Utility.Instance.EntityDashAnimation);
 			}
 		}
 		else

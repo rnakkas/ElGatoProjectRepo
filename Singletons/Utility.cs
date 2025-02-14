@@ -47,6 +47,7 @@ public partial class Utility : Node
     public string EntityWallSlideAnimation = "wall_slide";
     public string EntityHurtAnimation = "hurt";
     public string EntityShootAnimation = "shoot";
+    public string EntityDashAnimation = "dash";
     
     // Player Weapon animation string names
     public string PistolShootAnimation = "shoot_pistol";

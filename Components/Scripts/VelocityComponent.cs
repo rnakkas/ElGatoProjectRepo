@@ -23,8 +23,6 @@ public partial class VelocityComponent : Node
 	[Export] public bool IsRightWallDetected {get; set;}
 
 	private Vector2 _velocity;
-	public bool HurtStatus;
-	public bool OnDashCooldown;
 	
 	public float KnockbackFromAttack(Vector2 attackPosition, float knockback, Vector2 attackVelocity)
 	{
@@ -50,41 +48,40 @@ public partial class VelocityComponent : Node
 		return _velocity.Y;
 	}
 	
-	public Vector2 CalculateVelocity(float delta, float direction, bool hurtStatus)
+	public Vector2 CalculateVelocity(float delta, Vector2 direction)
 	{
 		RunStopAndIdleCalculations(delta, direction);
-		JumpCalculations();
+		JumpCalculations(direction);
 		FallCalculations(delta);
 		HittingCeilingsCalculations(delta);
 		WallSlideAndWallJumpCalculations(delta, direction);
-		DashCalculations(direction);
 		
 		return _velocity;
 	}
 
-	private void RunStopAndIdleCalculations(float delta, float direction)
+	private void RunStopAndIdleCalculations(float delta, Vector2 direction)
 	{
 		// Running, stopping and idle
-		if (direction != 0)
+		if (direction.X != 0)
 		{
-			_velocity.X = Mathf.MoveToward(_velocity.X, direction * MaxSpeed, Acceleration * delta);
+			_velocity.X = Mathf.MoveToward(_velocity.X, direction.X * MaxSpeed, Acceleration * delta);
 		
 			if (IsOnFloor)
 			{
 				_velocity.Y = 0;
 			}
 		}
-		else if (IsOnFloor && direction == 0)
+		else if (IsOnFloor && direction.X == 0)
 		{
 			_velocity.X = Mathf.MoveToward(_velocity.X, 0, Friction * delta);
 			_velocity.Y = 0;
 		}
 	}
 
-	private void JumpCalculations()
+	private void JumpCalculations(Vector2 direction)
 	{
 		// Jump
-		if (IsOnFloor && Input.IsActionPressed("jump"))
+		if (IsOnFloor && direction.Y < 0)
 		{
 			_velocity.Y = JumpVelocity;
 		}
@@ -109,7 +106,7 @@ public partial class VelocityComponent : Node
 		}
 	}
 
-	private void WallSlideAndWallJumpCalculations(float delta, float direction)
+	private void WallSlideAndWallJumpCalculations(float delta, Vector2 direction)
 	{
 		// Wall slide and wall jump
 		if (!IsOnFloor && (IsLeftWallDetected || IsRightWallDetected))
@@ -119,31 +116,31 @@ public partial class VelocityComponent : Node
 
 			if (IsLeftWallDetected)
 			{
-				direction = 1.0f;
+				direction.X = 1.0f;
 			} 
 			
 			if (IsRightWallDetected)
 			{
-				direction = -1.0f;
+				direction.X = -1.0f;
 			}
 			
 			// Wall Jump
-			if (Input.IsActionJustPressed("jump"))
+			if (direction.Y < 0)
 			{
 				_velocity.Y = WallJumpVelocity;
-				_velocity.X = direction * MaxSpeed;
+				_velocity.X = direction.X * MaxSpeed;
 			}
 		}
 	}
 
-	private void DashCalculations(float direction)
+	public float DashingVelocityCalculations(Vector2 direction, bool isDashing)
 	{
-		if (HurtStatus || OnDashCooldown)
-			return;
+		if (!isDashing)
+			return _velocity.X = 0;
 		
-		if (Input.IsActionJustPressed("dashDodge"))
-		{
-			_velocity.X = DashSpeed * direction;
-		}
+		_velocity.X = 0;
+		_velocity.X = DashSpeed * direction.X;
+		
+		return _velocity.X;
 	}
 }
