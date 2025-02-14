@@ -164,7 +164,14 @@ public partial class PlayerControllerComponent : Node
 		}
 	}
 
+	// Player controls
 	private void MovementLogic(float delta)
+	{
+		BasicMovements(delta);
+		Dash();
+	}
+
+	private void BasicMovements(float delta)
 	{
 		if (Input.IsActionPressed("move_left") && !_isDashing)
 		{
@@ -177,37 +184,44 @@ public partial class PlayerControllerComponent : Node
 		else if (
 			(!Input.IsActionPressed("move_left") || !Input.IsActionPressed("move_right")) && 
 			!_isDashing
-			)
+		)
 		{
 			_directionVector = Vector2.Zero;
 		}
-
+		
 		if (Input.IsActionPressed("jump"))
 		{
 			_directionVector = Vector2.Up;
 		}
 		
-		if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown && !_hurtStatus)
-		{
-			if (!_animation.Sprite.IsFlippedH())
-			{
-				_directionVector = Vector2.Right;
-			}
-			else if (_animation.Sprite.IsFlippedH())
-			{
-				_directionVector = Vector2.Left;
-			}
-
-			_isDashing = true;
-			_dashTimer.Start();
-			
-			_onDashCooldown = true;
-			_dashCooldownTimer.Start();
-
-			Velocity.X = _velocityComponent.DashingVelocityCalculations(_directionVector, _isDashing);
-		}
-		
 		Velocity = _velocityComponent.CalculateVelocity(delta, _directionVector);
+
+	}
+
+	//TODO: Logic on being able to move through bullets and enemies and not take damage when dashing
+	//TODO: When dashing, gravity will not affect player
+	//TODO: When dashing, player will not be able to shoot/attack
+	private void Dash()
+	{
+		if (!Input.IsActionJustPressed("dashDodge") || _onDashCooldown || _hurtStatus) 
+			return;
+		
+		if (!_animation.Sprite.IsFlippedH())
+		{
+			_directionVector = Vector2.Right;
+		}
+		else if (_animation.Sprite.IsFlippedH())
+		{
+			_directionVector = Vector2.Left;
+		}
+
+		_isDashing = true;
+		_dashTimer.Start();
+			
+		_onDashCooldown = true;
+		_dashCooldownTimer.Start();
+
+		Velocity.X = _velocityComponent.DashingVelocityCalculations(_directionVector, _isDashing);
 	}
 
 	public void PlayerControllerActions(float delta)
