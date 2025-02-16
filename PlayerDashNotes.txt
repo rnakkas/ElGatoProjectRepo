@@ -1,0 +1,20 @@
+if player presses the dash button
+	- move the player with dash velocity towards the direction they are facing
+	- set dashOnCooldown to true
+	- start the cooldown timer
+
+When dash cooldown ends, player will be able to dash again - done
+Also have a dash timer, during which time the player isDashing is true - done
+
+When dashing player will be able to move through enemies and bullets and not take damage
+Bullets will not collide with player hurtbox if player is dashing and will not damage player
+Player will be able to dash while on ground, in the air and while wall sliding - done
+Player will not be able to shoot while dashing
+Player will not be able to dash when hurt - done
+
+Need to set a dash speed in Velocity Component - done
+Need to calculate dash velocity with the dash speed and direction - done
+
+Dashing animation - done
+
+When dashing gravity will not affect player

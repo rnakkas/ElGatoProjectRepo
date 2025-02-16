@@ -69,7 +69,7 @@ public partial class EnemyControllerComponent : Node
     	
     	_health.TakeDamage(attackDamage);
     	
-    	_animation.FlipSpriteToFaceHitDirection(attackPosition);
+	    _animation?.FlipSprite(attackPosition);
     }
     
     private void OnHurtStatusCleared(bool hurtStatus)

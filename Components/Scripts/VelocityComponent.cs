@@ -1,6 +1,8 @@
 using Godot;
 using System;
+using System.Numerics;
 using Godot.Collections;
+using Vector2 = Godot.Vector2;
 
 namespace ElGatoProject.Components.Scripts;
 
@@ -9,6 +11,7 @@ namespace ElGatoProject.Components.Scripts;
 public partial class VelocityComponent : Node
 {
 	[Export] public float MaxSpeed { get; set; }
+	[Export] public float DashSpeed { get; set; }
 	[Export] public float Acceleration { get; set; }
 	[Export] public float Friction { get; set; }
 	[Export] public float JumpVelocity{ get; set; }
@@ -22,7 +25,7 @@ public partial class VelocityComponent : Node
 	[Export] public bool IsRightWallDetected {get; set;}
 
 	private Vector2 _velocity;
-	public Dictionary<string, bool> PlayerInputs;
+	public bool IsDashing;
 	
 	public float KnockbackFromAttack(Vector2 attackPosition, float knockback, Vector2 attackVelocity)
 	{
@@ -48,39 +51,68 @@ public partial class VelocityComponent : Node
 		return _velocity.Y;
 	}
 	
-	public Vector2 CalculateVelocity(float delta, float direction)
+	public Vector2 CalculateVelocity(float delta, Vector2 direction)
 	{
-		if (direction != 0)
+		RunStopAndIdleCalculations(delta, direction);
+		JumpCalculations(direction);
+		FallCalculations(delta);
+		HittingCeilingsCalculations(delta);
+		WallSlideAndWallJumpCalculations(delta, direction);
+		DashingVelocityCalculations(direction);
+		
+		return _velocity;
+	}
+
+	private void RunStopAndIdleCalculations(float delta, Vector2 direction)
+	{
+		// Running, stopping and idle
+		if (direction.X != 0)
 		{
-			_velocity.X = Mathf.MoveToward(_velocity.X, direction * MaxSpeed, Acceleration * delta);
+			_velocity.X = Mathf.MoveToward(_velocity.X, direction.X * MaxSpeed, Acceleration * delta);
 		
 			if (IsOnFloor)
 			{
 				_velocity.Y = 0;
 			}
 		}
-		else if (IsOnFloor && direction == 0)
+		else if (IsOnFloor && direction.X == 0)
 		{
 			_velocity.X = Mathf.MoveToward(_velocity.X, 0, Friction * delta);
 			_velocity.Y = 0;
 		}
-		
-		if (IsOnFloor && Input.IsActionPressed("jump"))
+	}
+
+	private void JumpCalculations(Vector2 direction)
+	{
+		// Jump
+		if (IsOnFloor && direction.Y < 0)
 		{
 			_velocity.Y = JumpVelocity;
 		}
+	}
 
-		if (!IsOnFloor)
+	private void FallCalculations(float delta)
+	{
+		// Fall
+		if (!IsOnFloor && !IsDashing)
 		{
 			_velocity.Y += Gravity * delta;
 			
 		}
+	}
 
+	private void HittingCeilingsCalculations(float delta)
+	{
+		// Hitting ceilings
 		if (IsOnCeiling)
 		{
 			_velocity.Y += Gravity * delta;
 		}
-		
+	}
+
+	private void WallSlideAndWallJumpCalculations(float delta, Vector2 direction)
+	{
+		// Wall slide and wall jump
 		if (!IsOnFloor && (IsLeftWallDetected || IsRightWallDetected))
 		{
 			_velocity.X = 0;
@@ -88,22 +120,28 @@ public partial class VelocityComponent : Node
 
 			if (IsLeftWallDetected)
 			{
-				direction = 1.0f;
+				direction.X = 1.0f;
 			} 
 			
 			if (IsRightWallDetected)
 			{
-				direction = -1.0f;
+				direction.X = -1.0f;
 			}
 			
 			// Wall Jump
-			if (Input.IsActionJustPressed("jump"))
+			if (direction.Y < 0)
 			{
 				_velocity.Y = WallJumpVelocity;
-				_velocity.X = direction * MaxSpeed;
+				_velocity.X = direction.X * MaxSpeed;
 			}
 		}
-		
-		return _velocity;
+	}
+
+	private void DashingVelocityCalculations(Vector2 direction)
+	{
+		if (!IsDashing)
+			return;
+		_velocity = Vector2.Zero;
+		_velocity.X = DashSpeed * direction.X;
 	}
 }

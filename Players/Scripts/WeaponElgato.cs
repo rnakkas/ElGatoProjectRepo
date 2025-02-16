@@ -13,7 +13,7 @@ public partial class WeaponElgato : Node2D
 	[Export] private Label _debugWeaponLabel;
 	
 	public Vector2 Direction;
-	public bool HurtStatus;
+	public bool HurtStatus, IsDashing;
 	private int _weaponAmmo;
 	
 	public override void _Ready()
@@ -83,7 +83,7 @@ public partial class WeaponElgato : Node2D
 
 	private void WeaponActions()
 	{
-		if (Input.IsActionPressed("shoot"))
+		if (Input.IsActionPressed("shoot") && !IsDashing)
 		{
 			_shooting.Shoot();
 		}
@@ -104,7 +104,7 @@ public partial class WeaponElgato : Node2D
 		SetComponentProperties();
 		WeaponActions();
 		
-		_animation.FlipSprite(Direction.X);
+		_animation.FlipSprite(Direction);
 		
 		_debugWeaponLabel.SetText(_shooting.WeaponType + ": " + _weaponAmmo);
 	}
