@@ -120,9 +120,10 @@ public partial class PlayerControllerComponent : Node
 	private void OnDashTimerTimeout()
 	{
 		_isDashing = false;
-		
+		_directionVector = Vector2.Zero;
+
 		// Set velocity x to 0 once dashing has finished
-		// Velocity.X = _velocityComponent.DashingVelocityCalculations(_directionVector);
+		Velocity.X = _velocityComponent.CalculateVelocity(0, _directionVector).X;
 	}
 	
 	// Helper functions
@@ -171,7 +172,6 @@ public partial class PlayerControllerComponent : Node
 	{
 		BasicMovements(delta);
 		Dash();
-		Velocity = _velocityComponent.CalculateVelocity(delta, _directionVector);
 	}
 
 	private void BasicMovements(float delta)
@@ -192,18 +192,15 @@ public partial class PlayerControllerComponent : Node
 			_directionVector = Vector2.Zero;
 		}
 		
-		if (Input.IsActionPressed("jump"))
+		if (Input.IsActionPressed("jump") && !_isDashing)
 		{
 			_directionVector = Vector2.Up;
 		}
-		
-		// Velocity = _velocityComponent.CalculateVelocity(delta, _directionVector);
-
 	}
 
 	//TODO: Logic on being able to move through bullets and enemies and not take damage when dashing
 	//TODO: When dashing, gravity will not affect player - DONE
-	//TODO: When dashing, player will not be able to shoot/attack
+	//TODO: When dashing, player will not be able to shoot/attack - DONE
 	//TODO: WHen dashing player will not be able to jump - DONE
 	private void Dash()
 	{
@@ -224,8 +221,6 @@ public partial class PlayerControllerComponent : Node
 			
 		_onDashCooldown = true;
 		_dashCooldownTimer.Start();
-
-		// Velocity.X = _velocityComponent.DashingVelocityCalculations(_directionVector);
 	}
 
 	public void PlayerControllerActions(float delta)
@@ -233,6 +228,8 @@ public partial class PlayerControllerComponent : Node
 		SetComponentProperties();
 		SetWeaponProperties();
 		MovementLogic(delta);
+		
+		Velocity = _velocityComponent.CalculateVelocity(delta, _directionVector);
 
 		_animation.PlayCharacterAnimations();
 		

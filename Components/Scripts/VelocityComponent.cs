@@ -85,7 +85,7 @@ public partial class VelocityComponent : Node
 	private void JumpCalculations(Vector2 direction)
 	{
 		// Jump
-		if (IsOnFloor && direction.Y < 0 && !IsDashing)
+		if (IsOnFloor && direction.Y < 0)
 		{
 			_velocity.Y = JumpVelocity;
 		}
@@ -141,7 +141,6 @@ public partial class VelocityComponent : Node
 	{
 		if (!IsDashing)
 			return;
-		
 		_velocity = Vector2.Zero;
 		_velocity.X = DashSpeed * direction.X;
 	}
