@@ -199,8 +199,9 @@ public partial class PlayerControllerComponent : Node
 	}
 
 	//TODO: Logic on being able to move through bullets and enemies and not take damage when dashing
-	//TODO: When dashing, gravity will not affect player
+	//TODO: When dashing, gravity will not affect player - DONE
 	//TODO: When dashing, player will not be able to shoot/attack
+	//TODO: WHen dashing player will not be able to jump - DONE
 	private void Dash()
 	{
 		if (!Input.IsActionJustPressed("dashDodge") || _onDashCooldown || _hurtStatus) 

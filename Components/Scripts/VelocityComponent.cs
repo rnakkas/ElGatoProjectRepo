@@ -1,6 +1,8 @@
 using Godot;
 using System;
+using System.Numerics;
 using Godot.Collections;
+using Vector2 = Godot.Vector2;
 
 namespace ElGatoProject.Components.Scripts;
 
@@ -23,6 +25,7 @@ public partial class VelocityComponent : Node
 	[Export] public bool IsRightWallDetected {get; set;}
 
 	private Vector2 _velocity;
+	public bool IsDashing;
 	
 	public float KnockbackFromAttack(Vector2 attackPosition, float knockback, Vector2 attackVelocity)
 	{
@@ -81,7 +84,7 @@ public partial class VelocityComponent : Node
 	private void JumpCalculations(Vector2 direction)
 	{
 		// Jump
-		if (IsOnFloor && direction.Y < 0)
+		if (IsOnFloor && direction.Y < 0 && !IsDashing)
 		{
 			_velocity.Y = JumpVelocity;
 		}
@@ -90,7 +93,7 @@ public partial class VelocityComponent : Node
 	private void FallCalculations(float delta)
 	{
 		// Fall
-		if (!IsOnFloor)
+		if (!IsOnFloor && !IsDashing)
 		{
 			_velocity.Y += Gravity * delta;
 			
@@ -135,10 +138,12 @@ public partial class VelocityComponent : Node
 
 	public float DashingVelocityCalculations(Vector2 direction, bool isDashing)
 	{
-		if (!isDashing)
-			return _velocity.X = 0;
+		IsDashing = isDashing;
 		
-		_velocity.X = 0;
+		if (!isDashing)
+			return _velocity.X;
+		
+		_velocity = Vector2.Zero;
 		_velocity.X = DashSpeed * direction.X;
 		
 		return _velocity.X;
