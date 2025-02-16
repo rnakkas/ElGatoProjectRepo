@@ -276,7 +276,7 @@ _debugHealthLabel = NodePath("../HealthLabel")
 _debugScoreLabel = NodePath("../ScoreLabel")
 
 [node name="dashCooldownTimer" type="Timer" parent="PlayerControllerComponent"]
-wait_time = 1.7
+wait_time = 0.9
 one_shot = true
 
 [node name="dashTimer" type="Timer" parent="PlayerControllerComponent"]
@@ -313,7 +313,7 @@ one_shot = true
 [node name="VelocityComponent" type="Node" parent="."]
 script = ExtResource("7_45r2u")
 MaxSpeed = 170.0
-DashSpeed = 650.0
+DashSpeed = 620.0
 Acceleration = 550.0
 Friction = 320.0
 JumpVelocity = -340.0

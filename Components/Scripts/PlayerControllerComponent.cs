@@ -147,6 +147,8 @@ public partial class PlayerControllerComponent : Node
 		_velocityComponent.IsLeftWallDetected = _leftWallDetect.IsColliding();
 		_velocityComponent.IsRightWallDetected = _rightWallDetect.IsColliding();
 		_velocityComponent.IsDashing = _isDashing;
+
+		_hurtbox.Monitorable = !_isDashing;
 	}
 	
 	private void SetWeaponProperties()
@@ -198,10 +200,6 @@ public partial class PlayerControllerComponent : Node
 		}
 	}
 
-	//TODO: Logic on being able to move through bullets and enemies and not take damage when dashing
-	//TODO: When dashing, gravity will not affect player - DONE
-	//TODO: When dashing, player will not be able to shoot/attack - DONE
-	//TODO: WHen dashing player will not be able to jump - DONE
 	private void Dash()
 	{
 		if (!Input.IsActionJustPressed("dashDodge") || _onDashCooldown || _hurtStatus) 
