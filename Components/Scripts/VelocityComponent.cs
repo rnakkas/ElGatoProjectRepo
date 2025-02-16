@@ -58,6 +58,7 @@ public partial class VelocityComponent : Node
 		FallCalculations(delta);
 		HittingCeilingsCalculations(delta);
 		WallSlideAndWallJumpCalculations(delta, direction);
+		DashingVelocityCalculations(direction);
 		
 		return _velocity;
 	}
@@ -136,16 +137,12 @@ public partial class VelocityComponent : Node
 		}
 	}
 
-	public float DashingVelocityCalculations(Vector2 direction, bool isDashing)
+	private void DashingVelocityCalculations(Vector2 direction)
 	{
-		IsDashing = isDashing;
-		
-		if (!isDashing)
-			return _velocity.X;
+		if (!IsDashing)
+			return;
 		
 		_velocity = Vector2.Zero;
 		_velocity.X = DashSpeed * direction.X;
-		
-		return _velocity.X;
 	}
 }

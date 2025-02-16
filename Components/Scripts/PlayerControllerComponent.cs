@@ -122,7 +122,7 @@ public partial class PlayerControllerComponent : Node
 		_isDashing = false;
 		
 		// Set velocity x to 0 once dashing has finished
-		Velocity.X = _velocityComponent.DashingVelocityCalculations(_directionVector, _isDashing); 
+		// Velocity.X = _velocityComponent.DashingVelocityCalculations(_directionVector);
 	}
 	
 	// Helper functions
@@ -145,6 +145,7 @@ public partial class PlayerControllerComponent : Node
 		_velocityComponent.IsOnCeiling = IsOnCeiling;
 		_velocityComponent.IsLeftWallDetected = _leftWallDetect.IsColliding();
 		_velocityComponent.IsRightWallDetected = _rightWallDetect.IsColliding();
+		_velocityComponent.IsDashing = _isDashing;
 	}
 	
 	private void SetWeaponProperties()
@@ -153,6 +154,7 @@ public partial class PlayerControllerComponent : Node
 			return;
 		
 		_weapon.HurtStatus = _hurtStatus;
+		_weapon.IsDashing = _isDashing;
 		
 		if (_animation.Sprite.IsFlippedH())
 		{
@@ -169,6 +171,7 @@ public partial class PlayerControllerComponent : Node
 	{
 		BasicMovements(delta);
 		Dash();
+		Velocity = _velocityComponent.CalculateVelocity(delta, _directionVector);
 	}
 
 	private void BasicMovements(float delta)
@@ -194,7 +197,7 @@ public partial class PlayerControllerComponent : Node
 			_directionVector = Vector2.Up;
 		}
 		
-		Velocity = _velocityComponent.CalculateVelocity(delta, _directionVector);
+		// Velocity = _velocityComponent.CalculateVelocity(delta, _directionVector);
 
 	}
 
@@ -222,7 +225,7 @@ public partial class PlayerControllerComponent : Node
 		_onDashCooldown = true;
 		_dashCooldownTimer.Start();
 
-		Velocity.X = _velocityComponent.DashingVelocityCalculations(_directionVector, _isDashing);
+		// Velocity.X = _velocityComponent.DashingVelocityCalculations(_directionVector);
 	}
 
 	public void PlayerControllerActions(float delta)
