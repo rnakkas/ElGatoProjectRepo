@@ -6,7 +6,7 @@
 script = ExtResource("1_v8l1v")
 ShootingCooldownTime = 0.05
 ReloadTime = 3.5
-MagazineSize = 60
+MagazineSize = 15
 BulletDamage = 2
 BulletKnockback = 35.0
 BulletsPerShot = 1
