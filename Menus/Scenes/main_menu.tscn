@@ -75,7 +75,7 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="StartGameButton" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer"]
-custom_minimum_size = Vector2(150, 0)
+custom_minimum_size = Vector2(150, 40)
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(1, 0, 0, 1)
 theme_override_constants/outline_size = 8
@@ -84,7 +84,7 @@ theme_override_font_sizes/font_size = 25
 text = "Start Game"
 
 [node name="ExitGameButton" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer"]
-custom_minimum_size = Vector2(150, 0)
+custom_minimum_size = Vector2(150, 40)
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(1, 0, 0, 1)
 theme_override_constants/outline_size = 8
