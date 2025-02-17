@@ -25,6 +25,9 @@ public partial class Globals : Node
     public ShootingProperties PlayerRailGunShootingProperties =
         ResourceLoader.Load<ShootingProperties>("res://Resources/PlayerRailGunShootingProperties.tres");
     
+    public PackedScene StagingLevel = 
+        ResourceLoader.Load<PackedScene>("res://Levels/Scenes/staging_level.tscn");
+    
     public override void _Ready()
     {
         Instance = this;
