@@ -7,25 +7,27 @@ public partial class PauseMenu : Control
 {
 	[Export] private Button _resumeButton, _mainMenuButton, _exitGameButton;
 	
+	[Signal]
+	public delegate void ReturnToMainMenuEventHandler();
+	
 	public override void _Ready()
 	{
 		_resumeButton.ButtonDown += OnResumeButtonPressed;
 		_mainMenuButton.ButtonDown += OnMainMenuButtonPressed;
 		_exitGameButton.ButtonDown += OnExitGaneButtonPressed;
-		
-		// Pause game processing when pause menu is ready/pause button pressed
-		GetTree().Paused = true;
 	}
 
 	private void OnResumeButtonPressed()
 	{
-		GetTree().Paused = false; // Unpause game on resume
+		SetVisible(false);
+		GetTree().Paused = false;
 	}
 
 	private void OnMainMenuButtonPressed()
 	{
+		SetVisible(false);
 		GetTree().Paused = false;
-		GetTree().ChangeSceneToPacked(Globals.Instance.MainMenu);
+		EmitSignal(SignalName.ReturnToMainMenu);
 	}
 
 	private void OnExitGaneButtonPressed()

@@ -21,6 +21,7 @@ _startGameButton = NodePath("MarginContainer/HBoxContainer/VBoxContainer/StartGa
 _exitGameButton = NodePath("MarginContainer/HBoxContainer/VBoxContainer/ExitGameButton")
 
 [node name="TextureRect" type="TextureRect" parent="."]
+modulate = Color(0.789729, 0.18701, 4.81307e-07, 0.901961)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
