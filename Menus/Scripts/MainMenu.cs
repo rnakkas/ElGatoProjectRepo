@@ -7,15 +7,22 @@ namespace ElGatoProject.Menus.Scripts;
 public partial class MainMenu : Control
 {
 	[Export] private Button _startGameButton, _exitGameButton;
+	
+	[Signal]
+	public delegate void StartGameEventHandler();
+	
+	[Signal]
+	public delegate void ExitGameEventHandler();
+	
 	public override void _Ready()
 	{
-		_startGameButton.ButtonDown += OnStartGameButtonPressed;
-		_exitGameButton.ButtonDown += OnExitGameButtonPressed;
+		_startGameButton.Pressed += OnStartGameButtonPressed;
+		_exitGameButton.Pressed += OnExitGameButtonPressed;
 	}
 
 	private void OnStartGameButtonPressed()
 	{
-		GetTree().ChangeSceneToPacked(Globals.Instance.StagingLevel);
+		EmitSignal(SignalName.StartGame);
 	}
 
 	private void OnExitGameButtonPressed()
