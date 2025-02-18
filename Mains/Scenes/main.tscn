@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://Mains/Scripts/LevelLoader.cs" id="4_aum1p"]
 
 [node name="Main" type="Node2D" node_paths=PackedStringArray("_mainMenu", "_pauseMenu", "_levelLoader")]
+process_mode = 3
 script = ExtResource("1_sui6x")
 _mainMenu = NodePath("UI/MainMenu")
 _pauseMenu = NodePath("UI/PauseMenu")

@@ -35,17 +35,26 @@ public partial class Main : Node2D
 		_mainMenu.SetVisible(true);
 	}
 
-	private void PauseGame()
+	// Allows pausing and resuming using the same input key 
+	private void PauseAndResumeGame()
 	{
-		if (Input.IsActionPressed("pause") && !_mainMenu.IsVisible())
+		if (!Input.IsActionJustPressed("pause") || _mainMenu.IsVisible()) 
+			return;
+		
+		GetTree().Paused = !GetTree().Paused;
+
+		if (GetTree().Paused)
 		{
-			GetTree().Paused = true;
 			_pauseMenu.SetVisible(true);
+		}
+		else if (!GetTree().Paused)
+		{
+			_pauseMenu.SetVisible(false);
 		}
 	}
 	
 	public override void _Process(double delta)
 	{
-		PauseGame();
+		PauseAndResumeGame();
 	}
 }
