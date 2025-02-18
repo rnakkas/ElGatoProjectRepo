@@ -12,9 +12,9 @@ public partial class PauseMenu : Control
 	
 	public override void _Ready()
 	{
-		_resumeButton.ButtonDown += OnResumeButtonPressed;
-		_mainMenuButton.ButtonDown += OnMainMenuButtonPressed;
-		_exitGameButton.ButtonDown += OnExitGaneButtonPressed;
+		_resumeButton.Pressed += OnResumeButtonPressed;
+		_mainMenuButton.Pressed += OnMainMenuButtonPressed;
+		_exitGameButton.Pressed += OnExitGaneButtonPressed;
 	}
 
 	private void OnResumeButtonPressed()

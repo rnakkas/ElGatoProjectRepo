@@ -16,8 +16,8 @@ public partial class MainMenu : Control
 	
 	public override void _Ready()
 	{
-		_startGameButton.ButtonDown += OnStartGameButtonPressed;
-		_exitGameButton.ButtonDown += OnExitGameButtonPressed;
+		_startGameButton.Pressed += OnStartGameButtonPressed;
+		_exitGameButton.Pressed += OnExitGameButtonPressed;
 	}
 
 	private void OnStartGameButtonPressed()
