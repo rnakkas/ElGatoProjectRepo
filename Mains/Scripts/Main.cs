@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using ElGatoProject.Menus.Scripts;
+using ElGatoProject.SceneTransitions.Scripts;
 using ElGatoProject.Singletons;
 
 namespace ElGatoProject.Mains.Scripts;
@@ -9,6 +10,7 @@ public partial class Main : Node2D
 	[Export] private MainMenu _mainMenu;
 	[Export] private PauseMenu _pauseMenu;
 	[Export] private LevelLoader _levelLoader;
+	[Export] private SceneTransition _sceneTransition;
 	
 	public override void _Ready()
 	{
@@ -26,11 +28,15 @@ public partial class Main : Node2D
 	private void OnStartGameButtonPressed()
 	{
 		_mainMenu.SetVisible(false);
+
+		_sceneTransition?.TransitionToScene();
+		
 		_levelLoader.LoadLevel("staging_level");
 	}
 
 	private void OnReturnToMainMenuPressed()
 	{
+		_sceneTransition?.TransitionToScene();
 		_levelLoader.UnloadCurrentLevel();
 		_mainMenu.SetVisible(true);
 	}

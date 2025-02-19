@@ -73,6 +73,10 @@ public partial class Utility : Node
     public string PlayerShotgunFly = "player_shotgun_fly";
     public string PlayerShotgunHit = "player_shotgun_hit";
 
+    // Scene transition and shader string names
+    public string SceneTransitionWipeAnimation = "screen_wipe_animation";
+    public string ShaderParameterWipeColor = "wipe_color";
+    
     public override void _Ready()
     {
         Instance = this;
