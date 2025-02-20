@@ -1,0 +1,9 @@
+- Main (Node)
+  - UI (CanvasLayer)
+    - TitleScreen (Control)
+    - MainMenu (Control)
+    - PauseMenu (Control)
+    - HUD (Control)
+  - GameManager (Node)        <- Handles game flow, levels, player state
+  - LevelLoader (Node)        <- Handles loading/unloading levels
+  - PlayerData (Node)         <- Stores player health, score, power-ups
