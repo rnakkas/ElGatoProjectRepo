@@ -29,16 +29,16 @@ public partial class Main : Node2D
 	{
 		_mainMenu.SetVisible(false);
 
-		_sceneTransition?.TransitionToScene();
-		
 		_levelLoader.LoadLevel("staging_level");
+		
+		_sceneTransition?.TransitionToScene();
 	}
 
 	private void OnReturnToMainMenuPressed()
 	{
 		_sceneTransition?.TransitionToScene();
 		_levelLoader.UnloadCurrentLevel();
-		_mainMenu.SetVisible(true);
+		_mainMenu.ReloadMainMenu();
 	}
 
 	// Allows pausing and resuming using the same input key 
