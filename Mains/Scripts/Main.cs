@@ -1,8 +1,6 @@
 using Godot;
-using System;
 using ElGatoProject.Menus.Scripts;
 using ElGatoProject.SceneTransitions.Scripts;
-using ElGatoProject.Singletons;
 
 namespace ElGatoProject.Mains.Scripts;
 public partial class Main : Node2D
@@ -44,7 +42,7 @@ public partial class Main : Node2D
 	// Allows pausing and resuming using the same input key 
 	private void PauseAndResumeGame()
 	{
-		if (!Input.IsActionJustPressed("pause") || _mainMenu.IsVisible()) 
+		if (!Input.IsActionJustPressed("pause") || _mainMenu.IsVisible() || _sceneTransition.IsVisible()) 
 			return;
 		
 		GetTree().Paused = !GetTree().Paused;

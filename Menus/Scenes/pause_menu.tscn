@@ -6,9 +6,11 @@
 
 [sub_resource type="SystemFont" id="SystemFont_ennaj"]
 font_names = PackedStringArray("Impact")
+subpixel_positioning = 0
 
 [sub_resource type="SystemFont" id="SystemFont_lhcl5"]
 font_names = PackedStringArray("Impact")
+subpixel_positioning = 0
 
 [node name="PauseMenu" type="Control" node_paths=PackedStringArray("_resumeButton", "_mainMenuButton", "_exitGameButton")]
 process_mode = 3
@@ -82,6 +84,7 @@ layout_mode = 2
 custom_minimum_size = Vector2(150, 40)
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(1, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(1, 0, 0, 1)
 theme_override_constants/outline_size = 8
 theme_override_fonts/font = SubResource("SystemFont_lhcl5")
 theme_override_font_sizes/font_size = 25
@@ -91,6 +94,7 @@ text = "Resume"
 custom_minimum_size = Vector2(150, 40)
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(1, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(1, 0, 0, 1)
 theme_override_constants/outline_size = 8
 theme_override_fonts/font = SubResource("SystemFont_lhcl5")
 theme_override_font_sizes/font_size = 25
@@ -101,6 +105,7 @@ text = "Main Menu
 custom_minimum_size = Vector2(150, 40)
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(1, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(1, 0, 0, 1)
 theme_override_constants/outline_size = 8
 theme_override_fonts/font = SubResource("SystemFont_lhcl5")
 theme_override_font_sizes/font_size = 25
