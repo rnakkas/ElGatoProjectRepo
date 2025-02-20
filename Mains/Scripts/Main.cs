@@ -27,7 +27,7 @@ public partial class Main : Node2D
 
 	private void OnStartGameButtonPressed()
 	{
-		_mainMenu.SetVisible(false);
+		_mainMenu.MainMenuVisibility(false);
 
 		_levelLoader.LoadLevel("staging_level");
 		
@@ -38,7 +38,7 @@ public partial class Main : Node2D
 	{
 		_sceneTransition?.TransitionToScene();
 		_levelLoader.UnloadCurrentLevel();
-		_mainMenu.ReloadMainMenu();
+		_mainMenu.MainMenuVisibility(true);
 	}
 
 	// Allows pausing and resuming using the same input key 
@@ -51,15 +51,15 @@ public partial class Main : Node2D
 
 		if (GetTree().Paused)
 		{
-			_pauseMenu.SetVisible(true);
+			_pauseMenu.PauseMenuVisibility(true);
 		}
 		else if (!GetTree().Paused)
 		{
-			_pauseMenu.SetVisible(false);
+			_pauseMenu.PauseMenuVisibility(false);
 		}
 	}
-	
-	public override void _Process(double delta)
+
+	public override void _Input(InputEvent @event)
 	{
 		PauseAndResumeGame();
 	}

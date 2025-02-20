@@ -34,4 +34,9 @@ public partial class PauseMenu : Control
 	{
 		GetTree().Quit();
 	}
+
+	public void PauseMenuVisibility(bool isVisible)
+	{
+		SetVisible(isVisible);
+	}
 }

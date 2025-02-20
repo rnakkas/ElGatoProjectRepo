@@ -16,9 +16,6 @@ public partial class MainMenu : Control
 
 	public override void _Ready()
 	{
-		_startGameButton.SetFocusMode(FocusModeEnum.All);
-		_exitGameButton.SetFocusMode(FocusModeEnum.All);
-		
 		_startGameButton.GrabFocus();
 
 		_startGameButton.MouseEntered += OnMouseHoverStartGameButton;
@@ -48,10 +45,14 @@ public partial class MainMenu : Control
 		_exitGameButton.GrabFocus();
 	}
 
-public void ReloadMainMenu()
+public void MainMenuVisibility(bool isVisible)
 	{
-		SetVisible(true);
-		_startGameButton.GrabFocus();
+		SetVisible(isVisible);
+		
+		if (isVisible)
+			_startGameButton.GrabFocus();
+		else
+			_startGameButton.ReleaseFocus();
 	}
 	
 }
