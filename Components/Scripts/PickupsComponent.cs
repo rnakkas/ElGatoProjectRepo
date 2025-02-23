@@ -26,7 +26,7 @@ public partial class PickupsComponent : Area2D
 
 	public bool PickupHealthItem(int healAmount)
 	{
-		return _healthComponent.Heal(healAmount);
+		return _healthComponent != null && _healthComponent.Heal(healAmount);
 	}
 
 	public void PickUpScoreItem(int scorePoints)
