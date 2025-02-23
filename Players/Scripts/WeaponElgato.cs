@@ -15,10 +15,13 @@ public partial class WeaponElgato : Node2D
 	public Vector2 Direction;
 	public bool HurtStatus, IsDashing;
 	private int _weaponAmmo;
+	private Vector2 _weaponPosition;
 	
 	public override void _Ready()
 	{
 		ConnectToSignals();
+		
+		_weaponPosition = Position;
 	}
 
 	private void ConnectToSignals()
@@ -105,6 +108,16 @@ public partial class WeaponElgato : Node2D
 		WeaponActions();
 		
 		_animation.FlipSprite(Direction);
+
+		if (Direction.X < 0)
+		{
+			Position = new Vector2(-_weaponPosition.X, _weaponPosition.Y);
+		}
+		else if (Direction.X > 0)
+		{
+			Position = new Vector2(_weaponPosition.X, _weaponPosition.Y);
+		}
+		
 		
 		_debugWeaponLabel.SetText(_shooting.WeaponType + ": " + _weaponAmmo);
 	}

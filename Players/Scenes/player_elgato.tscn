@@ -10,6 +10,22 @@
 [ext_resource type="Script" path="res://Components/Scripts/AnimationComponent.cs" id="8_gdubi"]
 [ext_resource type="Script" path="res://Components/Scripts/PickupsComponent.cs" id="9_iqa0q"]
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dci6a"]
+radius = 5.0
+height = 16.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_owtt2"]
+size = Vector2(12, 15)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_6qqgf"]
+radius = 9.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uprlr"]
+size = Vector2(5, 5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hwqex"]
+size = Vector2(17, 17)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_04kh0"]
 atlas = ExtResource("3_rhwya")
 region = Rect2(0, 64, 16, 16)
@@ -378,22 +394,6 @@ animations = [{
 "speed": 10.0
 }]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dci6a"]
-radius = 5.0
-height = 16.0
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_owtt2"]
-size = Vector2(12, 15)
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_6qqgf"]
-radius = 9.0
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_uprlr"]
-size = Vector2(5, 5)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_hwqex"]
-size = Vector2(17, 17)
-
 [node name="player_elgato" type="CharacterBody2D" node_paths=PackedStringArray("_playerController") groups=["Players"]]
 z_index = 1
 collision_mask = 6
@@ -425,11 +425,6 @@ one_shot = true
 [node name="dashTimer" type="Timer" parent="PlayerControllerComponent"]
 wait_time = 0.25
 one_shot = true
-
-[node name="sprite" type="AnimatedSprite2D" parent="."]
-position = Vector2(0, 3)
-sprite_frames = SubResource("SpriteFrames_nl62c")
-animation = &"jump"
 
 [node name="collider" type="CollisionShape2D" parent="."]
 self_modulate = Color(1, 1, 1, 0.403922)
@@ -515,6 +510,11 @@ self_modulate = Color(1, 1, 1, 0.27451)
 position = Vector2(0.5, 0.5)
 shape = SubResource("RectangleShape2D_hwqex")
 
+[node name="sprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, 3)
+sprite_frames = SubResource("SpriteFrames_nl62c")
+animation = &"jump"
+
 [node name="Weapon_ElGato" parent="." node_paths=PackedStringArray("_debugWeaponLabel") instance=ExtResource("5_c0mry")]
 _debugWeaponLabel = NodePath("../WeaponAmmoLabel")
 
@@ -541,3 +541,7 @@ offset_right = 31.0
 offset_bottom = -33.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 9
+
+[node name="WeaponAttachmentPoint" type="Marker2D" parent="."]
+modulate = Color(0.297785, 0.359474, 1, 1)
+position = Vector2(0, 6)
