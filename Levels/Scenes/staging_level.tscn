@@ -115,7 +115,7 @@ tile_set = SubResource("TileSet_4l5qw")
 position = Vector2(60, 55)
 
 [node name="Camera2D" type="Camera2D" parent="player_elgato"]
-zoom = Vector2(1.7, 1.7)
+zoom = Vector2(2.6, 2.6)
 limit_left = 0
 limit_top = -730
 limit_right = 3100
