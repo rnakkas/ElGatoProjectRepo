@@ -38,8 +38,6 @@ public partial class PlayerControllerComponent : Node
 	{
 		if (_pickupsBox == null)
 			return;
-		_pickupsBox.CheckCurrentHealth += OnHealthCheck;
-		_pickupsBox.PickedUpHealth += OnHealthPickedUp;
 		_pickupsBox.PickedUpScoreItem += OnScoreItemPickup;
 		_pickupsBox.PickedUpWeaponMod += OnWeaponModPickup;
 		
@@ -53,18 +51,6 @@ public partial class PlayerControllerComponent : Node
 		_dashCooldownTimer.Timeout += OnDashCooldownTimerTimeout;
 		
 		_dashTimer.Timeout += OnDashTimerTimeout;
-	}
-	
-	// Connected signal methods
-	private void OnHealthCheck()
-	{
-		_pickupsBox.MaxHealth = _health.MaxHealth;
-		_pickupsBox.CurrentHealth = _health.CurrentHealth;
-	}
-	
-	private void OnHealthPickedUp(int healAmount)
-	{
-		_health?.Heal(healAmount);
 	}
 	
 	private void OnHitByAttack(bool hurtStatus)

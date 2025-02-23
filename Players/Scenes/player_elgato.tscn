@@ -468,9 +468,10 @@ WallSlideVelocity = 100.0
 script = ExtResource("8_gdubi")
 Sprite = NodePath("../sprite")
 
-[node name="PickupsComponent" type="Area2D" parent="." groups=["PlayersPickupsBox"]]
+[node name="PickupsComponent" type="Area2D" parent="." node_paths=PackedStringArray("_healthComponent") groups=["PlayersPickupsBox"]]
 collision_mask = 16
 script = ExtResource("9_iqa0q")
+_healthComponent = NodePath("../HealthComponent")
 
 [node name="PickupsboxCollider" type="CollisionShape2D" parent="PickupsComponent"]
 self_modulate = Color(1, 1, 1, 0.737255)
