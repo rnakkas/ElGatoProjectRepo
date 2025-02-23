@@ -10,6 +10,7 @@ namespace ElGatoProject.Components.Scripts;
 [GlobalClass]
 public partial class PlayerControllerComponent : Node
 {
+	[Export] private CharacterBody2D _playerCharacter;
 	[Export] private HealthComponent _health;
 	[Export] private HurtboxComponent _hurtbox;
 	[Export] private VelocityComponent _velocityComponent;
@@ -33,7 +34,13 @@ public partial class PlayerControllerComponent : Node
 	private bool _hurtStatus, _onDashCooldown, _isDashing;
 	public bool IsOnFloor, IsOnCeiling;
 	private int _score;
-	
+
+	public override void _Ready()
+	{
+		ConnectSignals();
+		Velocity = _playerCharacter.Velocity;
+	}
+
 	public void ConnectSignals()
 	{
 		if (_pickupsBox == null)
@@ -95,7 +102,7 @@ public partial class PlayerControllerComponent : Node
 		_directionVector = Vector2.Zero;
 
 		// Set velocity x to 0 once dashing has finished
-		Velocity.X = _velocityComponent.CalculateVelocity(0, _directionVector).X;
+		// Velocity.X = _velocityComponent.CalculateVelocity(0, _directionVector).X;
 	}
 	
 	// Helper functions
@@ -114,11 +121,11 @@ public partial class PlayerControllerComponent : Node
 		_animation.HurtStatus = _hurtStatus;
 		_animation.IsDashing = _isDashing;
 		
-		_velocityComponent.IsOnFloor = IsOnFloor;
-		_velocityComponent.IsOnCeiling = IsOnCeiling;
-		_velocityComponent.IsLeftWallDetected = _leftWallDetect.IsColliding();
-		_velocityComponent.IsRightWallDetected = _rightWallDetect.IsColliding();
-		_velocityComponent.IsDashing = _isDashing;
+		// _velocityComponent.IsOnFloor = IsOnFloor;
+		// _velocityComponent.IsOnCeiling = IsOnCeiling;
+		// _velocityComponent.IsLeftWallDetected = _leftWallDetect.IsColliding();
+		// _velocityComponent.IsRightWallDetected = _rightWallDetect.IsColliding();
+		// _velocityComponent.IsDashing = _isDashing;
 
 		_hurtbox.Monitorable = !_isDashing;
 	}
@@ -147,27 +154,31 @@ public partial class PlayerControllerComponent : Node
 		Dash();
 	}
 
-	private void BasicMovements(float delta)
+	public void BasicMovements(float delta)
 	{
 		if (Input.IsActionPressed("move_left") && !_isDashing)
 		{
-			_directionVector = Vector2.Left;
+			// _directionVector = Vector2.Left;
+			_velocityComponent.AccelerateToMaxVelocity(delta, Vector2.Left);
 		}
 		else if (Input.IsActionPressed("move_right") && !_isDashing)
 		{
-			_directionVector = Vector2.Right;
+			// _directionVector = Vector2.Right;
+			_velocityComponent.AccelerateToMaxVelocity(delta, Vector2.Right);
 		}
 		else if (
 			(!Input.IsActionPressed("move_left") || !Input.IsActionPressed("move_right")) && 
 			!_isDashing
 		)
 		{
-			_directionVector = Vector2.Zero;
+			// _directionVector = Vector2.Zero;
+			_velocityComponent.DecelerateToZeroVelocity(delta);
 		}
 		
 		if (Input.IsActionPressed("jump") && !_isDashing)
 		{
-			_directionVector = Vector2.Up;
+			// _directionVector = Vector2.Up;
+			_velocityComponent.JumpeVelocity();
 		}
 	}
 
@@ -197,12 +208,14 @@ public partial class PlayerControllerComponent : Node
 		SetComponentProperties();
 		SetWeaponProperties();
 		MovementLogic(delta);
-		
-		Velocity = _velocityComponent.CalculateVelocity(delta, _directionVector);
+
+		// Velocity = _velocityComponent.CalculateVelocity(delta, _directionVector);
 
 		_animation.PlayCharacterAnimations();
-		
+
 		_debugHealthLabel.SetText("HP: " + _health.CurrentHealth);
 		_debugScoreLabel.SetText("Score: " + _score);
-		}
+	}
+	
+	
 }

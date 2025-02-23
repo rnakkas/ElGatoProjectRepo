@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Numerics;
+using ElGatoProject.Resources;
 using Godot.Collections;
 using Vector2 = Godot.Vector2;
 
@@ -10,138 +11,208 @@ namespace ElGatoProject.Components.Scripts;
 [GlobalClass]
 public partial class VelocityComponent : Node
 {
-	[Export] public float MaxSpeed { get; set; }
-	[Export] public float DashSpeed { get; set; }
-	[Export] public float Acceleration { get; set; }
-	[Export] public float Friction { get; set; }
-	[Export] public float JumpVelocity{ get; set; }
-	[Export] public float Gravity { get; set; }
-	[Export] public float WallSlideGravity { get; set; }
-	[Export] public float WallJumpVelocity { get; set; }
-	[Export] public float WallSlideVelocity { get; set; }
-	[Export] public bool IsOnFloor { get; set; }
-	[Export] public bool IsOnCeiling { get; set; }
-	[Export] public bool IsLeftWallDetected {get; set;}
-	[Export] public bool IsRightWallDetected {get; set;}
+	[Export] public CharacterVelocityProperties CharacterVelocityProperties { get; set; }
+	
+	
+	// [Export] public float MaxSpeed { get; set; }
+	// [Export] public float DashSpeed { get; set; }
+	// [Export] public float Acceleration { get; set; }
+	// [Export] public float Friction { get; set; }
+	// [Export] public float JumpVelocity{ get; set; }
+	// [Export] public float Gravity { get; set; }
+	// [Export] public float WallSlideGravity { get; set; }
+	// [Export] public float WallJumpVelocity { get; set; }
+	// [Export] public float WallSlideVelocity { get; set; }
+	// [Export] public bool IsOnFloor { get; set; }
+	// [Export] public bool IsOnCeiling { get; set; }
+	// [Export] public bool IsLeftWallDetected {get; set;}
+	// [Export] public bool IsRightWallDetected {get; set;}
 
-	private Vector2 _velocity;
-	public bool IsDashing;
+	public Vector2 Velocity;
+	// public bool IsDashing;
 	
 	public float KnockbackFromAttack(Vector2 attackPosition, float knockback, Vector2 attackVelocity)
 	{
 		if (attackVelocity != Vector2.Zero)
 		{
-			_velocity.X = knockback * attackVelocity.X;	
+			Velocity.X = knockback * attackVelocity.X;	
 		} 
 		else if (attackVelocity == Vector2.Zero && attackPosition.X < 0)
 		{
-			_velocity.X = knockback;
+			Velocity.X = knockback;
 		}
 		else if (attackVelocity == Vector2.Zero && attackPosition.X > 0)
 		{
-			_velocity.X = -knockback;
+			Velocity.X = -knockback;
 		}
 
-		return _velocity.X;
+		return Velocity.X;
 	}
 
 	public float JumpOnJumpPad(float jumpMultiplier)
 	{
-		_velocity.Y = jumpMultiplier * JumpVelocity;
-		return _velocity.Y;
+		Velocity.Y = jumpMultiplier * CharacterVelocityProperties.JumpVelocity;
+		return Velocity.Y;
+	}
+
+	public Vector2 AccelerateToMaxVelocity(float delta, Vector2 direction)
+	{
+		Velocity.X = Mathf.MoveToward(
+			Velocity.X, 
+			direction.X * CharacterVelocityProperties.MaxSpeed, 
+			CharacterVelocityProperties.Acceleration * delta);
+		
+		return Velocity;
+	}
+
+	public Vector2 DecelerateToZeroVelocity(float delta)
+	{
+		Velocity.X = Mathf.MoveToward(Velocity.X, 0, CharacterVelocityProperties.Friction * delta);
+		Velocity.Y = 0;
+		
+		return Velocity;
+	}
+
+	public Vector2 JumpeVelocity()
+	{
+		Velocity.Y = CharacterVelocityProperties.JumpVelocity;
+		return Velocity;
+	}
+
+	public Vector2 FallVelocity(float delta)
+	{
+		Velocity.Y += CharacterVelocityProperties.Gravity * delta;
+		return Velocity;
+	}
+
+	public Vector2 WallSlidingVelocity(float delta)
+	{
+		Velocity.X = 0;
+		Velocity.Y = Mathf.MoveToward(
+			Velocity.Y, 
+			CharacterVelocityProperties.WallSlideVelocity, 
+			CharacterVelocityProperties.WallSlideGravity * delta);
+		
+		return Velocity;
+	}
+
+	public Vector2 WallJumpingVelocity(float delta, Vector2 direction)
+	{
+		Velocity.Y = CharacterVelocityProperties.WallJumpVelocity;
+		Velocity.X = direction.X * CharacterVelocityProperties.MaxSpeed;
+		
+		return Velocity;
+	}
+
+	public Vector2 DashVelocity(Vector2 direction)
+	{
+		Velocity = Vector2.Zero;
+		Velocity.X = CharacterVelocityProperties.DashSpeed * direction.X;
+		
+		return Velocity;
+	}
+
+	public Vector2 OnFloorVelocity()
+	{
+		Velocity = Vector2.Zero;
+		return Velocity;
 	}
 	
-	public Vector2 CalculateVelocity(float delta, Vector2 direction)
-	{
-		RunStopAndIdleCalculations(delta, direction);
-		JumpCalculations(direction);
-		FallCalculations(delta);
-		HittingCeilingsCalculations(delta);
-		WallSlideAndWallJumpCalculations(delta, direction);
-		DashingVelocityCalculations(direction);
-		
-		return _velocity;
-	}
-
-	private void RunStopAndIdleCalculations(float delta, Vector2 direction)
-	{
-		// Running, stopping and idle
-		if (direction.X != 0)
-		{
-			_velocity.X = Mathf.MoveToward(_velocity.X, direction.X * MaxSpeed, Acceleration * delta);
-		
-			if (IsOnFloor)
-			{
-				_velocity.Y = 0;
-			}
-		}
-		else if (IsOnFloor && direction.X == 0)
-		{
-			_velocity.X = Mathf.MoveToward(_velocity.X, 0, Friction * delta);
-			_velocity.Y = 0;
-		}
-	}
-
-	private void JumpCalculations(Vector2 direction)
-	{
-		// Jump
-		if (IsOnFloor && direction.Y < 0)
-		{
-			_velocity.Y = JumpVelocity;
-		}
-	}
-
-	private void FallCalculations(float delta)
-	{
-		// Fall
-		if (!IsOnFloor && !IsDashing)
-		{
-			_velocity.Y += Gravity * delta;
-			
-		}
-	}
-
-	private void HittingCeilingsCalculations(float delta)
-	{
-		// Hitting ceilings
-		if (IsOnCeiling)
-		{
-			_velocity.Y += Gravity * delta;
-		}
-	}
-
-	private void WallSlideAndWallJumpCalculations(float delta, Vector2 direction)
-	{
-		// Wall slide and wall jump
-		if (!IsOnFloor && (IsLeftWallDetected || IsRightWallDetected))
-		{
-			_velocity.X = 0;
-			_velocity.Y = Mathf.MoveToward(_velocity.Y, WallSlideVelocity, WallSlideGravity * delta);
-
-			if (IsLeftWallDetected)
-			{
-				direction.X = 1.0f;
-			} 
-			
-			if (IsRightWallDetected)
-			{
-				direction.X = -1.0f;
-			}
-			
-			// Wall Jump
-			if (direction.Y < 0)
-			{
-				_velocity.Y = WallJumpVelocity;
-				_velocity.X = direction.X * MaxSpeed;
-			}
-		}
-	}
-
-	private void DashingVelocityCalculations(Vector2 direction)
-	{
-		if (!IsDashing)
-			return;
-		_velocity = Vector2.Zero;
-		_velocity.X = DashSpeed * direction.X;
-	}
+	
+	
+	//###################//
+	
+	// public Vector2 CalculateVelocity(float delta, Vector2 direction)
+	// {
+	// 	RunStopAndIdleCalculations(delta, direction);
+	// 	JumpCalculations(direction);
+	// 	FallCalculations(delta);
+	// 	HittingCeilingsCalculations(delta);
+	// 	WallSlideAndWallJumpCalculations(delta, direction);
+	// 	DashingVelocityCalculations(direction);
+	// 	
+	// 	return _velocity;
+	// }
+	//
+	// private void RunStopAndIdleCalculations(float delta, Vector2 direction)
+	// {
+	// 	// Running, stopping and idle
+	// 	if (direction.X != 0)
+	// 	{
+	// 		_velocity.X = Mathf.MoveToward(_velocity.X, direction.X * MaxSpeed, Acceleration * delta);
+	// 	
+	// 		if (IsOnFloor)
+	// 		{
+	// 			_velocity.Y = 0;
+	// 		}
+	// 	}
+	// 	else if (IsOnFloor && direction.X == 0)
+	// 	{
+	// 		_velocity.X = Mathf.MoveToward(_velocity.X, 0, Friction * delta);
+	// 		_velocity.Y = 0;
+	// 	}
+	// }
+	//
+	// private void JumpCalculations(Vector2 direction)
+	// {
+	// 	// Jump
+	// 	if (IsOnFloor && direction.Y < 0)
+	// 	{
+	// 		_velocity.Y = JumpVelocity;
+	// 	}
+	// }
+	//
+	// private void FallCalculations(float delta)
+	// {
+	// 	// Fall
+	// 	if (!IsOnFloor && !IsDashing)
+	// 	{
+	// 		_velocity.Y += Gravity * delta;
+	// 		
+	// 	}
+	// }
+	//
+	// private void HittingCeilingsCalculations(float delta)
+	// {
+	// 	// Hitting ceilings
+	// 	if (IsOnCeiling)
+	// 	{
+	// 		_velocity.Y += Gravity * delta;
+	// 	}
+	// }
+	//
+	// private void WallSlideAndWallJumpCalculations(float delta, Vector2 direction)
+	// {
+	// 	// Wall slide and wall jump
+	// 	if (!IsOnFloor && (IsLeftWallDetected || IsRightWallDetected))
+	// 	{
+	// 		_velocity.X = 0;
+	// 		_velocity.Y = Mathf.MoveToward(_velocity.Y, WallSlideVelocity, WallSlideGravity * delta);
+	//
+	// 		if (IsLeftWallDetected)
+	// 		{
+	// 			direction.X = 1.0f;
+	// 		} 
+	// 		
+	// 		if (IsRightWallDetected)
+	// 		{
+	// 			direction.X = -1.0f;
+	// 		}
+	// 		
+	// 		// Wall Jump
+	// 		if (direction.Y < 0)
+	// 		{
+	// 			_velocity.Y = WallJumpVelocity;
+	// 			_velocity.X = direction.X * MaxSpeed;
+	// 		}
+	// 	}
+	// }
+	//
+	// private void DashingVelocityCalculations(Vector2 direction)
+	// {
+	// 	if (!IsDashing)
+	// 		return;
+	// 	_velocity = Vector2.Zero;
+	// 	_velocity.X = DashSpeed * direction.X;
+	// }
 }
