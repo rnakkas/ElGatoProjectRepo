@@ -52,24 +52,9 @@ public partial class EnemyControllerComponent : Node
     }
     
     // Getting hit by attacks
-    private void OnHitByAttack(
-    	bool hurtStatus, 
-    	Vector2 attackPosition, 
-    	int attackDamage,
-    	float knockback, 
-    	Vector2 attackVelocity
-    )
+    private void OnHitByAttack(bool hurtStatus)
     {
-    	if (_health == null)
-    		return;
-    	if (_animation == null)
-    		return;
-    	
     	_hurtStatus = hurtStatus;
-    	
-    	_health.TakeDamage(attackDamage);
-    	
-	    _animation?.FlipSprite(attackPosition);
     }
     
     private void OnHurtStatusCleared(bool hurtStatus)

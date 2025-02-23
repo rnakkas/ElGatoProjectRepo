@@ -441,10 +441,13 @@ script = ExtResource("5_b0fly")
 CurrentHealth = 80
 MaxHealth = 100
 
-[node name="HurtboxComponent" type="Area2D" parent="." node_paths=PackedStringArray("_hurtStaggerTimer") groups=["PlayersHurtBox"]]
+[node name="HurtboxComponent" type="Area2D" parent="." node_paths=PackedStringArray("_hurtStaggerTimer", "_healthComponent", "_velocityComponent", "_bodySprite") groups=["PlayersHurtBox"]]
 collision_mask = 64
 script = ExtResource("5_eodsp")
 _hurtStaggerTimer = NodePath("HurtStaggerTimer")
+_healthComponent = NodePath("../HealthComponent")
+_velocityComponent = NodePath("../VelocityComponent")
+_bodySprite = NodePath("../sprite")
 
 [node name="HurtboxCollider" type="CollisionShape2D" parent="HurtboxComponent"]
 position = Vector2(0, 3.5)
@@ -513,7 +516,6 @@ position = Vector2(0.5, 0.5)
 shape = SubResource("RectangleShape2D_hwqex")
 
 [node name="Weapon_ElGato" parent="." node_paths=PackedStringArray("_debugWeaponLabel") instance=ExtResource("5_c0mry")]
-visible = false
 _debugWeaponLabel = NodePath("../WeaponAmmoLabel")
 
 [node name="HealthLabel" type="Label" parent="."]

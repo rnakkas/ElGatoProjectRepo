@@ -67,28 +67,14 @@ public partial class PlayerControllerComponent : Node
 		_health?.Heal(healAmount);
 	}
 	
-	private void OnHitByAttack(
-		bool hurtStatus, 
-		Vector2 attackPosition, 
-		int attackDamage,
-		float knockback, 
-		Vector2 attackVelocity
-	)
+	private void OnHitByAttack(bool hurtStatus)
 	{
-		_hurtStatus = hurtStatus;
-		
-		_health?.TakeDamage(attackDamage);
-
-		_animation?.FlipSprite(attackPosition);
-
-		if (_velocityComponent == null)
-			return;
-		Velocity.X = _velocityComponent.KnockbackFromAttack(attackPosition, knockback, attackVelocity);
+		_weapon.HurtStatus = hurtStatus;
 	}
 	
 	private void OnHurtStatusCleared(bool hurtStatus)
 	{
-		_hurtStatus = hurtStatus;
+		_weapon.HurtStatus = hurtStatus;
 	}
 	
 	private void EnteredJumpPad(Area2D area)
@@ -156,7 +142,6 @@ public partial class PlayerControllerComponent : Node
 		if (_weapon == null)
 			return;
 		
-		_weapon.HurtStatus = _hurtStatus;
 		_weapon.IsDashing = _isDashing;
 		
 		if (_animation.Sprite.IsFlippedH())
@@ -202,7 +187,7 @@ public partial class PlayerControllerComponent : Node
 
 	private void Dash()
 	{
-		if (!Input.IsActionJustPressed("dashDodge") || _onDashCooldown || _hurtStatus) 
+		if (!Input.IsActionJustPressed("dashDodge") || _onDashCooldown || _hurtbox.HurtStatus) 
 			return;
 		
 		if (!_animation.Sprite.IsFlippedH())
@@ -233,5 +218,5 @@ public partial class PlayerControllerComponent : Node
 		
 		_debugHealthLabel.SetText("HP: " + _health.CurrentHealth);
 		_debugScoreLabel.SetText("Score: " + _score);
-	}
+		}
 }

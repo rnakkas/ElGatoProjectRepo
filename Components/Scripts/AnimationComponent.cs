@@ -39,45 +39,45 @@ public partial class AnimationComponent : Node
 		
 		FlipSprite(Direction);
 
-		if (!HurtStatus)
-		{
-			if (Velocity.X == 0 && IsOnFloor)
-			{
-				Sprite.Play(Utility.Instance.EntityIdleAnimation);
-			}
-			else if (Velocity.X != 0 && IsOnFloor)
-			{
-				Sprite.Play(Utility.Instance.EntityRunAnimation);
-			}
-			else if (Velocity.Y < 0 && !IsOnFloor)
-			{
-				Sprite.Play(Utility.Instance.EntityJumpAnimation);
-			}
-			else if (Velocity.Y > 0 && !IsOnFloor)
-			{
-				Sprite.Play(Utility.Instance.EntityFallAnimation);
-			}
-		
-			if (!IsOnFloor && IsLeftWallDetected)
-			{
-				FlipSprite(new Vector2(1.0f, 0f));
-				Sprite.Play(Utility.Instance.EntityWallSlideAnimation);
-			}
-			else if (!IsOnFloor && IsRightWallDetected)
-			{
-				FlipSprite(new Vector2(-1.0f, 0f));
-				Sprite.Play(Utility.Instance.EntityWallSlideAnimation);
-			}
-
-			if (IsDashing)
-			{
-				Sprite.Play(Utility.Instance.EntityDashAnimation);
-			}
-		}
-		else
-		{
-			Sprite.Play(Utility.Instance.EntityHurtAnimation);
-		}
+		// if (!HurtStatus)
+		// {
+		// 	if (Velocity.X == 0 && IsOnFloor)
+		// 	{
+		// 		Sprite.Play(Utility.Instance.EntityIdleAnimation);
+		// 	}
+		// 	else if (Velocity.X != 0 && IsOnFloor)
+		// 	{
+		// 		Sprite.Play(Utility.Instance.EntityRunAnimation);
+		// 	}
+		// 	else if (Velocity.Y < 0 && !IsOnFloor)
+		// 	{
+		// 		Sprite.Play(Utility.Instance.EntityJumpAnimation);
+		// 	}
+		// 	else if (Velocity.Y > 0 && !IsOnFloor)
+		// 	{
+		// 		Sprite.Play(Utility.Instance.EntityFallAnimation);
+		// 	}
+		//
+		// 	if (!IsOnFloor && IsLeftWallDetected)
+		// 	{
+		// 		FlipSprite(new Vector2(1.0f, 0f));
+		// 		Sprite.Play(Utility.Instance.EntityWallSlideAnimation);
+		// 	}
+		// 	else if (!IsOnFloor && IsRightWallDetected)
+		// 	{
+		// 		FlipSprite(new Vector2(-1.0f, 0f));
+		// 		Sprite.Play(Utility.Instance.EntityWallSlideAnimation);
+		// 	}
+		//
+		// 	if (IsDashing)
+		// 	{
+		// 		Sprite.Play(Utility.Instance.EntityDashAnimation);
+		// 	}
+		// }
+		// else
+		// {
+		// 	Sprite.Play(Utility.Instance.EntityHurtAnimation);
+		// }
 	}
 
 	public void PlayProjectileAnimations(Utility.WeaponType bulletWeaponType, bool hitStatus)
