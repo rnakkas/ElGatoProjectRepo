@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_gp16e")
 MaxSpeed = 170.0
-DashSpeed = 620.0
+DashSpeed = 300.0
 Acceleration = 550.0
 Friction = 320.0
 JumpVelocity = -340.0

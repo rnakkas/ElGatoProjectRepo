@@ -61,11 +61,13 @@ public partial class PlayerElgato : CharacterBody2D
 	private void OnHitByAttack(bool hurtStatus)
 	{
 		_weapon.HurtStatus = hurtStatus;
+		_playerController.HurtStatus = hurtStatus;
 	}
 	
 	private void OnHurtStatusCleared(bool hurtStatus)
 	{
 		_weapon.HurtStatus = hurtStatus;
+		_playerController.HurtStatus = hurtStatus;
 	}
 	
 	public override void _PhysicsProcess(double delta)

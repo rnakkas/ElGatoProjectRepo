@@ -410,10 +410,11 @@ _healthComponent = NodePath("HealthComponent")
 _debugHealthLabel = NodePath("HealthLabel")
 _debugScoreLabel = NodePath("ScoreLabel")
 
-[node name="PlayerControllerComponent" type="Node" parent="." node_paths=PackedStringArray("_playerCharacter", "_sprite", "_velocityComponent", "_leftWallDetect", "_rightWallDetect", "_miscBox", "_weapon", "_dashCooldownTimer", "_dashTimer", "_debugHealthLabel", "_debugScoreLabel")]
+[node name="PlayerControllerComponent" type="Node" parent="." node_paths=PackedStringArray("_playerCharacter", "_sprite", "_hurtbox", "_velocityComponent", "_leftWallDetect", "_rightWallDetect", "_miscBox", "_weapon", "_dashCooldownTimer", "_dashTimer", "_debugHealthLabel", "_debugScoreLabel")]
 script = ExtResource("2_40482")
 _playerCharacter = NodePath("..")
 _sprite = NodePath("../sprite")
+_hurtbox = NodePath("../HurtboxComponent")
 _velocityComponent = NodePath("../VelocityComponent")
 _leftWallDetect = NodePath("../LeftWallDetect")
 _rightWallDetect = NodePath("../RightWallDetect")

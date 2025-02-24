@@ -12,67 +12,33 @@ public partial class PlayerControllerComponent : Node
 {
 	[Export] private CharacterBody2D _playerCharacter;
 	[Export] private AnimatedSprite2D _sprite;
-	
-	[Export] private HealthComponent _health;
-	[Export] private HurtboxComponent _hurtbox;
 	[Export] private VelocityComponent _velocityComponent;
-	[Export] private AnimationComponent _animation;
-	[Export] private PickupsComponent _pickupsBox;
-	
-	
 	[Export] private RayCast2D _leftWallDetect;
 	[Export] private RayCast2D _rightWallDetect;
 	[Export] private Area2D _miscBox;
-	[Export] private WeaponElgato _weapon;
 	[Export] private Timer _dashCooldownTimer;
 	[Export] private Timer _dashTimer;
-	
-	// Debug labels
-	[Export] private Label _debugHealthLabel;
-	[Export] private Label _debugScoreLabel;
 
-	private Vector2 _characterVelocity;
+	public bool HurtStatus;
 	
 	private Vector2 _velocity = Vector2.Zero;
 	private Vector2 _directionVector = Vector2.Zero;
-	private bool _hurtStatus, _onDashCooldown, _isDashing;
-	public bool IsOnFloor, IsOnCeiling;
-	private int _score;
+	
+	private bool _onDashCooldown, _isDashing;
 
 	public override void _Ready()
 	{
 		ConnectSignals();
-		_velocity = _playerCharacter.Velocity;
 	}
 
 	public void ConnectSignals()
 	{
-		// if (_pickupsBox == null)
-		// 	return;
-		// _pickupsBox.PickedUpScoreItem += OnScoreItemPickup;
-		// _pickupsBox.PickedUpWeaponMod += OnWeaponModPickup;
-		//
-		// if (_hurtbox == null)
-		// 	return;
-		// _hurtbox.GotHit += OnHitByAttack;
-		// _hurtbox.HurtStatusCleared += OnHurtStatusCleared; 
-		
 		_miscBox.AreaEntered += EnteredJumpPad;
 
 		_dashCooldownTimer.Timeout += OnDashCooldownTimerTimeout;
 		
 		_dashTimer.Timeout += OnDashTimerTimeout;
 	}
-	
-	// private void OnHitByAttack(bool hurtStatus)
-	// {
-	// 	_weapon.HurtStatus = hurtStatus;
-	// }
-	//
-	// private void OnHurtStatusCleared(bool hurtStatus)
-	// {
-	// 	_weapon.HurtStatus = hurtStatus;
-	// }
 	
 	private void EnteredJumpPad(Area2D area)
 	{
@@ -82,19 +48,6 @@ public partial class PlayerControllerComponent : Node
 		}
 	}
 
-	// private void OnScoreItemPickup(int scorePoints)
-	// {
-	// 	_score += scorePoints;
-	// }
-	//
-	// private void OnWeaponModPickup(string modType)
-	// {
-	// 	if (Enum.TryParse(modType, out Utility.WeaponType weaponType))
-	// 	{
-	// 		_weapon.SwitchWeapon(weaponType);
-	// 	}
-	// }
-
 	private void OnDashCooldownTimerTimeout()
 	{
 		_onDashCooldown = false;
@@ -103,64 +56,12 @@ public partial class PlayerControllerComponent : Node
 	private void OnDashTimerTimeout()
 	{
 		_isDashing = false;
-		_directionVector = Vector2.Zero;
-
-		// Set velocity x to 0 once dashing has finished
-		// Velocity.X = _velocityComponent.CalculateVelocity(0, _directionVector).X;
+		_playerCharacter.Velocity = Vector2.Zero;
 	}
-	
-	// Helper functions
-	private void SetComponentProperties()
-	{
-		if (_animation == null)
-			return;
-		if (_velocityComponent == null)
-			return;
-
-		_animation.Direction = _directionVector;
-		_animation.Velocity = _velocity;
-		_animation.IsOnFloor = IsOnFloor;
-		_animation.IsLeftWallDetected = _leftWallDetect.IsColliding();
-		_animation.IsRightWallDetected = _rightWallDetect.IsColliding();
-		_animation.HurtStatus = _hurtStatus;
-		_animation.IsDashing = _isDashing;
-		
-		// _velocityComponent.IsOnFloor = IsOnFloor;
-		// _velocityComponent.IsOnCeiling = IsOnCeiling;
-		// _velocityComponent.IsLeftWallDetected = _leftWallDetect.IsColliding();
-		// _velocityComponent.IsRightWallDetected = _rightWallDetect.IsColliding();
-		// _velocityComponent.IsDashing = _isDashing;
-
-		_hurtbox.Monitorable = !_isDashing;
-	}
-	
-	private void SetWeaponProperties()
-	{
-		if (_weapon == null)
-			return;
-		
-		_weapon.IsDashing = _isDashing;
-		
-		if (_animation.Sprite.IsFlippedH())
-		{
-			_weapon.Direction = new Vector2(-1.0f, 0f);
-		}
-		else if (!_animation.Sprite.IsFlippedH())
-		{
-			_weapon.Direction = new Vector2(1.0f, 0f);
-		}
-	}
-
-	// // Player controls
-	// private void MovementLogic(float delta)
-	// {
-	// 	BasicMovements(delta);
-	// 	Dash();
-	// }
 
 	public void BasicMovements(float delta)
 	{
-		if (!_playerCharacter.IsOnFloor())
+		if (!_playerCharacter.IsOnFloor() && !_isDashing)
 		{
 			_velocity = _velocityComponent.FallVelocity(delta);
 		}
@@ -176,16 +77,16 @@ public partial class PlayerControllerComponent : Node
 		
 		_directionVector = Input.GetVector("move_left", "move_right", "move_up", "move_down");
 		
-		if (_directionVector != Vector2.Zero && !_isDashing)
+		if (_directionVector != Vector2.Zero && !_isDashing && !HurtStatus)
 		{
 			_velocity = _velocityComponent.AccelerateToMaxVelocity(delta, _directionVector);
 		}
-		else if (_directionVector == Vector2.Zero && !_isDashing)
+		else if (_directionVector == Vector2.Zero && !_isDashing && !HurtStatus)
 		{
 			_velocity = _velocityComponent.DecelerateToZeroVelocity(delta);
 		}
 		
-		if (Input.IsActionPressed("jump") && _playerCharacter.IsOnFloor() && !_isDashing)
+		if (Input.IsActionPressed("jump") && _playerCharacter.IsOnFloor() && !_isDashing && !HurtStatus)
 		{
 			_velocity = _velocityComponent.JumpeVelocity();
 		}
@@ -194,19 +95,20 @@ public partial class PlayerControllerComponent : Node
 
 	private void Dash()
 	{
-		if (!Input.IsActionJustPressed("dashDodge") || _onDashCooldown || _hurtbox.HurtStatus) 
+		if (!Input.IsActionJustPressed("dashDodge") || _onDashCooldown || HurtStatus) 
 			return;
 		
-		if (!_animation.Sprite.IsFlippedH())
+		if (!_sprite.IsFlippedH())
 		{
-			_directionVector = Vector2.Right;
+			_velocity = _velocityComponent.DashVelocity(Vector2.Right);
 		}
-		else if (_animation.Sprite.IsFlippedH())
+		else if (_sprite.IsFlippedH())
 		{
-			_directionVector = Vector2.Left;
+			_velocity = _velocityComponent.DashVelocity(Vector2.Left);
 		}
 
 		_isDashing = true;
+		
 		_dashTimer.Start();
 			
 		_onDashCooldown = true;
@@ -217,26 +119,11 @@ public partial class PlayerControllerComponent : Node
 	{
 		_velocity = _playerCharacter.Velocity;
 		BasicMovements((float)delta);
+		Dash();
 		
 		_playerCharacter.Velocity = _velocity;
 		
 		_playerCharacter.MoveAndSlide();
 	}
-
-
-	// public void PlayerControllerActions(float delta)
-	// {
-	// 	SetComponentProperties();
-	// 	SetWeaponProperties();
-	// 	MovementLogic(delta);
-	//
-	// 	// Velocity = _velocityComponent.CalculateVelocity(delta, _directionVector);
-	//
-	// 	_animation.PlayCharacterAnimations();
-	//
-	// 	_debugHealthLabel.SetText("HP: " + _health.CurrentHealth);
-	// 	_debugScoreLabel.SetText("Score: " + _score);
-	// }
-	
 	
 }
