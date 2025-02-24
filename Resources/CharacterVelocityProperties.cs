@@ -15,4 +15,5 @@ public partial class CharacterVelocityProperties : Resource
     [Export] public float WallSlideGravity { get; set; }
     [Export] public float WallJumpVelocity { get; set; }
     [Export] public float WallSlideVelocity { get; set; }
+    [Export] public float KnockbackMultiplier { get; set; }
 }

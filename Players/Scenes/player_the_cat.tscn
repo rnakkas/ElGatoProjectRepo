@@ -14,6 +14,9 @@
 radius = 5.0
 height = 16.0
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_l4g6g"]
+size = Vector2(5, 5)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mju0f"]
 size = Vector2(12, 15)
 
@@ -388,9 +391,6 @@ animations = [{
 "speed": 10.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_l4g6g"]
-size = Vector2(5, 5)
-
 [node name="PlayerTheCat" type="CharacterBody2D" node_paths=PackedStringArray("_playerController", "_healthComponent", "_hurtboxComponent", "_debugHealthLabel") groups=["Players"]]
 collision_mask = 6
 script = ExtResource("1_ngcol")
@@ -398,6 +398,33 @@ _playerController = NodePath("PlayerControllerComponent")
 _healthComponent = NodePath("HealthComponent")
 _hurtboxComponent = NodePath("HurtboxComponent")
 _debugHealthLabel = NodePath("HealthLabel")
+
+[node name="LeftWallDetect" type="RayCast2D" parent="."]
+self_modulate = Color(1, 0, 1, 1)
+position = Vector2(0, 4)
+target_position = Vector2(-12, 0)
+collision_mask = 4
+
+[node name="RightWallDetect" type="RayCast2D" parent="."]
+self_modulate = Color(1, 0, 1, 1)
+position = Vector2(0, 4)
+target_position = Vector2(12, 0)
+collision_mask = 4
+
+[node name="collider" type="CollisionShape2D" parent="."]
+self_modulate = Color(1, 1, 1, 0.403922)
+position = Vector2(0, 3)
+shape = SubResource("CapsuleShape2D_431m1")
+
+[node name="TargetBox" type="Area2D" parent="." groups=["Players"]]
+position = Vector2(0, 5.465)
+collision_mask = 0
+monitoring = false
+
+[node name="TargetBoxCollider" type="CollisionShape2D" parent="TargetBox"]
+position = Vector2(0, 1.535)
+shape = SubResource("RectangleShape2D_l4g6g")
+debug_color = Color(0.932818, 0.259544, 0, 0.42)
 
 [node name="PlayerControllerComponent" type="Node" parent="." node_paths=PackedStringArray("_playerCharacter", "_sprite", "_velocityComponent", "_leftWallDetect", "_rightWallDetect", "_dashCooldownTimer", "_dashTimer")]
 script = ExtResource("2_y5cke")
@@ -421,26 +448,9 @@ one_shot = true
 script = ExtResource("5_jql4e")
 CharacterVelocityProperties = ExtResource("7_u5ntm")
 
-[node name="LeftWallDetect" type="RayCast2D" parent="."]
-self_modulate = Color(1, 0, 1, 1)
-position = Vector2(0, 4)
-target_position = Vector2(-12, 0)
-collision_mask = 4
-
-[node name="RightWallDetect" type="RayCast2D" parent="."]
-self_modulate = Color(1, 0, 1, 1)
-position = Vector2(0, 4)
-target_position = Vector2(12, 0)
-collision_mask = 4
-
-[node name="collider" type="CollisionShape2D" parent="."]
-self_modulate = Color(1, 1, 1, 0.403922)
-position = Vector2(0, 3)
-shape = SubResource("CapsuleShape2D_431m1")
-
 [node name="HealthComponent" type="Node" parent="."]
 script = ExtResource("2_irjyl")
-CurrentHealth = 80
+CurrentHealth = 85
 MaxHealth = 100
 
 [node name="HurtboxComponent" type="Area2D" parent="." node_paths=PackedStringArray("_hurtStaggerTimer", "_healthComponent", "_bodySprite", "_velocityComponent") groups=["PlayersHurtBox"]]
@@ -460,15 +470,21 @@ debug_color = Color(0.897598, 0.279026, 0.387079, 0.42)
 wait_time = 0.5
 one_shot = true
 
-[node name="PickupsComponent" type="Area2D" parent="." groups=["PlayersPickupsBox"]]
+[node name="PickupsComponent" type="Area2D" parent="." node_paths=PackedStringArray("_healthComponent") groups=["PlayersPickupsBox"]]
 collision_mask = 16
 script = ExtResource("4_mdlkx")
+_healthComponent = NodePath("../HealthComponent")
 
 [node name="PickupsboxCollider" type="CollisionShape2D" parent="PickupsComponent"]
 self_modulate = Color(1, 1, 1, 0.737255)
 position = Vector2(0, 3)
 shape = SubResource("CircleShape2D_22he6")
 debug_color = Color(0, 0.65098, 0, 0.419608)
+
+[node name="sprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, 3)
+sprite_frames = SubResource("SpriteFrames_w0g3d")
+animation = &"idle"
 
 [node name="Weapon_ElGato" parent="." node_paths=PackedStringArray("_debugWeaponLabel") instance=ExtResource("7_jnlk7")]
 visible = false
@@ -498,18 +514,3 @@ offset_right = 31.0
 offset_bottom = -33.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 9
-
-[node name="sprite" type="AnimatedSprite2D" parent="."]
-position = Vector2(0, 3)
-sprite_frames = SubResource("SpriteFrames_w0g3d")
-animation = &"idle"
-
-[node name="TargetBox" type="Area2D" parent="." groups=["Players"]]
-position = Vector2(0, 5.465)
-collision_mask = 0
-monitoring = false
-
-[node name="TargetBoxCollider" type="CollisionShape2D" parent="TargetBox"]
-position = Vector2(0, 1.535)
-shape = SubResource("RectangleShape2D_l4g6g")
-debug_color = Color(0.932818, 0.259544, 0, 0.42)

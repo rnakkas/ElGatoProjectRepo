@@ -31,12 +31,13 @@ public partial class PlayerTheCat : CharacterBody2D
 		_hurtboxComponent.HurtStatusCleared += OnHurtStatusCleared; 
 	}
 
-	private void OnHitByAttack(float knockbackVelocity)
+	private void OnHitByAttack(Vector2 knockbackVelocity)
 	{
+		_playerController.KnocbackVelocity = knockbackVelocity;
 		_playerController.SetState(Utility.CharacterState.Hurt);
 	}
 
-	private void OnHurtStatusCleared(bool hurtStatus)
+	private void OnHurtStatusCleared()
 	{
 		_playerController.SetState(Utility.CharacterState.Idle);
 	}

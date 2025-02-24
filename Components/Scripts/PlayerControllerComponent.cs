@@ -21,6 +21,7 @@ public partial class PlayerControllerComponent : Node
 	private bool _isDashing, _onDashCooldown;
 	private Vector2 _velocity, _direction = Vector2.Zero;
 	public Utility.CharacterState CurrentState;
+	public Vector2 KnocbackVelocity;
 
 	public override void _Ready()
 	{
@@ -109,7 +110,7 @@ public partial class PlayerControllerComponent : Node
 				_sprite.Play(Utility.Instance.EntityFallAnimation);
 				break;
 			case Utility.CharacterState.Hurt:
-				_velocity = _playerCharacter.Velocity;
+				_velocity = KnocbackVelocity;
 				_sprite.Play(Utility.Instance.EntityHurtAnimation);
 				break;
 			case Utility.CharacterState.WallSlide:
@@ -220,6 +221,10 @@ public partial class PlayerControllerComponent : Node
 				
 				break;
 			case Utility.CharacterState.Hurt:
+				if (!_playerCharacter.IsOnFloor())
+				{
+					_velocity.Y += _velocityComponent.FallVelocity(delta);
+				}
 				break;
 			case Utility.CharacterState.WallSlide:
 				_velocity = _velocityComponent.WallSlidingVelocity(delta, _velocity);

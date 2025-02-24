@@ -13,9 +13,9 @@ public partial class VelocityComponent : Node
 {
 	[Export] public CharacterVelocityProperties CharacterVelocityProperties { get; set; }
 	
-	public float KnockbackFromAttack(Vector2 attackPosition, float knockback)
+	public Vector2 KnockbackFromAttack(Vector2 attackPosition, float knockback)
 	{
-		return knockback * -attackPosition.X;
+		return new Vector2(knockback * -attackPosition.X, -knockback * CharacterVelocityProperties.KnockbackMultiplier);
 	}
 
 	public float JumpOnJumpPad(float jumpMultiplier)

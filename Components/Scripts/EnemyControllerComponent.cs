@@ -52,14 +52,14 @@ public partial class EnemyControllerComponent : Node
     }
     
     // Getting hit by attacks
-    private void OnHitByAttack(float knockbackVelocity)
+    private void OnHitByAttack(Vector2 knockbackVelocity)
     {
     	_hurtStatus = true;
     }
     
-    private void OnHurtStatusCleared(bool hurtStatus)
+    private void OnHurtStatusCleared()
     {
-    	_hurtStatus = hurtStatus;
+    	_hurtStatus = false;
     }
 
     // Dying
