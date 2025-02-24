@@ -7,65 +7,73 @@ using Vector2 = Godot.Vector2;
 
 namespace ElGatoProject.Components.Scripts;
 
-// This component sets velocity for entities
+// This component sets and holds velocity for entities
 [GlobalClass]
 public partial class VelocityComponent : Node
 {
 	[Export] public CharacterVelocityProperties CharacterVelocityProperties { get; set; }
+
+	public Vector2 EntityVelocity = Vector2.Zero;
 	
-	public Vector2 KnockbackFromAttack(Vector2 attackPosition, float knockback)
+	public void KnockbackFromAttack(Vector2 attackPosition, float knockback)
 	{
-		return new Vector2(knockback * -attackPosition.X, -knockback * CharacterVelocityProperties.KnockbackMultiplier);
+		EntityVelocity = new Vector2(
+			knockback * -attackPosition.X,
+			-knockback * CharacterVelocityProperties.KnockbackMultiplier
+			);
 	}
 
-	public float JumpOnJumpPad(float jumpMultiplier)
+	public void JumpOnJumpPad(float jumpMultiplier)
 	{
-		return jumpMultiplier * CharacterVelocityProperties.JumpVelocity;
+		EntityVelocity.Y = jumpMultiplier * CharacterVelocityProperties.JumpVelocity;
 	}
 
-	public float AccelerateToMaxVelocity(float delta, Vector2 direction, Vector2 currentVelocity)
+	public void AccelerateToMaxVelocity(float delta, Vector2 direction)
 	{
-		return Mathf.MoveToward(currentVelocity.X, direction.X * CharacterVelocityProperties.MaxSpeed, CharacterVelocityProperties.Acceleration * delta);
+		EntityVelocity.X = Mathf.MoveToward(
+			EntityVelocity.X,
+			direction.X * CharacterVelocityProperties.MaxSpeed,
+			CharacterVelocityProperties.Acceleration * delta
+		);
 	}
 
-	public float DecelerateToZeroVelocity(float delta, Vector2 currentVelocity)
+	public void DecelerateToZeroVelocity(float delta)
 	{
-		return Mathf.MoveToward(currentVelocity.X, 0, CharacterVelocityProperties.Friction * delta);
+		EntityVelocity.X = Mathf.MoveToward(EntityVelocity.X, 0, CharacterVelocityProperties.Friction * delta);
 	}
 
-	public float JumpeVelocity()
+	public void JumpeVelocity()
 	{
-		return CharacterVelocityProperties.JumpVelocity;
+		EntityVelocity.Y = CharacterVelocityProperties.JumpVelocity;
 		
 	}
 
-	public float FallVelocity(float delta)
+	public void FallVelocity(float delta)
 	{
-		return CharacterVelocityProperties.Gravity * delta;
+		EntityVelocity.Y += CharacterVelocityProperties.Gravity * delta;
 	}
 
-	public Vector2 WallSlidingVelocity(float delta, Vector2 currentVelocity)
+	public void WallSlidingVelocity(float delta)
 	{
-		
-		return new Vector2(
-			currentVelocity.X, 
+		EntityVelocity = new Vector2(
+			EntityVelocity.X, 
 			Mathf.MoveToward(
-				currentVelocity.Y, 
+				EntityVelocity.Y, 
 				CharacterVelocityProperties.WallSlideVelocity, 
 				CharacterVelocityProperties.WallSlideGravity * delta)
 			);
 	}
 
-	public Vector2 WallJumpingVelocity(Vector2 direction)
+	public void WallJumpingVelocity(Vector2 direction)
 	{
-		return new Vector2(
+		EntityVelocity = new Vector2(
 			direction.X * CharacterVelocityProperties.MaxSpeed,
 			CharacterVelocityProperties.WallJumpVelocity
 		);
 	}
 
-	public Vector2 DashVelocity(Vector2 direction)
+	public void DashVelocity(Vector2 direction)
 	{
-		return new Vector2(CharacterVelocityProperties.DashSpeed * direction.X, 0);
+		EntityVelocity = new Vector2(CharacterVelocityProperties.DashSpeed * direction.X, 0);
 	}
 }

@@ -19,7 +19,7 @@ public partial class PlayerControllerComponent : Node
 	[Export] private Timer _dashTimer;
 
 	private bool _isDashing, _onDashCooldown;
-	private Vector2 _velocity, _direction = Vector2.Zero;
+	private Vector2 _direction = Vector2.Zero;
 	public Utility.CharacterState CurrentState;
 	public Vector2 KnocbackVelocity;
 
@@ -39,7 +39,7 @@ public partial class PlayerControllerComponent : Node
 	{
 		if (area.IsInGroup("JumpPads"))
 		{
-			_velocity.Y = _velocityComponent.JumpOnJumpPad((float)area.Get("JumpMultiplier"));
+			_velocityComponent.JumpOnJumpPad((float)area.Get("JumpMultiplier"));
 		}
 	}
 
@@ -79,14 +79,13 @@ public partial class PlayerControllerComponent : Node
 			case Utility.CharacterState.Fall:
 				break;
 			case Utility.CharacterState.Hurt:
-				_velocity = Vector2.Zero;
 				break;
 			case Utility.CharacterState.WallSlide:
 				break;
 			case Utility.CharacterState.WallJump:
 				break;
 			case Utility.CharacterState.Dash:
-				_velocity = Vector2.Zero;
+				_velocityComponent.EntityVelocity = Vector2.Zero;
 				break;
 		}
 	}
@@ -96,39 +95,38 @@ public partial class PlayerControllerComponent : Node
 		switch (CurrentState)
 		{
 			case Utility.CharacterState.Idle:
-				_velocity.Y = 0;
+				_velocityComponent.EntityVelocity.Y = 0;
 				_sprite.Play(Utility.Instance.EntityIdleAnimation);
 				break;
 			case Utility.CharacterState.Run:
 				_sprite.Play(Utility.Instance.EntityRunAnimation);
 				break;
 			case Utility.CharacterState.Jump:
-				_velocity.Y = _velocityComponent.JumpeVelocity();
+				_velocityComponent.JumpeVelocity();
 				_sprite.Play(Utility.Instance.EntityJumpAnimation);
 				break;
 			case Utility.CharacterState.Fall:
 				_sprite.Play(Utility.Instance.EntityFallAnimation);
 				break;
 			case Utility.CharacterState.Hurt:
-				_velocity = KnocbackVelocity;
 				_sprite.Play(Utility.Instance.EntityHurtAnimation);
 				break;
 			case Utility.CharacterState.WallSlide:
 				_sprite.Play(Utility.Instance.EntityWallSlideAnimation);
 				break;
 			case Utility.CharacterState.WallJump:
-				_velocity = _velocityComponent.WallJumpingVelocity(_direction);
+				_velocityComponent.WallJumpingVelocity(_direction);
 				_sprite.Play(Utility.Instance.EntityJumpAnimation);
 				break;
 			case Utility.CharacterState.Dash:
 				GD.Print("Dash");
 				if (!_sprite.IsFlippedH())
 				{
-					_velocity = _velocityComponent.DashVelocity(Vector2.Right);
+					_velocityComponent.DashVelocity(Vector2.Right);
 				}
 				else if (_sprite.IsFlippedH())
 				{
-					_velocity = _velocityComponent.DashVelocity(Vector2.Left);
+					_velocityComponent.DashVelocity(Vector2.Left);
 				}
 
 				_isDashing = true;
@@ -142,7 +140,7 @@ public partial class PlayerControllerComponent : Node
 		}
 	}
 
-	public Vector2 UpdateState(float delta)
+	public void UpdateState(float delta)
 	{
 		_direction = Input.GetVector("move_left", "move_right", "move_up", "move_down");
 
@@ -151,7 +149,7 @@ public partial class PlayerControllerComponent : Node
 		switch (CurrentState)
 		{
 			case Utility.CharacterState.Idle:
-				_velocity.X = _velocityComponent.DecelerateToZeroVelocity(delta, _velocity);
+				_velocityComponent.DecelerateToZeroVelocity(delta);
 				
 				if (_direction != Vector2.Zero) 
 					SetState(Utility.CharacterState.Run);
@@ -165,7 +163,7 @@ public partial class PlayerControllerComponent : Node
 				break;
 			
 			case Utility.CharacterState.Run:
-				_velocity.X = _velocityComponent.AccelerateToMaxVelocity(delta, _direction, _velocity);
+				_velocityComponent.AccelerateToMaxVelocity(delta, _direction);
 				
 				if (_direction == Vector2.Zero)
 					SetState(Utility.CharacterState.Idle);
@@ -179,13 +177,13 @@ public partial class PlayerControllerComponent : Node
 				break;
 			
 			case Utility.CharacterState.Jump:
-				_velocity.X = _velocityComponent.AccelerateToMaxVelocity(delta, _direction, _velocity);
+				_velocityComponent.AccelerateToMaxVelocity(delta, _direction);
 
 				if (!_playerCharacter.IsOnFloor() || _playerCharacter.IsOnCeiling())
 				{
-					_velocity.Y += _velocityComponent.FallVelocity(delta);
+					_velocityComponent.FallVelocity(delta);
 
-					if (_velocity.Y > 0)
+					if (_velocityComponent.EntityVelocity.Y > 0)
 					{
 						SetState(Utility.CharacterState.Fall);
 					}
@@ -203,8 +201,8 @@ public partial class PlayerControllerComponent : Node
 				break;
 			
 			case Utility.CharacterState.Fall:
-				_velocity.X = _velocityComponent.AccelerateToMaxVelocity(delta, _direction, _velocity);
-				_velocity.Y += _velocityComponent.FallVelocity(delta);
+				_velocityComponent.AccelerateToMaxVelocity(delta, _direction);
+				_velocityComponent.FallVelocity(delta);
 				
 				if (_playerCharacter.IsOnFloor())
 					SetState(Utility.CharacterState.Idle);
@@ -223,11 +221,11 @@ public partial class PlayerControllerComponent : Node
 			case Utility.CharacterState.Hurt:
 				if (!_playerCharacter.IsOnFloor())
 				{
-					_velocity.Y += _velocityComponent.FallVelocity(delta);
+					_velocityComponent.FallVelocity(delta);
 				}
 				break;
 			case Utility.CharacterState.WallSlide:
-				_velocity = _velocityComponent.WallSlidingVelocity(delta, _velocity);
+				_velocityComponent.WallSlidingVelocity(delta);
 
 				if (_playerCharacter.IsOnFloor())
 				{
@@ -264,9 +262,9 @@ public partial class PlayerControllerComponent : Node
 			case Utility.CharacterState.WallJump:
 				if (!_playerCharacter.IsOnFloor())
 				{
-					_velocity.Y += _velocityComponent.FallVelocity(delta);
+					_velocityComponent.FallVelocity(delta);
 
-					if (_velocity.Y > 0)
+					if (_velocityComponent.EntityVelocity.Y > 0)
 					{
 						SetState(Utility.CharacterState.Fall);
 					}
@@ -281,8 +279,6 @@ public partial class PlayerControllerComponent : Node
 				
 				break;
 		}
-		
-		return _velocity;
 	}
 
 	private void FlipSprite(Vector2 direction)

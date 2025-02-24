@@ -10,6 +10,7 @@ public partial class PlayerTheCat : CharacterBody2D
 	[Export] private PlayerControllerComponent _playerController;
 	[Export] private HealthComponent _healthComponent;
 	[Export] private HurtboxComponent _hurtboxComponent;
+	[Export]private VelocityComponent _velocityComponent;
 
 	[Export] private Label _debugHealthLabel;
 
@@ -31,9 +32,8 @@ public partial class PlayerTheCat : CharacterBody2D
 		_hurtboxComponent.HurtStatusCleared += OnHurtStatusCleared; 
 	}
 
-	private void OnHitByAttack(Vector2 knockbackVelocity)
+	private void OnHitByAttack()
 	{
-		_playerController.KnocbackVelocity = knockbackVelocity;
 		_playerController.SetState(Utility.CharacterState.Hurt);
 	}
 
@@ -44,7 +44,8 @@ public partial class PlayerTheCat : CharacterBody2D
 	
 	public override void _PhysicsProcess(double delta)
 	{
-		_velocity = _playerController.UpdateState((float)delta);
+		_playerController.UpdateState((float)delta);
+		_velocity = _velocityComponent.EntityVelocity;
 		Velocity = _velocity;
 		
 		MoveAndSlide();

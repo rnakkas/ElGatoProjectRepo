@@ -391,12 +391,13 @@ animations = [{
 "speed": 10.0
 }]
 
-[node name="PlayerTheCat" type="CharacterBody2D" node_paths=PackedStringArray("_playerController", "_healthComponent", "_hurtboxComponent", "_debugHealthLabel") groups=["Players"]]
+[node name="PlayerTheCat" type="CharacterBody2D" node_paths=PackedStringArray("_playerController", "_healthComponent", "_hurtboxComponent", "_velocityComponent", "_debugHealthLabel") groups=["Players"]]
 collision_mask = 6
 script = ExtResource("1_ngcol")
 _playerController = NodePath("PlayerControllerComponent")
 _healthComponent = NodePath("HealthComponent")
 _hurtboxComponent = NodePath("HurtboxComponent")
+_velocityComponent = NodePath("VelocityComponent")
 _debugHealthLabel = NodePath("HealthLabel")
 
 [node name="LeftWallDetect" type="RayCast2D" parent="."]

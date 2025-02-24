@@ -12,7 +12,7 @@ public partial class HurtboxComponent : Area2D
 	[Export] private VelocityComponent _velocityComponent;
 	
 	[Signal]
-	public delegate void GotHitEventHandler(Vector2 knockbackVelocity);
+	public delegate void GotHitEventHandler();
 	[Signal]
 	public delegate void HurtStatusClearedEventHandler();
 	
@@ -29,31 +29,30 @@ public partial class HurtboxComponent : Area2D
 	// Called by the attacking area, for example attacking bullet calls this method to pass the attack data
 	public void HitByAttack(Area2D attackArea, int attackDamage, float knockback)
 	{
-		Vector2 knockbackVelocity;
-		
 		_hurtStaggerTimer.Start();
 		
-		Vector2 attackPosition = (attackArea.GlobalPosition - GlobalPosition).Normalized();
+		var attackPosition = (attackArea.GlobalPosition - GlobalPosition).Normalized();
 		
 		_healthComponent?.TakeDamage(attackDamage);
 		
 		if (_velocityComponent == null)
 			return;
-		knockbackVelocity = _velocityComponent.KnockbackFromAttack(attackPosition, knockback);
+		_velocityComponent.KnockbackFromAttack(attackPosition, knockback);
 		
-		if (_bodySprite != null)
+		if (_bodySprite == null)
+			return;
+		
+		switch (attackPosition.X)
 		{
-			if (attackPosition.X < 0)
-			{
+			case < 0:
 				_bodySprite.FlipH = true;
-			}
-			else if (attackPosition.X > 0)
-			{
+				break;
+			case > 0:
 				_bodySprite.FlipH = false;
-			}
+				break;
 		}
 		
-		EmitSignal(SignalName.GotHit, knockbackVelocity);
+		EmitSignal(SignalName.GotHit);
 	}
 
 
