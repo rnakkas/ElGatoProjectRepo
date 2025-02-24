@@ -11,7 +11,7 @@ public partial class HealthComponent : Node
 	
 	[Signal]
 	public delegate void HealthDepletedEventHandler();
-	
+
 	public void TakeDamage(int damage)
 	{
 		CurrentHealth -= damage;
@@ -27,6 +27,7 @@ public partial class HealthComponent : Node
 		if (CurrentHealth >= MaxHealth)
 			return false;
 		CurrentHealth = Mathf.Min(CurrentHealth + heal, MaxHealth);
+		
 		return true;
 	}
 }

@@ -395,23 +395,26 @@ animations = [{
 "speed": 10.0
 }]
 
-[node name="player_elgato" type="CharacterBody2D" node_paths=PackedStringArray("_playerController", "_velocityComponent") groups=["Players"]]
+[node name="player_elgato" type="CharacterBody2D" node_paths=PackedStringArray("_playerController", "_velocityComponent", "_hurtbox", "_pickupsBox", "_weapon", "_healthComponent", "_debugHealthLabel", "_debugScoreLabel") groups=["Players"]]
 z_index = 1
 collision_mask = 6
+slide_on_ceiling = false
 safe_margin = 2.5
 script = ExtResource("1_q6xoq")
 _playerController = NodePath("PlayerControllerComponent")
 _velocityComponent = NodePath("VelocityComponent")
+_hurtbox = NodePath("HurtboxComponent")
+_pickupsBox = NodePath("PickupsComponent")
+_weapon = NodePath("Weapon_ElGato")
+_healthComponent = NodePath("HealthComponent")
+_debugHealthLabel = NodePath("HealthLabel")
+_debugScoreLabel = NodePath("ScoreLabel")
 
-[node name="PlayerControllerComponent" type="Node" parent="." node_paths=PackedStringArray("_playerCharacter", "_health", "_hurtbox", "_velocityComponent", "_animation", "_pickupsBox", "_sprite", "_leftWallDetect", "_rightWallDetect", "_miscBox", "_weapon", "_dashCooldownTimer", "_dashTimer", "_debugHealthLabel", "_debugScoreLabel")]
+[node name="PlayerControllerComponent" type="Node" parent="." node_paths=PackedStringArray("_playerCharacter", "_sprite", "_velocityComponent", "_leftWallDetect", "_rightWallDetect", "_miscBox", "_weapon", "_dashCooldownTimer", "_dashTimer", "_debugHealthLabel", "_debugScoreLabel")]
 script = ExtResource("2_40482")
 _playerCharacter = NodePath("..")
-_health = NodePath("../HealthComponent")
-_hurtbox = NodePath("../HurtboxComponent")
-_velocityComponent = NodePath("../VelocityComponent")
-_animation = NodePath("../AnimationComponent")
-_pickupsBox = NodePath("../PickupsComponent")
 _sprite = NodePath("../sprite")
+_velocityComponent = NodePath("../VelocityComponent")
 _leftWallDetect = NodePath("../LeftWallDetect")
 _rightWallDetect = NodePath("../RightWallDetect")
 _miscBox = NodePath("../MiscBox")
@@ -509,9 +512,11 @@ shape = SubResource("RectangleShape2D_hwqex")
 [node name="sprite" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, 3)
 sprite_frames = SubResource("SpriteFrames_nl62c")
-animation = &"jump"
+animation = &"idle"
 
 [node name="Weapon_ElGato" parent="." node_paths=PackedStringArray("_debugWeaponLabel") instance=ExtResource("5_c0mry")]
+visible = false
+position = Vector2(6, 3)
 _debugWeaponLabel = NodePath("../WeaponAmmoLabel")
 
 [node name="HealthLabel" type="Label" parent="."]
@@ -537,7 +542,3 @@ offset_right = 31.0
 offset_bottom = -33.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 9
-
-[node name="WeaponAttachmentPoint" type="Marker2D" parent="."]
-modulate = Color(0.297785, 0.359474, 1, 1)
-position = Vector2(0, 6)

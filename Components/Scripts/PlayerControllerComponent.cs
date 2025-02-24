@@ -11,13 +11,15 @@ namespace ElGatoProject.Components.Scripts;
 public partial class PlayerControllerComponent : Node
 {
 	[Export] private CharacterBody2D _playerCharacter;
+	[Export] private AnimatedSprite2D _sprite;
+	
 	[Export] private HealthComponent _health;
 	[Export] private HurtboxComponent _hurtbox;
 	[Export] private VelocityComponent _velocityComponent;
 	[Export] private AnimationComponent _animation;
 	[Export] private PickupsComponent _pickupsBox;
 	
-	[Export] private AnimatedSprite2D _sprite;
+	
 	[Export] private RayCast2D _leftWallDetect;
 	[Export] private RayCast2D _rightWallDetect;
 	[Export] private Area2D _miscBox;
@@ -28,8 +30,10 @@ public partial class PlayerControllerComponent : Node
 	// Debug labels
 	[Export] private Label _debugHealthLabel;
 	[Export] private Label _debugScoreLabel;
+
+	private Vector2 _characterVelocity;
 	
-	public Vector2 Velocity = Vector2.Zero;
+	private Vector2 _velocity = Vector2.Zero;
 	private Vector2 _directionVector = Vector2.Zero;
 	private bool _hurtStatus, _onDashCooldown, _isDashing;
 	public bool IsOnFloor, IsOnCeiling;
@@ -38,20 +42,20 @@ public partial class PlayerControllerComponent : Node
 	public override void _Ready()
 	{
 		ConnectSignals();
-		Velocity = _playerCharacter.Velocity;
+		_velocity = _playerCharacter.Velocity;
 	}
 
 	public void ConnectSignals()
 	{
-		if (_pickupsBox == null)
-			return;
-		_pickupsBox.PickedUpScoreItem += OnScoreItemPickup;
-		_pickupsBox.PickedUpWeaponMod += OnWeaponModPickup;
-		
-		if (_hurtbox == null)
-			return;
-		_hurtbox.GotHit += OnHitByAttack;
-		_hurtbox.HurtStatusCleared += OnHurtStatusCleared; 
+		// if (_pickupsBox == null)
+		// 	return;
+		// _pickupsBox.PickedUpScoreItem += OnScoreItemPickup;
+		// _pickupsBox.PickedUpWeaponMod += OnWeaponModPickup;
+		//
+		// if (_hurtbox == null)
+		// 	return;
+		// _hurtbox.GotHit += OnHitByAttack;
+		// _hurtbox.HurtStatusCleared += OnHurtStatusCleared; 
 		
 		_miscBox.AreaEntered += EnteredJumpPad;
 
@@ -60,36 +64,36 @@ public partial class PlayerControllerComponent : Node
 		_dashTimer.Timeout += OnDashTimerTimeout;
 	}
 	
-	private void OnHitByAttack(bool hurtStatus)
-	{
-		_weapon.HurtStatus = hurtStatus;
-	}
-	
-	private void OnHurtStatusCleared(bool hurtStatus)
-	{
-		_weapon.HurtStatus = hurtStatus;
-	}
+	// private void OnHitByAttack(bool hurtStatus)
+	// {
+	// 	_weapon.HurtStatus = hurtStatus;
+	// }
+	//
+	// private void OnHurtStatusCleared(bool hurtStatus)
+	// {
+	// 	_weapon.HurtStatus = hurtStatus;
+	// }
 	
 	private void EnteredJumpPad(Area2D area)
 	{
 		if (area.IsInGroup("JumpPads"))
 		{
-			Velocity.Y = _velocityComponent.JumpOnJumpPad((float)area.Get("JumpMultiplier"));
+			_velocity.Y = _velocityComponent.JumpOnJumpPad((float)area.Get("JumpMultiplier"));
 		}
 	}
 
-	private void OnScoreItemPickup(int scorePoints)
-	{
-		_score += scorePoints;
-	}
-
-	private void OnWeaponModPickup(string modType)
-	{
-		if (Enum.TryParse(modType, out Utility.WeaponType weaponType))
-		{
-			_weapon.SwitchWeapon(weaponType);
-		}
-	}
+	// private void OnScoreItemPickup(int scorePoints)
+	// {
+	// 	_score += scorePoints;
+	// }
+	//
+	// private void OnWeaponModPickup(string modType)
+	// {
+	// 	if (Enum.TryParse(modType, out Utility.WeaponType weaponType))
+	// 	{
+	// 		_weapon.SwitchWeapon(weaponType);
+	// 	}
+	// }
 
 	private void OnDashCooldownTimerTimeout()
 	{
@@ -114,7 +118,7 @@ public partial class PlayerControllerComponent : Node
 			return;
 
 		_animation.Direction = _directionVector;
-		_animation.Velocity = Velocity;
+		_animation.Velocity = _velocity;
 		_animation.IsOnFloor = IsOnFloor;
 		_animation.IsLeftWallDetected = _leftWallDetect.IsColliding();
 		_animation.IsRightWallDetected = _rightWallDetect.IsColliding();
@@ -147,39 +151,45 @@ public partial class PlayerControllerComponent : Node
 		}
 	}
 
-	// Player controls
-	private void MovementLogic(float delta)
-	{
-		BasicMovements(delta);
-		Dash();
-	}
+	// // Player controls
+	// private void MovementLogic(float delta)
+	// {
+	// 	BasicMovements(delta);
+	// 	Dash();
+	// }
 
 	public void BasicMovements(float delta)
 	{
-		if (Input.IsActionPressed("move_left") && !_isDashing)
+		if (!_playerCharacter.IsOnFloor())
 		{
-			// _directionVector = Vector2.Left;
-			_velocityComponent.AccelerateToMaxVelocity(delta, Vector2.Left);
+			_velocity = _velocityComponent.FallVelocity(delta);
 		}
-		else if (Input.IsActionPressed("move_right") && !_isDashing)
+		else
 		{
-			// _directionVector = Vector2.Right;
-			_velocityComponent.AccelerateToMaxVelocity(delta, Vector2.Right);
+			_velocity = _velocityComponent.OnFloorVelocity();
 		}
-		else if (
-			(!Input.IsActionPressed("move_left") || !Input.IsActionPressed("move_right")) && 
-			!_isDashing
-		)
+
+		if (_playerCharacter.IsOnCeiling())
 		{
-			// _directionVector = Vector2.Zero;
-			_velocityComponent.DecelerateToZeroVelocity(delta);
+			_velocity = _velocityComponent.FallVelocity(delta);
 		}
 		
-		if (Input.IsActionPressed("jump") && !_isDashing)
+		_directionVector = Input.GetVector("move_left", "move_right", "move_up", "move_down");
+		
+		if (_directionVector != Vector2.Zero && !_isDashing)
 		{
-			// _directionVector = Vector2.Up;
-			_velocityComponent.JumpeVelocity();
+			_velocity = _velocityComponent.AccelerateToMaxVelocity(delta, _directionVector);
 		}
+		else if (_directionVector == Vector2.Zero && !_isDashing)
+		{
+			_velocity = _velocityComponent.DecelerateToZeroVelocity(delta);
+		}
+		
+		if (Input.IsActionPressed("jump") && _playerCharacter.IsOnFloor() && !_isDashing)
+		{
+			_velocity = _velocityComponent.JumpeVelocity();
+		}
+		
 	}
 
 	private void Dash()
@@ -203,19 +213,30 @@ public partial class PlayerControllerComponent : Node
 		_dashCooldownTimer.Start();
 	}
 
-	public void PlayerControllerActions(float delta)
+	public override void _PhysicsProcess(double delta)
 	{
-		SetComponentProperties();
-		SetWeaponProperties();
-		MovementLogic(delta);
-
-		// Velocity = _velocityComponent.CalculateVelocity(delta, _directionVector);
-
-		_animation.PlayCharacterAnimations();
-
-		_debugHealthLabel.SetText("HP: " + _health.CurrentHealth);
-		_debugScoreLabel.SetText("Score: " + _score);
+		_velocity = _playerCharacter.Velocity;
+		BasicMovements((float)delta);
+		
+		_playerCharacter.Velocity = _velocity;
+		
+		_playerCharacter.MoveAndSlide();
 	}
+
+
+	// public void PlayerControllerActions(float delta)
+	// {
+	// 	SetComponentProperties();
+	// 	SetWeaponProperties();
+	// 	MovementLogic(delta);
+	//
+	// 	// Velocity = _velocityComponent.CalculateVelocity(delta, _directionVector);
+	//
+	// 	_animation.PlayCharacterAnimations();
+	//
+	// 	_debugHealthLabel.SetText("HP: " + _health.CurrentHealth);
+	// 	_debugScoreLabel.SetText("Score: " + _score);
+	// }
 	
 	
 }

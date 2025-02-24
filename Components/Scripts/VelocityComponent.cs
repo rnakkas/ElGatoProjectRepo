@@ -68,7 +68,6 @@ public partial class VelocityComponent : Node
 	public Vector2 DecelerateToZeroVelocity(float delta)
 	{
 		Velocity.X = Mathf.MoveToward(Velocity.X, 0, CharacterVelocityProperties.Friction * delta);
-		Velocity.Y = 0;
 		
 		return Velocity;
 	}
@@ -114,7 +113,7 @@ public partial class VelocityComponent : Node
 
 	public Vector2 OnFloorVelocity()
 	{
-		Velocity = Vector2.Zero;
+		Velocity.Y = 0;
 		return Velocity;
 	}
 	
