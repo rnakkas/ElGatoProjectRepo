@@ -13,108 +13,120 @@ public partial class VelocityComponent : Node
 {
 	[Export] public CharacterVelocityProperties CharacterVelocityProperties { get; set; }
 	
-	
-	// [Export] public float MaxSpeed { get; set; }
-	// [Export] public float DashSpeed { get; set; }
-	// [Export] public float Acceleration { get; set; }
-	// [Export] public float Friction { get; set; }
-	// [Export] public float JumpVelocity{ get; set; }
-	// [Export] public float Gravity { get; set; }
-	// [Export] public float WallSlideGravity { get; set; }
-	// [Export] public float WallJumpVelocity { get; set; }
-	// [Export] public float WallSlideVelocity { get; set; }
-	// [Export] public bool IsOnFloor { get; set; }
-	// [Export] public bool IsOnCeiling { get; set; }
-	// [Export] public bool IsLeftWallDetected {get; set;}
-	// [Export] public bool IsRightWallDetected {get; set;}
-
-	public Vector2 Velocity;
+	// private Vector2 _velocity;
 	// public bool IsDashing;
 	
 	public float KnockbackFromAttack(Vector2 attackPosition, float knockback, Vector2 attackVelocity)
 	{
-		if (attackVelocity != Vector2.Zero)
-		{
-			Velocity.X = knockback * attackVelocity.X;	
-		} 
-		else if (attackVelocity == Vector2.Zero && attackPosition.X < 0)
-		{
-			Velocity.X = knockback;
-		}
-		else if (attackVelocity == Vector2.Zero && attackPosition.X > 0)
-		{
-			Velocity.X = -knockback;
-		}
+		return knockback * -attackPosition.X;
 
-		return Velocity.X;
+		// if (attackVelocity != Vector2.Zero)
+		// {
+		// 	_velocity.X = knockback * -attackPosition.X;	
+		// } 
+		//
+		// // return _velocity.X;
 	}
 
 	public float JumpOnJumpPad(float jumpMultiplier)
 	{
-		Velocity.Y = jumpMultiplier * CharacterVelocityProperties.JumpVelocity;
-		return Velocity.Y;
-	}
-
-	public Vector2 AccelerateToMaxVelocity(float delta, Vector2 direction)
-	{
-		Velocity.X = Mathf.MoveToward(
-			Velocity.X, 
-			direction.X * CharacterVelocityProperties.MaxSpeed, 
-			CharacterVelocityProperties.Acceleration * delta);
+		return jumpMultiplier * CharacterVelocityProperties.JumpVelocity;
 		
-		return Velocity;
+		// _velocity.Y = jumpMultiplier * CharacterVelocityProperties.JumpVelocity;
+		// return _velocity.Y;
 	}
 
-	public Vector2 DecelerateToZeroVelocity(float delta)
+	public float AccelerateToMaxVelocity(float delta, Vector2 direction, Vector2 currentVelocity)
 	{
-		Velocity.X = Mathf.MoveToward(Velocity.X, 0, CharacterVelocityProperties.Friction * delta);
+		return Mathf.MoveToward(currentVelocity.X, direction.X * CharacterVelocityProperties.MaxSpeed, CharacterVelocityProperties.Acceleration * delta);
 		
-		return Velocity;
+		// _velocity.X = Mathf.MoveToward(
+		// 	_velocity.X, 
+		// 	direction.X * CharacterVelocityProperties.MaxSpeed, 
+		// 	CharacterVelocityProperties.Acceleration * delta);
+		//
+		// return _velocity;
 	}
 
-	public Vector2 JumpeVelocity()
+	public float DecelerateToZeroVelocity(float delta, Vector2 currentVelocity)
 	{
-		Velocity.Y = CharacterVelocityProperties.JumpVelocity;
-		return Velocity;
-	}
-
-	public Vector2 FallVelocity(float delta)
-	{
-		Velocity.Y += CharacterVelocityProperties.Gravity * delta;
-		return Velocity;
-	}
-
-	public Vector2 WallSlidingVelocity(float delta)
-	{
-		Velocity.X = 0;
-		Velocity.Y = Mathf.MoveToward(
-			Velocity.Y, 
-			CharacterVelocityProperties.WallSlideVelocity, 
-			CharacterVelocityProperties.WallSlideGravity * delta);
+		return Mathf.MoveToward(currentVelocity.X, 0, CharacterVelocityProperties.Friction * delta);
 		
-		return Velocity;
+		// _velocity.X = Mathf.MoveToward(_velocity.X, 0, CharacterVelocityProperties.Friction * delta);
+		//
+		// return _velocity;
 	}
 
-	public Vector2 WallJumpingVelocity(float delta, Vector2 direction)
+	public float JumpeVelocity()
 	{
-		Velocity.Y = CharacterVelocityProperties.WallJumpVelocity;
-		Velocity.X = direction.X * CharacterVelocityProperties.MaxSpeed;
+		return CharacterVelocityProperties.JumpVelocity;
 		
-		return Velocity;
+		// _velocity.Y = CharacterVelocityProperties.JumpVelocity;
+		// return _velocity;
+	}
+
+	public float FallVelocity(float delta)
+	{
+		return CharacterVelocityProperties.Gravity * delta;
+		
+		// _velocity.Y += CharacterVelocityProperties.Gravity * delta;
+		// return _velocity;
+	}
+
+	public float WallSlidingVelocity(float delta)
+	{
+		
+		return CharacterVelocityProperties.Gravity * delta;
+		
+		//
+		// return new Vector2(
+		// 	0, 
+		// 	Mathf.MoveToward(
+		// 		currentVelocity.Y, 
+		// 		CharacterVelocityProperties.WallSlideVelocity, 
+		// 		CharacterVelocityProperties.WallSlideGravity * delta)
+		// 	);
+
+		// _velocity.X = 0;
+		// _velocity.Y = Mathf.MoveToward(
+		// 	_velocity.Y, 
+		// 	CharacterVelocityProperties.WallSlideVelocity, 
+		// 	CharacterVelocityProperties.WallSlideGravity * delta);
+		//
+		// return _velocity;
+	}
+
+	public Vector2 WallJumpingVelocity(Vector2 direction)
+	{
+		return new Vector2(
+			direction.X * CharacterVelocityProperties.MaxSpeed,
+			CharacterVelocityProperties.WallJumpVelocity
+		);
+
+		//
+		// _velocity.Y = CharacterVelocityProperties.WallJumpVelocity;
+		// _velocity.X = direction.X * CharacterVelocityProperties.MaxSpeed;
+		//
+		// return _velocity;
 	}
 
 	public Vector2 DashVelocity(Vector2 direction)
 	{
-		Velocity = Vector2.Zero;
-		Velocity.X = CharacterVelocityProperties.DashSpeed * direction.X;
-		
-		return Velocity;
+		return new Vector2(CharacterVelocityProperties.DashSpeed * direction.X, 0);
+
+		//
+		// _velocity = Vector2.Zero;
+		// _velocity.X = CharacterVelocityProperties.DashSpeed * direction.X;
+		//
+		// return _velocity;
 	}
 
-	public Vector2 OnFloorVelocity()
+	public float OnFloorVelocity()
 	{
-		Velocity.Y = 0;
-		return Velocity;
+		return 0;
+		
+		// _velocity.Y = 0;
+		// return _velocity;
 	}
 	
 	

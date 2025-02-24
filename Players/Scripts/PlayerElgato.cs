@@ -9,7 +9,6 @@ public partial class PlayerElgato : CharacterBody2D
 {
 	// Components
 	[Export] private PlayerControllerComponent _playerController;
-	[Export] private VelocityComponent _velocityComponent;
 	[Export] private HurtboxComponent _hurtbox;
 	[Export] private PickupsComponent _pickupsBox;
 	[Export] private WeaponElgato _weapon;
@@ -58,16 +57,16 @@ public partial class PlayerElgato : CharacterBody2D
 		}
 	}
 	
-	private void OnHitByAttack(bool hurtStatus)
+	private void OnHitByAttack(bool hurtStatus, Vector2 attackPosition)
 	{
 		_weapon.HurtStatus = hurtStatus;
-		_playerController.HurtStatus = hurtStatus;
+		// _playerController.HurtStatus = hurtStatus;
 	}
 	
 	private void OnHurtStatusCleared(bool hurtStatus)
 	{
 		_weapon.HurtStatus = hurtStatus;
-		_playerController.HurtStatus = hurtStatus;
+		// _playerController.HurtStatus = hurtStatus;
 	}
 	
 	public override void _PhysicsProcess(double delta)

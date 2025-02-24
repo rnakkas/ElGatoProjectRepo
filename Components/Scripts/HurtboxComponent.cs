@@ -8,16 +8,14 @@ public partial class HurtboxComponent : Area2D
 {
 	[Export] private Timer _hurtStaggerTimer;
 	[Export] private HealthComponent _healthComponent;
-	[Export] private VelocityComponent _velocityComponent;
 	[Export] private AnimatedSprite2D _bodySprite;
 	
 	[Signal]
-	public delegate void GotHitEventHandler(bool hurtStatus);
+	public delegate void GotHitEventHandler(bool hurtStatus, Vector2 attackPosition);
 	[Signal]
 	public delegate void HurtStatusClearedEventHandler(bool hurtStatus);
 
 	public bool HurtStatus;
-	
 	
 	public override void _Ready()
 	{
@@ -41,8 +39,6 @@ public partial class HurtboxComponent : Area2D
 		
 		_healthComponent?.TakeDamage(attackDamage);
 		
-		_velocityComponent?.KnockbackFromAttack(attackPosition, knockback, attackVelocity);
-		
 		_bodySprite?.Play("hurt");
 		if (_bodySprite != null)
 		{
@@ -56,7 +52,7 @@ public partial class HurtboxComponent : Area2D
 			}
 		}
 		
-		EmitSignal(SignalName.GotHit, HurtStatus);
+		EmitSignal(SignalName.GotHit, HurtStatus, attackPosition);
 	}
 
 

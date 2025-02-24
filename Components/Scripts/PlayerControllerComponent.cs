@@ -19,12 +19,8 @@ public partial class PlayerControllerComponent : Node
 	[Export] private Timer _dashCooldownTimer;
 	[Export] private Timer _dashTimer;
 
-	public bool HurtStatus;
-	
-	private Vector2 _velocity = Vector2.Zero;
-	private Vector2 _directionVector = Vector2.Zero;
-	
-	private bool _onDashCooldown, _isDashing;
+	private bool _isDashing,_onDashCooldown, _hurtStatus, _wallSlideStatus;
+	private Vector2 _velocity, _direction = Vector2.Zero;
 
 	public override void _Ready()
 	{
@@ -33,7 +29,7 @@ public partial class PlayerControllerComponent : Node
 
 	public void ConnectSignals()
 	{
-		_miscBox.AreaEntered += EnteredJumpPad;
+		// _miscBox.AreaEntered += EnteredJumpPad;
 
 		_dashCooldownTimer.Timeout += OnDashCooldownTimerTimeout;
 		
@@ -56,47 +52,51 @@ public partial class PlayerControllerComponent : Node
 	private void OnDashTimerTimeout()
 	{
 		_isDashing = false;
-		_playerCharacter.Velocity = Vector2.Zero;
+		_velocity = Vector2.Zero;
 	}
-
-	public void BasicMovements(float delta)
+	
+	public Vector2 BasicMovements(float delta)
 	{
-		if (!_playerCharacter.IsOnFloor() && !_isDashing)
+		if (!_playerCharacter.IsOnFloor() && !_isDashing && !_wallSlideStatus)
 		{
-			_velocity = _velocityComponent.FallVelocity(delta);
+			_velocity.Y += _velocityComponent.FallVelocity(delta);
 		}
 		else
 		{
-			_velocity = _velocityComponent.OnFloorVelocity();
+			_velocity.Y = _velocityComponent.OnFloorVelocity();
 		}
 
-		if (_playerCharacter.IsOnCeiling())
+		if (_playerCharacter.IsOnCeiling() && !_isDashing && !_wallSlideStatus)
 		{
-			_velocity = _velocityComponent.FallVelocity(delta);
+			_velocity.Y += _velocityComponent.FallVelocity(delta);
 		}
 		
-		_directionVector = Input.GetVector("move_left", "move_right", "move_up", "move_down");
-		
-		if (_directionVector != Vector2.Zero && !_isDashing && !HurtStatus)
+		_direction = Input.GetVector("move_left", "move_right", "move_up", "move_down");
+
+		if (!_hurtStatus && !_isDashing && !_wallSlideStatus)
 		{
-			_velocity = _velocityComponent.AccelerateToMaxVelocity(delta, _directionVector);
-		}
-		else if (_directionVector == Vector2.Zero && !_isDashing && !HurtStatus)
-		{
-			_velocity = _velocityComponent.DecelerateToZeroVelocity(delta);
+			if (_direction != Vector2.Zero)
+			{
+				_velocity.X = _velocityComponent.AccelerateToMaxVelocity(delta, _direction, _velocity);
+			}
+			else if (_direction == Vector2.Zero)
+			{
+				_velocity.X = _velocityComponent.DecelerateToZeroVelocity(delta, _velocity);
+			}
+		
+			if (Input.IsActionPressed("jump") && _playerCharacter.IsOnFloor() )
+			{
+				_velocity.Y = _velocityComponent.JumpeVelocity();
+			}
 		}
 		
-		if (Input.IsActionPressed("jump") && _playerCharacter.IsOnFloor() && !_isDashing && !HurtStatus)
-		{
-			_velocity = _velocityComponent.JumpeVelocity();
-		}
-		
+		return _velocity;
 	}
 
-	private void Dash()
+	public Vector2 Dash()
 	{
-		if (!Input.IsActionJustPressed("dashDodge") || _onDashCooldown || HurtStatus) 
-			return;
+		if (!Input.IsActionJustPressed("dashDodge") || _onDashCooldown || _hurtStatus) 
+			return _velocity;
 		
 		if (!_sprite.IsFlippedH())
 		{
@@ -108,22 +108,48 @@ public partial class PlayerControllerComponent : Node
 		}
 
 		_isDashing = true;
-		
 		_dashTimer.Start();
 			
 		_onDashCooldown = true;
 		_dashCooldownTimer.Start();
+		
+		return _velocity;
 	}
 
-	public override void _PhysicsProcess(double delta)
+	public Vector2 WallSlideAndWallJump(float delta)
 	{
-		_velocity = _playerCharacter.Velocity;
-		BasicMovements((float)delta);
-		Dash();
+		if (
+			(_leftWallDetect.IsColliding() || _rightWallDetect.IsColliding()) &&
+			!_playerCharacter.IsOnFloor()
+		)
+		{
+			_wallSlideStatus = true;
+			
+			_velocity.Y += _velocityComponent.WallSlidingVelocity(delta);
+			
+			
+
+			if (_leftWallDetect.IsColliding() && Input.IsActionJustPressed("jump"))
+			{
+				_sprite.FlipH = false;
+				_direction = new Vector2(1.0f, 0);
+				_velocity = _velocityComponent.WallJumpingVelocity(_direction);
+			}
+			else if (_rightWallDetect.IsColliding() && Input.IsActionJustPressed("jump"))
+			{
+				_sprite.FlipH = true;
+				_direction = new Vector2(-1.0f, 0);
+				_velocity = _velocityComponent.WallJumpingVelocity(_direction);
+			}
+			
+		}
+		else
+		{
+			_wallSlideStatus = false;
+		}
 		
-		_playerCharacter.Velocity = _velocity;
-		
-		_playerCharacter.MoveAndSlide();
+		return _velocity;
 	}
+
 	
 }
