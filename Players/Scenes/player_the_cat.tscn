@@ -408,7 +408,7 @@ _dashCooldownTimer = NodePath("dashCooldownTimer")
 _dashTimer = NodePath("dashTimer")
 
 [node name="dashCooldownTimer" type="Timer" parent="PlayerControllerComponent"]
-wait_time = 0.9
+wait_time = 0.7
 one_shot = true
 
 [node name="dashTimer" type="Timer" parent="PlayerControllerComponent"]

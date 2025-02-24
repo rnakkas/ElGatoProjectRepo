@@ -21,9 +21,7 @@ public partial class PlayerTheCat : CharacterBody2D
 	
 	public override void _PhysicsProcess(double delta)
 	{
-		_velocity = _playerController.BasicMovements((float)delta);
-		_velocity = _playerController.Dash();
-		_velocity = _playerController.WallSlideAndWallJump((float)delta);
+		_velocity = _playerController.UpdateState((float)delta);
 		Velocity = _velocity;
 		
 		MoveAndSlide();

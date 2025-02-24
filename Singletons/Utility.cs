@@ -39,6 +39,20 @@ public partial class Utility : Node
         Enemy
     }
 
+    public enum CharacterState
+    {
+        Idle,
+        Run,
+        Jump,
+        Fall,
+        Hurt,
+        Death,
+        WallSlide,
+        WallJump,
+        Dash,
+        Shoot
+    }
+
     // Character animation string names
     public string EntityIdleAnimation = "idle";
     public string EntityRunAnimation = "run";

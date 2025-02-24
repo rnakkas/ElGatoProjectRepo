@@ -21,6 +21,7 @@ public partial class PlayerControllerComponent : Node
 
 	private bool _isDashing,_onDashCooldown, _hurtStatus, _wallSlideStatus;
 	private Vector2 _velocity, _direction = Vector2.Zero;
+	private Utility.CharacterState _currentState;
 
 	public override void _Ready()
 	{
@@ -47,6 +48,7 @@ public partial class PlayerControllerComponent : Node
 	private void OnDashCooldownTimerTimeout()
 	{
 		_onDashCooldown = false;
+		GD.Print("dash ready");
 	}
 
 	private void OnDashTimerTimeout()
@@ -55,100 +57,239 @@ public partial class PlayerControllerComponent : Node
 		_velocity = Vector2.Zero;
 	}
 	
-	public Vector2 BasicMovements(float delta)
-	{
-		if (!_playerCharacter.IsOnFloor() && !_isDashing && !_wallSlideStatus)
-		{
-			_velocity.Y += _velocityComponent.FallVelocity(delta);
-		}
-		else
-		{
-			_velocity.Y = _velocityComponent.OnFloorVelocity();
-		}
+	// State machine
 
-		if (_playerCharacter.IsOnCeiling() && !_isDashing && !_wallSlideStatus)
+	public void SetState(Utility.CharacterState newState)
+	{
+		if (newState == _currentState)
+			return;
+
+		ExitState();
+		_currentState = newState;
+		EnterState();
+	}
+
+	private void ExitState()
+	{
+		switch (_currentState)
 		{
-			_velocity.Y += _velocityComponent.FallVelocity(delta);
+			case Utility.CharacterState.Idle:
+				break;
+			case Utility.CharacterState.Run:
+				break;
+			case Utility.CharacterState.Jump:
+				break;
+			case Utility.CharacterState.Fall:
+				break;
+			case Utility.CharacterState.Hurt:
+				break;
+			case Utility.CharacterState.WallSlide:
+				break;
+			case Utility.CharacterState.WallJump:
+				break;
+			case Utility.CharacterState.Dash:
+				break;
 		}
-		
+	}
+
+	private void EnterState()
+	{
+		switch (_currentState)
+		{
+			case Utility.CharacterState.Idle:
+				_velocity.Y = 0;
+				_sprite.Play(Utility.Instance.EntityIdleAnimation);
+				break;
+			case Utility.CharacterState.Run:
+				_sprite.Play(Utility.Instance.EntityRunAnimation);
+				break;
+			case Utility.CharacterState.Jump:
+				_velocity.Y = _velocityComponent.JumpeVelocity();
+				_sprite.Play(Utility.Instance.EntityJumpAnimation);
+				break;
+			case Utility.CharacterState.Fall:
+				_sprite.Play(Utility.Instance.EntityFallAnimation);
+				break;
+			case Utility.CharacterState.Hurt:
+				break;
+			case Utility.CharacterState.WallSlide:
+				_sprite.Play(Utility.Instance.EntityWallSlideAnimation);
+				break;
+			case Utility.CharacterState.WallJump:
+				_velocity = _velocityComponent.WallJumpingVelocity(_direction);
+				_sprite.Play(Utility.Instance.EntityJumpAnimation);
+				break;
+			case Utility.CharacterState.Dash:
+				GD.Print("Dash");
+				if (!_sprite.IsFlippedH())
+				{
+					_velocity = _velocityComponent.DashVelocity(Vector2.Right);
+				}
+				else if (_sprite.IsFlippedH())
+				{
+					_velocity = _velocityComponent.DashVelocity(Vector2.Left);
+				}
+
+				_isDashing = true;
+				_dashTimer.Start();
+					
+				_onDashCooldown = true;
+				_dashCooldownTimer.Start();
+				
+				_sprite.Play(Utility.Instance.EntityDashAnimation);
+				break;
+		}
+	}
+
+	public Vector2 UpdateState(float delta)
+	{
 		_direction = Input.GetVector("move_left", "move_right", "move_up", "move_down");
 
-		if (!_hurtStatus && !_isDashing && !_wallSlideStatus)
+		FlipSprite(_direction);
+		
+		switch (_currentState)
 		{
-			if (_direction != Vector2.Zero)
-			{
-				_velocity.X = _velocityComponent.AccelerateToMaxVelocity(delta, _direction, _velocity);
-			}
-			else if (_direction == Vector2.Zero)
-			{
+			case Utility.CharacterState.Idle:
 				_velocity.X = _velocityComponent.DecelerateToZeroVelocity(delta, _velocity);
-			}
-		
-			if (Input.IsActionPressed("jump") && _playerCharacter.IsOnFloor() )
-			{
-				_velocity.Y = _velocityComponent.JumpeVelocity();
-			}
+				
+				if (_direction != Vector2.Zero) 
+					SetState(Utility.CharacterState.Run);
+				else if (!_playerCharacter.IsOnFloor() || _playerCharacter.IsOnCeiling())
+					SetState(Utility.CharacterState.Fall);
+				else if (Input.IsActionPressed("jump") && _playerCharacter.IsOnFloor()) 
+					SetState(Utility.CharacterState.Jump);
+				
+				if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown) 
+					SetState(Utility.CharacterState.Dash);
+				break;
+			
+			case Utility.CharacterState.Run:
+				_velocity.X = _velocityComponent.AccelerateToMaxVelocity(delta, _direction, _velocity);
+				
+				if (_direction == Vector2.Zero)
+					SetState(Utility.CharacterState.Idle);
+				else if (!_playerCharacter.IsOnFloor() || _playerCharacter.IsOnCeiling())
+					SetState(Utility.CharacterState.Fall);
+				else if (Input.IsActionPressed("jump") && _playerCharacter.IsOnFloor())
+					SetState(Utility.CharacterState.Jump); 
+				
+				if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown)
+					SetState(Utility.CharacterState.Dash);
+				break;
+			
+			case Utility.CharacterState.Jump:
+				_velocity.X = _velocityComponent.AccelerateToMaxVelocity(delta, _direction, _velocity);
+
+				if (!_playerCharacter.IsOnFloor() || _playerCharacter.IsOnCeiling())
+				{
+					_velocity.Y += _velocityComponent.FallVelocity(delta);
+
+					if (_velocity.Y > 0)
+					{
+						SetState(Utility.CharacterState.Fall);
+					}
+				}
+				else if (
+					!_playerCharacter.IsOnFloor() &&
+					(_leftWallDetect.IsColliding() || _rightWallDetect.IsColliding())
+				)
+				{
+					SetState(Utility.CharacterState.WallSlide);
+				}
+				
+				if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown)
+					SetState(Utility.CharacterState.Dash);
+				break;
+			
+			case Utility.CharacterState.Fall:
+				_velocity.X = _velocityComponent.AccelerateToMaxVelocity(delta, _direction, _velocity);
+				_velocity.Y += _velocityComponent.FallVelocity(delta);
+				
+				if (_playerCharacter.IsOnFloor())
+					SetState(Utility.CharacterState.Idle);
+				else if (
+					!_playerCharacter.IsOnFloor() &&
+					(_leftWallDetect.IsColliding() || _rightWallDetect.IsColliding())
+				)
+				{
+					SetState(Utility.CharacterState.WallSlide);
+				}
+				
+				if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown)
+					SetState(Utility.CharacterState.Dash);
+				
+				break;
+			case Utility.CharacterState.Hurt:
+				break;
+			case Utility.CharacterState.WallSlide:
+				_velocity = _velocityComponent.WallSlidingVelocity(delta, _velocity);
+
+				if (_playerCharacter.IsOnFloor())
+				{
+					SetState(Utility.CharacterState.Idle);
+
+					if (_direction != Vector2.Zero)
+					{
+						SetState(Utility.CharacterState.Run);
+					}
+				}
+				else if (!_playerCharacter.IsOnFloor())
+				{
+					if (_leftWallDetect.IsColliding())
+					{
+						_sprite.FlipH = false;
+						_direction = Vector2.Right;
+					}
+					else if (_rightWallDetect.IsColliding())
+					{
+						_sprite.FlipH = true;
+						_direction = Vector2.Left;
+					}
+
+					if (Input.IsActionJustPressed("jump"))
+					{
+						SetState(Utility.CharacterState.WallJump);
+					}
+				}
+
+				if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown)
+					SetState(Utility.CharacterState.Dash);
+				
+				break;
+			case Utility.CharacterState.WallJump:
+				if (!_playerCharacter.IsOnFloor())
+				{
+					_velocity.Y += _velocityComponent.FallVelocity(delta);
+
+					if (_velocity.Y > 0)
+					{
+						SetState(Utility.CharacterState.Fall);
+					}
+				}
+				break;
+			
+			case Utility.CharacterState.Dash:
+				if (!_isDashing)
+				{
+					SetState(Utility.CharacterState.Idle);
+				}
+				
+				break;
 		}
 		
 		return _velocity;
 	}
 
-	public Vector2 Dash()
+	private void FlipSprite(Vector2 direction)
 	{
-		if (!Input.IsActionJustPressed("dashDodge") || _onDashCooldown || _hurtStatus) 
-			return _velocity;
-		
-		if (!_sprite.IsFlippedH())
+		if (direction == Vector2.Right)
 		{
-			_velocity = _velocityComponent.DashVelocity(Vector2.Right);
+			_sprite.FlipH = false;
 		}
-		else if (_sprite.IsFlippedH())
+		else if (direction == Vector2.Left)
 		{
-			_velocity = _velocityComponent.DashVelocity(Vector2.Left);
+			_sprite.FlipH = true;
 		}
-
-		_isDashing = true;
-		_dashTimer.Start();
-			
-		_onDashCooldown = true;
-		_dashCooldownTimer.Start();
-		
-		return _velocity;
-	}
-
-	public Vector2 WallSlideAndWallJump(float delta)
-	{
-		if (
-			(_leftWallDetect.IsColliding() || _rightWallDetect.IsColliding()) &&
-			!_playerCharacter.IsOnFloor()
-		)
-		{
-			_wallSlideStatus = true;
-			
-			_velocity.Y += _velocityComponent.WallSlidingVelocity(delta);
-			
-			
-
-			if (_leftWallDetect.IsColliding() && Input.IsActionJustPressed("jump"))
-			{
-				_sprite.FlipH = false;
-				_direction = new Vector2(1.0f, 0);
-				_velocity = _velocityComponent.WallJumpingVelocity(_direction);
-			}
-			else if (_rightWallDetect.IsColliding() && Input.IsActionJustPressed("jump"))
-			{
-				_sprite.FlipH = true;
-				_direction = new Vector2(-1.0f, 0);
-				_velocity = _velocityComponent.WallJumpingVelocity(_direction);
-			}
-			
-		}
-		else
-		{
-			_wallSlideStatus = false;
-		}
-		
-		return _velocity;
 	}
 
 	
