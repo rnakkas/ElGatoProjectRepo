@@ -40,7 +40,7 @@ public partial class PlayerElgato : CharacterBody2D
 		
 		if (_hurtbox == null)
 			return;
-		_hurtbox.GotHit += OnHitByAttack;
+		// _hurtbox.GotHit += OnHitByAttack;
 		_hurtbox.HurtStatusCleared += OnHurtStatusCleared; 
 	}
 	

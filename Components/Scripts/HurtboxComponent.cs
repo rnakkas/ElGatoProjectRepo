@@ -9,9 +9,10 @@ public partial class HurtboxComponent : Area2D
 	[Export] private Timer _hurtStaggerTimer;
 	[Export] private HealthComponent _healthComponent;
 	[Export] private AnimatedSprite2D _bodySprite;
+	[Export] private VelocityComponent _velocityComponent;
 	
 	[Signal]
-	public delegate void GotHitEventHandler(bool hurtStatus, Vector2 attackPosition);
+	public delegate void GotHitEventHandler(float knockbackVelocity);
 	[Signal]
 	public delegate void HurtStatusClearedEventHandler(bool hurtStatus);
 
@@ -25,13 +26,15 @@ public partial class HurtboxComponent : Area2D
 	private void HurtStatusTimerTimedOut()
 	{
 		HurtStatus = false;
-		_bodySprite?.Play("idle");
+		// _bodySprite?.Play("idle");
 		EmitSignal(SignalName.HurtStatusCleared, HurtStatus);
 	}
 	
 	// Called by the attacking area, for example attacking bullet calls this method to pass the attack data
-	public void HitByAttack(Area2D attackArea, int attackDamage, float knockback, Vector2 attackVelocity)
+	public void HitByAttack(Area2D attackArea, int attackDamage, float knockback)
 	{
+		float knockbackVelocity;
+		
 		HurtStatus = true;
 		_hurtStaggerTimer.Start();
 		
@@ -39,7 +42,10 @@ public partial class HurtboxComponent : Area2D
 		
 		_healthComponent?.TakeDamage(attackDamage);
 		
-		_bodySprite?.Play("hurt");
+		if (_velocityComponent == null)
+			return;
+		knockbackVelocity = _velocityComponent.KnockbackFromAttack(attackPosition, knockback);
+		
 		if (_bodySprite != null)
 		{
 			if (attackPosition.X < 0)
@@ -52,7 +58,7 @@ public partial class HurtboxComponent : Area2D
 			}
 		}
 		
-		EmitSignal(SignalName.GotHit, HurtStatus, attackPosition);
+		EmitSignal(SignalName.GotHit, knockbackVelocity);
 	}
 
 

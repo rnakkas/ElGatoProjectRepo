@@ -13,7 +13,7 @@ public partial class VelocityComponent : Node
 {
 	[Export] public CharacterVelocityProperties CharacterVelocityProperties { get; set; }
 	
-	public float KnockbackFromAttack(Vector2 attackPosition, float knockback, Vector2 attackVelocity)
+	public float KnockbackFromAttack(Vector2 attackPosition, float knockback)
 	{
 		return knockback * -attackPosition.X;
 	}
@@ -67,10 +67,5 @@ public partial class VelocityComponent : Node
 	public Vector2 DashVelocity(Vector2 direction)
 	{
 		return new Vector2(CharacterVelocityProperties.DashSpeed * direction.X, 0);
-	}
-
-	public float OnFloorVelocity()
-	{
-		return 0;
 	}
 }

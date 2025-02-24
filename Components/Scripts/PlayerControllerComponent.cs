@@ -15,23 +15,20 @@ public partial class PlayerControllerComponent : Node
 	[Export] private VelocityComponent _velocityComponent;
 	[Export] private RayCast2D _leftWallDetect;
 	[Export] private RayCast2D _rightWallDetect;
-	[Export] private Area2D _miscBox;
 	[Export] private Timer _dashCooldownTimer;
 	[Export] private Timer _dashTimer;
 
-	private bool _isDashing,_onDashCooldown, _hurtStatus, _wallSlideStatus;
+	private bool _isDashing, _onDashCooldown;
 	private Vector2 _velocity, _direction = Vector2.Zero;
-	private Utility.CharacterState _currentState;
+	public Utility.CharacterState CurrentState;
 
 	public override void _Ready()
 	{
 		ConnectSignals();
 	}
 
-	public void ConnectSignals()
+	private void ConnectSignals()
 	{
-		// _miscBox.AreaEntered += EnteredJumpPad;
-
 		_dashCooldownTimer.Timeout += OnDashCooldownTimerTimeout;
 		
 		_dashTimer.Timeout += OnDashTimerTimeout;
@@ -54,24 +51,23 @@ public partial class PlayerControllerComponent : Node
 	private void OnDashTimerTimeout()
 	{
 		_isDashing = false;
-		_velocity = Vector2.Zero;
 	}
 	
 	// State machine
 
 	public void SetState(Utility.CharacterState newState)
 	{
-		if (newState == _currentState)
+		if (newState == CurrentState)
 			return;
 
 		ExitState();
-		_currentState = newState;
+		CurrentState = newState;
 		EnterState();
 	}
 
 	private void ExitState()
 	{
-		switch (_currentState)
+		switch (CurrentState)
 		{
 			case Utility.CharacterState.Idle:
 				break;
@@ -82,19 +78,21 @@ public partial class PlayerControllerComponent : Node
 			case Utility.CharacterState.Fall:
 				break;
 			case Utility.CharacterState.Hurt:
+				_velocity = Vector2.Zero;
 				break;
 			case Utility.CharacterState.WallSlide:
 				break;
 			case Utility.CharacterState.WallJump:
 				break;
 			case Utility.CharacterState.Dash:
+				_velocity = Vector2.Zero;
 				break;
 		}
 	}
 
 	private void EnterState()
 	{
-		switch (_currentState)
+		switch (CurrentState)
 		{
 			case Utility.CharacterState.Idle:
 				_velocity.Y = 0;
@@ -111,6 +109,8 @@ public partial class PlayerControllerComponent : Node
 				_sprite.Play(Utility.Instance.EntityFallAnimation);
 				break;
 			case Utility.CharacterState.Hurt:
+				_velocity = _playerCharacter.Velocity;
+				_sprite.Play(Utility.Instance.EntityHurtAnimation);
 				break;
 			case Utility.CharacterState.WallSlide:
 				_sprite.Play(Utility.Instance.EntityWallSlideAnimation);
@@ -147,7 +147,7 @@ public partial class PlayerControllerComponent : Node
 
 		FlipSprite(_direction);
 		
-		switch (_currentState)
+		switch (CurrentState)
 		{
 			case Utility.CharacterState.Idle:
 				_velocity.X = _velocityComponent.DecelerateToZeroVelocity(delta, _velocity);
