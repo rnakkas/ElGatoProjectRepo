@@ -8,7 +8,8 @@ namespace ElGatoProject.Players.Scripts;
 public partial class WeaponElgato : Node2D
 {
 	[Export] private ShootingComponent _shooting;
-	[Export] private AnimationComponent _animation;
+	[Export] private AnimatedSprite2D _weaponSprite, _flashSprite;
+	[Export] private PlayerControllerComponent _playerController;
 	
 	[Export] private Label _debugWeaponLabel;
 	
@@ -22,6 +23,9 @@ public partial class WeaponElgato : Node2D
 		ConnectToSignals();
 		
 		_weaponPosition = Position;
+		
+		_weaponSprite.Play(Utility.Instance.EntityIdleAnimation);
+		_flashSprite.Play(Utility.Instance.EntityIdleAnimation);
 	}
 
 	private void ConnectToSignals()
@@ -32,19 +36,24 @@ public partial class WeaponElgato : Node2D
 	// Shooting signal connection
 	private void OnShooting()
 	{
-		_animation.PlayWeaponAnimations(true, _shooting.WeaponType);
+		// _animation.PlayWeaponAnimations(true, _shooting.WeaponType);
+		
+		_weaponSprite.Play(Utility.Instance.EntityShootAnimation);
+		_flashSprite.Play(Utility.Instance.EntityShootAnimation);
+		
 		
 		// Only reduce ammo for power-up weapons
 		if (_shooting.WeaponType != Utility.WeaponType.PlayerPistol)
 			_weaponAmmo--;
 	}
 	
-	private void SetComponentProperties()
-	{
-		_shooting.TargetVector = Direction;
-		_shooting.HurtStatus = HurtStatus;
-	}
+	// private void SetComponentProperties()
+	// {
+	// 	_shooting.TargetVector = Direction;
+	// 	_shooting.HurtStatus = HurtStatus;
+	// }
 
+	//TODO: set the animation speed in the weapon properties
 	public void SwitchWeapon(Utility.WeaponType weaponType)
 	{
 		_shooting.WeaponType = weaponType;
@@ -86,13 +95,17 @@ public partial class WeaponElgato : Node2D
 
 	private void WeaponActions()
 	{
-		if (Input.IsActionPressed("shoot") && !IsDashing)
+		if (Input.IsActionPressed("shoot") && !IsDashing && !HurtStatus)
 		{
-			_shooting.Shoot();
+			_shooting.Shoot(Direction);
 		}
 		else
 		{
-			_animation.PlayWeaponAnimations(false, _shooting.WeaponType);
+			// _animation.PlayWeaponAnimations(false, _shooting.WeaponType);
+			
+			_weaponSprite.Play(Utility.Instance.EntityIdleAnimation);
+			_flashSprite.Play(Utility.Instance.EntityIdleAnimation);
+			
 		}
 		
 		// If weapon power-up ammo runs out, return to pistol
@@ -102,12 +115,30 @@ public partial class WeaponElgato : Node2D
 		}
 	}
 	
+	private void FlipSprite(Vector2 direction)
+	{
+		if (_weaponSprite == null || _flashSprite == null) 
+			return;
+
+		switch (direction.X)
+		{
+			case < 0:
+				_weaponSprite.FlipH = true;
+				_flashSprite.FlipH = true;
+				break;
+			case > 0:
+				_weaponSprite.FlipH = false;
+				_flashSprite.FlipH = false;
+				break;
+		}
+	}
+	
 	public override void _Process(double delta)
 	{
-		SetComponentProperties();
+		// SetComponentProperties();
 		WeaponActions();
 		
-		_animation.FlipSprite(Direction);
+		FlipSprite(Direction);
 
 		if (Direction.X < 0)
 		{

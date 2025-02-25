@@ -1,7 +1,8 @@
-[gd_scene load_steps=26 format=3 uid="uid://bec21vtufstsw"]
+[gd_scene load_steps=31 format=3 uid="uid://bec21vtufstsw"]
 
 [ext_resource type="Script" path="res://Players/Scripts/WeaponElgato.cs" id="1_704rr"]
 [ext_resource type="Texture2D" uid="uid://b2cpn0fiw8o8i" path="res://Assets/Players/fingergun-Animatino-001-Sheet.png" id="2_7ynsm"]
+[ext_resource type="Texture2D" uid="uid://btbbbg66urihw" path="res://Assets/Players/muzzleFlash-Animation-001-Sheet.png" id="3_bfs8v"]
 [ext_resource type="Resource" uid="uid://cs6j3p5h3n34h" path="res://Resources/PlayerPistolShootingProperties.tres" id="4_230cw"]
 [ext_resource type="Script" path="res://Components/Scripts/ShootingComponent.cs" id="5_liu8t"]
 [ext_resource type="Script" path="res://Components/Scripts/AnimationComponent.cs" id="6_nupb6"]
@@ -167,6 +168,46 @@ animations = [{
 "speed": 8.0
 }]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_g32pq"]
+atlas = ExtResource("3_bfs8v")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8s5jc"]
+atlas = ExtResource("3_bfs8v")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kx2aj"]
+atlas = ExtResource("3_bfs8v")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_a7dhu"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": null
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g32pq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8s5jc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kx2aj")
+}, {
+"duration": 1.0,
+"texture": null
+}],
+"loop": false,
+"name": &"shoot",
+"speed": 17.0
+}]
+
 [node name="Weapon_ElGato" type="Node2D" node_paths=PackedStringArray("_shooting", "_animation")]
 position = Vector2(6, 5)
 script = ExtResource("1_704rr")
@@ -175,9 +216,7 @@ _animation = NodePath("AnimationComponent")
 
 [node name="sprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_ld3wl")
-animation = &"shoot_machineGun"
-frame = 2
-frame_progress = 1.0
+animation = &"shoot_pistol"
 
 [node name="ShootingComponent" type="Node2D" parent="." node_paths=PackedStringArray("_muzzle", "_shotCooldownTimer")]
 script = ExtResource("5_liu8t")
@@ -187,7 +226,13 @@ _muzzle = NodePath("muzzle")
 _shotCooldownTimer = NodePath("shotCooldownTimer")
 
 [node name="muzzle" type="Marker2D" parent="ShootingComponent"]
-position = Vector2(18.305, -5.045)
+position = Vector2(10, -1)
+
+[node name="flashSprite" type="AnimatedSprite2D" parent="ShootingComponent/muzzle"]
+position = Vector2(-10, 1)
+sprite_frames = SubResource("SpriteFrames_a7dhu")
+animation = &"shoot"
+offset = Vector2(10, -1)
 
 [node name="shotCooldownTimer" type="Timer" parent="ShootingComponent"]
 

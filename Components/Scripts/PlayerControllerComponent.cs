@@ -21,7 +21,6 @@ public partial class PlayerControllerComponent : Node
 	private bool _isDashing, _onDashCooldown;
 	private Vector2 _direction = Vector2.Zero;
 	public Utility.CharacterState CurrentState;
-	public Vector2 KnocbackVelocity;
 
 	public override void _Ready()
 	{

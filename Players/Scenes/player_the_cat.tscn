@@ -488,7 +488,6 @@ sprite_frames = SubResource("SpriteFrames_w0g3d")
 animation = &"idle"
 
 [node name="Weapon_ElGato" parent="." node_paths=PackedStringArray("_debugWeaponLabel") instance=ExtResource("7_jnlk7")]
-visible = false
 position = Vector2(6, 3)
 _debugWeaponLabel = NodePath("../WeaponAmmoLabel")
 
