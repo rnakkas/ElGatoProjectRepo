@@ -63,12 +63,6 @@ public partial class Utility : Node
     public string EntityShootAnimation = "shoot";
     public string EntityDashAnimation = "dash";
     
-    // Player Weapon animation string names
-    public string PistolShootAnimation = "shoot_pistol";
-    public string ShotgunShootAnimation = "shoot_shotgun";
-    public string MachineGunShootAnimation = "shoot_machineGun";
-    public string RailGunShootAnimation = "shoot_railGun";
-    
     // Projectile animation string names
     public string EnemyMachineGunFly = "enemy_machinegun_fly";
     public string EnemyMachineGunHit = "enemy_machinegun_hit";

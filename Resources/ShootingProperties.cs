@@ -14,4 +14,5 @@ public partial class ShootingProperties : Resource
     [Export] public int BulletsPerShot;
     [Export] public float BulletSwayAngle;
     [Export] public float BulletSpeed;
+    [Export] public float AnimationSpeed;
 }

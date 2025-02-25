@@ -45,7 +45,6 @@ public partial class PlayerControllerComponent : Node
 	private void OnDashCooldownTimerTimeout()
 	{
 		_onDashCooldown = false;
-		GD.Print("dash ready");
 	}
 
 	private void OnDashTimerTimeout()
@@ -118,7 +117,6 @@ public partial class PlayerControllerComponent : Node
 				_sprite.Play(Utility.Instance.EntityJumpAnimation);
 				break;
 			case Utility.CharacterState.Dash:
-				GD.Print("Dash");
 				if (!_sprite.IsFlippedH())
 				{
 					_velocityComponent.DashVelocity(Vector2.Right);

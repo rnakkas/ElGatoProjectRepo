@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using ElGatoProject.Components.Scripts;
+using ElGatoProject.Resources;
 using ElGatoProject.Singletons;
 
 namespace ElGatoProject.Players.Scripts;
@@ -20,7 +21,7 @@ public partial class WeaponElgato : Node2D
 	
 	public override void _Ready()
 	{
-		ConnectToSignals();
+		_shooting.Shooting += OnShooting;
 		
 		_weaponPosition = Position;
 		
@@ -28,32 +29,22 @@ public partial class WeaponElgato : Node2D
 		_flashSprite.Play(Utility.Instance.EntityIdleAnimation);
 	}
 
-	private void ConnectToSignals()
-	{
-		_shooting.Shooting += OnShooting;
-	}
-
 	// Shooting signal connection
 	private void OnShooting()
 	{
-		// _animation.PlayWeaponAnimations(true, _shooting.WeaponType);
+		// Change speed scale of animations based on weapon type from shooting properties
+		_weaponSprite.SetSpeedScale(_shooting.ShootingProperties.AnimationSpeed);
+		_flashSprite.SetSpeedScale(_shooting.ShootingProperties.AnimationSpeed);
 		
-		_weaponSprite.Play(Utility.Instance.PistolShootAnimation);
+		_weaponSprite.Play(Utility.Instance.EntityShootAnimation);
 		_flashSprite.Play(Utility.Instance.EntityShootAnimation);
-		
+	
 		
 		// Only reduce ammo for power-up weapons
 		if (_shooting.WeaponType != Utility.WeaponType.PlayerPistol)
 			_weaponAmmo--;
 	}
 	
-	// private void SetComponentProperties()
-	// {
-	// 	_shooting.TargetVector = Direction;
-	// 	_shooting.HurtStatus = HurtStatus;
-	// }
-
-	//TODO: set the animation speed in the weapon properties
 	public void SwitchWeapon(Utility.WeaponType weaponType)
 	{
 		_shooting.WeaponType = weaponType;
@@ -95,15 +86,6 @@ public partial class WeaponElgato : Node2D
 
 	private void WeaponActions()
 	{
-		if (_characterSprite.IsFlippedH())
-		{
-			_direction = Vector2.Left;
-		}
-		else if (!_characterSprite.IsFlippedH())
-		{
-			_direction = Vector2.Right;
-		}
-		
 		if (
 			Input.IsActionPressed("shoot") && 
 			_playerController.CurrentState != Utility.CharacterState.Dash &&
@@ -114,10 +96,14 @@ public partial class WeaponElgato : Node2D
 		}
 		else
 		{
-			// _animation.PlayWeaponAnimations(false, _shooting.WeaponType);
+			// Set speed scale back to 1 for idle animations
+			_weaponSprite.SetSpeedScale(1);
+			_flashSprite.SetSpeedScale(1);
 			
-			_weaponSprite.Play(Utility.Instance.EntityIdleAnimation);
-			_flashSprite.Play(Utility.Instance.EntityIdleAnimation);
+			if (!_weaponSprite.IsPlaying())
+				_weaponSprite.Play(Utility.Instance.EntityIdleAnimation);
+			if (!_flashSprite.IsPlaying())
+				_flashSprite.Play(Utility.Instance.EntityIdleAnimation);
 			
 		}
 		
@@ -125,6 +111,18 @@ public partial class WeaponElgato : Node2D
 		if (_weaponAmmo <= 0)
 		{
 			SwitchWeapon(Utility.WeaponType.PlayerPistol);
+		}
+	}
+
+	private void SetWeaponDirection()
+	{
+		if (_characterSprite.IsFlippedH())
+		{
+			_direction = Vector2.Left;
+		}
+		else if (!_characterSprite.IsFlippedH())
+		{
+			_direction = Vector2.Right;
 		}
 	}
 	
@@ -150,21 +148,9 @@ public partial class WeaponElgato : Node2D
 	
 	public override void _Process(double delta)
 	{
-		// SetComponentProperties();
-		
-		WeaponActions();
-		
+		SetWeaponDirection();
 		FlipSprite();
-
-		// if (Direction.X < 0)
-		// {
-		// 	Position = new Vector2(-_weaponPosition.X, _weaponPosition.Y);
-		// }
-		// else if (Direction.X > 0)
-		// {
-		// 	Position = new Vector2(_weaponPosition.X, _weaponPosition.Y);
-		// }
-		
+		WeaponActions();
 		
 		_debugWeaponLabel.SetText(_shooting.WeaponType + ": " + _weaponAmmo);
 	}

@@ -12,3 +12,4 @@ BulletKnockback = 100.0
 BulletsPerShot = 6
 BulletSwayAngle = 5.2
 BulletSpeed = 350.0
+AnimationSpeed = 0.8

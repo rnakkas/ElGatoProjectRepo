@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://bec21vtufstsw"]
+[gd_scene load_steps=20 format=3 uid="uid://bec21vtufstsw"]
 
 [ext_resource type="Script" path="res://Players/Scripts/WeaponElgato.cs" id="1_704rr"]
 [ext_resource type="Texture2D" uid="uid://b2cpn0fiw8o8i" path="res://Assets/Players/fingergun-Animatino-001-Sheet.png" id="2_7ynsm"]
@@ -23,18 +23,6 @@ region = Rect2(32, 0, 16, 16)
 atlas = ExtResource("2_7ynsm")
 region = Rect2(48, 0, 16, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_kgflq"]
-atlas = ExtResource("2_7ynsm")
-region = Rect2(0, 16, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_init3"]
-atlas = ExtResource("2_7ynsm")
-region = Rect2(16, 16, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_h7txk"]
-atlas = ExtResource("2_7ynsm")
-region = Rect2(32, 16, 16, 16)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_15yow"]
 atlas = ExtResource("2_7ynsm")
 region = Rect2(0, 16, 16, 16)
@@ -48,38 +36,6 @@ atlas = ExtResource("2_7ynsm")
 region = Rect2(32, 16, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_egjta"]
-atlas = ExtResource("2_7ynsm")
-region = Rect2(48, 16, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_m1o6w"]
-atlas = ExtResource("2_7ynsm")
-region = Rect2(0, 16, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_7y6cu"]
-atlas = ExtResource("2_7ynsm")
-region = Rect2(16, 16, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_lcpsq"]
-atlas = ExtResource("2_7ynsm")
-region = Rect2(32, 16, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_k7o76"]
-atlas = ExtResource("2_7ynsm")
-region = Rect2(48, 16, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_2a43s"]
-atlas = ExtResource("2_7ynsm")
-region = Rect2(0, 16, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_cel2w"]
-atlas = ExtResource("2_7ynsm")
-region = Rect2(16, 16, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_48hys"]
-atlas = ExtResource("2_7ynsm")
-region = Rect2(32, 16, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_hi6b4"]
 atlas = ExtResource("2_7ynsm")
 region = Rect2(48, 16, 16, 16)
 
@@ -104,20 +60,6 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_kgflq")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_init3")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_h7txk")
-}],
-"loop": false,
-"name": &"shoot_machineGun",
-"speed": 30.0
-}, {
-"frames": [{
-"duration": 1.0,
 "texture": SubResource("AtlasTexture_15yow")
 }, {
 "duration": 1.0,
@@ -130,42 +72,8 @@ animations = [{
 "texture": SubResource("AtlasTexture_egjta")
 }],
 "loop": false,
-"name": &"shoot_pistol",
+"name": &"shoot",
 "speed": 10.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_m1o6w")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_7y6cu")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_lcpsq")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_k7o76")
-}],
-"loop": false,
-"name": &"shoot_railGun",
-"speed": 7.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_2a43s")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_cel2w")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_48hys")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_hi6b4")
-}],
-"loop": false,
-"name": &"shoot_shotgun",
-"speed": 8.0
 }]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_g32pq"]
@@ -217,7 +125,7 @@ _flashSprite = NodePath("ShootingComponent/muzzle/flashSprite")
 
 [node name="weaponSprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_ld3wl")
-animation = &"shoot_pistol"
+animation = &"shoot"
 
 [node name="ShootingComponent" type="Node2D" parent="." node_paths=PackedStringArray("_muzzle", "_shotCooldownTimer")]
 script = ExtResource("5_liu8t")
