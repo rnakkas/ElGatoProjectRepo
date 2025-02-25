@@ -64,6 +64,9 @@ public partial class Utility : Node
     public string EntityDashAnimation = "dash";
     
     // Projectile animation string names
+    public string BulletFlyAnimation = "fly";
+    public string BulletHitAnimation = "hit";
+    
     public string EnemyMachineGunFly = "enemy_machinegun_fly";
     public string EnemyMachineGunHit = "enemy_machinegun_hit";
     public string EnemyPistolFly = "enemy_pistol_fly";

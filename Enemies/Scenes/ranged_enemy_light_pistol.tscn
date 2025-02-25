@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://dnkd8nwcia0in"]
+[gd_scene load_steps=13 format=3 uid="uid://dnkd8nwcia0in"]
 
 [ext_resource type="Script" path="res://Enemies/Scripts/RangedEnemyLightPistol.cs" id="1_djtq4"]
 [ext_resource type="Script" path="res://Components/Scripts/EnemyControllerComponent.cs" id="2_jd8vp"]
@@ -6,7 +6,6 @@
 [ext_resource type="Script" path="res://Components/Scripts/HurtboxComponent.cs" id="4_u8cat"]
 [ext_resource type="Script" path="res://Components/Scripts/PlayerDetectionComponent.cs" id="5_ost8k"]
 [ext_resource type="Script" path="res://Components/Scripts/ShootingComponent.cs" id="6_lo5xk"]
-[ext_resource type="Script" path="res://Components/Scripts/AnimationComponent.cs" id="7_765es"]
 [ext_resource type="Resource" uid="uid://dc1g7eyd6beey" path="res://Resources/EnemyPistolShootingProperties.tres" id="7_ddrk6"]
 [ext_resource type="Texture2D" uid="uid://dqx6rpywerr0u" path="res://icon.svg" id="8_wqfqs"]
 
@@ -90,14 +89,13 @@ animations = [{
 script = ExtResource("1_djtq4")
 _enemyController = NodePath("EnemyControllerComponent")
 
-[node name="EnemyControllerComponent" type="Node" parent="." node_paths=PackedStringArray("_health", "_hurtbox", "_playerDetection", "_shooting", "_animation", "_debugHealthLabel")]
+[node name="EnemyControllerComponent" type="Node" parent="." node_paths=PackedStringArray("_health", "_hurtbox", "_playerDetection", "_shooting", "_debugHealthLabel")]
 script = ExtResource("2_jd8vp")
 _enemyType = 1
 _health = NodePath("../HealthComponent")
 _hurtbox = NodePath("../HurtboxComponent")
 _playerDetection = NodePath("../PlayerDetectionComponent")
 _shooting = NodePath("../ShootingComponent")
-_animation = NodePath("../AnimationComponent")
 _debugHealthLabel = NodePath("../HealthLabel")
 
 [node name="HealthComponent" type="Node" parent="."]
@@ -155,9 +153,6 @@ position = Vector2(0, -11)
 [node name="ShotCooldownTimer" type="Timer" parent="ShootingComponent"]
 
 [node name="ReloadTimer" type="Timer" parent="ShootingComponent"]
-
-[node name="AnimationComponent" type="Node" parent="."]
-script = ExtResource("7_765es")
 
 [node name="spriteBody" type="AnimatedSprite2D" parent="."]
 self_modulate = Color(0.0196078, 0.0196078, 0.0196078, 1)

@@ -11,10 +11,12 @@ public partial class BulletProjectile : Node2D
 	
 	// Components
 	[Export] private ProjectileHitboxComponent _hitbox;
-	[Export] private AnimationComponent _animation;
+	[Export] private AnimatedSprite2D _bulletSprite;
 	
 	[Export] private Timer _despawnTimer;
 
+	private bool _hitStatus;
+	
 	public float BulletSpeed, Knockback;
 	public Vector2 Target;
 	public int BulletDamage;
@@ -27,7 +29,7 @@ public partial class BulletProjectile : Node2D
 		ConnectToSignals();
 		SetComponentProperties();
 		
-		_animation.PlayProjectileAnimations(BulletWeaponType, false);
+		_bulletSprite.Play(Utility.Instance.BulletFlyAnimation);
 		_despawnTimer.Start();
 	}
 	
@@ -46,9 +48,16 @@ public partial class BulletProjectile : Node2D
 	}
 
 	// Hitting targets
-	private void OnHitBoxCollision()
+	private async void OnHitBoxCollision()
 	{
-		_animation.PlayProjectileAnimations(BulletWeaponType, true);
+		if (_bulletSprite == null)
+			return;
+		
+		_hitStatus = true;
+		
+		_bulletSprite.Play(Utility.Instance.BulletHitAnimation);
+		await ToSignal(_bulletSprite, "animation_finished");
+		
 		QueueFree();
 	}
 	
@@ -60,6 +69,9 @@ public partial class BulletProjectile : Node2D
 	// Velocity calculations
 	private void ApplyVelocity(float delta)
 	{
+		if (_hitStatus)
+			return;
+		
 		_velocity = new Vector2(
 			delta * BulletSpeed * Target.X,
 			delta * BulletSpeed * Target.Y

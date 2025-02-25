@@ -13,7 +13,6 @@ public partial class EnemyControllerComponent : Node
     [Export] private HurtboxComponent _hurtbox;
     [Export] private PlayerDetectionComponent _playerDetection;
     [Export] private ShootingComponent _shooting;
-    [Export] private AnimationComponent _animation;
     
     [Export] private Label _debugHealthLabel;
 
