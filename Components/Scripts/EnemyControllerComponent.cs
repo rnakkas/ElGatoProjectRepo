@@ -33,7 +33,7 @@ public partial class EnemyControllerComponent : Node
     
     private void SetComponentProperties()
     {
-    	_shooting.TargetVector = _playerDetection.PlayerPosition;
+    	// _shooting.TargetVector = _playerDetection.PlayerPosition;
     	_shooting.HurtStatus = _hurtStatus;
     }
 
@@ -43,7 +43,7 @@ public partial class EnemyControllerComponent : Node
 	    {
 		    case Utility.EnemyType.Ranged:
 			    if (_canSeePlayer)
-					_shooting.Shoot();
+					_shooting.Shoot(_playerDetection.PlayerPosition);
 			    break;
 		    
 		    case Utility.EnemyType.Melee:

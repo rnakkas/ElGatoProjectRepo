@@ -8,13 +8,13 @@ namespace ElGatoProject.Players.Scripts;
 public partial class WeaponElgato : Node2D
 {
 	[Export] private ShootingComponent _shooting;
-	[Export] private AnimatedSprite2D _weaponSprite, _flashSprite;
+	[Export] private AnimatedSprite2D _weaponSprite, _flashSprite, _characterSprite;
 	[Export] private PlayerControllerComponent _playerController;
 	
 	[Export] private Label _debugWeaponLabel;
-	
-	public Vector2 Direction;
-	public bool HurtStatus, IsDashing;
+
+	private Vector2 _direction;
+	// public bool HurtStatus, IsDashing;
 	private int _weaponAmmo;
 	private Vector2 _weaponPosition;
 	
@@ -38,7 +38,7 @@ public partial class WeaponElgato : Node2D
 	{
 		// _animation.PlayWeaponAnimations(true, _shooting.WeaponType);
 		
-		_weaponSprite.Play(Utility.Instance.EntityShootAnimation);
+		_weaponSprite.Play(Utility.Instance.PistolShootAnimation);
 		_flashSprite.Play(Utility.Instance.EntityShootAnimation);
 		
 		
@@ -95,9 +95,22 @@ public partial class WeaponElgato : Node2D
 
 	private void WeaponActions()
 	{
-		if (Input.IsActionPressed("shoot") && !IsDashing && !HurtStatus)
+		if (_characterSprite.IsFlippedH())
 		{
-			_shooting.Shoot(Direction);
+			_direction = Vector2.Left;
+		}
+		else if (!_characterSprite.IsFlippedH())
+		{
+			_direction = Vector2.Right;
+		}
+		
+		if (
+			Input.IsActionPressed("shoot") && 
+			_playerController.CurrentState != Utility.CharacterState.Dash &&
+			_playerController.CurrentState != Utility.CharacterState.Hurt
+			)
+		{
+			_shooting.Shoot(_direction);
 		}
 		else
 		{
@@ -115,20 +128,22 @@ public partial class WeaponElgato : Node2D
 		}
 	}
 	
-	private void FlipSprite(Vector2 direction)
+	private void FlipSprite()
 	{
 		if (_weaponSprite == null || _flashSprite == null) 
 			return;
 
-		switch (direction.X)
+		switch (_direction.X)
 		{
 			case < 0:
 				_weaponSprite.FlipH = true;
 				_flashSprite.FlipH = true;
+				Position = new Vector2(-_weaponPosition.X, _weaponPosition.Y);
 				break;
 			case > 0:
 				_weaponSprite.FlipH = false;
 				_flashSprite.FlipH = false;
+				Position = new Vector2(_weaponPosition.X, _weaponPosition.Y);
 				break;
 		}
 	}
@@ -136,18 +151,19 @@ public partial class WeaponElgato : Node2D
 	public override void _Process(double delta)
 	{
 		// SetComponentProperties();
+		
 		WeaponActions();
 		
-		FlipSprite(Direction);
+		FlipSprite();
 
-		if (Direction.X < 0)
-		{
-			Position = new Vector2(-_weaponPosition.X, _weaponPosition.Y);
-		}
-		else if (Direction.X > 0)
-		{
-			Position = new Vector2(_weaponPosition.X, _weaponPosition.Y);
-		}
+		// if (Direction.X < 0)
+		// {
+		// 	Position = new Vector2(-_weaponPosition.X, _weaponPosition.Y);
+		// }
+		// else if (Direction.X > 0)
+		// {
+		// 	Position = new Vector2(_weaponPosition.X, _weaponPosition.Y);
+		// }
 		
 		
 		_debugWeaponLabel.SetText(_shooting.WeaponType + ": " + _weaponAmmo);

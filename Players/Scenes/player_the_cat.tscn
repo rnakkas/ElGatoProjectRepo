@@ -487,8 +487,10 @@ position = Vector2(0, 3)
 sprite_frames = SubResource("SpriteFrames_w0g3d")
 animation = &"idle"
 
-[node name="Weapon_ElGato" parent="." node_paths=PackedStringArray("_debugWeaponLabel") instance=ExtResource("7_jnlk7")]
+[node name="Weapon_ElGato" parent="." node_paths=PackedStringArray("_characterSprite", "_playerController", "_debugWeaponLabel") instance=ExtResource("7_jnlk7")]
 position = Vector2(6, 3)
+_characterSprite = NodePath("../sprite")
+_playerController = NodePath("../PlayerControllerComponent")
 _debugWeaponLabel = NodePath("../WeaponAmmoLabel")
 
 [node name="HealthLabel" type="Label" parent="."]

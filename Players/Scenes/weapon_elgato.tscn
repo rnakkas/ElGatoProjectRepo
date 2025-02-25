@@ -208,13 +208,14 @@ animations = [{
 "speed": 17.0
 }]
 
-[node name="Weapon_ElGato" type="Node2D" node_paths=PackedStringArray("_shooting", "_animation")]
+[node name="Weapon_ElGato" type="Node2D" node_paths=PackedStringArray("_shooting", "_weaponSprite", "_flashSprite")]
 position = Vector2(6, 5)
 script = ExtResource("1_704rr")
 _shooting = NodePath("ShootingComponent")
-_animation = NodePath("AnimationComponent")
+_weaponSprite = NodePath("weaponSprite")
+_flashSprite = NodePath("ShootingComponent/muzzle/flashSprite")
 
-[node name="sprite" type="AnimatedSprite2D" parent="."]
+[node name="weaponSprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_ld3wl")
 animation = &"shoot_pistol"
 
@@ -226,7 +227,7 @@ _muzzle = NodePath("muzzle")
 _shotCooldownTimer = NodePath("shotCooldownTimer")
 
 [node name="muzzle" type="Marker2D" parent="ShootingComponent"]
-position = Vector2(10, -1)
+position = Vector2(10, -2)
 
 [node name="flashSprite" type="AnimatedSprite2D" parent="ShootingComponent/muzzle"]
 position = Vector2(-10, 1)
@@ -238,4 +239,4 @@ offset = Vector2(10, -1)
 
 [node name="AnimationComponent" type="Node" parent="." node_paths=PackedStringArray("Sprite")]
 script = ExtResource("6_nupb6")
-Sprite = NodePath("../sprite")
+Sprite = NodePath("../weaponSprite")

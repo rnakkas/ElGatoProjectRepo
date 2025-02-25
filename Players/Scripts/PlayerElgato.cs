@@ -59,13 +59,13 @@ public partial class PlayerElgato : CharacterBody2D
 	
 	private void OnHitByAttack(bool hurtStatus, Vector2 attackPosition)
 	{
-		_weapon.HurtStatus = hurtStatus;
+		// _weapon.HurtStatus = hurtStatus;
 		// _playerController.HurtStatus = hurtStatus;
 	}
 	
 	private void OnHurtStatusCleared()
 	{
-		_weapon.HurtStatus = false;
+		// _weapon.HurtStatus = false;
 		// _playerController.HurtStatus = hurtStatus;
 	}
 	
