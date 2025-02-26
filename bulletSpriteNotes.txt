@@ -3,3 +3,6 @@ Investigate how to dynamically change the bullet sprite based on weapon type
 -- then in the bullet script, use the WeaponType variable to instantiate and add the sprite for the matching bullet
 	type to the bullet scene
 -- these sprites all have the same animation naming format, "fly" and "hit"
+-- store the separate packed scenes in a dictionary in Utilities.cs, i.e Dictionary<weaponEnum, PackedScene>
+
+-- also disable bullet's hitbox collision once it collides with something

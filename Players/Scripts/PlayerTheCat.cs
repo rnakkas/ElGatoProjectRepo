@@ -10,12 +10,16 @@ public partial class PlayerTheCat : CharacterBody2D
 	[Export] private PlayerControllerComponent _playerController;
 	[Export] private HealthComponent _healthComponent;
 	[Export] private HurtboxComponent _hurtboxComponent;
-	[Export]private VelocityComponent _velocityComponent;
+	[Export] private VelocityComponent _velocityComponent;
+	[Export] private PickupsComponent _pickupsComponent;
 
 	[Export] private Label _debugHealthLabel;
+	[Export] private Label _debugScoreLabel;
 
 	private bool _isDashing, _hurtStatus;
 	private Vector2 _velocity, _direction = Vector2.Zero;
+	
+	private int _score;
 
 	public override void _Ready()
 	{
@@ -30,6 +34,10 @@ public partial class PlayerTheCat : CharacterBody2D
 			return;
 		_hurtboxComponent.GotHit += OnHitByAttack;
 		_hurtboxComponent.HurtStatusCleared += OnHurtStatusCleared; 
+		
+		if (_pickupsComponent == null)
+			return;
+		_pickupsComponent.PickedUpScoreItem += OnScoreItemPickedUp;
 	}
 
 	private void OnHitByAttack()
@@ -40,6 +48,11 @@ public partial class PlayerTheCat : CharacterBody2D
 	private void OnHurtStatusCleared()
 	{
 		_playerController.SetState(Utility.CharacterState.Idle);
+	}
+
+	private void OnScoreItemPickedUp(int scoreAmount)
+	{
+		_score += scoreAmount;
 	}
 	
 	public override void _PhysicsProcess(double delta)
@@ -54,5 +67,6 @@ public partial class PlayerTheCat : CharacterBody2D
 	public override void _Process(double delta)
 	{
 		_debugHealthLabel.SetText("HP: " + _healthComponent.CurrentHealth);
+		_debugScoreLabel.SetText("SCORE: " + _score);
 	}
 }

@@ -19,10 +19,7 @@ public partial class PickupsComponent : Area2D
 	public delegate void PickedUpScoreItemEventHandler(int scoreAmount);
 
 	[Signal]
-	public delegate void PickedUpWeaponModEventHandler(string modType);
-	
-	// public int CurrentHealth { get; set; }
-	// public int MaxHealth { get; set; }
+	public delegate void PickedUpWeaponPowerUpEventHandler(string modType);
 
 	public bool PickupHealthItem(int healAmount)
 	{
@@ -36,7 +33,7 @@ public partial class PickupsComponent : Area2D
 
 	public void PickupWeaponMod(Utility.WeaponType weaponType)
 	{
-		EmitSignal(SignalName.PickedUpWeaponMod, weaponType.ToString());
+		EmitSignal(SignalName.PickedUpWeaponPowerUp, weaponType.ToString());
 	}
 
 }

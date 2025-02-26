@@ -11,17 +11,17 @@ public partial class WeaponElgato : Node2D
 	[Export] private ShootingComponent _shooting;
 	[Export] private AnimatedSprite2D _weaponSprite, _flashSprite, _characterSprite;
 	[Export] private PlayerControllerComponent _playerController;
+	[Export] private PickupsComponent _pickupsComponent;
 	
 	[Export] private Label _debugWeaponLabel;
 
 	private Vector2 _direction;
-	// public bool HurtStatus, IsDashing;
 	private int _weaponAmmo;
 	private Vector2 _weaponPosition;
 	
 	public override void _Ready()
 	{
-		_shooting.Shooting += OnShooting;
+		ConnectSignals();
 		
 		_weaponPosition = Position;
 		
@@ -29,6 +29,25 @@ public partial class WeaponElgato : Node2D
 		_flashSprite.Play(Utility.Instance.EntityIdleAnimation);
 	}
 
+	private void ConnectSignals()
+	{
+		if (_shooting == null)
+			return;
+		_shooting.Shooting += OnShooting;
+		
+		if (_pickupsComponent == null)
+			return;
+		_pickupsComponent.PickedUpWeaponPowerUp += OnWeaponPowerUpPickedUp;
+	}
+
+	private void OnWeaponPowerUpPickedUp(string weaponPowerUp)
+	{
+		if (Enum.TryParse(weaponPowerUp, out Utility.WeaponType weaponType))
+		{
+			SwitchWeapon(weaponType);
+		}
+	}
+	
 	// Shooting signal connection
 	private void OnShooting()
 	{
@@ -88,8 +107,8 @@ public partial class WeaponElgato : Node2D
 	{
 		if (
 			Input.IsActionPressed("shoot") && 
-			_playerController.CurrentState != Utility.CharacterState.Dash &&
-			_playerController.CurrentState != Utility.CharacterState.Hurt
+			_playerController?.CurrentState != Utility.CharacterState.Dash &&
+			_playerController?.CurrentState != Utility.CharacterState.Hurt
 			)
 		{
 			_shooting.Shoot(_direction);

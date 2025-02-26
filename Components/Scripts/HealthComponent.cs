@@ -26,8 +26,8 @@ public partial class HealthComponent : Node
 	{
 		if (CurrentHealth >= MaxHealth)
 			return false;
-		CurrentHealth = Mathf.Min(CurrentHealth + heal, MaxHealth);
 		
+		CurrentHealth = Mathf.Min(CurrentHealth + heal, MaxHealth);
 		return true;
 	}
 }

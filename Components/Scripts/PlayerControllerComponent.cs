@@ -17,6 +17,7 @@ public partial class PlayerControllerComponent : Node
 	[Export] private RayCast2D _rightWallDetect;
 	[Export] private Timer _dashCooldownTimer;
 	[Export] private Timer _dashTimer;
+	[Export] private CollisionShape2D _hurtboxCollider;
 
 	private bool _isDashing, _onDashCooldown;
 	private Vector2 _direction = Vector2.Zero;
@@ -83,6 +84,7 @@ public partial class PlayerControllerComponent : Node
 			case Utility.CharacterState.WallJump:
 				break;
 			case Utility.CharacterState.Dash:
+				_hurtboxCollider.SetDisabled(false); // Exit invincibility after dash finished
 				_velocityComponent.EntityVelocity = Vector2.Zero;
 				break;
 		}
@@ -117,6 +119,7 @@ public partial class PlayerControllerComponent : Node
 				_sprite.Play(Utility.Instance.EntityJumpAnimation);
 				break;
 			case Utility.CharacterState.Dash:
+				_hurtboxCollider.SetDisabled(true); // Enter invincibility when dashing
 				if (!_sprite.IsFlippedH())
 				{
 					_velocityComponent.DashVelocity(Vector2.Right);
