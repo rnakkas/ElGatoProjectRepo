@@ -7,20 +7,14 @@ namespace ElGatoProject.Components.Scripts;
 public partial class HurtboxComponent : Area2D
 {
 	[Export] private Timer _hurtStaggerTimer;
+	[Export] private HealthComponent _healthComponent;
+	[Export] private AnimatedSprite2D _bodySprite;
+	[Export] private VelocityComponent _velocityComponent;
 	
 	[Signal]
-	public delegate void GotHitEventHandler(
-		bool hurtStatus, 
-		Vector2 attackPosition, 
-		int attackDamage, 
-		float knockback, 
-		Vector2 attackVelocity
-		);
+	public delegate void GotHitEventHandler();
 	[Signal]
-	public delegate void HurtStatusClearedEventHandler(bool hurtStatus);
-
-	private bool _hurtStatus;
-	
+	public delegate void HurtStatusClearedEventHandler();
 	
 	public override void _Ready()
 	{
@@ -29,26 +23,36 @@ public partial class HurtboxComponent : Area2D
 
 	private void HurtStatusTimerTimedOut()
 	{
-		_hurtStatus = false;
-		EmitSignal(SignalName.HurtStatusCleared, _hurtStatus);
+		EmitSignal(SignalName.HurtStatusCleared);
 	}
 	
 	// Called by the attacking area, for example attacking bullet calls this method to pass the attack data
-	public void HitByAttack(Area2D attackArea, int attackDamage, float knockback, Vector2 attackVelocity)
+	public void HitByAttack(Area2D attackArea, int attackDamage, float knockback)
 	{
-		_hurtStatus = true;
 		_hurtStaggerTimer.Start();
 		
-		Vector2 attackPosition = (attackArea.GlobalPosition - GlobalPosition).Normalized();
-
-		EmitSignal(
-			SignalName.GotHit, 
-			_hurtStatus,
-			attackPosition,
-			attackDamage,
-			knockback,
-			attackVelocity
-			);
+		var attackPosition = (attackArea.GlobalPosition - GlobalPosition).Normalized();
+		
+		_healthComponent?.TakeDamage(attackDamage);
+		
+		if (_velocityComponent == null)
+			return;
+		_velocityComponent.KnockbackFromAttack(attackPosition, knockback);
+		
+		if (_bodySprite == null)
+			return;
+		
+		switch (attackPosition.X)
+		{
+			case < 0:
+				_bodySprite.FlipH = true;
+				break;
+			case > 0:
+				_bodySprite.FlipH = false;
+				break;
+		}
+		
+		EmitSignal(SignalName.GotHit);
 	}
 
 

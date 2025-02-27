@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="CharacterVelocityProperties" load_steps=2 format=3 uid="uid://c660ff6m6ajmy"]
+
+[ext_resource type="Script" path="res://Resources/CharacterVelocityProperties.cs" id="1_gp16e"]
+
+[resource]
+script = ExtResource("1_gp16e")
+MaxSpeed = 170.0
+DashSpeed = 300.0
+Acceleration = 550.0
+Friction = 320.0
+JumpVelocity = -340.0
+Gravity = 780.0
+WallSlideGravity = 500.0
+WallJumpVelocity = -230.0
+WallSlideVelocity = 150.0
+KnockbackMultiplier = 2.5

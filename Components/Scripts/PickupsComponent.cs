@@ -7,6 +7,8 @@ namespace ElGatoProject.Components.Scripts;
 [GlobalClass]
 public partial class PickupsComponent : Area2D
 {
+	[Export] private HealthComponent _healthComponent;
+	
 	[Signal]
 	public delegate void CheckCurrentHealthEventHandler();
 	
@@ -17,20 +19,11 @@ public partial class PickupsComponent : Area2D
 	public delegate void PickedUpScoreItemEventHandler(int scoreAmount);
 
 	[Signal]
-	public delegate void PickedUpWeaponModEventHandler(string modType);
-	
-	public int CurrentHealth { get; set; }
-	public int MaxHealth { get; set; }
+	public delegate void PickedUpWeaponPowerUpEventHandler(string modType);
 
 	public bool PickupHealthItem(int healAmount)
 	{
-		EmitSignal(SignalName.CheckCurrentHealth);
-		
-		if (CurrentHealth >= MaxHealth) 
-			return false;
-		
-		EmitSignal(SignalName.PickedUpHealth, healAmount);
-		return true;
+		return _healthComponent != null && _healthComponent.Heal(healAmount);
 	}
 
 	public void PickUpScoreItem(int scorePoints)
@@ -40,7 +33,7 @@ public partial class PickupsComponent : Area2D
 
 	public void PickupWeaponMod(Utility.WeaponType weaponType)
 	{
-		EmitSignal(SignalName.PickedUpWeaponMod, weaponType.ToString());
+		EmitSignal(SignalName.PickedUpWeaponPowerUp, weaponType.ToString());
 	}
 
 }

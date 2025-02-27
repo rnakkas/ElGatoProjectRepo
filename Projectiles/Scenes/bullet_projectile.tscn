@@ -1,9 +1,41 @@
-[gd_scene load_steps=7 format=3 uid="uid://b061rx1dqmjpb"]
+[gd_scene load_steps=15 format=3 uid="uid://b061rx1dqmjpb"]
 
 [ext_resource type="Texture2D" uid="uid://dqx6rpywerr0u" path="res://icon.svg" id="1_1ts8e"]
 [ext_resource type="Script" path="res://Projectiles/Scripts/BulletProjectile.cs" id="1_d133d"]
 [ext_resource type="Script" path="res://Components/Scripts/ProjectileHitboxComponent.cs" id="2_g5lfy"]
-[ext_resource type="Script" path="res://Components/Scripts/AnimationComponent.cs" id="4_g5xvd"]
+[ext_resource type="Texture2D" uid="uid://bjk8001npdy75" path="res://Assets/Players/bullet-Animation-001-Sheet.png" id="3_bcnpg"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v37nc"]
+atlas = ExtResource("3_bcnpg")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_be5f1"]
+atlas = ExtResource("3_bcnpg")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1k8tt"]
+atlas = ExtResource("3_bcnpg")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ik8n6"]
+atlas = ExtResource("3_bcnpg")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8dp34"]
+atlas = ExtResource("3_bcnpg")
+region = Rect2(0, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uhh3n"]
+atlas = ExtResource("3_bcnpg")
+region = Rect2(16, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lrdhu"]
+atlas = ExtResource("3_bcnpg")
+region = Rect2(32, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w4qwi"]
+atlas = ExtResource("3_bcnpg")
+region = Rect2(48, 16, 16, 16)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ww87r"]
 animations = [{
@@ -50,6 +82,40 @@ animations = [{
 "name": &"enemy_shotgun_hit",
 "speed": 5.0
 }, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v37nc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_be5f1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1k8tt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ik8n6")
+}],
+"loop": true,
+"name": &"fly",
+"speed": 35.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8dp34")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uhh3n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lrdhu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w4qwi")
+}],
+"loop": false,
+"name": &"hit",
+"speed": 9.0
+}, {
 "frames": [],
 "loop": true,
 "name": &"player_machinegun_fly",
@@ -62,7 +128,16 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_1ts8e")
+"texture": SubResource("AtlasTexture_v37nc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_be5f1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1k8tt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ik8n6")
 }],
 "loop": true,
 "name": &"player_pistol_fly",
@@ -95,20 +170,17 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vrq6s"]
-size = Vector2(4, 4)
+size = Vector2(7, 3)
 
-[node name="bulletProjectile" type="Node2D" node_paths=PackedStringArray("_hitbox", "_animation", "_despawnTimer")]
+[node name="bulletProjectile" type="Node2D" node_paths=PackedStringArray("_hitbox", "_bulletSprite", "_despawnTimer")]
 script = ExtResource("1_d133d")
 _hitbox = NodePath("ProjectileHitboxComponent")
-_animation = NodePath("AnimationComponent")
+_bulletSprite = NodePath("sprite")
 _despawnTimer = NodePath("despawnTimer")
 
 [node name="sprite" type="AnimatedSprite2D" parent="."]
-self_modulate = Color(0, 0, 1, 1)
-position = Vector2(-2.98023e-08, -2.98023e-08)
-scale = Vector2(0.035, 0.035)
 sprite_frames = SubResource("SpriteFrames_ww87r")
-animation = &"enemy_pistol_fly"
+animation = &"hit"
 
 [node name="despawnTimer" type="Timer" parent="."]
 wait_time = 3.0
@@ -120,9 +192,6 @@ collision_mask = 39
 script = ExtResource("2_g5lfy")
 
 [node name="collider" type="CollisionShape2D" parent="ProjectileHitboxComponent"]
+position = Vector2(0.5, -0.5)
 shape = SubResource("RectangleShape2D_vrq6s")
 debug_color = Color(0.67451, 0.498039, 0.286275, 0.329412)
-
-[node name="AnimationComponent" type="Node" parent="." node_paths=PackedStringArray("Sprite")]
-script = ExtResource("4_g5xvd")
-Sprite = NodePath("../sprite")

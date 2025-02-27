@@ -19,7 +19,7 @@ public partial class ShootingComponent : Node2D
 	public delegate void ShootingEventHandler();
 	
 	public bool HurtStatus, OnCooldown;
-	public Vector2 TargetVector;
+	// public Vector2 TargetVector;
 	private bool _reloading;
 	private int _bulletCount;
 	private Vector2 _muzzlePosition;
@@ -33,12 +33,12 @@ public partial class ShootingComponent : Node2D
 	}
 	
 	// Public method
-	public void Shoot()
+	public void Shoot(Vector2 targetVector)
 	{
-		if (!HurtStatus && !OnCooldown)
+		if (!OnCooldown)
 		{
 			EmitSignal(SignalName.Shooting);
-			ShootingLogic();
+			ShootingLogic(targetVector);
 			OnCooldown = true;
 			_shotCooldownTimer.Start();
 		}
@@ -80,19 +80,19 @@ public partial class ShootingComponent : Node2D
 		_bulletCount = 0;
 	}
 
-	private void FlipMuzzle()
+	private void FlipMuzzle(Vector2 targetVector)
 	{
-		if (TargetVector.X < 0)
+		if (targetVector.X < 0)
 		{
 			_muzzle.Position = new Vector2(-_muzzlePosition.X, _muzzlePosition.Y);
 		}
-		else if (TargetVector.X > 0)
+		else if (targetVector.X > 0)
 		{
 			_muzzle.Position = new Vector2(_muzzlePosition.X, _muzzlePosition.Y);
 		}
 	}
 
-	private void ShootingLogic()
+	private void ShootingLogic(Vector2 targetVector)
 	{
 		switch (WeaponType)
 		{
@@ -105,7 +105,7 @@ public partial class ShootingComponent : Node2D
 					CreateAndSetBulletProperties(
 						Utility.PlayerOrEnemy.Enemy, 
 						WeaponType, 
-						GlobalPosition.DirectionTo(TargetVector)
+						GlobalPosition.DirectionTo(targetVector)
 						);
 				}
 				break;
@@ -117,7 +117,7 @@ public partial class ShootingComponent : Node2D
 					CreateAndSetBulletProperties(
 						Utility.PlayerOrEnemy.Enemy, 
 						WeaponType, 
-						GlobalPosition.DirectionTo(TargetVector)
+						GlobalPosition.DirectionTo(targetVector)
 						);
 					
 					_bulletCount++;
@@ -131,24 +131,24 @@ public partial class ShootingComponent : Node2D
 				break;
 			
 			case Utility.WeaponType.PlayerShotgun:
-				FlipMuzzle();
+				FlipMuzzle(targetVector);
 				for (int i = 0; i < ShootingProperties.BulletsPerShot; i++)
 				{
 					CreateAndSetBulletProperties(
 						Utility.PlayerOrEnemy.Player, 
 						WeaponType, 
-						new Vector2(TargetVector.X, TargetVector.Y)
+						new Vector2(targetVector.X, targetVector.Y)
 						);
 				}
 				break;
 			case Utility.WeaponType.PlayerPistol:
 			case Utility.WeaponType.PlayerMachineGun:
 			case Utility.WeaponType.PlayerRailGun:	
-				FlipMuzzle();
+				FlipMuzzle(targetVector);
 				CreateAndSetBulletProperties(
 					Utility.PlayerOrEnemy.Player, 
 					WeaponType,
-					new Vector2(TargetVector.X, TargetVector.Y)
+					new Vector2(targetVector.X, targetVector.Y)
 					);
 				break;
 		}

@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://cswtvyds80uje"]
+[gd_scene load_steps=13 format=3 uid="uid://cswtvyds80uje"]
 
 [ext_resource type="Script" path="res://Enemies/Scripts/RangedEnemyHeavyMachineGunner.cs" id="1_itndo"]
 [ext_resource type="Script" path="res://Components/Scripts/HealthComponent.cs" id="1_xwoja"]
@@ -6,7 +6,6 @@
 [ext_resource type="Script" path="res://Components/Scripts/EnemyControllerComponent.cs" id="2_inllw"]
 [ext_resource type="Script" path="res://Components/Scripts/PlayerDetectionComponent.cs" id="3_tk62a"]
 [ext_resource type="Script" path="res://Components/Scripts/ShootingComponent.cs" id="4_ukard"]
-[ext_resource type="Script" path="res://Components/Scripts/AnimationComponent.cs" id="5_46qp2"]
 [ext_resource type="Texture2D" uid="uid://dqx6rpywerr0u" path="res://icon.svg" id="6_1sfgy"]
 [ext_resource type="Resource" uid="uid://bwnm73me0dsah" path="res://Resources/EnemyHeavyMachineGunShootingProperties.tres" id="7_y7e2o"]
 
@@ -90,14 +89,13 @@ animations = [{
 script = ExtResource("1_itndo")
 _enemyController = NodePath("EnemyControllerComponent")
 
-[node name="EnemyControllerComponent" type="Node" parent="." node_paths=PackedStringArray("_health", "_hurtbox", "_playerDetection", "_shooting", "_animation", "_debugHealthLabel")]
+[node name="EnemyControllerComponent" type="Node" parent="." node_paths=PackedStringArray("_health", "_hurtbox", "_playerDetection", "_shooting", "_debugHealthLabel")]
 script = ExtResource("2_inllw")
 _enemyType = 1
 _health = NodePath("../HealthComponent")
 _hurtbox = NodePath("../HurtboxComponent")
 _playerDetection = NodePath("../PlayerDetectionComponent")
 _shooting = NodePath("../ShootingComponent")
-_animation = NodePath("../AnimationComponent")
 _debugHealthLabel = NodePath("../HealthLabel")
 
 [node name="HealthComponent" type="Node" parent="."]
@@ -105,11 +103,13 @@ script = ExtResource("1_xwoja")
 CurrentHealth = 60
 MaxHealth = 60
 
-[node name="HurtboxComponent" type="Area2D" parent="." node_paths=PackedStringArray("_hurtStaggerTimer") groups=["Enemies"]]
+[node name="HurtboxComponent" type="Area2D" parent="." node_paths=PackedStringArray("_hurtStaggerTimer", "_healthComponent", "_bodySprite") groups=["Enemies"]]
 collision_layer = 32
 collision_mask = 8
 script = ExtResource("2_dk7sr")
 _hurtStaggerTimer = NodePath("HurtStaggerTimer")
+_healthComponent = NodePath("../HealthComponent")
+_bodySprite = NodePath("../spriteBody")
 
 [node name="collider" type="CollisionShape2D" parent="HurtboxComponent"]
 shape = SubResource("RectangleShape2D_aud4t")
@@ -153,10 +153,6 @@ position = Vector2(0, -11)
 [node name="ShotCooldownTimer" type="Timer" parent="ShootingComponent"]
 
 [node name="ReloadTimer" type="Timer" parent="ShootingComponent"]
-
-[node name="AnimationComponent" type="Node" parent="." node_paths=PackedStringArray("Sprite")]
-script = ExtResource("5_46qp2")
-Sprite = NodePath("../spriteBody")
 
 [node name="spriteBody" type="AnimatedSprite2D" parent="."]
 self_modulate = Color(0.0196078, 0.0196078, 0.0196078, 1)

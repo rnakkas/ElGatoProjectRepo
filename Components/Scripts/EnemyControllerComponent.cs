@@ -13,7 +13,6 @@ public partial class EnemyControllerComponent : Node
     [Export] private HurtboxComponent _hurtbox;
     [Export] private PlayerDetectionComponent _playerDetection;
     [Export] private ShootingComponent _shooting;
-    [Export] private AnimationComponent _animation;
     
     [Export] private Label _debugHealthLabel;
 
@@ -33,7 +32,7 @@ public partial class EnemyControllerComponent : Node
     
     private void SetComponentProperties()
     {
-    	_shooting.TargetVector = _playerDetection.PlayerPosition;
+    	// _shooting.TargetVector = _playerDetection.PlayerPosition;
     	_shooting.HurtStatus = _hurtStatus;
     }
 
@@ -43,7 +42,7 @@ public partial class EnemyControllerComponent : Node
 	    {
 		    case Utility.EnemyType.Ranged:
 			    if (_canSeePlayer)
-					_shooting.Shoot();
+					_shooting.Shoot(_playerDetection.PlayerPosition);
 			    break;
 		    
 		    case Utility.EnemyType.Melee:
@@ -52,29 +51,14 @@ public partial class EnemyControllerComponent : Node
     }
     
     // Getting hit by attacks
-    private void OnHitByAttack(
-    	bool hurtStatus, 
-    	Vector2 attackPosition, 
-    	int attackDamage,
-    	float knockback, 
-    	Vector2 attackVelocity
-    )
+    private void OnHitByAttack()
     {
-    	if (_health == null)
-    		return;
-    	if (_animation == null)
-    		return;
-    	
-    	_hurtStatus = hurtStatus;
-    	
-    	_health.TakeDamage(attackDamage);
-    	
-	    _animation?.FlipSprite(attackPosition);
+    	_hurtStatus = true;
     }
     
-    private void OnHurtStatusCleared(bool hurtStatus)
+    private void OnHurtStatusCleared()
     {
-    	_hurtStatus = hurtStatus;
+    	_hurtStatus = false;
     }
 
     // Dying

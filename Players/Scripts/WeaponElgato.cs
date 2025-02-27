@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using ElGatoProject.Components.Scripts;
+using ElGatoProject.Resources;
 using ElGatoProject.Singletons;
 
 namespace ElGatoProject.Players.Scripts;
@@ -8,40 +9,61 @@ namespace ElGatoProject.Players.Scripts;
 public partial class WeaponElgato : Node2D
 {
 	[Export] private ShootingComponent _shooting;
-	[Export] private AnimationComponent _animation;
+	[Export] private AnimatedSprite2D _weaponSprite, _flashSprite, _characterSprite;
+	[Export] private PlayerControllerComponent _playerController;
+	[Export] private PickupsComponent _pickupsComponent;
 	
 	[Export] private Label _debugWeaponLabel;
-	
-	public Vector2 Direction;
-	public bool HurtStatus, IsDashing;
+
+	private Vector2 _direction;
 	private int _weaponAmmo;
+	private Vector2 _weaponPosition;
 	
 	public override void _Ready()
 	{
-		ConnectToSignals();
+		ConnectSignals();
+		
+		_weaponPosition = Position;
+		
+		_weaponSprite.Play(Utility.Instance.EntityIdleAnimation);
+		_flashSprite.Play(Utility.Instance.EntityIdleAnimation);
 	}
 
-	private void ConnectToSignals()
+	private void ConnectSignals()
 	{
+		if (_shooting == null)
+			return;
 		_shooting.Shooting += OnShooting;
+		
+		if (_pickupsComponent == null)
+			return;
+		_pickupsComponent.PickedUpWeaponPowerUp += OnWeaponPowerUpPickedUp;
 	}
 
+	private void OnWeaponPowerUpPickedUp(string weaponPowerUp)
+	{
+		if (Enum.TryParse(weaponPowerUp, out Utility.WeaponType weaponType))
+		{
+			SwitchWeapon(weaponType);
+		}
+	}
+	
 	// Shooting signal connection
 	private void OnShooting()
 	{
-		_animation.PlayWeaponAnimations(true, _shooting.WeaponType);
+		// Change speed scale of animations based on weapon type from shooting properties
+		_weaponSprite.SetSpeedScale(_shooting.ShootingProperties.AnimationSpeed);
+		_flashSprite.SetSpeedScale(_shooting.ShootingProperties.AnimationSpeed);
+		
+		_weaponSprite.Play(Utility.Instance.EntityShootAnimation);
+		_flashSprite.Play(Utility.Instance.EntityShootAnimation);
+	
 		
 		// Only reduce ammo for power-up weapons
 		if (_shooting.WeaponType != Utility.WeaponType.PlayerPistol)
 			_weaponAmmo--;
 	}
 	
-	private void SetComponentProperties()
-	{
-		_shooting.TargetVector = Direction;
-		_shooting.HurtStatus = HurtStatus;
-	}
-
 	public void SwitchWeapon(Utility.WeaponType weaponType)
 	{
 		_shooting.WeaponType = weaponType;
@@ -83,13 +105,25 @@ public partial class WeaponElgato : Node2D
 
 	private void WeaponActions()
 	{
-		if (Input.IsActionPressed("shoot") && !IsDashing)
+		if (
+			Input.IsActionPressed("shoot") && 
+			_playerController?.CurrentState != Utility.CharacterState.Dash &&
+			_playerController?.CurrentState != Utility.CharacterState.Hurt
+			)
 		{
-			_shooting.Shoot();
+			_shooting.Shoot(_direction);
 		}
 		else
 		{
-			_animation.PlayWeaponAnimations(false, _shooting.WeaponType);
+			// Set speed scale back to 1 for idle animations
+			_weaponSprite.SetSpeedScale(1);
+			_flashSprite.SetSpeedScale(1);
+			
+			if (!_weaponSprite.IsPlaying())
+				_weaponSprite.Play(Utility.Instance.EntityIdleAnimation);
+			if (!_flashSprite.IsPlaying())
+				_flashSprite.Play(Utility.Instance.EntityIdleAnimation);
+			
 		}
 		
 		// If weapon power-up ammo runs out, return to pistol
@@ -98,13 +132,44 @@ public partial class WeaponElgato : Node2D
 			SwitchWeapon(Utility.WeaponType.PlayerPistol);
 		}
 	}
+
+	private void SetWeaponDirection()
+	{
+		if (_characterSprite.IsFlippedH())
+		{
+			_direction = Vector2.Left;
+		}
+		else if (!_characterSprite.IsFlippedH())
+		{
+			_direction = Vector2.Right;
+		}
+	}
+	
+	private void FlipSprite()
+	{
+		if (_weaponSprite == null || _flashSprite == null) 
+			return;
+
+		switch (_direction.X)
+		{
+			case < 0:
+				_weaponSprite.FlipH = true;
+				_flashSprite.FlipH = true;
+				Position = new Vector2(-_weaponPosition.X, _weaponPosition.Y);
+				break;
+			case > 0:
+				_weaponSprite.FlipH = false;
+				_flashSprite.FlipH = false;
+				Position = new Vector2(_weaponPosition.X, _weaponPosition.Y);
+				break;
+		}
+	}
 	
 	public override void _Process(double delta)
 	{
-		SetComponentProperties();
+		SetWeaponDirection();
+		FlipSprite();
 		WeaponActions();
-		
-		_animation.FlipSprite(Direction);
 		
 		_debugWeaponLabel.SetText(_shooting.WeaponType + ": " + _weaponAmmo);
 	}

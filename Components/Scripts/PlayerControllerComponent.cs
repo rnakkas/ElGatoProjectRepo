@@ -10,105 +10,36 @@ namespace ElGatoProject.Components.Scripts;
 [GlobalClass]
 public partial class PlayerControllerComponent : Node
 {
-	[Export] private HealthComponent _health;
-	[Export] private HurtboxComponent _hurtbox;
-	[Export] private VelocityComponent _velocityComponent;
-	[Export] private AnimationComponent _animation;
-	[Export] private PickupsComponent _pickupsBox;
-	
+	[Export] private CharacterBody2D _playerCharacter;
 	[Export] private AnimatedSprite2D _sprite;
+	[Export] private VelocityComponent _velocityComponent;
 	[Export] private RayCast2D _leftWallDetect;
 	[Export] private RayCast2D _rightWallDetect;
-	[Export] private Area2D _miscBox;
-	[Export] private WeaponElgato _weapon;
 	[Export] private Timer _dashCooldownTimer;
 	[Export] private Timer _dashTimer;
-	
-	// Debug labels
-	[Export] private Label _debugHealthLabel;
-	[Export] private Label _debugScoreLabel;
-	
-	public Vector2 Velocity = Vector2.Zero;
-	private Vector2 _directionVector = Vector2.Zero;
-	private bool _hurtStatus, _onDashCooldown, _isDashing;
-	public bool IsOnFloor, IsOnCeiling;
-	private int _score;
-	
-	public void ConnectSignals()
-	{
-		if (_pickupsBox == null)
-			return;
-		_pickupsBox.CheckCurrentHealth += OnHealthCheck;
-		_pickupsBox.PickedUpHealth += OnHealthPickedUp;
-		_pickupsBox.PickedUpScoreItem += OnScoreItemPickup;
-		_pickupsBox.PickedUpWeaponMod += OnWeaponModPickup;
-		
-		if (_hurtbox == null)
-			return;
-		_hurtbox.GotHit += OnHitByAttack;
-		_hurtbox.HurtStatusCleared += OnHurtStatusCleared; 
-		
-		_miscBox.AreaEntered += EnteredJumpPad;
+	[Export] private CollisionShape2D _hurtboxCollider;
 
+	private bool _isDashing, _onDashCooldown;
+	private Vector2 _direction = Vector2.Zero;
+	public Utility.CharacterState CurrentState;
+
+	public override void _Ready()
+	{
+		ConnectSignals();
+	}
+
+	private void ConnectSignals()
+	{
 		_dashCooldownTimer.Timeout += OnDashCooldownTimerTimeout;
 		
 		_dashTimer.Timeout += OnDashTimerTimeout;
-	}
-	
-	// Connected signal methods
-	private void OnHealthCheck()
-	{
-		_pickupsBox.MaxHealth = _health.MaxHealth;
-		_pickupsBox.CurrentHealth = _health.CurrentHealth;
-	}
-	
-	private void OnHealthPickedUp(int healAmount)
-	{
-		_health?.Heal(healAmount);
-	}
-	
-	private void OnHitByAttack(
-		bool hurtStatus, 
-		Vector2 attackPosition, 
-		int attackDamage,
-		float knockback, 
-		Vector2 attackVelocity
-	)
-	{
-		_hurtStatus = hurtStatus;
-		
-		_health?.TakeDamage(attackDamage);
-
-		_animation?.FlipSprite(attackPosition);
-
-		if (_velocityComponent == null)
-			return;
-		Velocity.X = _velocityComponent.KnockbackFromAttack(attackPosition, knockback, attackVelocity);
-	}
-	
-	private void OnHurtStatusCleared(bool hurtStatus)
-	{
-		_hurtStatus = hurtStatus;
 	}
 	
 	private void EnteredJumpPad(Area2D area)
 	{
 		if (area.IsInGroup("JumpPads"))
 		{
-			Velocity.Y = _velocityComponent.JumpOnJumpPad((float)area.Get("JumpMultiplier"));
-		}
-	}
-
-	private void OnScoreItemPickup(int scorePoints)
-	{
-		_score += scorePoints;
-	}
-
-	private void OnWeaponModPickup(string modType)
-	{
-		if (Enum.TryParse(modType, out Utility.WeaponType weaponType))
-		{
-			_weapon.SwitchWeapon(weaponType);
+			_velocityComponent.JumpOnJumpPad((float)area.Get("JumpMultiplier"));
 		}
 	}
 
@@ -120,118 +51,247 @@ public partial class PlayerControllerComponent : Node
 	private void OnDashTimerTimeout()
 	{
 		_isDashing = false;
-		_directionVector = Vector2.Zero;
-
-		// Set velocity x to 0 once dashing has finished
-		Velocity.X = _velocityComponent.CalculateVelocity(0, _directionVector).X;
 	}
 	
-	// Helper functions
-	private void SetComponentProperties()
+	// State machine
+
+	public void SetState(Utility.CharacterState newState)
 	{
-		if (_animation == null)
-			return;
-		if (_velocityComponent == null)
+		if (newState == CurrentState)
 			return;
 
-		_animation.Direction = _directionVector;
-		_animation.Velocity = Velocity;
-		_animation.IsOnFloor = IsOnFloor;
-		_animation.IsLeftWallDetected = _leftWallDetect.IsColliding();
-		_animation.IsRightWallDetected = _rightWallDetect.IsColliding();
-		_animation.HurtStatus = _hurtStatus;
-		_animation.IsDashing = _isDashing;
-		
-		_velocityComponent.IsOnFloor = IsOnFloor;
-		_velocityComponent.IsOnCeiling = IsOnCeiling;
-		_velocityComponent.IsLeftWallDetected = _leftWallDetect.IsColliding();
-		_velocityComponent.IsRightWallDetected = _rightWallDetect.IsColliding();
-		_velocityComponent.IsDashing = _isDashing;
-
-		_hurtbox.Monitorable = !_isDashing;
+		ExitState();
+		CurrentState = newState;
+		EnterState();
 	}
-	
-	private void SetWeaponProperties()
+
+	private void ExitState()
 	{
-		if (_weapon == null)
-			return;
-		
-		_weapon.HurtStatus = _hurtStatus;
-		_weapon.IsDashing = _isDashing;
-		
-		if (_animation.Sprite.IsFlippedH())
+		switch (CurrentState)
 		{
-			_weapon.Direction = new Vector2(-1.0f, 0f);
-		}
-		else if (!_animation.Sprite.IsFlippedH())
-		{
-			_weapon.Direction = new Vector2(1.0f, 0f);
+			case Utility.CharacterState.Idle:
+				break;
+			case Utility.CharacterState.Run:
+				break;
+			case Utility.CharacterState.Jump:
+				break;
+			case Utility.CharacterState.Fall:
+				break;
+			case Utility.CharacterState.Hurt:
+				break;
+			case Utility.CharacterState.WallSlide:
+				break;
+			case Utility.CharacterState.WallJump:
+				break;
+			case Utility.CharacterState.Dash:
+				_hurtboxCollider.SetDisabled(false); // Exit invincibility after dash finished
+				_velocityComponent.EntityVelocity = Vector2.Zero;
+				break;
 		}
 	}
 
-	// Player controls
-	private void MovementLogic(float delta)
+	private void EnterState()
 	{
-		BasicMovements(delta);
-		Dash();
+		switch (CurrentState)
+		{
+			case Utility.CharacterState.Idle:
+				_velocityComponent.EntityVelocity.Y = 0;
+				_sprite.Play(Utility.Instance.EntityIdleAnimation);
+				break;
+			case Utility.CharacterState.Run:
+				_sprite.Play(Utility.Instance.EntityRunAnimation);
+				break;
+			case Utility.CharacterState.Jump:
+				_velocityComponent.JumpeVelocity();
+				_sprite.Play(Utility.Instance.EntityJumpAnimation);
+				break;
+			case Utility.CharacterState.Fall:
+				_sprite.Play(Utility.Instance.EntityFallAnimation);
+				break;
+			case Utility.CharacterState.Hurt:
+				_sprite.Play(Utility.Instance.EntityHurtAnimation);
+				break;
+			case Utility.CharacterState.WallSlide:
+				_sprite.Play(Utility.Instance.EntityWallSlideAnimation);
+				break;
+			case Utility.CharacterState.WallJump:
+				_velocityComponent.WallJumpingVelocity(_direction);
+				_sprite.Play(Utility.Instance.EntityJumpAnimation);
+				break;
+			case Utility.CharacterState.Dash:
+				_hurtboxCollider.SetDisabled(true); // Enter invincibility when dashing
+				if (!_sprite.IsFlippedH())
+				{
+					_velocityComponent.DashVelocity(Vector2.Right);
+				}
+				else if (_sprite.IsFlippedH())
+				{
+					_velocityComponent.DashVelocity(Vector2.Left);
+				}
+
+				_isDashing = true;
+				_dashTimer.Start();
+					
+				_onDashCooldown = true;
+				_dashCooldownTimer.Start();
+				
+				_sprite.Play(Utility.Instance.EntityDashAnimation);
+				break;
+		}
 	}
 
-	private void BasicMovements(float delta)
+	public void UpdateState(float delta)
 	{
-		if (Input.IsActionPressed("move_left") && !_isDashing)
-		{
-			_directionVector = Vector2.Left;
-		}
-		else if (Input.IsActionPressed("move_right") && !_isDashing)
-		{
-			_directionVector = Vector2.Right;
-		}
-		else if (
-			(!Input.IsActionPressed("move_left") || !Input.IsActionPressed("move_right")) && 
-			!_isDashing
-		)
-		{
-			_directionVector = Vector2.Zero;
-		}
-		
-		if (Input.IsActionPressed("jump") && !_isDashing)
-		{
-			_directionVector = Vector2.Up;
-		}
-	}
+		_direction = Input.GetVector("move_left", "move_right", "move_up", "move_down");
 
-	private void Dash()
-	{
-		if (!Input.IsActionJustPressed("dashDodge") || _onDashCooldown || _hurtStatus) 
-			return;
+		FlipSprite(_direction);
 		
-		if (!_animation.Sprite.IsFlippedH())
+		switch (CurrentState)
 		{
-			_directionVector = Vector2.Right;
-		}
-		else if (_animation.Sprite.IsFlippedH())
-		{
-			_directionVector = Vector2.Left;
-		}
-
-		_isDashing = true;
-		_dashTimer.Start();
+			case Utility.CharacterState.Idle:
+				_velocityComponent.DecelerateToZeroVelocity(delta);
+				
+				if (_direction != Vector2.Zero) 
+					SetState(Utility.CharacterState.Run);
+				else if (!_playerCharacter.IsOnFloor() || _playerCharacter.IsOnCeiling())
+					SetState(Utility.CharacterState.Fall);
+				else if (Input.IsActionPressed("jump") && _playerCharacter.IsOnFloor()) 
+					SetState(Utility.CharacterState.Jump);
+				
+				if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown) 
+					SetState(Utility.CharacterState.Dash);
+				break;
 			
-		_onDashCooldown = true;
-		_dashCooldownTimer.Start();
+			case Utility.CharacterState.Run:
+				_velocityComponent.AccelerateToMaxVelocity(delta, _direction);
+				
+				if (_direction == Vector2.Zero)
+					SetState(Utility.CharacterState.Idle);
+				else if (!_playerCharacter.IsOnFloor() || _playerCharacter.IsOnCeiling())
+					SetState(Utility.CharacterState.Fall);
+				else if (Input.IsActionPressed("jump") && _playerCharacter.IsOnFloor())
+					SetState(Utility.CharacterState.Jump); 
+				
+				if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown)
+					SetState(Utility.CharacterState.Dash);
+				break;
+			
+			case Utility.CharacterState.Jump:
+				_velocityComponent.AccelerateToMaxVelocity(delta, _direction);
+
+				if (!_playerCharacter.IsOnFloor() || _playerCharacter.IsOnCeiling())
+				{
+					_velocityComponent.FallVelocity(delta);
+
+					if (_velocityComponent.EntityVelocity.Y > 0)
+					{
+						SetState(Utility.CharacterState.Fall);
+					}
+				}
+				else if (
+					!_playerCharacter.IsOnFloor() &&
+					(_leftWallDetect.IsColliding() || _rightWallDetect.IsColliding())
+				)
+				{
+					SetState(Utility.CharacterState.WallSlide);
+				}
+				
+				if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown)
+					SetState(Utility.CharacterState.Dash);
+				break;
+			
+			case Utility.CharacterState.Fall:
+				_velocityComponent.AccelerateToMaxVelocity(delta, _direction);
+				_velocityComponent.FallVelocity(delta);
+				
+				if (_playerCharacter.IsOnFloor())
+					SetState(Utility.CharacterState.Idle);
+				else if (
+					!_playerCharacter.IsOnFloor() &&
+					(_leftWallDetect.IsColliding() || _rightWallDetect.IsColliding())
+				)
+				{
+					SetState(Utility.CharacterState.WallSlide);
+				}
+				
+				if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown)
+					SetState(Utility.CharacterState.Dash);
+				
+				break;
+			case Utility.CharacterState.Hurt:
+				if (!_playerCharacter.IsOnFloor())
+				{
+					_velocityComponent.FallVelocity(delta);
+				}
+				break;
+			case Utility.CharacterState.WallSlide:
+				_velocityComponent.WallSlidingVelocity(delta);
+
+				if (_playerCharacter.IsOnFloor())
+				{
+					SetState(Utility.CharacterState.Idle);
+
+					if (_direction != Vector2.Zero)
+					{
+						SetState(Utility.CharacterState.Run);
+					}
+				}
+				else if (!_playerCharacter.IsOnFloor())
+				{
+					if (_leftWallDetect.IsColliding())
+					{
+						_sprite.FlipH = false;
+						_direction = Vector2.Right;
+					}
+					else if (_rightWallDetect.IsColliding())
+					{
+						_sprite.FlipH = true;
+						_direction = Vector2.Left;
+					}
+
+					if (Input.IsActionJustPressed("jump"))
+					{
+						SetState(Utility.CharacterState.WallJump);
+					}
+				}
+
+				if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown)
+					SetState(Utility.CharacterState.Dash);
+				
+				break;
+			case Utility.CharacterState.WallJump:
+				if (!_playerCharacter.IsOnFloor())
+				{
+					_velocityComponent.FallVelocity(delta);
+
+					if (_velocityComponent.EntityVelocity.Y > 0)
+					{
+						SetState(Utility.CharacterState.Fall);
+					}
+				}
+				break;
+			
+			case Utility.CharacterState.Dash:
+				if (!_isDashing)
+				{
+					SetState(Utility.CharacterState.Idle);
+				}
+				
+				break;
+		}
 	}
 
-	public void PlayerControllerActions(float delta)
+	private void FlipSprite(Vector2 direction)
 	{
-		SetComponentProperties();
-		SetWeaponProperties();
-		MovementLogic(delta);
-		
-		Velocity = _velocityComponent.CalculateVelocity(delta, _directionVector);
-
-		_animation.PlayCharacterAnimations();
-		
-		_debugHealthLabel.SetText("HP: " + _health.CurrentHealth);
-		_debugScoreLabel.SetText("Score: " + _score);
+		if (direction == Vector2.Right)
+		{
+			_sprite.FlipH = false;
+		}
+		else if (direction == Vector2.Left)
+		{
+			_sprite.FlipH = true;
+		}
 	}
+
+	
 }
