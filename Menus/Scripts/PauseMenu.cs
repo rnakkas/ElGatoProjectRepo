@@ -10,6 +10,11 @@ public partial class PauseMenu : Control
 	
 	public override void _Ready()
 	{
+		ConnectSignals();
+	}
+
+	private void ConnectSignals()
+	{
 		_resumeButton.MouseEntered += OnMouseHoverResumeButton;
 		_mainMenuButton.MouseEntered += OnMouseHoverMainMenuButtoon;
 		_exitGameButton.MouseEntered += OnMouseHoverExitGameButton;

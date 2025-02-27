@@ -1,0 +1,76 @@
+[gd_scene load_steps=4 format=3 uid="uid://cdxspo7dwh0iq"]
+
+[ext_resource type="Script" path="res://Players/Scripts/PlayerHud.cs" id="1_qul8y"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rjbe6"]
+bg_color = Color(0.133333, 0.137255, 0.137255, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.941176, 0.964706, 0.964706, 1)
+border_blend = true
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jb0nb"]
+bg_color = Color(0.941176, 0.964706, 0.964706, 1)
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+
+[node name="PlayerHUD" type="Control" node_paths=PackedStringArray("_scoreValue", "_caffeineBar")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_qul8y")
+_scoreValue = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/scoreValue")
+_caffeineBar = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/caffeineBar")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 40.0
+grow_horizontal = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 40
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="scoreLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "SCORE: "
+
+[node name="caffeineLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "CAFFEINE: "
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="scoreValue" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "000489891"
+horizontal_alignment = 2
+
+[node name="caffeineBar" type="ProgressBar" parent="MarginContainer/HBoxContainer/VBoxContainer2"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_rjbe6")
+theme_override_styles/fill = SubResource("StyleBoxFlat_jb0nb")
+step = 1.0
+value = 50.0
+rounded = true
+show_percentage = false

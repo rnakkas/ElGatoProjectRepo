@@ -24,6 +24,9 @@ public partial class PlayerTheCat : CharacterBody2D
 	public override void _Ready()
 	{
 		_velocity = Velocity;
+		
+		Globals.Instance.PlayerMaxHealth = _healthComponent.MaxHealth;
+		Globals.Instance.PlayerCurrentHealth = _healthComponent.CurrentHealth;
 
 		ConnectSignals();
 	}
@@ -35,9 +38,9 @@ public partial class PlayerTheCat : CharacterBody2D
 		_hurtboxComponent.GotHit += OnHitByAttack;
 		_hurtboxComponent.HurtStatusCleared += OnHurtStatusCleared; 
 		
-		if (_pickupsComponent == null)
-			return;
-		_pickupsComponent.PickedUpScoreItem += OnScoreItemPickedUp;
+		// if (_pickupsComponent == null)
+		// 	return;
+		// _pickupsComponent.PickedUpScoreItem += OnScoreItemPickedUp;
 	}
 
 	private void OnHitByAttack()
@@ -50,10 +53,10 @@ public partial class PlayerTheCat : CharacterBody2D
 		_playerController.SetState(Utility.CharacterState.Idle);
 	}
 
-	private void OnScoreItemPickedUp(int scoreAmount)
-	{
-		_score += scoreAmount;
-	}
+	// private void OnScoreItemPickedUp(int scoreAmount)
+	// {
+	// 	_score += scoreAmount;
+	// }
 	
 	public override void _PhysicsProcess(double delta)
 	{
@@ -67,6 +70,6 @@ public partial class PlayerTheCat : CharacterBody2D
 	public override void _Process(double delta)
 	{
 		_debugHealthLabel.SetText("HP: " + _healthComponent.CurrentHealth);
-		_debugScoreLabel.SetText("SCORE: " + _score);
+		// _debugScoreLabel.SetText("SCORE: " + _score);
 	}
 }

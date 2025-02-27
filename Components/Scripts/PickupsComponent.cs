@@ -29,6 +29,7 @@ public partial class PickupsComponent : Area2D
 	public void PickUpScoreItem(int scorePoints)
 	{
 		EmitSignal(SignalName.PickedUpScoreItem, scorePoints);
+		Globals.Instance.PlayerScore += scorePoints;
 	}
 
 	public void PickupWeaponMod(Utility.WeaponType weaponType)
