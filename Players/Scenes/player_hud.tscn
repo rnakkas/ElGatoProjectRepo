@@ -10,13 +10,13 @@ border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.941176, 0.964706, 0.964706, 1)
 border_blend = true
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jb0nb"]
 bg_color = Color(0.941176, 0.964706, 0.964706, 1)
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
 
 [node name="PlayerHUD" type="Control" node_paths=PackedStringArray("_scoreValue", "_caffeineBar")]
 layout_mode = 3
@@ -35,8 +35,8 @@ anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 40.0
 grow_horizontal = 2
-theme_override_constants/margin_left = 40
-theme_override_constants/margin_top = 20
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 40
 theme_override_constants/margin_bottom = 40
 

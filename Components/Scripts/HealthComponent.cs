@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using ElGatoProject.Singletons;
 
 namespace ElGatoProject.Components.Scripts;
 
@@ -11,11 +12,15 @@ public partial class HealthComponent : Node
 	
 	[Signal]
 	public delegate void HealthDepletedEventHandler();
+	[Signal]
+	public delegate void HealthChangedEventHandler();
 
 	public void TakeDamage(int damage)
 	{
 		CurrentHealth -= damage;
 
+		EmitSignal(SignalName.HealthChanged);
+		
 		if (CurrentHealth <= 0)
 		{
 			EmitSignal(SignalName.HealthDepleted);
@@ -28,6 +33,9 @@ public partial class HealthComponent : Node
 			return false;
 		
 		CurrentHealth = Mathf.Min(CurrentHealth + heal, MaxHealth);
+		
+		EmitSignal(SignalName.HealthChanged);
+		
 		return true;
 	}
 }

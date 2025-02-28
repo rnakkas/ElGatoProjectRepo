@@ -2,6 +2,7 @@ using Godot;
 using ElGatoProject.Menus.Scripts;
 using ElGatoProject.Players.Scripts;
 using ElGatoProject.SceneTransitions.Scripts;
+using ElGatoProject.Singletons;
 
 namespace ElGatoProject.Mains.Scripts;
 public partial class Main : Node2D
@@ -43,6 +44,8 @@ public partial class Main : Node2D
 		_sceneTransition?.TransitionToScene();
 		_levelLoader.UnloadCurrentLevel();
 		_mainMenu.MainMenuVisibility(true);
+		_playerHud.SetVisible(false);
+		Globals.Instance.PlayerScore = 0;
 	}
 
 	// Allows pausing and resuming using the same input key 

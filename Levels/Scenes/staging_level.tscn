@@ -95,7 +95,7 @@ physics_layer_0/collision_layer = 4
 physics_layer_0/collision_mask = 9
 sources/0 = SubResource("TileSetAtlasSource_nyd86")
 
-[node name="staging_level" type="Node2D"]
+[node name="staging_level" type="Node2D" groups=["Levels"]]
 process_mode = 1
 
 [node name="back" type="TileMapLayer" parent="."]

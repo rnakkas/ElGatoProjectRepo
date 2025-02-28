@@ -34,14 +34,6 @@ public partial class PlayerControllerComponent : Node
 		
 		_dashTimer.Timeout += OnDashTimerTimeout;
 	}
-	
-	private void EnteredJumpPad(Area2D area)
-	{
-		if (area.IsInGroup("JumpPads"))
-		{
-			_velocityComponent.JumpOnJumpPad((float)area.Get("JumpMultiplier"));
-		}
-	}
 
 	private void OnDashCooldownTimerTimeout()
 	{

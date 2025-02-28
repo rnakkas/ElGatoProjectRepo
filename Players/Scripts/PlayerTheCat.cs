@@ -13,9 +13,6 @@ public partial class PlayerTheCat : CharacterBody2D
 	[Export] private VelocityComponent _velocityComponent;
 	[Export] private PickupsComponent _pickupsComponent;
 
-	[Export] private Label _debugHealthLabel;
-	[Export] private Label _debugScoreLabel;
-
 	private bool _isDashing, _hurtStatus;
 	private Vector2 _velocity, _direction = Vector2.Zero;
 	
@@ -24,11 +21,17 @@ public partial class PlayerTheCat : CharacterBody2D
 	public override void _Ready()
 	{
 		_velocity = Velocity;
-		
-		Globals.Instance.PlayerMaxHealth = _healthComponent.MaxHealth;
-		Globals.Instance.PlayerCurrentHealth = _healthComponent.CurrentHealth;
 
+		EmitSignals();
 		ConnectSignals();
+	}
+
+	private void EmitSignals()
+	{
+		// For HUD
+		EventsBus.Instance.EmitSignal(nameof(EventsBus.PlayerMaxHealthUpdate), _healthComponent.MaxHealth);
+		EventsBus.Instance.EmitSignal(nameof(EventsBus.PlayerCurrentHealthUpdate), _healthComponent.CurrentHealth);
+		EventsBus.Instance.EmitSignal(nameof(EventsBus.PlayerScoreUpdate), Globals.Instance.PlayerScore);
 	}
 
 	private void ConnectSignals()
@@ -38,9 +41,13 @@ public partial class PlayerTheCat : CharacterBody2D
 		_hurtboxComponent.GotHit += OnHitByAttack;
 		_hurtboxComponent.HurtStatusCleared += OnHurtStatusCleared; 
 		
-		// if (_pickupsComponent == null)
-		// 	return;
-		// _pickupsComponent.PickedUpScoreItem += OnScoreItemPickedUp;
+		if (_healthComponent == null)
+			return;
+		_healthComponent.HealthChanged += OnPlayerHealthChanged;
+
+		if (_pickupsComponent == null)
+			return;
+		_pickupsComponent.PickedUpScoreItem += OnScoreItemPickedUp;
 	}
 
 	private void OnHitByAttack()
@@ -53,10 +60,17 @@ public partial class PlayerTheCat : CharacterBody2D
 		_playerController.SetState(Utility.CharacterState.Idle);
 	}
 
-	// private void OnScoreItemPickedUp(int scoreAmount)
-	// {
-	// 	_score += scoreAmount;
-	// }
+	// To display health on HUD
+	private void OnPlayerHealthChanged()
+	{
+		EventsBus.Instance.EmitSignal(nameof(EventsBus.PlayerCurrentHealthUpdate), _healthComponent.CurrentHealth);
+	}
+
+	// To display score on HUD
+	private void OnScoreItemPickedUp()
+	{
+		EventsBus.Instance.EmitSignal(nameof(EventsBus.PlayerScoreUpdate), Globals.Instance.PlayerScore);
+	}
 	
 	public override void _PhysicsProcess(double delta)
 	{
@@ -67,9 +81,4 @@ public partial class PlayerTheCat : CharacterBody2D
 		MoveAndSlide();
 	}
 
-	public override void _Process(double delta)
-	{
-		_debugHealthLabel.SetText("HP: " + _healthComponent.CurrentHealth);
-		// _debugScoreLabel.SetText("SCORE: " + _score);
-	}
 }

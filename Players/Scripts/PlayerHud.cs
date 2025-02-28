@@ -12,12 +12,29 @@ public partial class PlayerHud : Control
 	{
 		if (!IsVisible())
 			return;
-		
-		_scoreValue.SetText(Globals.Instance.PlayerScore.ToString());
-		_caffeineBar.SetMax(Globals.Instance.PlayerMaxHealth);
-		_caffeineBar.SetValue(Globals.Instance.PlayerCurrentHealth);
-		
-		GD.Print("Max HP: " + Globals.Instance.PlayerMaxHealth + ", Current HP: " + Globals.Instance.PlayerCurrentHealth);
+		ConnectSignals();
+	}
+
+	private void ConnectSignals()
+	{
+		EventsBus.Instance.PlayerMaxHealthUpdate += OnPlayerMaxHealthReceived;
+		EventsBus.Instance.PlayerCurrentHealthUpdate += OnPlayerCurrentHealthReceived;
+		EventsBus.Instance.PlayerScoreUpdate += OnPlayerScoreChangeReceived;
+	}
+
+	private void OnPlayerMaxHealthReceived(int maxHealth)
+	{
+		_caffeineBar.SetMax(maxHealth);
+	}
+
+	private void OnPlayerCurrentHealthReceived(int currentHealth)
+	{
+		_caffeineBar.SetValue(currentHealth);
+	}
+
+	private void OnPlayerScoreChangeReceived(int score)
+	{
+		_scoreValue.SetText(score.ToString("D8"));
 	}
 	
 }
