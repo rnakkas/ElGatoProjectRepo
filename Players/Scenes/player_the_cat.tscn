@@ -451,10 +451,15 @@ one_shot = true
 script = ExtResource("5_jql4e")
 CharacterVelocityProperties = ExtResource("7_u5ntm")
 
-[node name="HealthComponent" type="Node" parent="."]
+[node name="HealthComponent" type="Node" parent="." node_paths=PackedStringArray("_caffeineDrainTimer")]
 script = ExtResource("2_irjyl")
 CurrentHealth = 85
-MaxHealth = 100
+_maxHealth = 100
+_caffeineDrainTimer = NodePath("caffeineDrainTimer")
+
+[node name="caffeineDrainTimer" type="Timer" parent="HealthComponent"]
+wait_time = 0.9
+autostart = true
 
 [node name="HurtboxComponent" type="Area2D" parent="." node_paths=PackedStringArray("_hurtStaggerTimer", "_healthComponent", "_bodySprite", "_velocityComponent") groups=["PlayersHurtBox"]]
 collision_mask = 64

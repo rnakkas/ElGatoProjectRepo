@@ -88,6 +88,9 @@ public partial class Utility : Node
     public string SceneTransitionWipeAnimation = "screen_wipe_animation";
     public string ShaderParameterWipeColor = "wipe_color";
     
+    // Node group string names
+    public string NodeGroupPlayers = "Players";
+    
     public override void _Ready()
     {
         Instance = this;
