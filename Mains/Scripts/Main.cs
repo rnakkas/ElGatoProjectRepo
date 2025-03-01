@@ -45,6 +45,8 @@ public partial class Main : Node2D
 		_levelLoader.UnloadCurrentLevel();
 		_mainMenu.MainMenuVisibility(true);
 		_playerHud.SetVisible(false);
+		
+		// Reset player score on return to main menu
 		Globals.Instance.PlayerScore = 0;
 	}
 

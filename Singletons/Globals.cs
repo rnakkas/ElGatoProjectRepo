@@ -9,7 +9,8 @@ public partial class Globals : Node
     public static Globals Instance { get; private set; }
 
     public RandomNumberGenerator Rng = new();
-    public int PlayerScore { get; set; }
+
+    public int PlayerScore = 0;
     
     //TODO: Move these to Utilities.cs
     public PackedScene BulletProjectile = 

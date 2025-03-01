@@ -12,14 +12,22 @@ public partial class HealthComponent : Node
 	
 	[Signal]
 	public delegate void HealthDepletedEventHandler();
-	[Signal]
-	public delegate void HealthChangedEventHandler();
+
+	public override void _Ready()
+	{
+		if (!Owner.IsInGroup("Players"))
+			return;
+		
+		EventsBus.Instance.EmitSignal(nameof(EventsBus.PlayerMaxHealthUpdate), MaxHealth);
+		EventsBus.Instance.EmitSignal(nameof(EventsBus.PlayerCurrentHealthUpdate), CurrentHealth);
+	}
 
 	public void TakeDamage(int damage)
 	{
 		CurrentHealth -= damage;
 
-		EmitSignal(SignalName.HealthChanged);
+		if (Owner.IsInGroup("Players"))
+			EventsBus.Instance.EmitSignal(nameof(EventsBus.PlayerCurrentHealthUpdate), CurrentHealth);
 		
 		if (CurrentHealth <= 0)
 		{
@@ -34,7 +42,8 @@ public partial class HealthComponent : Node
 		
 		CurrentHealth = Mathf.Min(CurrentHealth + heal, MaxHealth);
 		
-		EmitSignal(SignalName.HealthChanged);
+		if (Owner.IsInGroup("Players"))
+			EventsBus.Instance.EmitSignal(nameof(EventsBus.PlayerCurrentHealthUpdate), CurrentHealth);
 		
 		return true;
 	}
