@@ -13,6 +13,10 @@ public partial class EventsBus : Node
 	public delegate void PlayerCurrentHealthUpdateEventHandler(int currentHealth);
 	[Signal]
 	public delegate void PlayerScoreUpdateEventHandler(int score);
+	[Signal]
+	public delegate void PlayerCurrentWeaponUpdateEventHandler(Utility.WeaponType weapon);
+	[Signal]
+	public delegate void PlayerCurrentWeaponAmmoUpdateEventHandler(int ammo);
 	
 	public override void _Ready()
 	{

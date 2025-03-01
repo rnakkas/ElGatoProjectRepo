@@ -37,6 +37,9 @@ public partial class Main : Node2D
 		_sceneTransition?.TransitionToScene();
 		
 		_playerHud.SetVisible(true);
+		
+		// Set player score to 0 on new game start
+		_playerHud.UpdatePlayerScore(Globals.Instance.PlayerScore = 0);
 	}
 
 	private void OnReturnToMainMenuPressed()
@@ -47,7 +50,7 @@ public partial class Main : Node2D
 		_playerHud.SetVisible(false);
 		
 		// Reset player score on return to main menu
-		Globals.Instance.PlayerScore = 0;
+		_playerHud.UpdatePlayerScore(Globals.Instance.PlayerScore = 0);
 	}
 
 	// Allows pausing and resuming using the same input key 

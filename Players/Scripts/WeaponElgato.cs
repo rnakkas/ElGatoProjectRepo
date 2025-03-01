@@ -27,6 +27,10 @@ public partial class WeaponElgato : Node2D
 		
 		_weaponSprite.Play(Utility.Instance.EntityIdleAnimation);
 		_flashSprite.Play(Utility.Instance.EntityIdleAnimation);
+
+		GD.Print(_shooting.WeaponType);
+		EventsBus.Instance.EmitSignal(nameof(EventsBus.Instance.PlayerCurrentWeaponUpdate), _shooting.WeaponType.ToString());
+		EventsBus.Instance.EmitSignal(nameof(EventsBus.Instance.PlayerCurrentWeaponAmmoUpdate), _weaponAmmo);
 	}
 
 	private void ConnectSignals()

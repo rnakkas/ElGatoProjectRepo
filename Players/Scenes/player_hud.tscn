@@ -18,7 +18,7 @@ bg_color = Color(0.941176, 0.964706, 0.964706, 1)
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 
-[node name="PlayerHUD" type="Control" node_paths=PackedStringArray("_scoreValue", "_caffeineBar")]
+[node name="PlayerHUD" type="Control" node_paths=PackedStringArray("_scoreValue", "_weaponType", "_weaponAmmo", "_caffeineBar")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -27,6 +27,8 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_qul8y")
 _scoreValue = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/scoreValue")
+_weaponType = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer/weaponType")
+_weaponAmmo = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer/weaponAmmo")
 _caffeineBar = NodePath("MarginContainer/HBoxContainer/VBoxContainer2/caffeineBar")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
@@ -66,7 +68,6 @@ size_flags_horizontal = 0
 
 [node name="scoreValue" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
-text = "000489891"
 horizontal_alignment = 2
 
 [node name="caffeineBar" type="ProgressBar" parent="MarginContainer/HBoxContainer/VBoxContainer2"]
@@ -84,12 +85,15 @@ layout_mode = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer/VBoxContainer2"]
 layout_mode = 2
-theme_override_constants/separation = 30
+theme_override_constants/separation = 20
 
 [node name="weaponType" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer"]
+custom_minimum_size = Vector2(130, 0)
 layout_mode = 2
 text = "Machine Gun"
 
 [node name="weaponAmmo" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer2/HBoxContainer"]
+custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 text = "200"
+horizontal_alignment = 1
