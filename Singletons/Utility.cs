@@ -91,6 +91,9 @@ public partial class Utility : Node
     // Node group string names
     public string NodeGroupPlayers = "Players";
     
+    // Misc strings
+    public string InfinitySymbol = "\u221E";
+    
     public override void _Ready()
     {
         Instance = this;
