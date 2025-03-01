@@ -55,6 +55,10 @@ text = "SCORE: "
 layout_mode = 2
 text = "CAFFEINE: "
 
+[node name="weaponLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "WEAPON: "
+
 [node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
