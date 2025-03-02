@@ -15,8 +15,6 @@ public partial class EventsBus : Node
 	public delegate void PlayerScoreUpdateEventHandler(int score);
 	[Signal]
 	public delegate void PlayerCurrentWeaponUpdateEventHandler(string weaponType, int ammo);
-	// [Signal]
-	// public delegate void PlayerCurrentWeaponAmmoUpdateEventHandler(string weaponType, int ammo);
 	
 	public override void _Ready()
 	{

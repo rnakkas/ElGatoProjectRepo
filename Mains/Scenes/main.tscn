@@ -20,12 +20,12 @@ _playerHud = NodePath("UI/PlayerHUD")
 
 [node name="UI" type="CanvasLayer" parent="."]
 
+[node name="PlayerHUD" parent="UI" instance=ExtResource("5_biahh")]
+
 [node name="MainMenu" parent="UI" instance=ExtResource("2_qhitg")]
 process_mode = 3
 
 [node name="PauseMenu" parent="UI" instance=ExtResource("3_vsq55")]
-
-[node name="PlayerHUD" parent="UI" instance=ExtResource("5_biahh")]
 
 [node name="LevelLoader" type="Node" parent="."]
 script = ExtResource("4_aum1p")
