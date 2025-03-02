@@ -21,7 +21,6 @@ public partial class PlayerHud : Control
 		EventsBus.Instance.PlayerCurrentHealthUpdate += OnPlayerCurrentHealthReceived;
 		EventsBus.Instance.PlayerScoreUpdate += OnPlayerScoreChangeReceived;
 		EventsBus.Instance.PlayerCurrentWeaponUpdate += OnPlayerCurrentWeaponReceived;
-		EventsBus.Instance.PlayerCurrentWeaponAmmoUpdate += OnPlayerCurrentWeaponAmmoReceived;
 	}
 
 	private void OnPlayerMaxHealthReceived(int maxHealth)
@@ -44,13 +43,15 @@ public partial class PlayerHud : Control
 		_scoreValue.SetText(score.ToString("D8"));
 	}
 
-	private void OnPlayerCurrentWeaponReceived(Utility.WeaponType weaponType)
+	private void OnPlayerCurrentWeaponReceived(string weaponType, int ammo)
 	{
-		_weaponType.SetText(weaponType.ToString());
-	}
+		if (_weaponType.Text != weaponType)
+		{
+			_weaponType.SetText(weaponType);
+		}
 
-	private void OnPlayerCurrentWeaponAmmoReceived(int ammo)
-	{
-		_weaponAmmo.SetText(ammo.ToString());
+		_weaponAmmo.SetText(weaponType == Utility.WeaponType.PlayerPistol.ToString()
+			? Utility.Instance.InfinitySymbol
+			: ammo.ToString());
 	}
 }
