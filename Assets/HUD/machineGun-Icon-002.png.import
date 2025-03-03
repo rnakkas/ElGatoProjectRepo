@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bocou8apk6nlc"
-path="res://.godot/imported/machineGun-Icon-001.png-e62eac5379a7b1b42276ffa52950ae0a.ctex"
+uid="uid://cytlmcjanr62v"
+path="res://.godot/imported/machineGun-Icon-002.png-3d193f2d5de73eb2ba7e0dd14763fb57.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/HUD/machineGun-Icon-001.png"
-dest_files=["res://.godot/imported/machineGun-Icon-001.png-e62eac5379a7b1b42276ffa52950ae0a.ctex"]
+source_file="res://Assets/HUD/machineGun-Icon-002.png"
+dest_files=["res://.godot/imported/machineGun-Icon-002.png-3d193f2d5de73eb2ba7e0dd14763fb57.ctex"]
 
 [params]
 

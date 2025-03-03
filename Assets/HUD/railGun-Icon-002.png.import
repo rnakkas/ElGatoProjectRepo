@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c15frkvib0h86"
-path="res://.godot/imported/shotgun-Icon-001.png-a072bad45e8881bce4ebdc439cbffc05.ctex"
+uid="uid://dueit6qwvturr"
+path="res://.godot/imported/railGun-Icon-002.png-05b393dacfa20193b5830ae079490e7b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/HUD/shotgun-Icon-001.png"
-dest_files=["res://.godot/imported/shotgun-Icon-001.png-a072bad45e8881bce4ebdc439cbffc05.ctex"]
+source_file="res://Assets/HUD/railGun-Icon-002.png"
+dest_files=["res://.godot/imported/railGun-Icon-002.png-05b393dacfa20193b5830ae079490e7b.ctex"]
 
 [params]
 

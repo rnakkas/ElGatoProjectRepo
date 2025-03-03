@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://cdxspo7dwh0iq"]
 
 [ext_resource type="Script" path="res://Players/Scripts/PlayerHud.cs" id="1_qul8y"]
-[ext_resource type="Texture2D" uid="uid://bocou8apk6nlc" path="res://Assets/HUD/machineGun-Icon-001.png" id="2_3hc70"]
+[ext_resource type="Texture2D" uid="uid://cytlmcjanr62v" path="res://Assets/HUD/machineGun-Icon-002.png" id="2_3acm0"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rjbe6"]
 bg_color = Color(0.133333, 0.137255, 0.137255, 1)
@@ -81,7 +81,7 @@ theme_override_constants/separation = 10
 
 [node name="weaponTypeIcon" type="TextureRect" parent="MarginContainer/VBoxContainer-HUD/HBoxContainer-Weapons"]
 layout_mode = 2
-texture = ExtResource("2_3hc70")
+texture = ExtResource("2_3acm0")
 
 [node name="weaponAmmo" type="Label" parent="MarginContainer/VBoxContainer-HUD/HBoxContainer-Weapons"]
 custom_minimum_size = Vector2(40, 0)

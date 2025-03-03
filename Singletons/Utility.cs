@@ -96,9 +96,9 @@ public partial class Utility : Node
     
     // Packed scene path strings
     // HUD Icons
-    public string ShotgunHudIconTexturePath = "res://Assets/HUD/shotgun-Icon-001.png";
-    public string MachineGunHudIconTexturePath = "res://Assets/HUD/machineGun-Icon-001.png";
-    public string RailGunHudIconTexturePath = "res://Assets/HUD/railGun-Icon-001.png";
+    public string ShotgunHudIconTexturePath = "res://Assets/HUD/shotgun-Icon-002.png";
+    public string MachineGunHudIconTexturePath = "res://Assets/HUD/machineGun-Icon-002.png";
+    public string RailGunHudIconTexturePath = "res://Assets/HUD/railGun-Icon-002.png";
     
     public override void _Ready()
     {
