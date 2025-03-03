@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://cdxspo7dwh0iq"]
+[gd_scene load_steps=5 format=3 uid="uid://cdxspo7dwh0iq"]
 
 [ext_resource type="Script" path="res://Players/Scripts/PlayerHud.cs" id="1_qul8y"]
+[ext_resource type="Texture2D" uid="uid://c15frkvib0h86" path="res://Assets/HUD/shotgun-Icon-001.png" id="2_q5u1x"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rjbe6"]
 bg_color = Color(0.133333, 0.137255, 0.137255, 1)
@@ -92,9 +93,14 @@ layout_mode = 2
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 20
+theme_override_constants/separation = 19
+
+[node name="weaponTypeIcon" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = ExtResource("2_q5u1x")
 
 [node name="weaponType" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+visible = false
 custom_minimum_size = Vector2(130, 0)
 layout_mode = 2
 size_flags_horizontal = 8
