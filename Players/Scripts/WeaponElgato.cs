@@ -27,6 +27,10 @@ public partial class WeaponElgato : Node2D
 		
 		_weaponSprite.Play(Utility.Instance.EntityIdleAnimation);
 		_flashSprite.Play(Utility.Instance.EntityIdleAnimation);
+
+		// For HUD
+		EventsBus.Instance.EmitSignal(nameof(EventsBus.Instance.PlayerCurrentWeaponUpdate),
+			_shooting.WeaponType.ToString());
 	}
 
 	private void ConnectSignals()
@@ -60,11 +64,15 @@ public partial class WeaponElgato : Node2D
 	
 		
 		// Only reduce ammo for power-up weapons
-		if (_shooting.WeaponType != Utility.WeaponType.PlayerPistol)
-			_weaponAmmo--;
+		if (_shooting.WeaponType == Utility.WeaponType.PlayerPistol) 
+			return;
+		_weaponAmmo--;
+		
+		// For HUD
+		EventsBus.Instance.EmitSignal(nameof(EventsBus.Instance.PlayerAmmoUpdate), _weaponAmmo);
 	}
-	
-	public void SwitchWeapon(Utility.WeaponType weaponType)
+
+	private void SwitchWeapon(Utility.WeaponType weaponType)
 	{
 		_shooting.WeaponType = weaponType;
 		
@@ -101,6 +109,10 @@ public partial class WeaponElgato : Node2D
 		
 		// Set the updated timer values for the new weapon type
 		_shooting.SetTimerValues(); 
+		
+		// For HUD
+		EventsBus.Instance.EmitSignal(nameof(EventsBus.Instance.PlayerCurrentWeaponUpdate), weaponType.ToString());
+		EventsBus.Instance.EmitSignal(nameof(EventsBus.Instance.PlayerAmmoUpdate), _weaponAmmo);
 	}
 
 	private void WeaponActions()

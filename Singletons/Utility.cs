@@ -88,6 +88,18 @@ public partial class Utility : Node
     public string SceneTransitionWipeAnimation = "screen_wipe_animation";
     public string ShaderParameterWipeColor = "wipe_color";
     
+    // Node group string names
+    public string NodeGroupPlayers = "Players";
+    
+    // Misc strings
+    public string InfinitySymbol = "\u221E";
+    
+    // Packed scene path strings
+    // HUD Icons
+    public string ShotgunHudIconTexturePath = "res://Assets/HUD/shotgun-Icon-001.png";
+    public string MachineGunHudIconTexturePath = "res://Assets/HUD/machineGun-Icon-001.png";
+    public string RailGunHudIconTexturePath = "res://Assets/HUD/railGun-Icon-001.png";
+    
     public override void _Ready()
     {
         Instance = this;

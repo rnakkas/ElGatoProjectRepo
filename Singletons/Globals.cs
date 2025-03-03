@@ -9,7 +9,10 @@ public partial class Globals : Node
     public static Globals Instance { get; private set; }
 
     public RandomNumberGenerator Rng = new();
+
+    public int PlayerScore = 0;
     
+    //TODO: Move these to Utilities.cs
     public PackedScene BulletProjectile = 
         ResourceLoader.Load<PackedScene>("res://Projectiles/Scenes/bullet_projectile.tscn");
 

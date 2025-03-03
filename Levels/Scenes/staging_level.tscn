@@ -95,7 +95,7 @@ physics_layer_0/collision_layer = 4
 physics_layer_0/collision_mask = 9
 sources/0 = SubResource("TileSetAtlasSource_nyd86")
 
-[node name="staging_level" type="Node2D"]
+[node name="staging_level" type="Node2D" groups=["Levels"]]
 process_mode = 1
 
 [node name="back" type="TileMapLayer" parent="."]
@@ -218,7 +218,7 @@ position = Vector2(825, 305)
 [node name="WeaponModPickups" type="Node" parent="."]
 
 [node name="WeaponModShotgun" parent="WeaponModPickups" instance=ExtResource("12_jqfr8")]
-position = Vector2(175, 49)
+position = Vector2(717, 317)
 
 [node name="WeaponModMachineGun" parent="WeaponModPickups" instance=ExtResource("13_osyl6")]
 position = Vector2(570, 323)

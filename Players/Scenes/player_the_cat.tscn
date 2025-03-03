@@ -391,7 +391,7 @@ animations = [{
 "speed": 10.0
 }]
 
-[node name="PlayerTheCat" type="CharacterBody2D" node_paths=PackedStringArray("_playerController", "_healthComponent", "_hurtboxComponent", "_velocityComponent", "_pickupsComponent", "_debugHealthLabel", "_debugScoreLabel") groups=["Players"]]
+[node name="PlayerTheCat" type="CharacterBody2D" node_paths=PackedStringArray("_playerController", "_healthComponent", "_hurtboxComponent", "_velocityComponent", "_pickupsComponent") groups=["Players"]]
 z_index = 100
 collision_mask = 6
 script = ExtResource("1_ngcol")
@@ -400,8 +400,6 @@ _healthComponent = NodePath("HealthComponent")
 _hurtboxComponent = NodePath("HurtboxComponent")
 _velocityComponent = NodePath("VelocityComponent")
 _pickupsComponent = NodePath("PickupsComponent")
-_debugHealthLabel = NodePath("HealthLabel")
-_debugScoreLabel = NodePath("ScoreLabel")
 
 [node name="LeftWallDetect" type="RayCast2D" parent="."]
 self_modulate = Color(1, 0, 1, 1)
@@ -453,10 +451,15 @@ one_shot = true
 script = ExtResource("5_jql4e")
 CharacterVelocityProperties = ExtResource("7_u5ntm")
 
-[node name="HealthComponent" type="Node" parent="."]
+[node name="HealthComponent" type="Node" parent="." node_paths=PackedStringArray("_caffeineDrainTimer")]
 script = ExtResource("2_irjyl")
 CurrentHealth = 85
-MaxHealth = 100
+_maxHealth = 100
+_caffeineDrainTimer = NodePath("caffeineDrainTimer")
+
+[node name="caffeineDrainTimer" type="Timer" parent="HealthComponent"]
+wait_time = 0.9
+autostart = true
 
 [node name="HurtboxComponent" type="Area2D" parent="." node_paths=PackedStringArray("_hurtStaggerTimer", "_healthComponent", "_bodySprite", "_velocityComponent") groups=["PlayersHurtBox"]]
 collision_mask = 64
@@ -497,20 +500,6 @@ _characterSprite = NodePath("../sprite")
 _playerController = NodePath("../PlayerControllerComponent")
 _pickupsComponent = NodePath("../PickupsComponent")
 _debugWeaponLabel = NodePath("../WeaponAmmoLabel")
-
-[node name="HealthLabel" type="Label" parent="."]
-offset_left = -12.0
-offset_top = -25.0
-offset_right = 31.0
-offset_bottom = -12.0
-theme_override_font_sizes/font_size = 9
-
-[node name="ScoreLabel" type="Label" parent="."]
-offset_left = -12.0
-offset_top = -36.0
-offset_right = 31.0
-offset_bottom = -23.0
-theme_override_font_sizes/font_size = 9
 
 [node name="WeaponAmmoLabel" type="Label" parent="."]
 offset_left = -12.0

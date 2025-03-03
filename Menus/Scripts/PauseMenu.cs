@@ -10,20 +10,25 @@ public partial class PauseMenu : Control
 	
 	public override void _Ready()
 	{
+		ConnectSignals();
+	}
+
+	private void ConnectSignals()
+	{
 		_resumeButton.MouseEntered += OnMouseHoverResumeButton;
-		_mainMenuButton.MouseEntered += OnMouseHoverMainMenuButtoon;
+		_mainMenuButton.MouseEntered += OnMouseHoverMainMenuButton;
 		_exitGameButton.MouseEntered += OnMouseHoverExitGameButton;
 		
 		_resumeButton.Pressed += OnResumeButtonPressed;
 		_mainMenuButton.Pressed += OnMainMenuButtonPressed;
-		_exitGameButton.Pressed += OnExitGaneButtonPressed;
+		_exitGameButton.Pressed += OnExitGameButtonPressed;
 	}
 
 	private void OnMouseHoverResumeButton()
 	{
 		_resumeButton.GrabFocus();
 	}
-	private void OnMouseHoverMainMenuButtoon()
+	private void OnMouseHoverMainMenuButton()
 	{
 		_mainMenuButton.GrabFocus();
 	}
@@ -45,7 +50,7 @@ public partial class PauseMenu : Control
 		EmitSignal(SignalName.ReturnToMainMenu);
 	}
 
-	private void OnExitGaneButtonPressed()
+	private void OnExitGameButtonPressed()
 	{
 		GetTree().Quit();
 	}

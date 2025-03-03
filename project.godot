@@ -39,6 +39,7 @@ CatnipPickups="Group for collectibles, score, catnip etc pickups "
 WeaponModPickups="Group for weapon mod pickups"
 PlayersPickupsBox="Group for player's pickups box"
 PlayersHurtBox="Group for player's hurt box"
+Levels="Group for levels"
 
 [input]
 
