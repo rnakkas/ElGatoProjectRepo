@@ -29,11 +29,8 @@ public partial class WeaponElgato : Node2D
 		_flashSprite.Play(Utility.Instance.EntityIdleAnimation);
 
 		// For HUD
-		EventsBus.Instance.EmitSignal(
-			nameof(EventsBus.Instance.PlayerCurrentWeaponUpdate),
-			_shooting.WeaponType.ToString(),
-			_weaponAmmo
-			);
+		EventsBus.Instance.EmitSignal(nameof(EventsBus.Instance.PlayerCurrentWeaponUpdate),
+			_shooting.WeaponType.ToString());
 	}
 
 	private void ConnectSignals()
@@ -72,10 +69,7 @@ public partial class WeaponElgato : Node2D
 		_weaponAmmo--;
 		
 		// For HUD
-		EventsBus.Instance.EmitSignal(
-			nameof(EventsBus.Instance.PlayerCurrentWeaponUpdate), 
-			_shooting.WeaponType.ToString(), 
-			_weaponAmmo); 
+		EventsBus.Instance.EmitSignal(nameof(EventsBus.Instance.PlayerAmmoUpdate), _weaponAmmo);
 	}
 
 	private void SwitchWeapon(Utility.WeaponType weaponType)
@@ -117,11 +111,8 @@ public partial class WeaponElgato : Node2D
 		_shooting.SetTimerValues(); 
 		
 		// For HUD
-		EventsBus.Instance.EmitSignal(
-			nameof(EventsBus.Instance.PlayerCurrentWeaponUpdate), 
-			weaponType.ToString(),
-			_weaponAmmo
-			);
+		EventsBus.Instance.EmitSignal(nameof(EventsBus.Instance.PlayerCurrentWeaponUpdate), weaponType.ToString());
+		EventsBus.Instance.EmitSignal(nameof(EventsBus.Instance.PlayerAmmoUpdate), _weaponAmmo);
 	}
 
 	private void WeaponActions()

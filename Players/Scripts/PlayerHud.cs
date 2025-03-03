@@ -5,8 +5,11 @@ using ElGatoProject.Singletons;
 namespace ElGatoProject.Players.Scripts;
 public partial class PlayerHud : Control
 {
-	[Export] private Label _scoreValue, _weaponType, _weaponAmmo;
+	[Export] private Label _scoreValue, _weaponAmmo;
+	[Export] private TextureRect _weaponTypeIcon;
 	[Export] private ProgressBar _caffeineBar;
+
+	private string _currentWeapon;
 	
 	public override void _Ready()
 	{
@@ -21,6 +24,7 @@ public partial class PlayerHud : Control
 		EventsBus.Instance.PlayerCurrentHealthUpdate += OnPlayerCurrentHealthReceived;
 		EventsBus.Instance.PlayerScoreUpdate += OnPlayerScoreChangeReceived;
 		EventsBus.Instance.PlayerCurrentWeaponUpdate += OnPlayerCurrentWeaponReceived;
+		EventsBus.Instance.PlayerAmmoUpdate += OnPlayerAmmoReceived;
 	}
 
 	private void OnPlayerMaxHealthReceived(int maxHealth)
@@ -43,15 +47,46 @@ public partial class PlayerHud : Control
 		_scoreValue.SetText(score.ToString("D8"));
 	}
 
-	private void OnPlayerCurrentWeaponReceived(string weaponType, int ammo)
+	private void OnPlayerCurrentWeaponReceived(string weaponType)
 	{
-		if (_weaponType.Text != weaponType)
+		// Only show weapon hud if weapon is not pistol
+		if (weaponType == Utility.WeaponType.PlayerPistol.ToString())
 		{
-			_weaponType.SetText(weaponType);
+			_weaponTypeIcon.SetVisible(false);
+			_weaponAmmo.SetVisible(false);
+		}
+		else
+		{
+			_weaponTypeIcon.SetVisible(true);
+			_weaponAmmo.SetVisible(true);
 		}
 
-		_weaponAmmo.SetText(weaponType == Utility.WeaponType.PlayerPistol.ToString()
-			? Utility.Instance.InfinitySymbol
-			: ammo.ToString());
+		_weaponTypeIcon.Texture = LoadWeaponIconTexture(weaponType);
+	}
+
+	private void OnPlayerAmmoReceived(int ammo)
+	{
+		_weaponAmmo.SetText(ammo.ToString());
+	}
+	
+	// Helper functions
+	private static Texture2D LoadWeaponIconTexture(string weaponType)
+	{
+		// Lazy load texture resource depending on weapon pickup
+		Texture2D texture = null;
+		if (weaponType == Utility.WeaponType.PlayerShotgun.ToString())
+		{
+			texture= ResourceLoader.Load<Texture2D>(Utility.Instance.ShotgunHudIconTexturePath);
+		}
+		else if (weaponType == Utility.WeaponType.PlayerMachineGun.ToString())
+		{
+			texture= ResourceLoader.Load<Texture2D>(Utility.Instance.MachineGunHudIconTexturePath);
+		}
+		else if (weaponType == Utility.WeaponType.PlayerRailGun.ToString())
+		{
+			texture= ResourceLoader.Load<Texture2D>(Utility.Instance.RailGunHudIconTexturePath);
+		}
+		
+		return texture;
 	}
 }

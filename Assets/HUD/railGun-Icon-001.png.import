@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bg2hhksxuqscy"
-path="res://.godot/imported/sniperRifle-Icon-001.png-26ca3fae01677e28ecff6a2429e5ca89.ctex"
+path="res://.godot/imported/railGun-Icon-001.png-ec6860d6ab242ae5f4f03bb4c08d6295.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/HUD/sniperRifle-Icon-001.png"
-dest_files=["res://.godot/imported/sniperRifle-Icon-001.png-26ca3fae01677e28ecff6a2429e5ca89.ctex"]
+source_file="res://Assets/HUD/railGun-Icon-001.png"
+dest_files=["res://.godot/imported/railGun-Icon-001.png-ec6860d6ab242ae5f4f03bb4c08d6295.ctex"]
 
 [params]
 

@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://cdxspo7dwh0iq"]
 
 [ext_resource type="Script" path="res://Players/Scripts/PlayerHud.cs" id="1_qul8y"]
-[ext_resource type="Texture2D" uid="uid://c15frkvib0h86" path="res://Assets/HUD/shotgun-Icon-001.png" id="2_q5u1x"]
+[ext_resource type="Texture2D" uid="uid://bocou8apk6nlc" path="res://Assets/HUD/machineGun-Icon-001.png" id="2_3hc70"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rjbe6"]
 bg_color = Color(0.133333, 0.137255, 0.137255, 1)
@@ -19,7 +19,7 @@ bg_color = Color(0.941176, 0.964706, 0.964706, 1)
 corner_radius_top_right = 3
 corner_radius_bottom_right = 3
 
-[node name="PlayerHUD" type="Control" node_paths=PackedStringArray("_scoreValue", "_weaponType", "_weaponAmmo", "_caffeineBar")]
+[node name="PlayerHUD" type="Control" node_paths=PackedStringArray("_scoreValue", "_weaponAmmo", "_weaponTypeIcon", "_caffeineBar")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -27,10 +27,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_qul8y")
-_scoreValue = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/scoreValue")
-_weaponType = NodePath("MarginContainer/VBoxContainer/HBoxContainer2/weaponType")
-_weaponAmmo = NodePath("MarginContainer/VBoxContainer/HBoxContainer2/weaponAmmo")
-_caffeineBar = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2/caffeineBar")
+_scoreValue = NodePath("MarginContainer/VBoxContainer-HUD/HBoxContainer/VBoxContainer-HP_and_score/scoreValue")
+_weaponAmmo = NodePath("MarginContainer/VBoxContainer-HUD/HBoxContainer-Weapons/weaponAmmo")
+_weaponTypeIcon = NodePath("MarginContainer/VBoxContainer-HUD/HBoxContainer-Weapons/weaponTypeIcon")
+_caffeineBar = NodePath("MarginContainer/VBoxContainer-HUD/HBoxContainer/VBoxContainer-HP_and_score/caffeineBar")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -43,42 +43,26 @@ theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 40
 theme_override_constants/margin_bottom = 40
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer-HUD" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer-HUD"]
 layout_mode = 2
 
-[node name="VBoxContainer DELETE" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
-visible = false
-layout_mode = 2
-theme_override_constants/separation = 5
-
-[node name="scoreLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer DELETE"]
-layout_mode = 2
-text = "SCORE: "
-
-[node name="caffeineLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer DELETE"]
-layout_mode = 2
-text = "CAFFEINE: "
-
-[node name="weaponLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer DELETE"]
-layout_mode = 2
-text = "WEAPON: "
-
-[node name="VBoxContainer2" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="VBoxContainer-HP_and_score" type="VBoxContainer" parent="MarginContainer/VBoxContainer-HUD/HBoxContainer"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_horizontal = 0
-theme_override_constants/separation = 10
+theme_override_constants/separation = 3
 
-[node name="scoreValue" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2"]
+[node name="scoreValue" type="Label" parent="MarginContainer/VBoxContainer-HUD/HBoxContainer/VBoxContainer-HP_and_score"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "00000000"
 horizontal_alignment = 2
+vertical_alignment = 1
 
-[node name="caffeineBar" type="ProgressBar" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2"]
+[node name="caffeineBar" type="ProgressBar" parent="MarginContainer/VBoxContainer-HUD/HBoxContainer/VBoxContainer-HP_and_score"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 theme_override_styles/background = SubResource("StyleBoxFlat_rjbe6")
@@ -88,25 +72,18 @@ value = 50.0
 rounded = true
 show_percentage = false
 
-[node name="separator" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer2"]
+[node name="separator" type="Control" parent="MarginContainer/VBoxContainer-HUD/HBoxContainer/VBoxContainer-HP_and_score"]
 layout_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="HBoxContainer-Weapons" type="HBoxContainer" parent="MarginContainer/VBoxContainer-HUD"]
 layout_mode = 2
-theme_override_constants/separation = 19
+theme_override_constants/separation = 10
 
-[node name="weaponTypeIcon" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="weaponTypeIcon" type="TextureRect" parent="MarginContainer/VBoxContainer-HUD/HBoxContainer-Weapons"]
 layout_mode = 2
-texture = ExtResource("2_q5u1x")
+texture = ExtResource("2_3hc70")
 
-[node name="weaponType" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
-visible = false
-custom_minimum_size = Vector2(130, 0)
-layout_mode = 2
-size_flags_horizontal = 8
-text = "Machine Gun"
-
-[node name="weaponAmmo" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="weaponAmmo" type="Label" parent="MarginContainer/VBoxContainer-HUD/HBoxContainer-Weapons"]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
