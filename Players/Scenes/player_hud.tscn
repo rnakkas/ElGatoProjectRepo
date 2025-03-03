@@ -5,10 +5,10 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rjbe6"]
 bg_color = Color(0.133333, 0.137255, 0.137255, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
 border_color = Color(0.941176, 0.964706, 0.964706, 1)
 border_blend = true
 corner_radius_top_right = 3
@@ -63,7 +63,7 @@ horizontal_alignment = 2
 vertical_alignment = 1
 
 [node name="caffeineBar" type="ProgressBar" parent="MarginContainer/VBoxContainer-HUD/HBoxContainer/VBoxContainer-HP_and_score"]
-custom_minimum_size = Vector2(0, 20)
+custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 theme_override_styles/background = SubResource("StyleBoxFlat_rjbe6")
 theme_override_styles/fill = SubResource("StyleBoxFlat_jb0nb")
