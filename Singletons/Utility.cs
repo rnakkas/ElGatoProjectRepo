@@ -91,9 +91,6 @@ public partial class Utility : Node
     // Node group string names
     public string NodeGroupPlayers = "Players";
     
-    // Misc strings
-    public string InfinitySymbol = "\u221E";
-    
     // Packed scene path strings
     // HUD Icons
     public string ShotgunHudIconTexturePath = "res://Assets/HUD/shotgun-Icon-002.png";

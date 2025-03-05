@@ -1,26 +1,30 @@
-[gd_scene load_steps=7 format=3 uid="uid://53hkq24j3wee"]
+[gd_scene load_steps=8 format=3 uid="uid://53hkq24j3wee"]
 
 [ext_resource type="Script" path="res://Mains/Scripts/Main.cs" id="1_sui6x"]
 [ext_resource type="PackedScene" uid="uid://b48vrq7yrm6ip" path="res://Menus/Scenes/main_menu.tscn" id="2_qhitg"]
 [ext_resource type="PackedScene" uid="uid://bm75lcsdm4kec" path="res://Menus/Scenes/pause_menu.tscn" id="3_vsq55"]
 [ext_resource type="Script" path="res://Mains/Scripts/LevelLoader.cs" id="4_aum1p"]
+[ext_resource type="PackedScene" uid="uid://1n6eoojc5hfk" path="res://Menus/Scenes/game_over_menu.tscn" id="4_havpe"]
 [ext_resource type="PackedScene" uid="uid://cs8e7jtnmbagf" path="res://SceneTransitions/Scenes/scene_transition.tscn" id="5_81irw"]
 [ext_resource type="PackedScene" uid="uid://cdxspo7dwh0iq" path="res://Players/Scenes/player_hud.tscn" id="5_biahh"]
 
-[node name="Main" type="Node2D" node_paths=PackedStringArray("_mainMenu", "_pauseMenu", "_levelLoader", "_sceneTransition", "_playerHud")]
+[node name="Main" type="Node2D" node_paths=PackedStringArray("_sceneTransition", "_playerHud", "_gameOverMenu", "_mainMenu", "_pauseMenu", "_levelLoader")]
 process_mode = 3
 script = ExtResource("1_sui6x")
+_sceneTransition = NodePath("SceneTransition")
+_playerHud = NodePath("UI/PlayerHUD")
+_gameOverMenu = NodePath("UI/GameOverMenu")
 _mainMenu = NodePath("UI/MainMenu")
 _pauseMenu = NodePath("UI/PauseMenu")
 _levelLoader = NodePath("LevelLoader")
-_sceneTransition = NodePath("SceneTransition")
-_playerHud = NodePath("UI/PlayerHUD")
 
 [node name="SceneTransition" parent="." instance=ExtResource("5_81irw")]
 
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="PlayerHUD" parent="UI" instance=ExtResource("5_biahh")]
+
+[node name="GameOverMenu" parent="UI" instance=ExtResource("4_havpe")]
 
 [node name="MainMenu" parent="UI" instance=ExtResource("2_qhitg")]
 process_mode = 3

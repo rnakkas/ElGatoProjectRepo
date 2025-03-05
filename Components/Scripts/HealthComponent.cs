@@ -41,8 +41,14 @@ public partial class HealthComponent : Node
 
 		if (Owner.IsInGroup(Utility.Instance.NodeGroupPlayers))
 			EventsBus.Instance.EmitSignal(nameof(EventsBus.PlayerCurrentHealthUpdate), CurrentHealth);
-		
-		if (CurrentHealth <= 0)
+
+		if (CurrentHealth > 0) 
+			return;
+		if (Owner.IsInGroup(Utility.Instance.NodeGroupPlayers))
+		{
+			EventsBus.Instance.EmitSignal(nameof(EventsBus.PlayerHealthDepleted));
+		}
+		else
 		{
 			EmitSignal(SignalName.HealthDepleted);
 		}
