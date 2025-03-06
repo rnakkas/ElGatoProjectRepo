@@ -174,7 +174,14 @@ public partial class ShootingComponent : Node2D
 		projectileInstance.BulletDamage = ShootingProperties.BulletDamage;
 		projectileInstance.GlobalPosition = _muzzle.GlobalPosition;
 		
-		// Add the projectiles to the level instead of root
-		GetTree().GetNodesInGroup("Levels")[0].AddChild(projectileInstance);
+		// Add the projectiles to the level instead of root, ensure level is the currently visible one
+		var levelsArray = GetTree().GetNodesInGroup("Levels");
+		foreach (var level in levelsArray)
+		{
+			if (level is Node2D levelNode && levelNode.IsVisible())
+			{
+				levelNode.AddChild(projectileInstance);
+			}
+		}
 	}
 }
