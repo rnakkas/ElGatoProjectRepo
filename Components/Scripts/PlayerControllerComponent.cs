@@ -110,7 +110,7 @@ public partial class PlayerControllerComponent : Node
 			case Utility.CharacterState.WallJump:
 				break;
 			case Utility.CharacterState.Dash:
-				_hurtboxComponent.SetDeferred(Area2D.PropertyName.Monitorable, false); // Exit invincibility after dash finished
+				_hurtboxComponent.SetDeferred(Area2D.PropertyName.Monitorable, true); // Exit invincibility after dash finished
 				_velocityComponent.EntityVelocity = Vector2.Zero;
 				break;
 		}

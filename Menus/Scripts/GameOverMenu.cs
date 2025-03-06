@@ -10,14 +10,15 @@ public partial class GameOverMenu : Control
 	
 	[Signal]
 	public delegate void CloseGameOverScreenEventHandler();
+	
 	[Signal]
 	public delegate void ReturnToMainMenuEventHandler();
 
-	// private Timer _gameOverScreenTimer;
+	[Signal]
+	public delegate void RetryEventHandler();
 
 	public override void _Ready()
 	{
-		// _gameOverScreenTimer = GetNode<Timer>("gameOverScreenTimer");
 		ConnectSignals();
 	}
 
@@ -30,8 +31,6 @@ public partial class GameOverMenu : Control
 		_retryButton.Pressed += OnRetryButtonPressed;
 		_mainMenuButton.Pressed += OnMainMenuButtonPressed;
 		_exitGameButton.Pressed += OnExitGameButtonPressed;
-		
-		// _gameOverScreenTimer.Timeout += OnGameOverScreenTimedOut;
 	}
 	
 	private void OnMouseHoverRetryButton()
@@ -50,14 +49,12 @@ public partial class GameOverMenu : Control
 	private void OnRetryButtonPressed()
 	{
 		SetVisible(false);
-		GetTree().Paused = false;
-		GetTree().ReloadCurrentScene();
+		EmitSignal(SignalName.Retry);
 	}
 
 	private void OnMainMenuButtonPressed()
 	{
 		SetVisible(false);
-		GetTree().Paused = false;
 		EmitSignal(SignalName.ReturnToMainMenu);
 	}
 
@@ -65,11 +62,6 @@ public partial class GameOverMenu : Control
 	{
 		GetTree().Quit();
 	}
-
-	// private void OnGameOverScreenTimedOut()
-	// {
-	// 	EmitSignal(SignalName.CloseGameOverScreen);
-	// }
 
 	public void GameOverScreenVisibility(bool isVisible)
 	{

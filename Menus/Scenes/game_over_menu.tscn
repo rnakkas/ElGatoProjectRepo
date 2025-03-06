@@ -12,7 +12,7 @@ subpixel_positioning = 0
 font_names = PackedStringArray("Impact")
 subpixel_positioning = 0
 
-[node name="GameOverMenu" type="Control" node_paths=PackedStringArray("_scoreValueLabel")]
+[node name="GameOverMenu" type="Control" node_paths=PackedStringArray("_scoreValueLabel", "_retryButton", "_mainMenuButton", "_exitGameButton")]
 process_mode = 3
 layout_mode = 3
 anchors_preset = 15
@@ -22,10 +22,13 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_do677")
 _scoreValueLabel = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/scoreValueLabel")
+_retryButton = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/RetryButton")
+_mainMenuButton = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/MainMenuButton")
+_exitGameButton = NodePath("MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer/ExitGameButton")
 
 [node name="TextureRect" type="TextureRect" parent="."]
 modulate = Color(0.133333, 0.137255, 0.137255, 1)
-self_modulate = Color(1, 1, 1, 0)
+self_modulate = Color(1, 1, 1, 0.763)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -93,6 +96,12 @@ layout_mode = 2
 [node name="separator3" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 
+[node name="separator14" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="separator15" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
 [node name="RetryButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(150, 40)
 layout_mode = 2
@@ -103,6 +112,21 @@ theme_override_fonts/font = SubResource("SystemFont_n08n1")
 theme_override_font_sizes/font_size = 25
 text = "Retry
 "
+
+[node name="separator4" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="separator5" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="separator6" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="separator10" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="separator11" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
 
 [node name="MainMenuButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(150, 40)
@@ -115,6 +139,21 @@ theme_override_font_sizes/font_size = 25
 text = "Main Menu
 "
 
+[node name="separator7" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="separator12" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="separator13" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="separator8" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="separator9" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
 [node name="ExitGameButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(150, 40)
 layout_mode = 2
@@ -125,7 +164,3 @@ theme_override_fonts/font = SubResource("SystemFont_n08n1")
 theme_override_font_sizes/font_size = 25
 text = "Exit Game
 "
-
-[node name="gameOverScreenTimer" type="Timer" parent="."]
-wait_time = 5.0
-one_shot = true

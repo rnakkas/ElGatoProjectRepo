@@ -12,9 +12,9 @@ public partial class LevelLoader : Node
     {
         if (levelName == _currentLevel)
             return;
-        _currentLevel = levelName;
         var level = ResourceLoader.Load<PackedScene>($"res://Levels/Scenes/{levelName}.tscn").Instantiate();
         GetOwner().AddChild(level);
+        _currentLevel = level.Name; // Set current level as the name of the current level's node name
     }
 
     public void UnloadCurrentLevel()

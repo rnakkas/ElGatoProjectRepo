@@ -27,8 +27,11 @@ public partial class Main : Node2D
 	private void ConnectToSignals()
 	{
 		_mainMenu.StartGame += OnStartGameButtonPressed;
+		
 		_pauseMenu.ReturnToMainMenu += OnReturnToMainMenuPressed;
-		_gameOverMenu.CloseGameOverScreen += OnGameOverScreenClosed;
+		
+		_gameOverMenu.ReturnToMainMenu += OnReturnToMainMenuPressed;
+		_gameOverMenu.Retry += OnRetryButtonPressed;
 
 		EventsBus.Instance.PlayerDied += OnPlayerDeath;
 	}
@@ -63,18 +66,22 @@ public partial class Main : Node2D
 	private void OnPlayerDeath()
 	{
 		_playerHud.SetVisible(false);
-		// _sceneTransition?.PlaySceneTransition();
-		// _levelLoader.UnloadCurrentLevel();
-		
-		_gameOverMenu.GameOverScreenActions();
+		_gameOverMenu.GameOverScreenVisibility(true);
 	}
 
-	private void OnGameOverScreenClosed()
+	private void OnRetryButtonPressed()
 	{
-		_gameOverMenu.SetVisible(false);
+		Globals.Instance.IsPlayerDying = false;
 		_sceneTransition?.PlaySceneTransition();
+		_gameOverMenu.GameOverScreenVisibility(false);
 		_levelLoader.UnloadCurrentLevel();
-		_mainMenu.MainMenuVisibility(true);
+		_levelLoader.LoadLevel("staging_level");
+		
+		_playerHud.SetVisible(true);
+
+		// Set player score to 0 on retry
+		_playerHud.UpdatePlayerScore(Globals.Instance.PlayerScore = 0);
+		
 	}
 
 	// Allows pausing and resuming using the same input key 
