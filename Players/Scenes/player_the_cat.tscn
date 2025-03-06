@@ -425,7 +425,7 @@ position = Vector2(0, 1.535)
 shape = SubResource("RectangleShape2D_l4g6g")
 debug_color = Color(0.932818, 0.259544, 0, 0.42)
 
-[node name="PlayerControllerComponent" type="Node" parent="." node_paths=PackedStringArray("_playerCharacter", "_sprite", "_velocityComponent", "_leftWallDetect", "_rightWallDetect", "_dashCooldownTimer", "_dashTimer", "_gameOverTimer", "_hurtboxCollider", "_hurtboxComponent", "_healthComponent")]
+[node name="PlayerControllerComponent" type="Node" parent="." node_paths=PackedStringArray("_playerCharacter", "_sprite", "_velocityComponent", "_leftWallDetect", "_rightWallDetect", "_dashCooldownTimer", "_dashTimer", "_gameOverTimer", "_invincibilityTimer", "_blinkTimer", "_hurtboxComponent", "_healthComponent")]
 script = ExtResource("2_y5cke")
 _playerCharacter = NodePath("..")
 _sprite = NodePath("../sprite")
@@ -435,7 +435,8 @@ _rightWallDetect = NodePath("../RightWallDetect")
 _dashCooldownTimer = NodePath("dashCooldownTimer")
 _dashTimer = NodePath("dashTimer")
 _gameOverTimer = NodePath("gameOverTimer")
-_hurtboxCollider = NodePath("../HurtboxComponent/HurtboxCollider")
+_invincibilityTimer = NodePath("invincibilityTimer")
+_blinkTimer = NodePath("blinkTimer")
 _hurtboxComponent = NodePath("../HurtboxComponent")
 _healthComponent = NodePath("../HealthComponent")
 
@@ -450,6 +451,13 @@ one_shot = true
 [node name="gameOverTimer" type="Timer" parent="PlayerControllerComponent"]
 wait_time = 2.2
 one_shot = true
+
+[node name="invincibilityTimer" type="Timer" parent="PlayerControllerComponent"]
+wait_time = 1.5
+one_shot = true
+
+[node name="blinkTimer" type="Timer" parent="PlayerControllerComponent"]
+wait_time = 0.12
 
 [node name="VelocityComponent" type="Node" parent="."]
 script = ExtResource("5_jql4e")

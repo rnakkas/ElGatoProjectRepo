@@ -126,7 +126,7 @@ position_smoothing_enabled = true
 [node name="RangedEnemies" type="Node" parent="."]
 
 [node name="RangedEnemyLightMachineGunner" parent="RangedEnemies" instance=ExtResource("5_om0qa")]
-position = Vector2(2100, 320)
+position = Vector2(278, 322)
 
 [node name="RangedEnemyLightPistol" parent="RangedEnemies" instance=ExtResource("5_e7ekv")]
 position = Vector2(1555, 135)
