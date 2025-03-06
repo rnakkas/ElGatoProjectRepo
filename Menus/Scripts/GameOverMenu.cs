@@ -7,6 +7,8 @@ public partial class GameOverMenu : Control
 {
 	[Export] public Label ScoreValueLabel;
 
+	//TODO: Have a timer that then takes player to main menu or high scores screen
+	
 	// public override void _Ready()
 	// {
 	// 	ConnectSignals();

@@ -453,7 +453,7 @@ CharacterVelocityProperties = ExtResource("7_u5ntm")
 
 [node name="HealthComponent" type="Node" parent="." node_paths=PackedStringArray("_caffeineDrainTimer")]
 script = ExtResource("2_irjyl")
-CurrentHealth = 85
+CurrentHealth = 3
 _maxHealth = 100
 _caffeineDrainTimer = NodePath("caffeineDrainTimer")
 
@@ -494,16 +494,8 @@ position = Vector2(0, 3)
 sprite_frames = SubResource("SpriteFrames_w0g3d")
 animation = &"idle"
 
-[node name="Weapon_ElGato" parent="." node_paths=PackedStringArray("_characterSprite", "_playerController", "_pickupsComponent", "_debugWeaponLabel") instance=ExtResource("7_jnlk7")]
+[node name="Weapon_ElGato" parent="." node_paths=PackedStringArray("_characterSprite", "_playerController", "_pickupsComponent") instance=ExtResource("7_jnlk7")]
 position = Vector2(6, 3)
 _characterSprite = NodePath("../sprite")
 _playerController = NodePath("../PlayerControllerComponent")
 _pickupsComponent = NodePath("../PickupsComponent")
-_debugWeaponLabel = NodePath("../WeaponAmmoLabel")
-
-[node name="WeaponAmmoLabel" type="Label" parent="."]
-offset_left = -12.0
-offset_top = -46.0
-offset_right = 31.0
-offset_bottom = -33.0
-theme_override_font_sizes/font_size = 9

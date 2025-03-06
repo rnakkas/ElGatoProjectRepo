@@ -58,6 +58,7 @@ public partial class Main : Node2D
 
 	private void OnPlayerHealthDepleted()
 	{
+		//TODO: Fix this
 		_playerHud.SetVisible(false);
 		_levelLoader.UnloadCurrentLevel();
 		_sceneTransition?.PlaySceneTransition();

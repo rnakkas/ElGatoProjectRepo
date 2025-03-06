@@ -12,8 +12,6 @@ public partial class WeaponElgato : Node2D
 	[Export] private AnimatedSprite2D _weaponSprite, _flashSprite, _characterSprite;
 	[Export] private PlayerControllerComponent _playerController;
 	[Export] private PickupsComponent _pickupsComponent;
-	
-	[Export] private Label _debugWeaponLabel;
 
 	private Vector2 _direction;
 	private int _weaponAmmo;
@@ -143,6 +141,12 @@ public partial class WeaponElgato : Node2D
 		{
 			SwitchWeapon(Utility.WeaponType.PlayerPistol);
 		}
+		
+		// If player dies, despawn weapon
+		if (_playerController?.CurrentState == Utility.CharacterState.Death)
+		{
+			QueueFree();
+		}
 	}
 
 	private void SetWeaponDirection()
@@ -182,7 +186,5 @@ public partial class WeaponElgato : Node2D
 		SetWeaponDirection();
 		FlipSprite();
 		WeaponActions();
-		
-		_debugWeaponLabel.SetText(_shooting.WeaponType + ": " + _weaponAmmo);
 	}
 }

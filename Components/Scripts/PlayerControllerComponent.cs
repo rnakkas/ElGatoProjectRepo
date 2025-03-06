@@ -76,7 +76,7 @@ public partial class PlayerControllerComponent : Node
 			case Utility.CharacterState.WallJump:
 				break;
 			case Utility.CharacterState.Dash:
-				_hurtboxCollider.SetDisabled(false); // Exit invincibility after dash finished
+				_hurtboxCollider.SetDeferred(CollisionShape2D.PropertyName.Disabled, false); // Exit invincibility after dash finished
 				_velocityComponent.EntityVelocity = Vector2.Zero;
 				break;
 		}
@@ -90,28 +90,35 @@ public partial class PlayerControllerComponent : Node
 				_velocityComponent.EntityVelocity.Y = 0;
 				_sprite.Play(Utility.Instance.EntityIdleAnimation);
 				break;
+			
 			case Utility.CharacterState.Run:
 				_sprite.Play(Utility.Instance.EntityRunAnimation);
 				break;
+			
 			case Utility.CharacterState.Jump:
 				_velocityComponent.JumpeVelocity();
 				_sprite.Play(Utility.Instance.EntityJumpAnimation);
 				break;
+			
 			case Utility.CharacterState.Fall:
 				_sprite.Play(Utility.Instance.EntityFallAnimation);
 				break;
+			
 			case Utility.CharacterState.Hurt:
 				_sprite.Play(Utility.Instance.EntityHurtAnimation);
 				break;
+			
 			case Utility.CharacterState.WallSlide:
 				_sprite.Play(Utility.Instance.EntityWallSlideAnimation);
 				break;
+			
 			case Utility.CharacterState.WallJump:
 				_velocityComponent.WallJumpingVelocity(_direction);
 				_sprite.Play(Utility.Instance.EntityJumpAnimation);
 				break;
+			
 			case Utility.CharacterState.Dash:
-				_hurtboxCollider.SetDisabled(true); // Enter invincibility when dashing
+				_hurtboxCollider.SetDeferred(CollisionShape2D.PropertyName.Disabled, true); // Enter invincibility when dashing
 				if (!_sprite.IsFlippedH())
 				{
 					_velocityComponent.DashVelocity(Vector2.Right);
@@ -128,6 +135,14 @@ public partial class PlayerControllerComponent : Node
 				_dashCooldownTimer.Start();
 				
 				_sprite.Play(Utility.Instance.EntityDashAnimation);
+				break;
+			
+			case Utility.CharacterState.Death:
+				_hurtboxCollider.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+				_velocityComponent.EntityVelocity = Vector2.Zero;
+				
+				_sprite.Play(Utility.Instance.EntityDeathAnimation);
+				
 				break;
 		}
 	}
@@ -268,7 +283,6 @@ public partial class PlayerControllerComponent : Node
 				{
 					SetState(Utility.CharacterState.Idle);
 				}
-				
 				break;
 		}
 	}
