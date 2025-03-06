@@ -275,15 +275,18 @@ public partial class PlayerControllerComponent : Node
 			case Utility.CharacterState.Fall:
 				_velocityComponent?.AccelerateToMaxVelocity(delta, _direction);
 				_velocityComponent?.FallVelocity(delta);
-				
-				if (_playerCharacter.IsOnFloor())
-					SetState(Utility.CharacterState.Idle);
-				else if (
-					!_playerCharacter.IsOnFloor() &&
-					(_leftWallDetect.IsColliding() || _rightWallDetect.IsColliding())
-				)
+
+				if (_playerCharacter != null && _leftWallDetect != null && _rightWallDetect != null)
 				{
-					SetState(Utility.CharacterState.WallSlide);
+					if (_playerCharacter.IsOnFloor())
+						SetState(Utility.CharacterState.Idle);
+					else if (
+						!_playerCharacter.IsOnFloor() &&
+						(_leftWallDetect.IsColliding() || _rightWallDetect.IsColliding())
+					)
+					{
+						SetState(Utility.CharacterState.WallSlide);
+					}
 				}
 				
 				if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown)
@@ -291,40 +294,46 @@ public partial class PlayerControllerComponent : Node
 				break;
 			
 			case Utility.CharacterState.Hurt:
-				if (!_playerCharacter.IsOnFloor())
+				if (_playerCharacter != null)
 				{
-					_velocityComponent?.FallVelocity(delta);
+					if (!_playerCharacter.IsOnFloor())
+					{
+						_velocityComponent?.FallVelocity(delta);
+					}
 				}
 				break;
 			
 			case Utility.CharacterState.WallSlide:
 				_velocityComponent?.WallSlidingVelocity(delta);
 
-				if (_playerCharacter.IsOnFloor())
+				if (_playerCharacter != null && _leftWallDetect != null && _rightWallDetect != null)
 				{
-					SetState(Utility.CharacterState.Idle);
+					if (_playerCharacter.IsOnFloor())
+					{
+						SetState(Utility.CharacterState.Idle);
 
-					if (_direction != Vector2.Zero)
-					{
-						SetState(Utility.CharacterState.Run);
+						if (_direction != Vector2.Zero)
+						{
+							SetState(Utility.CharacterState.Run);
+						}
 					}
-				}
-				else if (!_playerCharacter.IsOnFloor())
-				{
-					if (_leftWallDetect.IsColliding())
+					else if (!_playerCharacter.IsOnFloor())
 					{
-						_sprite.FlipH = false;
-						_direction = Vector2.Right;
-					}
-					else if (_rightWallDetect.IsColliding())
-					{
-						_sprite.FlipH = true;
-						_direction = Vector2.Left;
-					}
+						if (_leftWallDetect.IsColliding())
+						{
+							_sprite.FlipH = false;
+							_direction = Vector2.Right;
+						}
+						else if (_rightWallDetect.IsColliding())
+						{
+							_sprite.FlipH = true;
+							_direction = Vector2.Left;
+						}
 
-					if (Input.IsActionJustPressed("jump"))
-					{
-						SetState(Utility.CharacterState.WallJump);
+						if (Input.IsActionJustPressed("jump"))
+						{
+							SetState(Utility.CharacterState.WallJump);
+						}
 					}
 				}
 
@@ -334,13 +343,16 @@ public partial class PlayerControllerComponent : Node
 				break;
 			
 			case Utility.CharacterState.WallJump:
-				if (!_playerCharacter.IsOnFloor())
+				if (_playerCharacter != null)
 				{
-					_velocityComponent?.FallVelocity(delta);
-
-					if (_velocityComponent?.EntityVelocity.Y > 0)
+					if (!_playerCharacter.IsOnFloor())
 					{
-						SetState(Utility.CharacterState.Fall);
+						_velocityComponent?.FallVelocity(delta);
+
+						if (_velocityComponent?.EntityVelocity.Y > 0)
+						{
+							SetState(Utility.CharacterState.Fall);
+						}
 					}
 				}
 				break;
