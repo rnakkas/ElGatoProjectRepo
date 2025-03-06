@@ -62,6 +62,7 @@ public partial class Utility : Node
     public string EntityHurtAnimation = "hurt";
     public string EntityShootAnimation = "shoot";
     public string EntityDashAnimation = "dash";
+    public string EntityDeathAnimation = "death";
     
     // Projectile animation string names
     public string BulletFlyAnimation = "fly";
@@ -90,9 +91,6 @@ public partial class Utility : Node
     
     // Node group string names
     public string NodeGroupPlayers = "Players";
-    
-    // Misc strings
-    public string InfinitySymbol = "\u221E";
     
     // Packed scene path strings
     // HUD Icons

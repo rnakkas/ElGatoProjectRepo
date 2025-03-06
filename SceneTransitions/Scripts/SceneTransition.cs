@@ -14,7 +14,7 @@ public partial class SceneTransition : CanvasLayer
 		_shaderMaterial = (ShaderMaterial)GetNodeOrNull<ColorRect>("ColorRect").Material;
 	}
 	
-	public async void TransitionToScene()
+	public async void PlaySceneTransition()
 	{
 		SetWipeColor(new Color(34f / 255f, 35f / 255f, 35f / 255f)); // Hex: 222323;
 		SetLayer(10); // Set layer high enough for the node to be on top
