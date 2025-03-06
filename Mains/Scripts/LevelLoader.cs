@@ -19,7 +19,7 @@ public partial class LevelLoader : Node
 
     public void UnloadCurrentLevel()
     {
-       GetOwner().GetNode(_currentLevel).Free();
+       GetOwner().GetNode(_currentLevel).QueueFree();
        _currentLevel = "";
     }
     

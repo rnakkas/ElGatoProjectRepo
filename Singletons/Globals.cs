@@ -11,6 +11,8 @@ public partial class Globals : Node
     public RandomNumberGenerator Rng = new();
 
     public int PlayerScore = 0;
+
+    public bool IsPlayerDying;
     
     //TODO: Move these to Utilities.cs
     public PackedScene BulletProjectile = 

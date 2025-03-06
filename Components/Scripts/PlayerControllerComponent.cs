@@ -15,9 +15,10 @@ public partial class PlayerControllerComponent : Node
 	[Export] private VelocityComponent _velocityComponent;
 	[Export] private RayCast2D _leftWallDetect;
 	[Export] private RayCast2D _rightWallDetect;
-	[Export] private Timer _dashCooldownTimer;
-	[Export] private Timer _dashTimer;
+	[Export] private Timer _dashCooldownTimer, _dashTimer, _gameOverTimer;
 	[Export] private CollisionShape2D _hurtboxCollider;
+	[Export] private HurtboxComponent _hurtboxComponent;
+	[Export] private HealthComponent _healthComponent;
 
 	private bool _isDashing, _onDashCooldown;
 	private Vector2 _direction = Vector2.Zero;
@@ -28,11 +29,23 @@ public partial class PlayerControllerComponent : Node
 		ConnectSignals();
 	}
 
+	// Signals and connections methods
 	private void ConnectSignals()
 	{
 		_dashCooldownTimer.Timeout += OnDashCooldownTimerTimeout;
 		
 		_dashTimer.Timeout += OnDashTimerTimeout;
+
+		_gameOverTimer.Timeout += OnGameOverTimerTimeout;
+		
+		if (_hurtboxComponent == null)
+			return;
+		_hurtboxComponent.GotHit += OnHitByAttack;
+		_hurtboxComponent.HurtStatusCleared += OnHurtStatusCleared; 
+		
+		if (_healthComponent == null)
+			return;
+		_healthComponent.HealthDepleted += OnHealthDepleted;
 	}
 
 	private void OnDashCooldownTimerTimeout()
@@ -44,10 +57,31 @@ public partial class PlayerControllerComponent : Node
 	{
 		_isDashing = false;
 	}
+
+	private static void OnGameOverTimerTimeout()
+	{
+		EventsBus.Instance.EmitSignal(nameof(EventsBus.PlayerDied));
+	}
+	
+	private void OnHitByAttack()
+	{
+		SetState(Utility.CharacterState.Hurt);
+	}
+	
+	private void OnHurtStatusCleared()
+	{
+		if (_healthComponent is { CurrentHealth: > 0 } )
+			SetState(Utility.CharacterState.Idle);
+	}
+	
+	private void OnHealthDepleted()
+	{
+		SetState(Utility.CharacterState.Death);
+	}
+	
 	
 	// State machine
-
-	public void SetState(Utility.CharacterState newState)
+	private void SetState(Utility.CharacterState newState)
 	{
 		if (newState == CurrentState)
 			return;
@@ -76,7 +110,7 @@ public partial class PlayerControllerComponent : Node
 			case Utility.CharacterState.WallJump:
 				break;
 			case Utility.CharacterState.Dash:
-				_hurtboxCollider.SetDeferred(CollisionShape2D.PropertyName.Disabled, false); // Exit invincibility after dash finished
+				_hurtboxComponent.SetDeferred(Area2D.PropertyName.Monitorable, false); // Exit invincibility after dash finished
 				_velocityComponent.EntityVelocity = Vector2.Zero;
 				break;
 		}
@@ -118,7 +152,7 @@ public partial class PlayerControllerComponent : Node
 				break;
 			
 			case Utility.CharacterState.Dash:
-				_hurtboxCollider.SetDeferred(CollisionShape2D.PropertyName.Disabled, true); // Enter invincibility when dashing
+				_hurtboxComponent.SetDeferred(Area2D.PropertyName.Monitorable, false); // Enter invincibility when dashing
 				if (!_sprite.IsFlippedH())
 				{
 					_velocityComponent.DashVelocity(Vector2.Right);
@@ -138,10 +172,13 @@ public partial class PlayerControllerComponent : Node
 				break;
 			
 			case Utility.CharacterState.Death:
-				_hurtboxCollider.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+				_hurtboxComponent.SetDeferred(Area2D.PropertyName.Monitorable, false); // Don't get hit if dying
 				_velocityComponent.EntityVelocity = Vector2.Zero;
-				
 				_sprite.Play(Utility.Instance.EntityDeathAnimation);
+				
+				// Wait before transitioning to game over screen
+				_gameOverTimer.Start();
+				Globals.Instance.IsPlayerDying = true;
 				
 				break;
 		}
@@ -223,14 +260,15 @@ public partial class PlayerControllerComponent : Node
 				
 				if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown)
 					SetState(Utility.CharacterState.Dash);
-				
 				break;
+			
 			case Utility.CharacterState.Hurt:
 				if (!_playerCharacter.IsOnFloor())
 				{
 					_velocityComponent.FallVelocity(delta);
 				}
 				break;
+			
 			case Utility.CharacterState.WallSlide:
 				_velocityComponent.WallSlidingVelocity(delta);
 
@@ -266,6 +304,7 @@ public partial class PlayerControllerComponent : Node
 					SetState(Utility.CharacterState.Dash);
 				
 				break;
+			
 			case Utility.CharacterState.WallJump:
 				if (!_playerCharacter.IsOnFloor())
 				{

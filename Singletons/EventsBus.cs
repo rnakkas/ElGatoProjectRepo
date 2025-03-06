@@ -12,7 +12,7 @@ public partial class EventsBus : Node
 	[Signal] 
 	public delegate void PlayerCurrentHealthUpdateEventHandler(int currentHealth);
 	[Signal]
-	public delegate void PlayerHealthDepletedEventHandler();
+	public delegate void PlayerDiedEventHandler();
 	[Signal]
 	public delegate void PlayerScoreUpdateEventHandler(int score);
 	[Signal]

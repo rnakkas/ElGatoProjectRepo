@@ -5,6 +5,7 @@ using ElGatoProject.SceneTransitions.Scripts;
 using ElGatoProject.Singletons;
 
 namespace ElGatoProject.Mains.Scripts;
+
 public partial class Main : Node2D
 {
 	[Export] private SceneTransition _sceneTransition;
@@ -19,7 +20,7 @@ public partial class Main : Node2D
 		_playerHud.SetVisible(false);
 		_pauseMenu.SetVisible(false);
 		_gameOverMenu.SetVisible(false);
-		
+
 		ConnectToSignals();
 	}
 
@@ -27,20 +28,23 @@ public partial class Main : Node2D
 	{
 		_mainMenu.StartGame += OnStartGameButtonPressed;
 		_pauseMenu.ReturnToMainMenu += OnReturnToMainMenuPressed;
-		
-		EventsBus.Instance.PlayerHealthDepleted += OnPlayerHealthDepleted;
+		_gameOverMenu.CloseGameOverScreen += OnGameOverScreenClosed;
+
+		EventsBus.Instance.PlayerDied += OnPlayerDeath;
 	}
 
 	private void OnStartGameButtonPressed()
 	{
+		Globals.Instance.IsPlayerDying = false;
+		
 		_mainMenu.MainMenuVisibility(false);
 
 		_levelLoader.LoadLevel("staging_level");
-		
+
 		_sceneTransition?.PlaySceneTransition();
-		
+
 		_playerHud.SetVisible(true);
-		
+
 		// Set player score to 0 on new game start
 		_playerHud.UpdatePlayerScore(Globals.Instance.PlayerScore = 0);
 	}
@@ -51,29 +55,38 @@ public partial class Main : Node2D
 		_levelLoader.UnloadCurrentLevel();
 		_mainMenu.MainMenuVisibility(true);
 		_playerHud.SetVisible(false);
-		
+
 		// Reset player score on return to main menu
 		_playerHud.UpdatePlayerScore(Globals.Instance.PlayerScore = 0);
 	}
 
-	private void OnPlayerHealthDepleted()
+	private void OnPlayerDeath()
 	{
-		//TODO: Fix this
 		_playerHud.SetVisible(false);
-		_levelLoader.UnloadCurrentLevel();
+		// _sceneTransition?.PlaySceneTransition();
+		// _levelLoader.UnloadCurrentLevel();
+		
+		_gameOverMenu.GameOverScreenActions();
+	}
+
+	private void OnGameOverScreenClosed()
+	{
+		_gameOverMenu.SetVisible(false);
 		_sceneTransition?.PlaySceneTransition();
-		_gameOverMenu.SetVisible(true);
-		_gameOverMenu.ScoreValueLabel.SetText(Globals.Instance.PlayerScore.ToString("D8"));
+		_levelLoader.UnloadCurrentLevel();
+		_mainMenu.MainMenuVisibility(true);
 	}
 
 	// Allows pausing and resuming using the same input key 
 	private void PauseAndResumeGame()
 	{
+		// Don't allow pausing if on main menu, during scene transition, during game over screen and while dying
 		if (
 			!Input.IsActionJustPressed("pause") ||
 			_mainMenu.IsVisible() ||
 			_sceneTransition.IsVisible() ||
-			_gameOverMenu.IsVisible()
+			_gameOverMenu.IsVisible() ||
+			Globals.Instance.IsPlayerDying
 		)
 		{
 			return;

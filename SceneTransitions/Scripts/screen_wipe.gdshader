@@ -5,7 +5,7 @@ uniform vec4 wipe_color; // Color of the wipe effect
 
 void fragment() {
     vec2 uv = UV;
-    float wipe = smoothstep(progress - 0.02, progress + 0.02, uv.x);
+    float wipe = smoothstep(progress - 0.09, progress + 0.09, uv.x);
     float sceneAlpha = texture(TEXTURE, UV).a; // Get alpha from texture colour
 
     // Blend wipe color with scene
