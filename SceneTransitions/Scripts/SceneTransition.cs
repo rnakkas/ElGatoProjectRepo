@@ -1,6 +1,5 @@
 using Godot;
-using System;
-using ElGatoProject.Singletons;
+using ElGatoProject.Utilties;
 
 namespace ElGatoProject.SceneTransitions.Scripts;
 public partial class SceneTransition : CanvasLayer
@@ -20,7 +19,7 @@ public partial class SceneTransition : CanvasLayer
 		SetLayer(10); // Set layer high enough for the node to be on top
 		SetVisible(true);
 		
-		_animationPlayer.Play(Utility.Instance.SceneTransitionWipeAnimation); // Play wipe animation
+		_animationPlayer.Play(Utility.SceneTransitionWipeAnimation); // Play wipe animation
 
 		await ToSignal(_animationPlayer, "animation_finished"); // Wait for animation to complete
 		
@@ -31,6 +30,6 @@ public partial class SceneTransition : CanvasLayer
 	{
 		// Convert Color to Vector4 since Godot expects a vec4
 		Vector4 colorVec4 = new Vector4(newColor.R, newColor.G, newColor.B, newColor.A);
-		_shaderMaterial.SetShaderParameter(Utility.Instance.ShaderParameterWipeColor, colorVec4);
+		_shaderMaterial.SetShaderParameter(Utility.ShaderParameterWipeColor, colorVec4);
 	}
 }

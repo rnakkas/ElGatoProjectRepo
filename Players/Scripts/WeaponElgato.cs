@@ -1,8 +1,8 @@
 using Godot;
 using System;
 using ElGatoProject.Components.Scripts;
-using ElGatoProject.Resources;
 using ElGatoProject.Singletons;
+using ElGatoProject.Utilties;
 
 namespace ElGatoProject.Players.Scripts;
 
@@ -23,8 +23,8 @@ public partial class WeaponElgato : Node2D
 		
 		_weaponPosition = Position;
 		
-		_weaponSprite?.Play(Utility.Instance.EntityIdleAnimation);
-		_flashSprite?.Play(Utility.Instance.EntityIdleAnimation);
+		_weaponSprite?.Play(Utility.EntityIdleAnimation);
+		_flashSprite?.Play(Utility.EntityIdleAnimation);
 
 		// For HUD
 		EventsBus.Instance.EmitSignal(nameof(EventsBus.Instance.PlayerCurrentWeaponUpdate),
@@ -53,8 +53,8 @@ public partial class WeaponElgato : Node2D
 		_weaponSprite?.SetSpeedScale(_shooting.ShootingProperties.AnimationSpeed);
 		_flashSprite?.SetSpeedScale(_shooting.ShootingProperties.AnimationSpeed);
 		
-		_weaponSprite?.Play(Utility.Instance.EntityShootAnimation);
-		_flashSprite?.Play(Utility.Instance.EntityShootAnimation);
+		_weaponSprite?.Play(Utility.EntityShootAnimation);
+		_flashSprite?.Play(Utility.EntityShootAnimation);
 	
 		
 		// Only reduce ammo for power-up weapons
@@ -126,9 +126,9 @@ public partial class WeaponElgato : Node2D
 			_flashSprite?.SetSpeedScale(1);
 			
 			if (_weaponSprite != null && !_weaponSprite.IsPlaying())
-				_weaponSprite.Play(Utility.Instance.EntityIdleAnimation);
+				_weaponSprite.Play(Utility.EntityIdleAnimation);
 			if (_flashSprite != null && !_flashSprite.IsPlaying())
-				_flashSprite.Play(Utility.Instance.EntityIdleAnimation);
+				_flashSprite.Play(Utility.EntityIdleAnimation);
 			
 		}
 		

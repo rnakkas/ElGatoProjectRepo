@@ -1,5 +1,4 @@
 using Godot;
-using System;
 using ElGatoProject.Singletons;
 
 namespace ElGatoProject.Menus.Scripts;

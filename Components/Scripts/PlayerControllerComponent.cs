@@ -1,4 +1,5 @@
 using ElGatoProject.Singletons;
+using ElGatoProject.Utilties;
 using Godot;
 
 namespace ElGatoProject.Components.Scripts;
@@ -141,33 +142,33 @@ public partial class PlayerControllerComponent : Node
 		{
 			case Utility.CharacterState.Idle:
 				if (_velocityComponent != null) _velocityComponent.EntityVelocity.Y = 0;
-				_sprite?.Play(Utility.Instance.EntityIdleAnimation);
+				_sprite?.Play(Utility.EntityIdleAnimation);
 				break;
 			
 			case Utility.CharacterState.Run:
-				_sprite?.Play(Utility.Instance.EntityRunAnimation);
+				_sprite?.Play(Utility.EntityRunAnimation);
 				break;
 			
 			case Utility.CharacterState.Jump:
 				_velocityComponent?.JumpeVelocity();
-				_sprite?.Play(Utility.Instance.EntityJumpAnimation);
+				_sprite?.Play(Utility.EntityJumpAnimation);
 				break;
 			
 			case Utility.CharacterState.Fall:
-				_sprite?.Play(Utility.Instance.EntityFallAnimation);
+				_sprite?.Play(Utility.EntityFallAnimation);
 				break;
 			
 			case Utility.CharacterState.Hurt:
-				_sprite?.Play(Utility.Instance.EntityHurtAnimation);
+				_sprite?.Play(Utility.EntityHurtAnimation);
 				break;
 			
 			case Utility.CharacterState.WallSlide:
-				_sprite?.Play(Utility.Instance.EntityWallSlideAnimation);
+				_sprite?.Play(Utility.EntityWallSlideAnimation);
 				break;
 			
 			case Utility.CharacterState.WallJump:
 				_velocityComponent?.WallJumpingVelocity(_direction);
-				_sprite?.Play(Utility.Instance.EntityJumpAnimation);
+				_sprite?.Play(Utility.EntityJumpAnimation);
 				break;
 			
 			case Utility.CharacterState.Dash:
@@ -187,13 +188,13 @@ public partial class PlayerControllerComponent : Node
 				_onDashCooldown = true;
 				_dashCooldownTimer?.Start();
 				
-				_sprite?.Play(Utility.Instance.EntityDashAnimation);
+				_sprite?.Play(Utility.EntityDashAnimation);
 				break;
 			
 			case Utility.CharacterState.Death:
 				_hurtboxComponent?.SetDeferred(Area2D.PropertyName.Monitorable, false); // Don't get hit if dying
 				if (_velocityComponent != null) _velocityComponent.EntityVelocity = Vector2.Zero;
-				_sprite?.Play(Utility.Instance.EntityDeathAnimation);
+				_sprite?.Play(Utility.EntityDeathAnimation);
 				
 				// Wait before transitioning to game over screen
 				_gameOverTimer?.Start();

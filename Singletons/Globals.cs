@@ -1,5 +1,4 @@
 using Godot;
-using System;
 using ElGatoProject.Resources;
 
 namespace ElGatoProject.Singletons;

@@ -1,8 +1,5 @@
 using Godot;
-using System;
-using System.Numerics;
 using ElGatoProject.Resources;
-using Godot.Collections;
 using Vector2 = Godot.Vector2;
 
 namespace ElGatoProject.Components.Scripts;

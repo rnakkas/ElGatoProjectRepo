@@ -2,6 +2,7 @@ using Godot;
 using ElGatoProject.Projectiles.Scripts;
 using ElGatoProject.Resources;
 using ElGatoProject.Singletons;
+using ElGatoProject.Utilties;
 
 namespace ElGatoProject.Components.Scripts;
 

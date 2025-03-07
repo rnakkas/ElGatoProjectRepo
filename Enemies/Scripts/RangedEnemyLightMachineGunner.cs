@@ -1,5 +1,4 @@
 using Godot;
-using System;
 using ElGatoProject.Components.Scripts;
 
 namespace ElGatoProject.Enemies.Scripts;

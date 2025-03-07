@@ -1,6 +1,6 @@
 using Godot;
-using System;
 using ElGatoProject.Singletons;
+using ElGatoProject.Utilties;
 
 namespace ElGatoProject.Players.Scripts;
 public partial class PlayerHud : Control
@@ -74,15 +74,15 @@ public partial class PlayerHud : Control
 		Texture2D texture = null;
 		if (weaponType == Utility.WeaponType.PlayerShotgun.ToString())
 		{
-			texture= ResourceLoader.Load<Texture2D>(Utility.Instance.ShotgunHudIconTexturePath);
+			texture= ResourceLoader.Load<Texture2D>(Utility.ShotgunHudIconTexturePath);
 		}
 		else if (weaponType == Utility.WeaponType.PlayerMachineGun.ToString())
 		{
-			texture= ResourceLoader.Load<Texture2D>(Utility.Instance.MachineGunHudIconTexturePath);
+			texture= ResourceLoader.Load<Texture2D>(Utility.MachineGunHudIconTexturePath);
 		}
 		else if (weaponType == Utility.WeaponType.PlayerRailGun.ToString())
 		{
-			texture= ResourceLoader.Load<Texture2D>(Utility.Instance.RailGunHudIconTexturePath);
+			texture= ResourceLoader.Load<Texture2D>(Utility.RailGunHudIconTexturePath);
 		}
 		
 		return texture;
