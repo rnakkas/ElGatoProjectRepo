@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://cdxspo7dwh0iq"]
 
-[ext_resource type="Script" path="res://Players/Scripts/PlayerHud.cs" id="1_qul8y"]
+[ext_resource type="Script" path="res://UI/HUD/Scripts/PlayerHud.cs" id="1_adtko"]
 [ext_resource type="Texture2D" uid="uid://cytlmcjanr62v" path="res://Assets/HUD/machineGun-Icon-002.png" id="2_3acm0"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rjbe6"]
@@ -26,7 +26,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_qul8y")
+script = ExtResource("1_adtko")
 _scoreValue = NodePath("MarginContainer/VBoxContainer-HUD/HBoxContainer/VBoxContainer-HP_and_score/scoreValue")
 _weaponAmmo = NodePath("MarginContainer/VBoxContainer-HUD/HBoxContainer-Weapons/weaponAmmo")
 _weaponTypeIcon = NodePath("MarginContainer/VBoxContainer-HUD/HBoxContainer-Weapons/weaponTypeIcon")

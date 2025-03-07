@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://1n6eoojc5hfk"]
 
-[ext_resource type="Script" path="res://Menus/Scripts/GameOverMenu.cs" id="1_do677"]
+[ext_resource type="Script" path="res://UI/Menus/Scripts/GameOverMenu.cs" id="1_do677"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_buorf"]
 

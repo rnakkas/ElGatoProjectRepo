@@ -1,8 +1,8 @@
-using Godot;
 using ElGatoProject.Singletons;
 using ElGatoProject.Utilties;
+using Godot;
 
-namespace ElGatoProject.Players.Scripts;
+namespace ElGatoProject.UI.HUD.Scripts;
 public partial class PlayerHud : Control
 {
 	[Export] private Label _scoreValue, _weaponAmmo;

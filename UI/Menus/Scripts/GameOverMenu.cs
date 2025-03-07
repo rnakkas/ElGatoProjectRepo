@@ -1,7 +1,7 @@
-using Godot;
 using ElGatoProject.Singletons;
+using Godot;
 
-namespace ElGatoProject.Menus.Scripts;
+namespace ElGatoProject.UI.Menus.Scripts;
 public partial class GameOverMenu : Control
 {
 	[Export] private Label _scoreValueLabel;

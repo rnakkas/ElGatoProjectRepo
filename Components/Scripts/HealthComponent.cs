@@ -35,15 +35,19 @@ public partial class HealthComponent : Node
 
 	public void TakeDamage(int damage)
 	{
-		if (CurrentHealth > 0)
+		CurrentHealth -= damage;
+
+		switch (CurrentHealth)
 		{
-			CurrentHealth -= damage;
-			if (Owner.IsInGroup(Utility.NodeGroupPlayers))
-				EventsBus.Instance.EmitSignal(nameof(EventsBus.PlayerCurrentHealthUpdate), CurrentHealth);
-		}
-		else if (CurrentHealth <= 0)
-		{
-			EmitSignal(SignalName.HealthDepleted);
+			case > 0:
+			{
+				if (Owner.IsInGroup(Utility.NodeGroupPlayers))
+					EventsBus.Instance.EmitSignal(nameof(EventsBus.PlayerCurrentHealthUpdate), CurrentHealth);
+				break;
+			}
+			case <= 0:
+				EmitSignal(SignalName.HealthDepleted);
+				break;
 		}
 	}
 

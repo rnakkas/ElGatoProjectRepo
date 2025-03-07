@@ -1,6 +1,6 @@
 using Godot;
 
-namespace ElGatoProject.Menus.Scripts;
+namespace ElGatoProject.UI.Menus.Scripts;
 public partial class PauseMenu : Control
 {
 	[Export] private Button _resumeButton, _mainMenuButton, _exitGameButton;
