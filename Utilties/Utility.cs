@@ -67,22 +67,22 @@ public static class Utility
     public const string BulletFlyAnimation = "fly";
     public const string BulletHitAnimation = "hit";
     
-    public static string EnemyMachineGunFly = "enemy_machinegun_fly";
-    public static string EnemyMachineGunHit = "enemy_machinegun_hit";
-    public static string EnemyPistolFly = "enemy_pistol_fly";
-    public static string EnemyPistolHit = "enemy_pistol_hit";
-    public static string EnemyRailGunFly = "enemy_railgun_fly";
-    public static string EnemyRailGunHit = "enemy_railgun_hit";
-    public static string EnemyShotgunFly = "enemy_shotgun_fly";
-    public static string EnemyShotgunHit = "enemy_shotgun_hit";
-    public static string PlayerMachineGunFly = "player_machinegun_fly";
-    public static string PlayerMachineGunHit = "player_machinegun_hit";
-    public static string PlayerPistolFly = "player_pistol_fly";
-    public static string PlayerPistolHit = "player_pistol_hit";
-    public static string PlayerRailGunFly = "player_railgun_fly";
-    public static string PlayerRailGunHit = "player_railgun_hit";
-    public static string PlayerShotgunFly = "player_shotgun_fly";
-    public static string PlayerShotgunHit = "player_shotgun_hit";
+    // public static string EnemyMachineGunFly = "enemy_machinegun_fly";
+    // public static string EnemyMachineGunHit = "enemy_machinegun_hit";
+    // public static string EnemyPistolFly = "enemy_pistol_fly";
+    // public static string EnemyPistolHit = "enemy_pistol_hit";
+    // public static string EnemyRailGunFly = "enemy_railgun_fly";
+    // public static string EnemyRailGunHit = "enemy_railgun_hit";
+    // public static string EnemyShotgunFly = "enemy_shotgun_fly";
+    // public static string EnemyShotgunHit = "enemy_shotgun_hit";
+    // public static string PlayerMachineGunFly = "player_machinegun_fly";
+    // public static string PlayerMachineGunHit = "player_machinegun_hit";
+    // public static string PlayerPistolFly = "player_pistol_fly";
+    // public static string PlayerPistolHit = "player_pistol_hit";
+    // public static string PlayerRailGunFly = "player_railgun_fly";
+    // public static string PlayerRailGunHit = "player_railgun_hit";
+    // public static string PlayerShotgunFly = "player_shotgun_fly";
+    // public static string PlayerShotgunHit = "player_shotgun_hit";
 
     // Scene transition and shader string names
     public const string SceneTransitionWipeAnimation = "screen_wipe_animation";
