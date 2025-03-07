@@ -23,8 +23,8 @@ public partial class WeaponElgato : Node2D
 		
 		_weaponPosition = Position;
 		
-		_weaponSprite?.Play(Utility.EntityIdleAnimation);
-		_flashSprite?.Play(Utility.EntityIdleAnimation);
+		_weaponSprite?.Play(Utility.EntityAnimations[Utility.EntityState.Idle]);
+		_flashSprite?.Play(Utility.EntityAnimations[Utility.EntityState.Idle]);
 
 		// For HUD
 		EventsBus.Instance.EmitSignal(nameof(EventsBus.Instance.PlayerCurrentWeaponUpdate),
@@ -53,8 +53,8 @@ public partial class WeaponElgato : Node2D
 		_weaponSprite?.SetSpeedScale(_shooting.ShootingProperties.AnimationSpeed);
 		_flashSprite?.SetSpeedScale(_shooting.ShootingProperties.AnimationSpeed);
 		
-		_weaponSprite?.Play(Utility.EntityShootAnimation);
-		_flashSprite?.Play(Utility.EntityShootAnimation);
+		_weaponSprite?.Play(Utility.EntityAnimations[Utility.EntityState.Shoot]);
+		_flashSprite?.Play(Utility.EntityAnimations[Utility.EntityState.Shoot]);
 	
 		
 		// Only reduce ammo for power-up weapons
@@ -113,8 +113,8 @@ public partial class WeaponElgato : Node2D
 	{
 		if (
 			Input.IsActionPressed("shoot") && 
-			_playerController?.CurrentState != Utility.CharacterState.Dash &&
-			_playerController?.CurrentState != Utility.CharacterState.Hurt
+			_playerController?.CurrentState != Utility.EntityState.Dash &&
+			_playerController?.CurrentState != Utility.EntityState.Hurt
 			)
 		{
 			_shooting?.Shoot(_direction);
@@ -126,9 +126,9 @@ public partial class WeaponElgato : Node2D
 			_flashSprite?.SetSpeedScale(1);
 			
 			if (_weaponSprite != null && !_weaponSprite.IsPlaying())
-				_weaponSprite.Play(Utility.EntityIdleAnimation);
+				_weaponSprite.Play(Utility.EntityAnimations[Utility.EntityState.Idle]);
 			if (_flashSprite != null && !_flashSprite.IsPlaying())
-				_flashSprite.Play(Utility.EntityIdleAnimation);
+				_flashSprite.Play(Utility.EntityAnimations[Utility.EntityState.Idle]);
 			
 		}
 		
@@ -139,7 +139,7 @@ public partial class WeaponElgato : Node2D
 		}
 		
 		// If player dies, despawn weapon
-		if (_playerController?.CurrentState == Utility.CharacterState.Death)
+		if (_playerController?.CurrentState == Utility.EntityState.Death)
 		{
 			QueueFree();
 		}

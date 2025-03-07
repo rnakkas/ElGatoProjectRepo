@@ -17,7 +17,7 @@ public partial class Pickups : Area2D
 	
 	public override void _Ready()
 	{
-		_sprite?.Play(Utility.EntityIdleAnimation);
+		_sprite?.Play(Utility.EntityAnimations[Utility.EntityState.Idle]);
 		
 		AreaEntered += OnPlayerEntered;
 	}

@@ -1,3 +1,5 @@
+using Godot.Collections;
+
 namespace ElGatoProject.Utilties;
 public static class Utility
 {
@@ -33,7 +35,7 @@ public static class Utility
         Enemy
     }
 
-    public enum CharacterState
+    public enum EntityState
     {
         Idle,
         Run,
@@ -47,16 +49,19 @@ public static class Utility
         Shoot
     }
 
-    // Character animation string names
-    public const string EntityIdleAnimation = "idle";
-    public const string EntityRunAnimation = "run";
-    public const string EntityJumpAnimation = "jump";
-    public const string EntityFallAnimation = "fall";
-    public const string EntityWallSlideAnimation = "wall_slide";
-    public const string EntityHurtAnimation = "hurt";
-    public const string EntityShootAnimation = "shoot";
-    public const string EntityDashAnimation = "dash";
-    public const string EntityDeathAnimation = "death";
+    public static readonly Dictionary<EntityState, string> EntityAnimations = new()
+    {
+        [EntityState.Idle] = "idle",
+        [EntityState.Run] = "run",
+        [EntityState.Jump] = "jump",
+        [EntityState.Fall] = "fall",
+        [EntityState.Hurt] = "hurt",
+        [EntityState.Death] = "death",
+        [EntityState.WallSlide] = "wall_slide",
+        [EntityState.WallJump] = "jump",
+        [EntityState.Dash] = "dash",
+        [EntityState.Shoot] = "shoot"
+    };
     
     // Projectile animation string names
     public const string BulletFlyAnimation = "fly";
