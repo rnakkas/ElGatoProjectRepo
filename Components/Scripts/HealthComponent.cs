@@ -25,9 +25,7 @@ public partial class HealthComponent : Node
 		EventsBus.Instance.EmitSignal(nameof(EventsBus.PlayerCurrentHealthUpdate), CurrentHealth);
 
 		// To continuously drain health(caffeine) meter
-		if (_caffeineDrainTimer == null)
-			return;
-		_caffeineDrainTimer.Timeout += OnCaffeineDrainTimerTimeout;
+		if (_caffeineDrainTimer != null) _caffeineDrainTimer.Timeout += OnCaffeineDrainTimerTimeout;
 	}
 
 	private void OnCaffeineDrainTimerTimeout()

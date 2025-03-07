@@ -12,8 +12,7 @@ public partial class ShootingComponent : Node2D
 	[Export] public ShootingProperties ShootingProperties;
 	
 	[Export] private Marker2D _muzzle;
-	[Export] private Timer _shotCooldownTimer;
-	[Export] private Timer _reloadTimer;
+	[Export] private Timer _shotCooldownTimer, _reloadTimer;
 
 	[Signal]
 	public delegate void ShootingEventHandler();
@@ -29,7 +28,7 @@ public partial class ShootingComponent : Node2D
 		SetTimerValues();
 		ConnectToSignals();
 		
-		_muzzlePosition = _muzzle.Position;
+		if (_muzzle != null) _muzzlePosition = _muzzle.Position;
 	}
 	
 	// Public method
@@ -40,33 +39,31 @@ public partial class ShootingComponent : Node2D
 			EmitSignal(SignalName.Shooting);
 			ShootingLogic(targetVector);
 			OnCooldown = true;
-			_shotCooldownTimer.Start();
+			_shotCooldownTimer?.Start();
 		}
 	}
 
 	// Helper functions
 	public void SetTimerValues()
 	{
-		if (_shotCooldownTimer == null)
-			return;
-		_shotCooldownTimer.OneShot = true;
-		_shotCooldownTimer.WaitTime = ShootingProperties.ShootingCooldownTime;
-		
-		if (_reloadTimer == null)
-			return;
-		_reloadTimer.OneShot = true;
-		_reloadTimer.WaitTime = ShootingProperties.ReloadTime;
+		if (_shotCooldownTimer != null)
+		{
+			_shotCooldownTimer.OneShot = true;
+			if (ShootingProperties != null) _shotCooldownTimer.WaitTime = ShootingProperties.ShootingCooldownTime;
+		}
+
+		if (_reloadTimer != null)
+		{
+			_reloadTimer.OneShot = true;
+			if (ShootingProperties != null) _reloadTimer.WaitTime = ShootingProperties.ReloadTime;
+		}
 	}
 
 	private void ConnectToSignals()
 	{
-		if (_shotCooldownTimer == null)
-			return;
-		_shotCooldownTimer.Timeout += OnShotCoolDownTimerTimeout;
+		if (_shotCooldownTimer != null) _shotCooldownTimer.Timeout += OnShotCoolDownTimerTimeout;
 		
-		if (_reloadTimer == null)
-			return;
-		_reloadTimer.Timeout += OnReloadTimerTimeout;
+		if (_reloadTimer != null) _reloadTimer.Timeout += OnReloadTimerTimeout;
 	}
 
 	private void OnShotCoolDownTimerTimeout()
@@ -84,11 +81,11 @@ public partial class ShootingComponent : Node2D
 	{
 		if (targetVector.X < 0)
 		{
-			_muzzle.Position = new Vector2(-_muzzlePosition.X, _muzzlePosition.Y);
+			if (_muzzle != null) _muzzle.Position = new Vector2(-_muzzlePosition.X, _muzzlePosition.Y);
 		}
 		else if (targetVector.X > 0)
 		{
-			_muzzle.Position = new Vector2(_muzzlePosition.X, _muzzlePosition.Y);
+			if (_muzzle != null) _muzzle.Position = new Vector2(_muzzlePosition.X, _muzzlePosition.Y);
 		}
 	}
 
@@ -100,7 +97,7 @@ public partial class ShootingComponent : Node2D
 				break;
 			
 			case Utility.WeaponType.EnemyShotgun:
-				for (int i = 0; i < ShootingProperties.BulletsPerShot; i++)
+				for (int i = 0; i < ShootingProperties?.BulletsPerShot; i++)
 				{
 					CreateAndSetBulletProperties(
 						Utility.PlayerOrEnemy.Enemy, 
@@ -122,17 +119,17 @@ public partial class ShootingComponent : Node2D
 					
 					_bulletCount++;
 					
-					if (_bulletCount >= ShootingProperties.MagazineSize)
+					if (_bulletCount >= ShootingProperties?.MagazineSize)
 					{
 						_reloading = true;
-						_reloadTimer.Start();
+						_reloadTimer?.Start();
 					}
 				}
 				break;
 			
 			case Utility.WeaponType.PlayerShotgun:
 				FlipMuzzle(targetVector);
-				for (int i = 0; i < ShootingProperties.BulletsPerShot; i++)
+				for (int i = 0; i < ShootingProperties?.BulletsPerShot; i++)
 				{
 					CreateAndSetBulletProperties(
 						Utility.PlayerOrEnemy.Player, 
@@ -172,7 +169,7 @@ public partial class ShootingComponent : Node2D
 		projectileInstance.BulletSpeed = ShootingProperties.BulletSpeed;
 		projectileInstance.Knockback = ShootingProperties.BulletKnockback; 
 		projectileInstance.BulletDamage = ShootingProperties.BulletDamage;
-		projectileInstance.GlobalPosition = _muzzle.GlobalPosition;
+		if (_muzzle != null) projectileInstance.GlobalPosition = _muzzle.GlobalPosition;
 		
 		// Add the projectiles to the level instead of root, ensure level is the currently visible one
 		var levelsArray = GetTree().GetNodesInGroup("Levels");

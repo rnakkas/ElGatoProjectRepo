@@ -14,9 +14,9 @@ namespace ElGatoProject.Components.Scripts;
 [GlobalClass]
 public partial class ProjectileHitboxComponent : Area2D
 {
-	[Export] public int Damage { get; set; }
-	[Export] public float Knockback { get; set; }
-	[Export] public Vector2 Velocity { get; set; }
+	public int Damage { get; set; }
+	public float Knockback { get; set; }
+	public Vector2 Velocity { get; set; }
 	
 	[Signal] public delegate void HitboxCollidedEventHandler();
 	
@@ -32,6 +32,8 @@ public partial class ProjectileHitboxComponent : Area2D
 	{
 		if (body is TileMapLayer)
 		{
+			SetDeferred(Area2D.PropertyName.Monitoring, false);
+			SetDeferred(Area2D.PropertyName.Monitorable, false);
 			EmitSignal(SignalName.HitboxCollided);
 		}
 	}
@@ -45,6 +47,8 @@ public partial class ProjectileHitboxComponent : Area2D
 		{
 			if (entityArea is not HurtboxComponent hurtboxComponent)
 				return;
+			SetDeferred(Area2D.PropertyName.Monitoring, false);
+			SetDeferred(Area2D.PropertyName.Monitorable, false);
 			hurtboxComponent.HitByAttack(this, Damage, Knockback);
 			EmitSignal(SignalName.HitboxCollided);
 		}

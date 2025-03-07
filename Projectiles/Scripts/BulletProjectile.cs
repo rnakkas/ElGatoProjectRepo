@@ -29,34 +29,38 @@ public partial class BulletProjectile : Node2D
 		ConnectToSignals();
 		SetComponentProperties();
 		
-		_bulletSprite.Play(Utility.Instance.BulletFlyAnimation);
-		_despawnTimer.Start();
+		_bulletSprite?.Play(Utility.Instance.BulletFlyAnimation);
+		_despawnTimer?.Start();
 	}
 	
 	// Helper functions
 	private void ConnectToSignals()
 	{
-		_despawnTimer.Timeout += OmBulletDespawnTimerTimedOut;
-		_hitbox.HitboxCollided += OnHitBoxCollision;
+		if (_despawnTimer != null) _despawnTimer.Timeout += OmBulletDespawnTimerTimedOut;
+
+		if (_hitbox != null) _hitbox.HitboxCollided += OnHitBoxCollision;
 	}
-	
+
 	private void SetComponentProperties()
 	{
-		_hitbox.PlayerOrEnemyProjectile = PlayerOrEnemyBullet;
-		_hitbox.Damage = BulletDamage;
-		_hitbox.Knockback = Knockback;
+		if (_hitbox != null)
+		{
+			_hitbox.PlayerOrEnemyProjectile = PlayerOrEnemyBullet;
+			_hitbox.Damage = BulletDamage;
+			_hitbox.Knockback = Knockback;
+		}
 	}
 
 	// Hitting targets
 	private async void OnHitBoxCollision()
 	{
-		if (_bulletSprite == null)
-			return;
-		
 		_hitStatus = true;
 		
-		_bulletSprite.Play(Utility.Instance.BulletHitAnimation);
-		await ToSignal(_bulletSprite, "animation_finished");
+		if (_bulletSprite != null)
+		{
+			_bulletSprite.Play(Utility.Instance.BulletHitAnimation);
+			await ToSignal(_bulletSprite, "animation_finished");
+		}
 		
 		QueueFree();
 	}
@@ -79,8 +83,8 @@ public partial class BulletProjectile : Node2D
 		
 		MoveLocalX(_velocity.X, true);
 		MoveLocalY(_velocity.Y, true);
-		
-		_hitbox.Velocity = _velocity;
+
+		if (_hitbox != null) _hitbox.Velocity = _velocity;
 	}
 	
 	public override void _PhysicsProcess(double delta)

@@ -18,7 +18,7 @@ public partial class HurtboxComponent : Area2D
 	
 	public override void _Ready()
 	{
-		_hurtStaggerTimer.Timeout += HurtStatusTimerTimedOut;
+		if (_hurtStaggerTimer != null) _hurtStaggerTimer.Timeout += HurtStatusTimerTimedOut;
 	}
 
 	private void HurtStatusTimerTimedOut()
@@ -29,28 +29,27 @@ public partial class HurtboxComponent : Area2D
 	// Called by the attacking area, for example attacking bullet calls this method to pass the attack data
 	public void HitByAttack(Area2D attackArea, int attackDamage, float knockback)
 	{
-		_hurtStaggerTimer.Start();
+		_hurtStaggerTimer?.Start();
 		
 		var attackPosition = (attackArea.GlobalPosition - GlobalPosition).Normalized();
 		
 		_healthComponent?.TakeDamage(attackDamage);
 		
-		if (_velocityComponent == null)
-			return;
-		_velocityComponent.KnockbackFromAttack(attackPosition, knockback);
-		
-		if (_bodySprite == null)
-			return;
-		
-		switch (attackPosition.X)
+		if (_velocityComponent != null) _velocityComponent.KnockbackFromAttack(attackPosition, knockback);
+
+		if (_bodySprite != null)
 		{
-			case < 0:
-				_bodySprite.FlipH = true;
-				break;
-			case > 0:
-				_bodySprite.FlipH = false;
-				break;
+			switch (attackPosition.X)
+			{
+				case < 0:
+					_bodySprite.FlipH = true;
+					break;
+				case > 0:
+					_bodySprite.FlipH = false;
+					break;
+			}
 		}
+		
 		
 		EmitSignal(SignalName.GotHit);
 	}

@@ -63,8 +63,8 @@ public partial class Pickups : Area2D
 		Tween tween1 = GetTree().CreateTween();
 		Tween tween2 = GetTree().CreateTween();
 
-		tween1.TweenProperty(_sprite, "modulate:a", 0, 0.4);
-		tween2.TweenProperty(_sprite, "position", _sprite.Position - new Vector2(0, 75), 0.5);
+		tween1.TweenProperty(this, "modulate:a", 0, 0.4);
+		tween2.TweenProperty(this, "position", Position - new Vector2(0, 45), 0.5);
 		tween2.TweenCallback(Callable.From(QueueFree));
 	}
 	

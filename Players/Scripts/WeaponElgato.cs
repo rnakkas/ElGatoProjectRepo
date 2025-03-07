@@ -23,23 +23,19 @@ public partial class WeaponElgato : Node2D
 		
 		_weaponPosition = Position;
 		
-		_weaponSprite.Play(Utility.Instance.EntityIdleAnimation);
-		_flashSprite.Play(Utility.Instance.EntityIdleAnimation);
+		_weaponSprite?.Play(Utility.Instance.EntityIdleAnimation);
+		_flashSprite?.Play(Utility.Instance.EntityIdleAnimation);
 
 		// For HUD
 		EventsBus.Instance.EmitSignal(nameof(EventsBus.Instance.PlayerCurrentWeaponUpdate),
-			_shooting.WeaponType.ToString());
+			_shooting?.WeaponType.ToString());
 	}
 
 	private void ConnectSignals()
 	{
-		if (_shooting == null)
-			return;
-		_shooting.Shooting += OnShooting;
+		if (_shooting != null) _shooting.Shooting += OnShooting;
 		
-		if (_pickupsComponent == null)
-			return;
-		_pickupsComponent.PickedUpWeaponPowerUp += OnWeaponPowerUpPickedUp;
+		if (_pickupsComponent != null) _pickupsComponent.PickedUpWeaponPowerUp += OnWeaponPowerUpPickedUp;
 	}
 
 	private void OnWeaponPowerUpPickedUp(string weaponPowerUp)
@@ -54,15 +50,15 @@ public partial class WeaponElgato : Node2D
 	private void OnShooting()
 	{
 		// Change speed scale of animations based on weapon type from shooting properties
-		_weaponSprite.SetSpeedScale(_shooting.ShootingProperties.AnimationSpeed);
-		_flashSprite.SetSpeedScale(_shooting.ShootingProperties.AnimationSpeed);
+		_weaponSprite?.SetSpeedScale(_shooting.ShootingProperties.AnimationSpeed);
+		_flashSprite?.SetSpeedScale(_shooting.ShootingProperties.AnimationSpeed);
 		
-		_weaponSprite.Play(Utility.Instance.EntityShootAnimation);
-		_flashSprite.Play(Utility.Instance.EntityShootAnimation);
+		_weaponSprite?.Play(Utility.Instance.EntityShootAnimation);
+		_flashSprite?.Play(Utility.Instance.EntityShootAnimation);
 	
 		
 		// Only reduce ammo for power-up weapons
-		if (_shooting.WeaponType == Utility.WeaponType.PlayerPistol) 
+		if (_shooting?.WeaponType == Utility.WeaponType.PlayerPistol) 
 			return;
 		_weaponAmmo--;
 		
@@ -72,8 +68,8 @@ public partial class WeaponElgato : Node2D
 
 	private void SwitchWeapon(Utility.WeaponType weaponType)
 	{
-		_shooting.WeaponType = weaponType;
-		
+		if (_shooting != null) _shooting.WeaponType = weaponType;
+
 		switch (weaponType)
 		{
 			case Utility.WeaponType.None:
@@ -84,29 +80,29 @@ public partial class WeaponElgato : Node2D
 				return;
 			
 			case Utility.WeaponType.PlayerPistol:
-				_shooting.ShootingProperties = Globals.Instance.PlayerPistolShootingProperties;
+				if (_shooting != null) _shooting.ShootingProperties = Globals.Instance.PlayerPistolShootingProperties;
 				break;
 			
 			case Utility.WeaponType.PlayerShotgun:
-				_shooting.ShootingProperties = Globals.Instance.PlayerShotgunShootingProperties;
+				if (_shooting != null) _shooting.ShootingProperties = Globals.Instance.PlayerShotgunShootingProperties;
 				break;
 			
 			case Utility.WeaponType.PlayerMachineGun:
-				_shooting.ShootingProperties = Globals.Instance.PlayerMachineGunShootingProperties;
+				if (_shooting != null) _shooting.ShootingProperties = Globals.Instance.PlayerMachineGunShootingProperties;
 				break;
 			
 			case Utility.WeaponType.PlayerRailGun:
-				_shooting.ShootingProperties = Globals.Instance.PlayerRailGunShootingProperties;
+				if (_shooting != null) _shooting.ShootingProperties = Globals.Instance.PlayerRailGunShootingProperties;
 				break;
 			
 			default:
 				throw new ArgumentOutOfRangeException($"Weapon type does not exist");
 		}
 		
-		_weaponAmmo = _shooting.ShootingProperties.MagazineSize;
+		if (_shooting != null) _weaponAmmo = _shooting.ShootingProperties.MagazineSize;
 		
 		// Set the updated timer values for the new weapon type
-		_shooting.SetTimerValues(); 
+		_shooting?.SetTimerValues(); 
 		
 		// For HUD
 		EventsBus.Instance.EmitSignal(nameof(EventsBus.Instance.PlayerCurrentWeaponUpdate), weaponType.ToString());
@@ -121,17 +117,17 @@ public partial class WeaponElgato : Node2D
 			_playerController?.CurrentState != Utility.CharacterState.Hurt
 			)
 		{
-			_shooting.Shoot(_direction);
+			_shooting?.Shoot(_direction);
 		}
 		else
 		{
 			// Set speed scale back to 1 for idle animations
-			_weaponSprite.SetSpeedScale(1);
-			_flashSprite.SetSpeedScale(1);
+			_weaponSprite?.SetSpeedScale(1);
+			_flashSprite?.SetSpeedScale(1);
 			
-			if (!_weaponSprite.IsPlaying())
+			if (_weaponSprite != null && !_weaponSprite.IsPlaying())
 				_weaponSprite.Play(Utility.Instance.EntityIdleAnimation);
-			if (!_flashSprite.IsPlaying())
+			if (_flashSprite != null && !_flashSprite.IsPlaying())
 				_flashSprite.Play(Utility.Instance.EntityIdleAnimation);
 			
 		}
@@ -151,6 +147,9 @@ public partial class WeaponElgato : Node2D
 
 	private void SetWeaponDirection()
 	{
+		if (_characterSprite == null) 
+			return;
+		
 		if (_characterSprite.IsFlippedH())
 		{
 			_direction = Vector2.Left;
