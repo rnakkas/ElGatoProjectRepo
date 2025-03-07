@@ -17,21 +17,24 @@ public partial class Main : Node2D
 	
 	public override void _Ready()
 	{
-		_playerHud.SetVisible(false);
-		_pauseMenu.SetVisible(false);
-		_gameOverMenu.SetVisible(false);
+		_playerHud?.SetVisible(false);
+		_pauseMenu?.SetVisible(false);
+		_gameOverMenu?.SetVisible(false);
 
 		ConnectToSignals();
 	}
 
 	private void ConnectToSignals()
 	{
-		_mainMenu.StartGame += OnStartGameButtonPressed;
-		
-		_pauseMenu.ReturnToMainMenu += OnReturnToMainMenuPressed;
-		
-		_gameOverMenu.ReturnToMainMenu += OnReturnToMainMenuPressed;
-		_gameOverMenu.Retry += OnRetryButtonPressed;
+		if (_mainMenu != null) _mainMenu.StartGame += OnStartGameButtonPressed;
+
+		if (_pauseMenu != null) _pauseMenu.ReturnToMainMenu += OnReturnToMainMenuPressed;
+
+		if (_gameOverMenu != null)
+		{
+			_gameOverMenu.ReturnToMainMenu += OnReturnToMainMenuPressed;
+            _gameOverMenu.Retry += OnRetryButtonPressed;
+		}
 
 		EventsBus.Instance.PlayerDied += OnPlayerDeath;
 	}
@@ -40,47 +43,47 @@ public partial class Main : Node2D
 	{
 		Globals.Instance.IsPlayerDying = false;
 		
-		_mainMenu.MainMenuVisibility(false);
+		_mainMenu?.MainMenuVisibility(false);
 
-		_levelLoader.LoadLevel("staging_level");
+		_levelLoader?.LoadLevel("staging_level");
 
 		_sceneTransition?.PlaySceneTransition();
 
-		_playerHud.SetVisible(true);
+		_playerHud?.SetVisible(true);
 
 		// Set player score to 0 on new game start
-		_playerHud.UpdatePlayerScore(Globals.Instance.PlayerScore = 0);
+		_playerHud?.UpdatePlayerScore(Globals.Instance.PlayerScore = 0);
 	}
 
 	private void OnReturnToMainMenuPressed()
 	{
 		_sceneTransition?.PlaySceneTransition();
-		_levelLoader.UnloadCurrentLevel();
-		_mainMenu.MainMenuVisibility(true);
-		_playerHud.SetVisible(false);
+		_levelLoader?.UnloadCurrentLevel();
+		_mainMenu?.MainMenuVisibility(true);
+		_playerHud?.SetVisible(false);
 
 		// Reset player score on return to main menu
-		_playerHud.UpdatePlayerScore(Globals.Instance.PlayerScore = 0);
+		_playerHud?.UpdatePlayerScore(Globals.Instance.PlayerScore = 0);
 	}
 
 	private void OnPlayerDeath()
 	{
-		_playerHud.SetVisible(false);
-		_gameOverMenu.GameOverScreenVisibility(true);
+		_playerHud?.SetVisible(false);
+		_gameOverMenu?.GameOverScreenVisibility(true);
 	}
 
 	private void OnRetryButtonPressed()
 	{
 		Globals.Instance.IsPlayerDying = false;
 		_sceneTransition?.PlaySceneTransition();
-		_gameOverMenu.GameOverScreenVisibility(false);
-		_levelLoader.UnloadCurrentLevel();
-		_levelLoader.LoadLevel("staging_level");
+		_gameOverMenu?.GameOverScreenVisibility(false);
+		_levelLoader?.UnloadCurrentLevel();
+		_levelLoader?.LoadLevel("staging_level");
 		
-		_playerHud.SetVisible(true);
+		_playerHud?.SetVisible(true);
 
 		// Set player score to 0 on retry
-		_playerHud.UpdatePlayerScore(Globals.Instance.PlayerScore = 0);
+		_playerHud?.UpdatePlayerScore(Globals.Instance.PlayerScore = 0);
 		
 	}
 
@@ -90,9 +93,9 @@ public partial class Main : Node2D
 		// Don't allow pausing if on main menu, during scene transition, during game over screen and while dying
 		if (
 			!Input.IsActionJustPressed("pause") ||
-			_mainMenu.IsVisible() ||
-			_sceneTransition.IsVisible() ||
-			_gameOverMenu.IsVisible() ||
+			(_mainMenu != null && _mainMenu.IsVisible()) ||
+			(_sceneTransition != null && _sceneTransition.IsVisible()) ||
+			(_gameOverMenu != null && _gameOverMenu.IsVisible()) ||
 			Globals.Instance.IsPlayerDying
 		)
 		{
@@ -103,11 +106,11 @@ public partial class Main : Node2D
 
 		if (GetTree().Paused)
 		{
-			_pauseMenu.PauseMenuVisibility(true);
+			_pauseMenu?.PauseMenuVisibility(true);
 		}
 		else if (!GetTree().Paused)
 		{
-			_pauseMenu.PauseMenuVisibility(false);
+			_pauseMenu?.PauseMenuVisibility(false);
 		}
 	}
 

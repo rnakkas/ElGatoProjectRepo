@@ -8,8 +8,6 @@ public partial class PlayerHud : Control
 	[Export] private Label _scoreValue, _weaponAmmo;
 	[Export] private TextureRect _weaponTypeIcon;
 	[Export] private ProgressBar _caffeineBar;
-
-	private string _currentWeapon;
 	
 	public override void _Ready()
 	{
@@ -29,12 +27,12 @@ public partial class PlayerHud : Control
 
 	private void OnPlayerMaxHealthReceived(int maxHealth)
 	{
-		_caffeineBar.SetMax(maxHealth);
+		_caffeineBar?.SetMax(maxHealth);
 	}
 
 	private void OnPlayerCurrentHealthReceived(int currentHealth)
 	{
-		_caffeineBar.SetValue(currentHealth);
+		_caffeineBar?.SetValue(currentHealth);
 	}
 
 	private void OnPlayerScoreChangeReceived(int score)
@@ -44,7 +42,7 @@ public partial class PlayerHud : Control
 
 	public void UpdatePlayerScore(int score)
 	{
-		_scoreValue.SetText(score.ToString("D8"));
+		_scoreValue?.SetText(score.ToString("D8"));
 	}
 
 	private void OnPlayerCurrentWeaponReceived(string weaponType)
@@ -52,21 +50,21 @@ public partial class PlayerHud : Control
 		// Only show weapon hud if weapon is not pistol
 		if (weaponType == Utility.WeaponType.PlayerPistol.ToString())
 		{
-			_weaponTypeIcon.SetVisible(false);
-			_weaponAmmo.SetVisible(false);
+			_weaponTypeIcon?.SetVisible(false);
+			_weaponAmmo?.SetVisible(false);
 		}
 		else
 		{
-			_weaponTypeIcon.SetVisible(true);
-			_weaponAmmo.SetVisible(true);
+			_weaponTypeIcon?.SetVisible(true);
+			_weaponAmmo?.SetVisible(true);
 		}
 
-		_weaponTypeIcon.Texture = LoadWeaponIconTexture(weaponType);
+		if (_weaponTypeIcon != null) _weaponTypeIcon.Texture = LoadWeaponIconTexture(weaponType);
 	}
 
 	private void OnPlayerAmmoReceived(int ammo)
 	{
-		_weaponAmmo.SetText(ammo.ToString());
+		_weaponAmmo?.SetText(ammo.ToString());
 	}
 	
 	// Helper functions

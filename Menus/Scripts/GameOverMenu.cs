@@ -24,26 +24,36 @@ public partial class GameOverMenu : Control
 
 	private void ConnectSignals()
 	{
-		_retryButton.MouseEntered += OnMouseHoverRetryButton;
-		_mainMenuButton.MouseEntered += OnMouseHoverMainMenuButton;
-		_exitGameButton.MouseEntered += OnMouseHoverExitGameButton;
-		
-		_retryButton.Pressed += OnRetryButtonPressed;
-		_mainMenuButton.Pressed += OnMainMenuButtonPressed;
-		_exitGameButton.Pressed += OnExitGameButtonPressed;
+		if (_retryButton != null)
+		{
+			_retryButton.MouseEntered += OnMouseHoverRetryButton;
+			_retryButton.Pressed += OnRetryButtonPressed;
+		}
+
+		if (_mainMenuButton != null)
+		{
+			_mainMenuButton.MouseEntered += OnMouseHoverMainMenuButton;
+			_mainMenuButton.Pressed += OnMainMenuButtonPressed;
+		}
+
+		if (_exitGameButton != null)
+		{
+			_exitGameButton.MouseEntered += OnMouseHoverExitGameButton;
+			_exitGameButton.Pressed += OnExitGameButtonPressed;
+		}
 	}
 	
 	private void OnMouseHoverRetryButton()
 	{
-		_retryButton.GrabFocus();
+		_retryButton?.GrabFocus();
 	}
 	private void OnMouseHoverMainMenuButton()
 	{
-		_mainMenuButton.GrabFocus();
+		_mainMenuButton?.GrabFocus();
 	}
 	private void OnMouseHoverExitGameButton()
 	{
-		_exitGameButton.GrabFocus();
+		_exitGameButton?.GrabFocus();
 	}
 
 	private void OnRetryButtonPressed()
@@ -69,10 +79,10 @@ public partial class GameOverMenu : Control
 
 		if (isVisible)
 		{
-			_retryButton.GrabFocus();
-			_scoreValueLabel.SetText(Globals.Instance.PlayerScore.ToString("D8"));
+			_retryButton?.GrabFocus();
+			_scoreValueLabel?.SetText(Globals.Instance.PlayerScore.ToString("D8"));
 		}
 		else
-			_retryButton.ReleaseFocus();
+			_retryButton?.ReleaseFocus();
 	}
 }

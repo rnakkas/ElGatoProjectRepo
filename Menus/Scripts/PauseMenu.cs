@@ -15,26 +15,36 @@ public partial class PauseMenu : Control
 
 	private void ConnectSignals()
 	{
-		_resumeButton.MouseEntered += OnMouseHoverResumeButton;
-		_mainMenuButton.MouseEntered += OnMouseHoverMainMenuButton;
-		_exitGameButton.MouseEntered += OnMouseHoverExitGameButton;
-		
-		_resumeButton.Pressed += OnResumeButtonPressed;
-		_mainMenuButton.Pressed += OnMainMenuButtonPressed;
-		_exitGameButton.Pressed += OnExitGameButtonPressed;
+		if (_resumeButton != null)
+		{
+			_resumeButton.MouseEntered += OnMouseHoverResumeButton;
+			_resumeButton.Pressed += OnResumeButtonPressed;
+		}
+
+		if (_mainMenuButton != null)
+		{
+			_mainMenuButton.MouseEntered += OnMouseHoverMainMenuButton;
+			_mainMenuButton.Pressed += OnMainMenuButtonPressed;
+		}
+
+		if (_exitGameButton != null)
+		{
+			_exitGameButton.MouseEntered += OnMouseHoverExitGameButton;
+            _exitGameButton.Pressed += OnExitGameButtonPressed;
+		}
 	}
 
 	private void OnMouseHoverResumeButton()
 	{
-		_resumeButton.GrabFocus();
+		_resumeButton?.GrabFocus();
 	}
 	private void OnMouseHoverMainMenuButton()
 	{
-		_mainMenuButton.GrabFocus();
+		_mainMenuButton?.GrabFocus();
 	}
 	private void OnMouseHoverExitGameButton()
 	{
-		_exitGameButton.GrabFocus();
+		_exitGameButton?.GrabFocus();
 	}
 
 	private void OnResumeButtonPressed()
@@ -60,8 +70,8 @@ public partial class PauseMenu : Control
 		SetVisible(isVisible);
 		
 		if (isVisible)
-			_resumeButton.GrabFocus();
+			_resumeButton?.GrabFocus();
 		else
-			_resumeButton.ReleaseFocus();
+			_resumeButton?.ReleaseFocus();
 	}
 }

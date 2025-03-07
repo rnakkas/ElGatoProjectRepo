@@ -14,13 +14,18 @@ public partial class MainMenu : Control
 
 	public override void _Ready()
 	{
-		_startGameButton.GrabFocus();
+		if (_startGameButton != null)
+		{
+			_startGameButton.GrabFocus();
+			_startGameButton.MouseEntered += OnMouseHoverStartGameButton;
+			_startGameButton.Pressed += OnStartGameButtonPressed;
+		}
 
-		_startGameButton.MouseEntered += OnMouseHoverStartGameButton;
-		_exitGameButton.MouseEntered += OnMouseHoverExitGameButton;
-
-		_startGameButton.Pressed += OnStartGameButtonPressed;
-		_exitGameButton.Pressed += OnExitGameButtonPressed;
+		if (_exitGameButton != null)
+		{
+			_exitGameButton.MouseEntered += OnMouseHoverExitGameButton;
+			_exitGameButton.Pressed += OnExitGameButtonPressed;
+		}
 	}
 
 	private void OnStartGameButtonPressed()
@@ -35,12 +40,12 @@ public partial class MainMenu : Control
 
 	private void OnMouseHoverStartGameButton()
 	{
-		_startGameButton.GrabFocus();
+		_startGameButton?.GrabFocus();
 	}
 
 	private void OnMouseHoverExitGameButton()
 	{
-		_exitGameButton.GrabFocus();
+		_exitGameButton?.GrabFocus();
 	}
 
 public void MainMenuVisibility(bool isVisible)
@@ -48,9 +53,9 @@ public void MainMenuVisibility(bool isVisible)
 		SetVisible(isVisible);
 		
 		if (isVisible)
-			_startGameButton.GrabFocus();
+			_startGameButton?.GrabFocus();
 		else
-			_startGameButton.ReleaseFocus();
+			_startGameButton?.ReleaseFocus();
 	}
 	
 }
