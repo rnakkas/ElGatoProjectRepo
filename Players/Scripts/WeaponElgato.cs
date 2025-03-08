@@ -7,6 +7,7 @@ using ElGatoProject.Utilties;
 
 namespace ElGatoProject.Players.Scripts;
 
+//TODO: Create WeaponControllerComponent to handle weapon actions
 public partial class WeaponElgato : Node2D
 {
 	[Export] private ShootingComponent _shooting;
@@ -50,6 +51,7 @@ public partial class WeaponElgato : Node2D
 	// Shooting signal connection
 	private void OnShooting()
 	{
+		//TODO: Can move to WeaponControllerComponent
 		// Change speed scale of animations based on weapon type from shooting properties
 		_weaponSprite?.SetSpeedScale(_shooting.ShootingProperties.AnimationSpeed);
 		_flashSprite?.SetSpeedScale(_shooting.ShootingProperties.AnimationSpeed);
@@ -67,6 +69,7 @@ public partial class WeaponElgato : Node2D
 		EventsBus.Instance.EmitSignal(nameof(EventsBus.Instance.PlayerAmmoUpdate), _weaponAmmo);
 	}
 
+	//TODO: Can move to WeaponControllerComponent
 	private void SwitchWeapon(Utility.WeaponType weaponType)
 	{
 		if (_shooting != null) _shooting.WeaponType = weaponType;
@@ -118,6 +121,7 @@ public partial class WeaponElgato : Node2D
 		EventsBus.Instance.EmitSignal(nameof(EventsBus.Instance.PlayerAmmoUpdate), _weaponAmmo);
 	}
 
+	//TODO: Can move to WeaponControllerComponent
 	private void HandleShooting()
 	{
 		if (!CanShoot())
@@ -152,12 +156,14 @@ public partial class WeaponElgato : Node2D
 		HandleWeaponState();
 	}
 	
+	//TODO: Can move to WeaponControllerComponent
 	private bool CanShoot()
 	{
 		return _playerController?.CurrentState != Utility.EntityState.Dash &&
 		       _playerController?.CurrentState != Utility.EntityState.Hurt;
 	}
 
+	//TODO: Can move to WeaponControllerComponent
 	private void WeaponIdleAnimation()
 	{
 		_weaponSprite?.SetSpeedScale(1);
@@ -187,6 +193,7 @@ public partial class WeaponElgato : Node2D
 			_flashSprite.Play(Utility.EntityAnimations[Utility.EntityState.Idle]);
 	}
 
+	//TODO: Can move to WeaponControllerComponent
 	private void HandleWeaponState()
 	{
 		// If weapon power-up runs out of ammo, switch back to pistol
@@ -202,6 +209,7 @@ public partial class WeaponElgato : Node2D
 		}
 	}
 
+	//TODO: Can move to WeaponControllerComponent
 	private void SetWeaponDirection()
 	{
 		if (_characterSprite == null) 
@@ -217,6 +225,7 @@ public partial class WeaponElgato : Node2D
 		}
 	}
 	
+	//TODO: Can move to WeaponControllerComponent
 	private void FlipSprite()
 	{
 		if (_weaponSprite == null || _flashSprite == null) 
