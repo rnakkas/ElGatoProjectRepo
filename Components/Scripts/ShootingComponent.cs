@@ -2,6 +2,7 @@ using Godot;
 using ElGatoProject.Projectiles.Scripts;
 using ElGatoProject.Resources;
 using ElGatoProject.Singletons;
+using ElGatoProject.Utilties;
 
 namespace ElGatoProject.Components.Scripts;
 
@@ -16,10 +17,9 @@ public partial class ShootingComponent : Node2D
 
 	[Signal]
 	public delegate void ShootingEventHandler();
-	
-	public bool HurtStatus, OnCooldown;
-	// public Vector2 TargetVector;
-	private bool _reloading;
+
+	public bool HurtStatus;
+	private bool _onCooldown, _reloading;
 	private int _bulletCount;
 	private Vector2 _muzzlePosition;
 	
@@ -34,11 +34,11 @@ public partial class ShootingComponent : Node2D
 	// Public method
 	public void Shoot(Vector2 targetVector)
 	{
-		if (!OnCooldown)
+		if (!_onCooldown)
 		{
 			EmitSignal(SignalName.Shooting);
 			ShootingLogic(targetVector);
-			OnCooldown = true;
+			_onCooldown = true;
 			_shotCooldownTimer?.Start();
 		}
 	}
@@ -68,7 +68,7 @@ public partial class ShootingComponent : Node2D
 
 	private void OnShotCoolDownTimerTimeout()
 	{
-		OnCooldown = false;
+		_onCooldown = false;
 	}
 
 	private void OnReloadTimerTimeout()
@@ -157,7 +157,9 @@ public partial class ShootingComponent : Node2D
 		Vector2 directionToTarget
 		)
 	{
-		var projectileInstance = Globals.Instance.BulletProjectile.Instantiate<BulletProjectile>();
+		// var projectileInstance = Globals.Instance.BulletProjectile.Instantiate<BulletProjectile>();
+		var projectileInstance = ResourceLoader.Load<PackedScene>(Utility.BulletPackedScenePath)
+			.Instantiate<BulletProjectile>();
 		
 		projectileInstance.PlayerOrEnemyBullet = playerOrEnemy;
 		projectileInstance.BulletWeaponType = projectileWeaponType;

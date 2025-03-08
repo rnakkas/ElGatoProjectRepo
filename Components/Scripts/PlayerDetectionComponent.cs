@@ -1,6 +1,5 @@
 using Godot;
-using System;
-using ElGatoProject.Singletons;
+using ElGatoProject.Utilties;
 
 namespace ElGatoProject.Components.Scripts;
 
@@ -36,7 +35,7 @@ public partial class PlayerDetectionComponent : Node2D
 
     private void OnPlayerEnteredDetectionArea(Area2D playerArea)
     {
-	    if (!playerArea.IsInGroup(Utility.Instance.NodeGroupPlayers))
+	    if (!playerArea.IsInGroup(Utility.NodeGroupPlayers))
 		    return;
 	    _playerInRange = true;
 	    _playerDetectionRay.Enabled = true;
@@ -45,7 +44,7 @@ public partial class PlayerDetectionComponent : Node2D
 
     private void OnPlayerExitedDetectionArea(Area2D playerArea)
     {
-	    if (!playerArea.IsInGroup(Utility.Instance.NodeGroupPlayers))
+	    if (!playerArea.IsInGroup(Utility.NodeGroupPlayers))
 		    return;
 	    _playerInRange = false;
 	    _playerDetectionRay.Enabled = false;

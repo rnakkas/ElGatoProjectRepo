@@ -1,6 +1,6 @@
 using Godot;
-using System;
 using ElGatoProject.Singletons;
+using ElGatoProject.Utilties;
 
 namespace ElGatoProject.Components.Scripts;
 
@@ -17,7 +17,7 @@ public partial class HealthComponent : Node
 	public override void _Ready()
 	{
 		// Logic only for player character
-		if (!Owner.IsInGroup(Utility.Instance.NodeGroupPlayers))
+		if (!Owner.IsInGroup(Utility.NodeGroupPlayers))
 			return;
 		
 		// To display health(caffeine) on HUD
@@ -35,15 +35,19 @@ public partial class HealthComponent : Node
 
 	public void TakeDamage(int damage)
 	{
-		if (CurrentHealth > 0)
+		CurrentHealth -= damage;
+
+		switch (CurrentHealth)
 		{
-			CurrentHealth -= damage;
-			if (Owner.IsInGroup(Utility.Instance.NodeGroupPlayers))
-				EventsBus.Instance.EmitSignal(nameof(EventsBus.PlayerCurrentHealthUpdate), CurrentHealth);
-		}
-		else if (CurrentHealth <= 0)
-		{
-			EmitSignal(SignalName.HealthDepleted);
+			case > 0:
+			{
+				if (Owner.IsInGroup(Utility.NodeGroupPlayers))
+					EventsBus.Instance.EmitSignal(nameof(EventsBus.PlayerCurrentHealthUpdate), CurrentHealth);
+				break;
+			}
+			case <= 0:
+				EmitSignal(SignalName.HealthDepleted);
+				break;
 		}
 	}
 
@@ -54,7 +58,7 @@ public partial class HealthComponent : Node
 		
 		CurrentHealth = Mathf.Min(CurrentHealth + heal, _maxHealth);
 		
-		if (Owner.IsInGroup(Utility.Instance.NodeGroupPlayers))
+		if (Owner.IsInGroup(Utility.NodeGroupPlayers))
 			EventsBus.Instance.EmitSignal(nameof(EventsBus.PlayerCurrentHealthUpdate), CurrentHealth);
 		
 		return true;

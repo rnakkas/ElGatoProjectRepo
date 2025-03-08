@@ -1,6 +1,6 @@
 using Godot;
 
-namespace ElGatoProject.Menus.Scripts;
+namespace ElGatoProject.UI.Menus.Scripts;
 
 public partial class MainMenu : Control
 {

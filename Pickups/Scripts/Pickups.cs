@@ -1,7 +1,6 @@
 using Godot;
-using System;
 using ElGatoProject.Components.Scripts;
-using ElGatoProject.Singletons;
+using ElGatoProject.Utilties;
 
 namespace ElGatoProject.Pickups.Scripts;
 
@@ -18,7 +17,7 @@ public partial class Pickups : Area2D
 	
 	public override void _Ready()
 	{
-		_sprite?.Play(Utility.Instance.EntityIdleAnimation);
+		_sprite?.Play(Utility.EntityAnimations[Utility.EntityState.Idle]);
 		
 		AreaEntered += OnPlayerEntered;
 	}

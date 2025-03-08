@@ -1,7 +1,6 @@
 using Godot;
-using System;
 using ElGatoProject.Components.Scripts;
-using ElGatoProject.Singletons;
+using ElGatoProject.Utilties;
 
 namespace ElGatoProject.Projectiles.Scripts;
 
@@ -29,7 +28,7 @@ public partial class BulletProjectile : Node2D
 		ConnectToSignals();
 		SetComponentProperties();
 		
-		_bulletSprite?.Play(Utility.Instance.BulletFlyAnimation);
+		_bulletSprite?.Play(Utility.BulletFlyAnimation);
 		_despawnTimer?.Start();
 	}
 	
@@ -58,7 +57,7 @@ public partial class BulletProjectile : Node2D
 		
 		if (_bulletSprite != null)
 		{
-			_bulletSprite.Play(Utility.Instance.BulletHitAnimation);
+			_bulletSprite.Play(Utility.BulletHitAnimation);
 			await ToSignal(_bulletSprite, "animation_finished");
 		}
 		

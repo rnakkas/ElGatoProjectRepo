@@ -1,8 +1,8 @@
 using Godot;
-using ElGatoProject.Menus.Scripts;
-using ElGatoProject.Players.Scripts;
+using ElGatoProject.UI.Menus.Scripts;
 using ElGatoProject.SceneTransitions.Scripts;
 using ElGatoProject.Singletons;
+using ElGatoProject.UI.HUD.Scripts;
 
 namespace ElGatoProject.Mains.Scripts;
 

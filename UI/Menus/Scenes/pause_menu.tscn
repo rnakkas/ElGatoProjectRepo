@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://bm75lcsdm4kec"]
 
-[ext_resource type="Script" path="res://Menus/Scripts/PauseMenu.cs" id="1_4ligq"]
+[ext_resource type="Script" path="res://UI/Menus/Scripts/PauseMenu.cs" id="1_4ligq"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_70gbg"]
 

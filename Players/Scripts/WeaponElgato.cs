@@ -3,9 +3,11 @@ using System;
 using ElGatoProject.Components.Scripts;
 using ElGatoProject.Resources;
 using ElGatoProject.Singletons;
+using ElGatoProject.Utilties;
 
 namespace ElGatoProject.Players.Scripts;
 
+//TODO: Create WeaponControllerComponent to handle weapon actions
 public partial class WeaponElgato : Node2D
 {
 	[Export] private ShootingComponent _shooting;
@@ -23,8 +25,8 @@ public partial class WeaponElgato : Node2D
 		
 		_weaponPosition = Position;
 		
-		_weaponSprite?.Play(Utility.Instance.EntityIdleAnimation);
-		_flashSprite?.Play(Utility.Instance.EntityIdleAnimation);
+		_weaponSprite?.Play(Utility.EntityAnimations[Utility.EntityState.Idle]);
+		_flashSprite?.Play(Utility.EntityAnimations[Utility.EntityState.Idle]);
 
 		// For HUD
 		EventsBus.Instance.EmitSignal(nameof(EventsBus.Instance.PlayerCurrentWeaponUpdate),
@@ -49,12 +51,13 @@ public partial class WeaponElgato : Node2D
 	// Shooting signal connection
 	private void OnShooting()
 	{
+		//TODO: Can move to WeaponControllerComponent
 		// Change speed scale of animations based on weapon type from shooting properties
 		_weaponSprite?.SetSpeedScale(_shooting.ShootingProperties.AnimationSpeed);
 		_flashSprite?.SetSpeedScale(_shooting.ShootingProperties.AnimationSpeed);
 		
-		_weaponSprite?.Play(Utility.Instance.EntityShootAnimation);
-		_flashSprite?.Play(Utility.Instance.EntityShootAnimation);
+		_weaponSprite?.Play(Utility.EntityAnimations[Utility.EntityState.Shoot]);
+		_flashSprite?.Play(Utility.EntityAnimations[Utility.EntityState.Shoot]);
 	
 		
 		// Only reduce ammo for power-up weapons
@@ -66,6 +69,7 @@ public partial class WeaponElgato : Node2D
 		EventsBus.Instance.EmitSignal(nameof(EventsBus.Instance.PlayerAmmoUpdate), _weaponAmmo);
 	}
 
+	//TODO: Can move to WeaponControllerComponent
 	private void SwitchWeapon(Utility.WeaponType weaponType)
 	{
 		if (_shooting != null) _shooting.WeaponType = weaponType;
@@ -80,19 +84,27 @@ public partial class WeaponElgato : Node2D
 				return;
 			
 			case Utility.WeaponType.PlayerPistol:
-				if (_shooting != null) _shooting.ShootingProperties = Globals.Instance.PlayerPistolShootingProperties;
+				if (_shooting != null)
+					_shooting.ShootingProperties =
+						ResourceLoader.Load<ShootingProperties>(Utility.PlayerPistolShootingProperties);
 				break;
 			
 			case Utility.WeaponType.PlayerShotgun:
-				if (_shooting != null) _shooting.ShootingProperties = Globals.Instance.PlayerShotgunShootingProperties;
+				if (_shooting != null)
+					_shooting.ShootingProperties =
+						ResourceLoader.Load<ShootingProperties>(Utility.PlayerShotgunShootingProperties);
 				break;
 			
 			case Utility.WeaponType.PlayerMachineGun:
-				if (_shooting != null) _shooting.ShootingProperties = Globals.Instance.PlayerMachineGunShootingProperties;
+				if (_shooting != null)
+					_shooting.ShootingProperties =
+						ResourceLoader.Load<ShootingProperties>(Utility.PlayerMachineGunShootingProperties);
 				break;
 			
 			case Utility.WeaponType.PlayerRailGun:
-				if (_shooting != null) _shooting.ShootingProperties = Globals.Instance.PlayerRailGunShootingProperties;
+				if (_shooting != null)
+					_shooting.ShootingProperties =
+						ResourceLoader.Load<ShootingProperties>(Utility.PlayerRailGunShootingProperties);
 				break;
 			
 			default:
@@ -109,42 +121,95 @@ public partial class WeaponElgato : Node2D
 		EventsBus.Instance.EmitSignal(nameof(EventsBus.Instance.PlayerAmmoUpdate), _weaponAmmo);
 	}
 
-	private void WeaponActions()
+	//TODO: Can move to WeaponControllerComponent
+	private void HandleShooting()
 	{
-		if (
-			Input.IsActionPressed("shoot") && 
-			_playerController?.CurrentState != Utility.CharacterState.Dash &&
-			_playerController?.CurrentState != Utility.CharacterState.Hurt
-			)
+		if (!CanShoot())
 		{
-			_shooting?.Shoot(_direction);
+			WeaponIdleAnimation();
+			return;
 		}
-		else
+
+		switch (_shooting.ShootingProperties.TriggerType)
 		{
-			// Set speed scale back to 1 for idle animations
-			_weaponSprite?.SetSpeedScale(1);
-			_flashSprite?.SetSpeedScale(1);
-			
-			if (_weaponSprite != null && !_weaponSprite.IsPlaying())
-				_weaponSprite.Play(Utility.Instance.EntityIdleAnimation);
-			if (_flashSprite != null && !_flashSprite.IsPlaying())
-				_flashSprite.Play(Utility.Instance.EntityIdleAnimation);
-			
+			case Utility.WeapoTriggerType.Automatic:
+				if (Input.IsActionPressed("shoot"))
+					_shooting?.Shoot(_direction);
+				else
+					WeaponIdleAnimation();
+				break;
+    
+			case Utility.WeapoTriggerType.SingleShot:
+				if (Input.IsActionJustPressed("shoot"))
+					_shooting?.Shoot(_direction);
+				else
+					WeaponIdleAnimation();
+				break;
+    
+			case Utility.WeapoTriggerType.None:
+				break;
+    
+			default:
+				throw new ArgumentOutOfRangeException($"TriggerType does not exist");
 		}
 		
-		// If weapon power-up ammo runs out, return to pistol
+		HandleWeaponState();
+	}
+	
+	//TODO: Can move to WeaponControllerComponent
+	private bool CanShoot()
+	{
+		return _playerController?.CurrentState != Utility.EntityState.Dash &&
+		       _playerController?.CurrentState != Utility.EntityState.Hurt;
+	}
+
+	//TODO: Can move to WeaponControllerComponent
+	private void WeaponIdleAnimation()
+	{
+		_weaponSprite?.SetSpeedScale(1);
+		_flashSprite?.SetSpeedScale(1);
+
+		// Sync to character's idle animation after shooting
+		if (_weaponSprite != null && !_weaponSprite.IsPlaying())
+		{
+			_weaponSprite.Play(Utility.EntityAnimations[Utility.EntityState.Idle]);
+			_weaponSprite.Frame = _characterSprite.Frame;
+		}
+
+		// Sync to character's idle animation
+		if (
+			_characterSprite != null &&
+			_weaponSprite != null &&
+			_characterSprite.IsPlaying() &&
+			_characterSprite.Animation == Utility.EntityAnimations[Utility.EntityState.Idle]
+		)
+		{
+			_weaponSprite.Play(Utility.EntityAnimations[Utility.EntityState.Idle]);
+			_weaponSprite.Frame = _characterSprite.Frame;
+		}
+
+		// Idle muzzle flash animation, i.e. no muzzle flash
+		if (_flashSprite != null && !_flashSprite.IsPlaying())
+			_flashSprite.Play(Utility.EntityAnimations[Utility.EntityState.Idle]);
+	}
+
+	//TODO: Can move to WeaponControllerComponent
+	private void HandleWeaponState()
+	{
+		// If weapon power-up runs out of ammo, switch back to pistol
 		if (_weaponAmmo <= 0)
 		{
 			SwitchWeapon(Utility.WeaponType.PlayerPistol);
 		}
 		
 		// If player dies, despawn weapon
-		if (_playerController?.CurrentState == Utility.CharacterState.Death)
+		if (_playerController?.CurrentState == Utility.EntityState.Death)
 		{
 			QueueFree();
 		}
 	}
 
+	//TODO: Can move to WeaponControllerComponent
 	private void SetWeaponDirection()
 	{
 		if (_characterSprite == null) 
@@ -160,6 +225,7 @@ public partial class WeaponElgato : Node2D
 		}
 	}
 	
+	//TODO: Can move to WeaponControllerComponent
 	private void FlipSprite()
 	{
 		if (_weaponSprite == null || _flashSprite == null) 
@@ -184,6 +250,6 @@ public partial class WeaponElgato : Node2D
 	{
 		SetWeaponDirection();
 		FlipSprite();
-		WeaponActions();
+		HandleShooting();
 	}
 }

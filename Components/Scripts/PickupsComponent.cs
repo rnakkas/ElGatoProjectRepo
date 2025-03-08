@@ -1,6 +1,6 @@
 using Godot;
-using System;
 using ElGatoProject.Singletons;
+using ElGatoProject.Utilties;
 
 namespace ElGatoProject.Components.Scripts;
 
