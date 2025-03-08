@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using ElGatoProject.Components.Scripts;
+using ElGatoProject.Resources;
 using ElGatoProject.Singletons;
 using ElGatoProject.Utilties;
 
@@ -80,19 +81,27 @@ public partial class WeaponElgato : Node2D
 				return;
 			
 			case Utility.WeaponType.PlayerPistol:
-				if (_shooting != null) _shooting.ShootingProperties = Globals.Instance.PlayerPistolShootingProperties;
+				if (_shooting != null)
+					_shooting.ShootingProperties =
+						ResourceLoader.Load<ShootingProperties>(Utility.PlayerPistolShootingProperties);
 				break;
 			
 			case Utility.WeaponType.PlayerShotgun:
-				if (_shooting != null) _shooting.ShootingProperties = Globals.Instance.PlayerShotgunShootingProperties;
+				if (_shooting != null)
+					_shooting.ShootingProperties =
+						ResourceLoader.Load<ShootingProperties>(Utility.PlayerShotgunShootingProperties);
 				break;
 			
 			case Utility.WeaponType.PlayerMachineGun:
-				if (_shooting != null) _shooting.ShootingProperties = Globals.Instance.PlayerMachineGunShootingProperties;
+				if (_shooting != null)
+					_shooting.ShootingProperties =
+						ResourceLoader.Load<ShootingProperties>(Utility.PlayerMachineGunShootingProperties);
 				break;
 			
 			case Utility.WeaponType.PlayerRailGun:
-				if (_shooting != null) _shooting.ShootingProperties = Globals.Instance.PlayerRailGunShootingProperties;
+				if (_shooting != null)
+					_shooting.ShootingProperties =
+						ResourceLoader.Load<ShootingProperties>(Utility.PlayerRailGunShootingProperties);
 				break;
 			
 			default:

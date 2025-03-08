@@ -84,6 +84,7 @@ public static class Utility
     // public static string PlayerShotgunFly = "player_shotgun_fly";
     // public static string PlayerShotgunHit = "player_shotgun_hit";
 
+    
     // Scene transition and shader string names
     public const string SceneTransitionWipeAnimation = "screen_wipe_animation";
     public const string ShaderParameterWipeColor = "wipe_color";
@@ -91,10 +92,19 @@ public static class Utility
     // Node group string names
     public const string NodeGroupPlayers = "Players";
     
-    // Packed scene path strings
+    /*** Path strings for packed scenes and resources **/
     // HUD Icons
     public const string ShotgunHudIconTexturePath = "res://Assets/HUD/shotgun-Icon-002.png";
     public const string MachineGunHudIconTexturePath = "res://Assets/HUD/machineGun-Icon-002.png";
     public const string RailGunHudIconTexturePath = "res://Assets/HUD/railGun-Icon-002.png";
     
+    // Bullet
+    public const string BulletPackedScenePath = "res://Projectiles/Scenes/bullet_projectile.tscn";
+    
+    // Resources
+    public const string PlayerPistolShootingProperties = "res://Resources/PlayerPistolShootingProperties.tres";
+    public const string PlayerShotgunShootingProperties = "res://Resources/PlayerShotgunShootingProperties.tres";
+    public const string PlayerMachineGunShootingProperties = "res://Resources/PlayerMachineGunShootingProperties.tres";
+    public const string PlayerRailGunShootingProperties = "res://Resources/PlayerRailGunShootingProperties.tres";
+
 }
