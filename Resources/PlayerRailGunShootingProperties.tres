@@ -13,3 +13,4 @@ BulletsPerShot = 1
 BulletSwayAngle = 2.0
 BulletSpeed = 800.0
 AnimationSpeed = 0.7
+TriggerType = 1

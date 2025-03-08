@@ -118,30 +118,61 @@ public partial class WeaponElgato : Node2D
 		EventsBus.Instance.EmitSignal(nameof(EventsBus.Instance.PlayerAmmoUpdate), _weaponAmmo);
 	}
 
-	private void WeaponActions()
+	private void HandleShooting()
 	{
-		if (
-			Input.IsActionPressed("shoot") && 
-			_playerController?.CurrentState != Utility.EntityState.Dash &&
-			_playerController?.CurrentState != Utility.EntityState.Hurt
-			)
+		if (!CanShoot())
 		{
-			_shooting?.Shoot(_direction);
+			WeaponIdleAnimation();
+			return;
 		}
-		else
+
+		switch (_shooting.ShootingProperties.TriggerType)
 		{
-			// Set speed scale back to 1 for idle animations
-			_weaponSprite?.SetSpeedScale(1);
-			_flashSprite?.SetSpeedScale(1);
-			
-			if (_weaponSprite != null && !_weaponSprite.IsPlaying())
-				_weaponSprite.Play(Utility.EntityAnimations[Utility.EntityState.Idle]);
-			if (_flashSprite != null && !_flashSprite.IsPlaying())
-				_flashSprite.Play(Utility.EntityAnimations[Utility.EntityState.Idle]);
-			
+			case Utility.WeapoTriggerType.Automatic:
+				if (Input.IsActionPressed("shoot"))
+					_shooting?.Shoot(_direction);
+				else
+					WeaponIdleAnimation();
+				break;
+    
+			case Utility.WeapoTriggerType.SingleShot:
+				if (Input.IsActionJustPressed("shoot"))
+					_shooting?.Shoot(_direction);
+				else
+					WeaponIdleAnimation();
+				break;
+    
+			case Utility.WeapoTriggerType.None:
+				break;
+    
+			default:
+				throw new ArgumentOutOfRangeException($"TriggerType does not exist");
 		}
 		
-		// If weapon power-up ammo runs out, return to pistol
+		HandleWeaponState();
+	}
+	
+	private bool CanShoot()
+	{
+		return _playerController?.CurrentState != Utility.EntityState.Dash &&
+		       _playerController?.CurrentState != Utility.EntityState.Hurt;
+	}
+
+	private void WeaponIdleAnimation()
+	{
+		_weaponSprite?.SetSpeedScale(1);
+		_flashSprite?.SetSpeedScale(1);
+    
+		if (_weaponSprite != null && !_weaponSprite.IsPlaying())
+			_weaponSprite.Play(Utility.EntityAnimations[Utility.EntityState.Idle]);
+    
+		if (_flashSprite != null && !_flashSprite.IsPlaying())
+			_flashSprite.Play(Utility.EntityAnimations[Utility.EntityState.Idle]);
+	}
+
+	private void HandleWeaponState()
+	{
+		// If weapon power-up runs out of ammo, switch back to pistol
 		if (_weaponAmmo <= 0)
 		{
 			SwitchWeapon(Utility.WeaponType.PlayerPistol);
@@ -193,6 +224,6 @@ public partial class WeaponElgato : Node2D
 	{
 		SetWeaponDirection();
 		FlipSprite();
-		WeaponActions();
+		HandleShooting();
 	}
 }

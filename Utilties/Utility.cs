@@ -29,6 +29,13 @@ public static class Utility
         PlayerRailGun
     }
 
+    public enum WeapoTriggerType
+    {
+        None,
+        SingleShot,
+        Automatic
+    }
+    
     public enum PlayerOrEnemy
     {
         Player,

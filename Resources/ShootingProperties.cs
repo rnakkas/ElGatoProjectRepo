@@ -1,3 +1,4 @@
+using ElGatoProject.Utilties;
 using Godot;
 
 namespace ElGatoProject.Resources;
@@ -14,4 +15,5 @@ public partial class ShootingProperties : Resource
     [Export] public float BulletSwayAngle;
     [Export] public float BulletSpeed;
     [Export] public float AnimationSpeed;
+    [Export] public Utility.WeapoTriggerType TriggerType;
 }
