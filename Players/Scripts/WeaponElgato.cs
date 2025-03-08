@@ -162,10 +162,27 @@ public partial class WeaponElgato : Node2D
 	{
 		_weaponSprite?.SetSpeedScale(1);
 		_flashSprite?.SetSpeedScale(1);
-    
+
+		// Sync to character's idle animation after shooting
 		if (_weaponSprite != null && !_weaponSprite.IsPlaying())
+		{
 			_weaponSprite.Play(Utility.EntityAnimations[Utility.EntityState.Idle]);
-    
+			_weaponSprite.Frame = _characterSprite.Frame;
+		}
+
+		// Sync to character's idle animation
+		if (
+			_characterSprite != null &&
+			_weaponSprite != null &&
+			_characterSprite.IsPlaying() &&
+			_characterSprite.Animation == Utility.EntityAnimations[Utility.EntityState.Idle]
+		)
+		{
+			_weaponSprite.Play(Utility.EntityAnimations[Utility.EntityState.Idle]);
+			_weaponSprite.Frame = _characterSprite.Frame;
+		}
+
+		// Idle muzzle flash animation, i.e. no muzzle flash
 		if (_flashSprite != null && !_flashSprite.IsPlaying())
 			_flashSprite.Play(Utility.EntityAnimations[Utility.EntityState.Idle]);
 	}

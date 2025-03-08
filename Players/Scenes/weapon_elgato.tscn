@@ -52,10 +52,13 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_0sf2j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_flriv")
 }],
 "loop": true,
 "name": &"idle",
-"speed": 6.0
+"speed": 7.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -124,7 +127,7 @@ _flashSprite = NodePath("ShootingComponent/muzzle/flashSprite")
 
 [node name="weaponSprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_ld3wl")
-animation = &"shoot"
+animation = &"idle"
 
 [node name="ShootingComponent" type="Node2D" parent="." node_paths=PackedStringArray("_muzzle", "_shotCooldownTimer")]
 script = ExtResource("5_liu8t")
@@ -139,7 +142,7 @@ position = Vector2(10, -2)
 [node name="flashSprite" type="AnimatedSprite2D" parent="ShootingComponent/muzzle"]
 position = Vector2(-10, 1)
 sprite_frames = SubResource("SpriteFrames_a7dhu")
-animation = &"shoot"
+animation = &"idle"
 offset = Vector2(10, -1)
 
 [node name="shotCooldownTimer" type="Timer" parent="ShootingComponent"]
