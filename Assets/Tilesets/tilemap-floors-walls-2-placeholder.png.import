@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://db6pixvh8c8c1"
-path="res://.godot/imported/cat_fingerGun-1.png-994ccd9b5f9ea29db5429da222496f5e.ctex"
+uid="uid://c8wewtsxmggnk"
+path="res://.godot/imported/tilemap-floors-walls-2-placeholder.png-f362ab5fe067c1383fb2fea0e021b90b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Players/cat_fingerGun-1.png"
-dest_files=["res://.godot/imported/cat_fingerGun-1.png-994ccd9b5f9ea29db5429da222496f5e.ctex"]
+source_file="res://Assets/Tilesets/tilemap-floors-walls-2-placeholder.png"
+dest_files=["res://.godot/imported/tilemap-floors-walls-2-placeholder.png-f362ab5fe067c1383fb2fea0e021b90b.ctex"]
 
 [params]
 

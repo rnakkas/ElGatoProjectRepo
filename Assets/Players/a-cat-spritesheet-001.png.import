@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://lo3w8s4ichdj"
-path="res://.godot/imported/cat_fingerGun-2.png-04ec9cd1e66f8900c441e33defed7277.ctex"
+uid="uid://bc802ksk6u0fp"
+path="res://.godot/imported/a-cat-spritesheet-001.png-f10f7d14a1a390371eb2c31b20036d83.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Players/cat_fingerGun-2.png"
-dest_files=["res://.godot/imported/cat_fingerGun-2.png-04ec9cd1e66f8900c441e33defed7277.ctex"]
+source_file="res://Assets/Players/a-cat-spritesheet-001.png"
+dest_files=["res://.godot/imported/a-cat-spritesheet-001.png-f10f7d14a1a390371eb2c31b20036d83.ctex"]
 
 [params]
 
