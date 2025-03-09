@@ -99,6 +99,9 @@ public static class Utility
     // Node group string names
     public const string NodeGroupPlayers = "Players";
     
+    // Level names
+    public const string LevelOne = "level_one";
+    
     /*** Path strings for packed scenes and resources **/
     // HUD Icons
     public const string ShotgunHudIconTexturePath = "res://Assets/HUD/shotgun-Icon-002.png";

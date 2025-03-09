@@ -1,27 +1,63 @@
-[gd_scene load_steps=5 format=3 uid="uid://bkx2ap7o8frrj"]
+[gd_scene load_steps=11 format=3 uid="uid://bkx2ap7o8frrj"]
 
 [ext_resource type="Script" path="res://Pickups/Scripts/Pickups.cs" id="1_xvxms"]
-[ext_resource type="Texture2D" uid="uid://dqx6rpywerr0u" path="res://icon.svg" id="2_3j04q"]
+[ext_resource type="Texture2D" uid="uid://dg2m30llccj4e" path="res://Assets/Pickups/weaponPowerUps-spritesheet-001.png" id="2_mwof3"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_qutqj"]
-radius = 92.9258
+radius = 33.33
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cjypa"]
+atlas = ExtResource("2_mwof3")
+region = Rect2(0, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0k852"]
+atlas = ExtResource("2_mwof3")
+region = Rect2(64, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_envkv"]
+atlas = ExtResource("2_mwof3")
+region = Rect2(128, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ajc8v"]
+atlas = ExtResource("2_mwof3")
+region = Rect2(192, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p1jxl"]
+atlas = ExtResource("2_mwof3")
+region = Rect2(256, 128, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n1b37"]
+atlas = ExtResource("2_mwof3")
+region = Rect2(320, 128, 64, 64)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_f4jgu"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_3j04q")
+"texture": SubResource("AtlasTexture_cjypa")
 }, {
 "duration": 1.0,
-"texture": ExtResource("2_3j04q")
+"texture": SubResource("AtlasTexture_0k852")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_envkv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ajc8v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p1jxl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n1b37")
 }],
 "loop": true,
 "name": &"idle",
-"speed": 4.0
+"speed": 15.0
 }]
 
 [node name="WeaponModRailGun" type="Area2D" node_paths=PackedStringArray("_sprite") groups=["WeaponModPickups"]]
-scale = Vector2(0.15, 0.15)
+scale = Vector2(0.3, 0.3)
 collision_layer = 16
 script = ExtResource("1_xvxms")
 _pickupType = 2
@@ -34,16 +70,5 @@ shape = SubResource("CircleShape2D_qutqj")
 debug_color = Color(0, 0.529937, 0.660283, 0.42)
 
 [node name="sprite" type="AnimatedSprite2D" parent="."]
-self_modulate = Color(2.21401e-06, 0.561276, 0.690783, 1)
 sprite_frames = SubResource("SpriteFrames_f4jgu")
 animation = &"idle"
-
-[node name="Label" type="Label" parent="."]
-offset_left = -233.333
-offset_top = -166.667
-offset_right = 300.667
-offset_bottom = -97.6667
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_shadow_color = Color(1, 0, 0, 1)
-theme_override_font_sizes/font_size = 50
-text = "WeaponMod: RailGun"
