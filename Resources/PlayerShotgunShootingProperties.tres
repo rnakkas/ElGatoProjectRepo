@@ -4,13 +4,14 @@
 
 [resource]
 script = ExtResource("1_yxpyi")
-ShootingCooldownTime = 1.2
+ShootingCooldownTime = 0.7
 ReloadTime = 1.2
-MagazineSize = 10
-BulletDamage = 5
-BulletKnockback = 100.0
-BulletsPerShot = 6
-BulletSwayAngle = 5.2
-BulletSpeed = 350.0
+MagazineSize = 40
+BulletDamage = 10
+BulletKnockback = 150.0
+BulletsPerShot = 4
+BulletSwayAngle = 5.0
+BulletSpeed = 320.0
 AnimationSpeed = 0.8
 TriggerType = 1
+BulletDespawnTimeSeconds = 1.4

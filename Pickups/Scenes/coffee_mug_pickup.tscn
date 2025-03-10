@@ -1,83 +1,83 @@
 [gd_scene load_steps=15 format=3 uid="uid://ov2vlvh4yw53"]
 
 [ext_resource type="Script" path="res://Pickups/Scripts/Pickups.cs" id="1_0j1uh"]
-[ext_resource type="Texture2D" uid="uid://c5t6hh64h1lj0" path="res://Assets/Pickups/coffee_mug_spritesheet_v1.png" id="2_6hr5j"]
+[ext_resource type="Texture2D" uid="uid://b20wycyo288h8" path="res://Assets/Pickups/coffee_mug_spritesheet-001.png" id="2_oflxo"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_2r5gy"]
 radius = 30.0
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_pwsk1"]
-atlas = ExtResource("2_6hr5j")
+[sub_resource type="AtlasTexture" id="AtlasTexture_6uxou"]
+atlas = ExtResource("2_oflxo")
 region = Rect2(0, 0, 64, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_jbqdt"]
-atlas = ExtResource("2_6hr5j")
+[sub_resource type="AtlasTexture" id="AtlasTexture_u8ia3"]
+atlas = ExtResource("2_oflxo")
 region = Rect2(64, 0, 64, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_e5o73"]
-atlas = ExtResource("2_6hr5j")
+[sub_resource type="AtlasTexture" id="AtlasTexture_oskkq"]
+atlas = ExtResource("2_oflxo")
 region = Rect2(128, 0, 64, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_6fbu4"]
-atlas = ExtResource("2_6hr5j")
+[sub_resource type="AtlasTexture" id="AtlasTexture_fxu8s"]
+atlas = ExtResource("2_oflxo")
 region = Rect2(192, 0, 64, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_1hjpq"]
-atlas = ExtResource("2_6hr5j")
+[sub_resource type="AtlasTexture" id="AtlasTexture_wl0vo"]
+atlas = ExtResource("2_oflxo")
 region = Rect2(256, 0, 64, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_spnp7"]
-atlas = ExtResource("2_6hr5j")
+[sub_resource type="AtlasTexture" id="AtlasTexture_ywkrh"]
+atlas = ExtResource("2_oflxo")
 region = Rect2(320, 0, 64, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_k6fs7"]
-atlas = ExtResource("2_6hr5j")
+[sub_resource type="AtlasTexture" id="AtlasTexture_62u6b"]
+atlas = ExtResource("2_oflxo")
 region = Rect2(384, 0, 64, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_bjpep"]
-atlas = ExtResource("2_6hr5j")
+[sub_resource type="AtlasTexture" id="AtlasTexture_88h6v"]
+atlas = ExtResource("2_oflxo")
 region = Rect2(448, 0, 64, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_204cl"]
-atlas = ExtResource("2_6hr5j")
+[sub_resource type="AtlasTexture" id="AtlasTexture_lg7ij"]
+atlas = ExtResource("2_oflxo")
 region = Rect2(512, 0, 64, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_f4y3w"]
-atlas = ExtResource("2_6hr5j")
+[sub_resource type="AtlasTexture" id="AtlasTexture_w3fc6"]
+atlas = ExtResource("2_oflxo")
 region = Rect2(576, 0, 64, 64)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_88xwt"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_pwsk1")
+"texture": SubResource("AtlasTexture_6uxou")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_jbqdt")
+"texture": SubResource("AtlasTexture_u8ia3")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_e5o73")
+"texture": SubResource("AtlasTexture_oskkq")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_6fbu4")
+"texture": SubResource("AtlasTexture_fxu8s")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_1hjpq")
+"texture": SubResource("AtlasTexture_wl0vo")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_spnp7")
+"texture": SubResource("AtlasTexture_ywkrh")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_k6fs7")
+"texture": SubResource("AtlasTexture_62u6b")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_bjpep")
+"texture": SubResource("AtlasTexture_88h6v")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_204cl")
+"texture": SubResource("AtlasTexture_lg7ij")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_f4y3w")
+"texture": SubResource("AtlasTexture_w3fc6")
 }],
 "loop": true,
 "name": &"idle",
@@ -85,7 +85,7 @@ animations = [{
 }]
 
 [node name="CoffeeMugPickup" type="Area2D" node_paths=PackedStringArray("_sprite") groups=["HealthPickups"]]
-scale = Vector2(0.28, 0.28)
+scale = Vector2(0.22, 0.22)
 collision_layer = 16
 script = ExtResource("1_0j1uh")
 _healAmount = 10
@@ -95,6 +95,5 @@ _sprite = NodePath("sprite")
 shape = SubResource("CircleShape2D_2r5gy")
 
 [node name="sprite" type="AnimatedSprite2D" parent="."]
-self_modulate = Color(0.122313, 0.358631, 1, 1)
 sprite_frames = SubResource("SpriteFrames_88xwt")
 animation = &"idle"

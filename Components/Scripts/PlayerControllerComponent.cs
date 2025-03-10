@@ -324,6 +324,10 @@ public partial class PlayerControllerComponent : Node
 							_sprite.FlipH = true;
 							_direction = Vector2.Left;
 						}
+						else
+						{
+							SetState(Utility.EntityState.Idle);
+						}
 
 						if (Input.IsActionJustPressed("jump"))
 						{

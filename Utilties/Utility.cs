@@ -29,7 +29,7 @@ public static class Utility
         PlayerRailGun
     }
 
-    public enum WeapoTriggerType
+    public enum WeaponTriggerType
     {
         None,
         SingleShot,
@@ -99,6 +99,9 @@ public static class Utility
     // Node group string names
     public const string NodeGroupPlayers = "Players";
     
+    // Level names
+    public const string LevelOne = "level_one";
+    
     /*** Path strings for packed scenes and resources **/
     // HUD Icons
     public const string ShotgunHudIconTexturePath = "res://Assets/HUD/shotgun-Icon-002.png";
@@ -113,5 +116,23 @@ public static class Utility
     public const string PlayerShotgunShootingProperties = "res://Resources/PlayerShotgunShootingProperties.tres";
     public const string PlayerMachineGunShootingProperties = "res://Resources/PlayerMachineGunShootingProperties.tres";
     public const string PlayerRailGunShootingProperties = "res://Resources/PlayerRailGunShootingProperties.tres";
+    
+    // Muzzle flashes
+    public static readonly Dictionary<WeaponType, string> MuzzleFlashPackedScenePaths = new()
+    {
+        [WeaponType.PlayerPistol] = "res://Players/Scenes/PackedScenes/weapon_muzzle_flash_pistol.tscn",
+        [WeaponType.PlayerShotgun] = "res://Players/Scenes/PackedScenes/weapon_muzzle_flash_shotgun.tscn",
+        [WeaponType.PlayerMachineGun] = "res://Players/Scenes/PackedScenes/weapon_muzzle_flash_machinegun.tscn",
+        [WeaponType.PlayerRailGun] = "res://Players/Scenes/PackedScenes/weapon_muzzle_flash_railgun.tscn"
+    };
+    
+    // Bullet sprites
+    public static readonly Dictionary<WeaponType, string> BulletSpritePackedScenePaths = new()
+    {
+        [WeaponType.PlayerPistol] = "res://Projectiles/PackedScenes/pistol_bullet_projectile.tscn",
+        [WeaponType.PlayerShotgun] = "res://Projectiles/PackedScenes/shotgun_bullet_projectile.tscn",
+        [WeaponType.PlayerMachineGun] = "res://Projectiles/PackedScenes/machinegun_bullet_projectile.tscn",
+        [WeaponType.PlayerRailGun] = "res://Projectiles/PackedScenes/railgun_bullet_projectile.tscn"
+    };
 
 }

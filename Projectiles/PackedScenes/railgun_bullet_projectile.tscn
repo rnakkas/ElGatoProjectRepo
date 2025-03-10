@@ -1,0 +1,91 @@
+[gd_scene load_steps=12 format=3 uid="uid://bvam7boy6f4ib"]
+
+[ext_resource type="Texture2D" uid="uid://div5ig4n1b3xy" path="res://Assets/Weapons/a-playerRailGunBullet-spritesheet-001.png" id="1_15f4r"]
+[ext_resource type="Script" path="res://Components/Scripts/ProjectileHitboxComponent.cs" id="2_fvf4y"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hn86r"]
+atlas = ExtResource("1_15f4r")
+region = Rect2(0, 0, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tsvqn"]
+atlas = ExtResource("1_15f4r")
+region = Rect2(32, 0, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pul4w"]
+atlas = ExtResource("1_15f4r")
+region = Rect2(64, 0, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_woxcx"]
+atlas = ExtResource("1_15f4r")
+region = Rect2(96, 0, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4pj1w"]
+atlas = ExtResource("1_15f4r")
+region = Rect2(0, 16, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f6dxy"]
+atlas = ExtResource("1_15f4r")
+region = Rect2(32, 16, 32, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t8w00"]
+atlas = ExtResource("1_15f4r")
+region = Rect2(64, 16, 32, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_8al8a"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hn86r")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tsvqn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pul4w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_woxcx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tsvqn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pul4w")
+}],
+"loop": true,
+"name": &"fly",
+"speed": 35.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4pj1w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f6dxy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t8w00")
+}],
+"loop": false,
+"name": &"hit",
+"speed": 15.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_43k48"]
+size = Vector2(34, 3)
+
+[node name="railgun_bullet_projectile" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_8al8a")
+animation = &"fly"
+autoplay = "fly"
+frame = 2
+frame_progress = 0.27926
+
+[node name="ProjectileHitboxComponent" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 38
+script = ExtResource("2_fvf4y")
+
+[node name="collider" type="CollisionShape2D" parent="ProjectileHitboxComponent"]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_43k48")

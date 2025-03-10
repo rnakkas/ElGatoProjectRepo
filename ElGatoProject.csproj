@@ -9,7 +9,4 @@
     <Content Include="bulletSpriteNotes.txt" />
     <Content Include="mainStructureNotes.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Menus\Scripts\" />
-  </ItemGroup>
 </Project>

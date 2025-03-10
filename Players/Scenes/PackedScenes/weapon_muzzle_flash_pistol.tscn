@@ -1,0 +1,45 @@
+[gd_scene load_steps=6 format=3 uid="uid://d3i5pcy56lkso"]
+
+[ext_resource type="Texture2D" uid="uid://bcoc708qul62g" path="res://Assets/Weapons/a-playerMuzzlelFlashes-spritesheet-001.png" id="1_a18qn"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pnyrp"]
+atlas = ExtResource("1_a18qn")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0ohjh"]
+atlas = ExtResource("1_a18qn")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8r2nq"]
+atlas = ExtResource("1_a18qn")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_uwli7"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": null
+}],
+"loop": false,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pnyrp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0ohjh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8r2nq")
+}],
+"loop": false,
+"name": &"shoot",
+"speed": 13.0
+}]
+
+[node name="weapon_muzzle_flash_pistol" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_uwli7")
+animation = &"shoot"
+autoplay = "idle"

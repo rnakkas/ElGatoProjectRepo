@@ -3,6 +3,7 @@ using ElGatoProject.UI.Menus.Scripts;
 using ElGatoProject.SceneTransitions.Scripts;
 using ElGatoProject.Singletons;
 using ElGatoProject.UI.HUD.Scripts;
+using ElGatoProject.Utilties;
 
 namespace ElGatoProject.Mains.Scripts;
 
@@ -45,7 +46,7 @@ public partial class Main : Node2D
 		
 		_mainMenu?.MainMenuVisibility(false);
 
-		_levelLoader?.LoadLevel("staging_level");
+		_levelLoader?.LoadLevel(Utility.LevelOne);
 
 		_sceneTransition?.PlaySceneTransition();
 
@@ -78,7 +79,7 @@ public partial class Main : Node2D
 		_sceneTransition?.PlaySceneTransition();
 		_gameOverMenu?.GameOverScreenVisibility(false);
 		_levelLoader?.UnloadCurrentLevel();
-		_levelLoader?.LoadLevel("staging_level");
+		_levelLoader?.LoadLevel(Utility.LevelOne);
 		
 		_playerHud?.SetVisible(true);
 

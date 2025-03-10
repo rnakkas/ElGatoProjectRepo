@@ -8,15 +8,13 @@ public partial class BulletProjectile : Node2D
 {
 	[Export] public Utility.PlayerOrEnemy PlayerOrEnemyBullet { get; set; }
 	
-	// Components
-	[Export] private ProjectileHitboxComponent _hitbox;
-	[Export] private AnimatedSprite2D _bulletSprite;
-	
-	[Export] private Timer _despawnTimer;
+	// Nodes
+	private ProjectileHitboxComponent _hitbox;
+	private AnimatedSprite2D _bulletSprite;
+	private Timer _despawnTimer;
 
 	private bool _hitStatus;
-	
-	public float BulletSpeed, Knockback;
+	public float BulletSpeed, Knockback, DespawnTime;
 	public Vector2 Target;
 	public int BulletDamage;
 	public Utility.WeaponType BulletWeaponType;
@@ -25,29 +23,45 @@ public partial class BulletProjectile : Node2D
 	
 	public override void _Ready()
 	{
+		SetSprite();
+		SetHitbox();
+		SetTimerValues();
 		ConnectToSignals();
-		SetComponentProperties();
-		
 		_bulletSprite?.Play(Utility.BulletFlyAnimation);
-		_despawnTimer?.Start();
 	}
 	
 	// Helper functions
-	private void ConnectToSignals()
+	private void SetSprite()
 	{
-		if (_despawnTimer != null) _despawnTimer.Timeout += OmBulletDespawnTimerTimedOut;
-
-		if (_hitbox != null) _hitbox.HitboxCollided += OnHitBoxCollision;
+		_bulletSprite = ResourceLoader.Load<PackedScene>(Utility.BulletSpritePackedScenePaths[BulletWeaponType])
+			.Instantiate<AnimatedSprite2D>();
+		AddChild(_bulletSprite);
 	}
 
-	private void SetComponentProperties()
+	private void SetHitbox()
 	{
+		_hitbox = _bulletSprite.GetNodeOrNull<ProjectileHitboxComponent>("ProjectileHitboxComponent");
+		
 		if (_hitbox != null)
 		{
 			_hitbox.PlayerOrEnemyProjectile = PlayerOrEnemyBullet;
 			_hitbox.Damage = BulletDamage;
 			_hitbox.Knockback = Knockback;
 		}
+	}
+
+	private void SetTimerValues()
+	{
+		_despawnTimer = GetNodeOrNull<Timer>("despawnTimer");
+		_despawnTimer?.SetWaitTime(DespawnTime);
+		_despawnTimer?.Start();
+	}
+	
+	private void ConnectToSignals()
+	{
+		if (_despawnTimer != null) _despawnTimer.Timeout += OmBulletDespawnTimerTimedOut;
+
+		if (_hitbox != null) _hitbox.HitboxCollided += OnHitBoxCollision;
 	}
 
 	// Hitting targets
@@ -85,9 +99,23 @@ public partial class BulletProjectile : Node2D
 
 		if (_hitbox != null) _hitbox.Velocity = _velocity;
 	}
+
+	private void FlipSprite(float velocityX)
+	{
+		switch (velocityX)
+		{
+			case < 0:
+				_bulletSprite.FlipH = true;
+				break;
+			case > 0:
+				_bulletSprite.FlipH = false;
+				break;
+		}
+	}
 	
 	public override void _PhysicsProcess(double delta)
 	{
 		ApplyVelocity((float)delta);
+		FlipSprite(_velocity.X);
 	}
 }

@@ -1,27 +1,63 @@
-[gd_scene load_steps=5 format=3 uid="uid://cgnak73pe3qi7"]
+[gd_scene load_steps=11 format=3 uid="uid://cgnak73pe3qi7"]
 
 [ext_resource type="Script" path="res://Pickups/Scripts/Pickups.cs" id="1_64vpq"]
-[ext_resource type="Texture2D" uid="uid://dqx6rpywerr0u" path="res://icon.svg" id="2_ej284"]
+[ext_resource type="Texture2D" uid="uid://dg2m30llccj4e" path="res://Assets/Pickups/weaponPowerUps-spritesheet-001.png" id="2_vj4fc"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_kis5b"]
-radius = 92.9258
+radius = 33.33
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7a2o6"]
+atlas = ExtResource("2_vj4fc")
+region = Rect2(0, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vdfve"]
+atlas = ExtResource("2_vj4fc")
+region = Rect2(64, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v1mg4"]
+atlas = ExtResource("2_vj4fc")
+region = Rect2(128, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hysda"]
+atlas = ExtResource("2_vj4fc")
+region = Rect2(192, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v0iew"]
+atlas = ExtResource("2_vj4fc")
+region = Rect2(256, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fi5d6"]
+atlas = ExtResource("2_vj4fc")
+region = Rect2(320, 64, 64, 64)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_tvv47"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_ej284")
+"texture": SubResource("AtlasTexture_7a2o6")
 }, {
 "duration": 1.0,
-"texture": ExtResource("2_ej284")
+"texture": SubResource("AtlasTexture_vdfve")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v1mg4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hysda")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v0iew")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fi5d6")
 }],
 "loop": true,
 "name": &"idle",
-"speed": 4.0
+"speed": 15.0
 }]
 
 [node name="WeaponModMachineGun" type="Area2D" node_paths=PackedStringArray("_sprite") groups=["WeaponModPickups"]]
-scale = Vector2(0.15, 0.15)
+scale = Vector2(0.3, 0.3)
 collision_layer = 16
 script = ExtResource("1_64vpq")
 _pickupType = 2
@@ -34,16 +70,5 @@ shape = SubResource("CircleShape2D_kis5b")
 debug_color = Color(0, 0.529937, 0.660283, 0.42)
 
 [node name="sprite" type="AnimatedSprite2D" parent="."]
-self_modulate = Color(2.21401e-06, 0.561276, 0.690783, 1)
 sprite_frames = SubResource("SpriteFrames_tvv47")
 animation = &"idle"
-
-[node name="Label" type="Label" parent="."]
-offset_left = -233.333
-offset_top = -166.667
-offset_right = 300.667
-offset_bottom = -97.6667
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_shadow_color = Color(1, 0, 0, 1)
-theme_override_font_sizes/font_size = 50
-text = "WeaponMod: MachineGun"

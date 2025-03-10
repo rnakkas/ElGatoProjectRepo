@@ -1,60 +1,63 @@
-[gd_scene load_steps=19 format=3 uid="uid://bec21vtufstsw"]
+[gd_scene load_steps=15 format=3 uid="uid://bec21vtufstsw"]
 
 [ext_resource type="Script" path="res://Players/Scripts/WeaponElgato.cs" id="1_704rr"]
-[ext_resource type="Texture2D" uid="uid://b2cpn0fiw8o8i" path="res://Assets/Players/fingergun-Animatino-001-Sheet.png" id="2_7ynsm"]
-[ext_resource type="Texture2D" uid="uid://btbbbg66urihw" path="res://Assets/Players/muzzleFlash-Animation-001-Sheet.png" id="3_bfs8v"]
+[ext_resource type="Texture2D" uid="uid://b7mc1bxx33bb0" path="res://Assets/Weapons/a-fingergun-spritesheet-001.png" id="2_ug05y"]
 [ext_resource type="Resource" uid="uid://cs6j3p5h3n34h" path="res://Resources/PlayerPistolShootingProperties.tres" id="4_230cw"]
 [ext_resource type="Script" path="res://Components/Scripts/ShootingComponent.cs" id="5_liu8t"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_flriv"]
-atlas = ExtResource("2_7ynsm")
+[sub_resource type="AtlasTexture" id="AtlasTexture_q2qg4"]
+atlas = ExtResource("2_ug05y")
 region = Rect2(0, 0, 16, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_we3ck"]
-atlas = ExtResource("2_7ynsm")
+[sub_resource type="AtlasTexture" id="AtlasTexture_g6stk"]
+atlas = ExtResource("2_ug05y")
 region = Rect2(16, 0, 16, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_4sgai"]
-atlas = ExtResource("2_7ynsm")
+[sub_resource type="AtlasTexture" id="AtlasTexture_gpmcd"]
+atlas = ExtResource("2_ug05y")
 region = Rect2(32, 0, 16, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_0sf2j"]
-atlas = ExtResource("2_7ynsm")
+[sub_resource type="AtlasTexture" id="AtlasTexture_wk2m4"]
+atlas = ExtResource("2_ug05y")
 region = Rect2(48, 0, 16, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_15yow"]
-atlas = ExtResource("2_7ynsm")
+[sub_resource type="AtlasTexture" id="AtlasTexture_c7kcw"]
+atlas = ExtResource("2_ug05y")
+region = Rect2(64, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0su4a"]
+atlas = ExtResource("2_ug05y")
 region = Rect2(0, 16, 16, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_rr07q"]
-atlas = ExtResource("2_7ynsm")
+[sub_resource type="AtlasTexture" id="AtlasTexture_01mhi"]
+atlas = ExtResource("2_ug05y")
 region = Rect2(16, 16, 16, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_fyji7"]
-atlas = ExtResource("2_7ynsm")
+[sub_resource type="AtlasTexture" id="AtlasTexture_x245s"]
+atlas = ExtResource("2_ug05y")
 region = Rect2(32, 16, 16, 16)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_egjta"]
-atlas = ExtResource("2_7ynsm")
+[sub_resource type="AtlasTexture" id="AtlasTexture_n68ld"]
+atlas = ExtResource("2_ug05y")
 region = Rect2(48, 16, 16, 16)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ld3wl"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_flriv")
+"texture": SubResource("AtlasTexture_q2qg4")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_we3ck")
+"texture": SubResource("AtlasTexture_g6stk")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_4sgai")
+"texture": SubResource("AtlasTexture_gpmcd")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_0sf2j")
+"texture": SubResource("AtlasTexture_wk2m4")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_flriv")
+"texture": SubResource("AtlasTexture_c7kcw")
 }],
 "loop": true,
 "name": &"idle",
@@ -62,87 +65,38 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_15yow")
+"texture": SubResource("AtlasTexture_0su4a")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_rr07q")
+"texture": SubResource("AtlasTexture_01mhi")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_fyji7")
+"texture": SubResource("AtlasTexture_x245s")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_egjta")
+"texture": SubResource("AtlasTexture_n68ld")
 }],
 "loop": false,
 "name": &"shoot",
-"speed": 10.0
+"speed": 15.0
 }]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_g32pq"]
-atlas = ExtResource("3_bfs8v")
-region = Rect2(0, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_8s5jc"]
-atlas = ExtResource("3_bfs8v")
-region = Rect2(16, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_kx2aj"]
-atlas = ExtResource("3_bfs8v")
-region = Rect2(32, 0, 16, 16)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_a7dhu"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": null
-}],
-"loop": true,
-"name": &"idle",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_g32pq")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_8s5jc")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_kx2aj")
-}, {
-"duration": 1.0,
-"texture": null
-}],
-"loop": false,
-"name": &"shoot",
-"speed": 17.0
-}]
-
-[node name="Weapon_ElGato" type="Node2D" node_paths=PackedStringArray("_shooting", "_weaponSprite", "_flashSprite")]
+[node name="Weapon_ElGato" type="Node2D"]
 position = Vector2(6, 5)
 script = ExtResource("1_704rr")
-_shooting = NodePath("ShootingComponent")
-_weaponSprite = NodePath("weaponSprite")
-_flashSprite = NodePath("ShootingComponent/muzzle/flashSprite")
 
 [node name="weaponSprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_ld3wl")
-animation = &"idle"
+animation = &"shoot"
+
+[node name="muzzle" type="Marker2D" parent="."]
+position = Vector2(10, -2)
 
 [node name="ShootingComponent" type="Node2D" parent="." node_paths=PackedStringArray("_muzzle", "_shotCooldownTimer")]
 script = ExtResource("5_liu8t")
 WeaponType = 5
 ShootingProperties = ExtResource("4_230cw")
-_muzzle = NodePath("muzzle")
+_muzzle = NodePath("../muzzle")
 _shotCooldownTimer = NodePath("shotCooldownTimer")
-
-[node name="muzzle" type="Marker2D" parent="ShootingComponent"]
-position = Vector2(10, -2)
-
-[node name="flashSprite" type="AnimatedSprite2D" parent="ShootingComponent/muzzle"]
-position = Vector2(-10, 1)
-sprite_frames = SubResource("SpriteFrames_a7dhu")
-animation = &"idle"
-offset = Vector2(10, -1)
 
 [node name="shotCooldownTimer" type="Timer" parent="ShootingComponent"]

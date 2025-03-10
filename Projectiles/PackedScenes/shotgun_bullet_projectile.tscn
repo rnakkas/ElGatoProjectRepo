@@ -1,0 +1,90 @@
+[gd_scene load_steps=14 format=3 uid="uid://dq6fkj3on655u"]
+
+[ext_resource type="Texture2D" uid="uid://bmvuxase2aacl" path="res://Assets/Weapons/a-playerShotgunBullet-spritesheet-002.png" id="1_skl2p"]
+[ext_resource type="Script" path="res://Components/Scripts/ProjectileHitboxComponent.cs" id="2_ndnt6"]
+[ext_resource type="Texture2D" uid="uid://div5ig4n1b3xy" path="res://Assets/Weapons/a-playerRailGunBullet-spritesheet-001.png" id="2_ssog3"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mmdm8"]
+atlas = ExtResource("1_skl2p")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kjn34"]
+atlas = ExtResource("1_skl2p")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lo03p"]
+atlas = ExtResource("1_skl2p")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hm1hh"]
+atlas = ExtResource("1_skl2p")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3ona0"]
+atlas = ExtResource("1_skl2p")
+region = Rect2(64, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2nmr5"]
+atlas = ExtResource("1_skl2p")
+region = Rect2(80, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xkosc"]
+atlas = ExtResource("2_ssog3")
+region = Rect2(16, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b6p6d"]
+atlas = ExtResource("2_ssog3")
+region = Rect2(48, 16, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_c8pyl"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mmdm8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kjn34")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lo03p")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hm1hh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3ona0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2nmr5")
+}],
+"loop": true,
+"name": &"fly",
+"speed": 35.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xkosc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b6p6d")
+}],
+"loop": false,
+"name": &"hit",
+"speed": 15.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wfmos"]
+size = Vector2(8, 6)
+
+[node name="shotgun_bullet_projectile" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_c8pyl")
+animation = &"fly"
+autoplay = "fly"
+
+[node name="ProjectileHitboxComponent" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 38
+script = ExtResource("2_ndnt6")
+
+[node name="collider" type="CollisionShape2D" parent="ProjectileHitboxComponent"]
+shape = SubResource("RectangleShape2D_wfmos")
