@@ -81,11 +81,9 @@ animations = [{
 "speed": 15.0
 }]
 
-[node name="Weapon_ElGato" type="Node2D" node_paths=PackedStringArray("_shooting", "_weaponSprite")]
+[node name="Weapon_ElGato" type="Node2D"]
 position = Vector2(6, 5)
 script = ExtResource("1_704rr")
-_shooting = NodePath("ShootingComponent")
-_weaponSprite = NodePath("weaponSprite")
 
 [node name="weaponSprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_ld3wl")

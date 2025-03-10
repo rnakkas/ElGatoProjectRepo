@@ -125,5 +125,14 @@ public static class Utility
         [WeaponType.PlayerMachineGun] = "res://Players/Scenes/PackedScenes/weapon_muzzle_flash_machinegun.tscn",
         [WeaponType.PlayerRailGun] = "res://Players/Scenes/PackedScenes/weapon_muzzle_flash_railgun.tscn"
     };
+    
+    // Bullet sprites
+    public static readonly Dictionary<WeaponType, string> BulletSpritePackedScenePaths = new()
+    {
+        [WeaponType.PlayerPistol] = "res://Projectiles/PackedScenes/pistol_bullet_projectile.tscn",
+        [WeaponType.PlayerShotgun] = "res://Projectiles/PackedScenes/shotgun_blast_projectile.tscn",
+        [WeaponType.PlayerMachineGun] = "res://Projectiles/PackedScenes/machinegun_bullet_projectile.tscn",
+        [WeaponType.PlayerRailGun] = "res://Projectiles/PackedScenes/railgun_bullet_projectile.tscn"
+    };
 
 }

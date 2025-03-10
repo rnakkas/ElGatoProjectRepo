@@ -16,4 +16,5 @@ public partial class ShootingProperties : Resource
     [Export] public float BulletSpeed;
     [Export] public float AnimationSpeed;
     [Export] public Utility.WeaponTriggerType TriggerType;
+    [Export] public float BulletDespawnTimeSeconds;
 }

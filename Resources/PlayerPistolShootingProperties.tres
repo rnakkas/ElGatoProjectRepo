@@ -14,3 +14,4 @@ BulletSwayAngle = 2.5
 BulletSpeed = 420.0
 AnimationSpeed = 1.0
 TriggerType = 1
+BulletDespawnTimeSeconds = 3.0

@@ -134,15 +134,6 @@ public partial class ShootingComponent : Node2D
 				break;
 			
 			case Utility.WeaponType.PlayerShotgun:
-				for (int i = 0; i < ShootingProperties?.BulletsPerShot; i++)
-				{
-					CreateAndSetBulletProperties(
-						Utility.PlayerOrEnemy.Player, 
-						WeaponType, 
-						new Vector2(targetVector.X, targetVector.Y)
-						);
-				}
-				break;
 			case Utility.WeaponType.PlayerPistol:
 			case Utility.WeaponType.PlayerMachineGun:
 			case Utility.WeaponType.PlayerRailGun:
@@ -171,7 +162,8 @@ public partial class ShootingComponent : Node2D
 		projectileInstance.Target = directionToTarget;
 		projectileInstance.RotationDegrees = 
 			Globals.Instance.Rng.RandfRange(-ShootingProperties.BulletSwayAngle, ShootingProperties.BulletSwayAngle);
-		
+
+		projectileInstance.DespawnTime = ShootingProperties.BulletDespawnTimeSeconds;
 		projectileInstance.BulletSpeed = ShootingProperties.BulletSpeed;
 		projectileInstance.Knockback = ShootingProperties.BulletKnockback; 
 		projectileInstance.BulletDamage = ShootingProperties.BulletDamage;

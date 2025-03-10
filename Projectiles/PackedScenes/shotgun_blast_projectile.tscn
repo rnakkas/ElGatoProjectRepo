@@ -1,0 +1,69 @@
+[gd_scene load_steps=10 format=3 uid="uid://b153hyslfojut"]
+
+[ext_resource type="Texture2D" uid="uid://bayldwyokq766" path="res://Assets/Weapons/a-playerShotgunBullet-spritesheet-001.png" id="1_pn8yr"]
+[ext_resource type="Script" path="res://Components/Scripts/ProjectileHitboxComponent.cs" id="2_qaihd"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h0rij"]
+atlas = ExtResource("1_pn8yr")
+region = Rect2(0, 0, 32, 30)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wrjdc"]
+atlas = ExtResource("1_pn8yr")
+region = Rect2(32, 0, 32, 30)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ur7ll"]
+atlas = ExtResource("1_pn8yr")
+region = Rect2(64, 0, 32, 30)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4ysui"]
+atlas = ExtResource("1_pn8yr")
+region = Rect2(96, 0, 32, 30)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ghv5i"]
+atlas = ExtResource("1_pn8yr")
+region = Rect2(128, 0, 32, 30)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_sjltv"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_h0rij")
+}, {
+"duration": 1.2,
+"texture": SubResource("AtlasTexture_wrjdc")
+}, {
+"duration": 1.5,
+"texture": SubResource("AtlasTexture_ur7ll")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4ysui")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ghv5i")
+}, {
+"duration": 1.0,
+"texture": null
+}],
+"loop": false,
+"name": &"fly",
+"speed": 11.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_v2304"]
+size = Vector2(34, 32)
+
+[node name="shotgun_blast_projectile" type="AnimatedSprite2D"]
+scale = Vector2(1.2, 1.2)
+sprite_frames = SubResource("SpriteFrames_sjltv")
+animation = &"fly"
+autoplay = "fly"
+frame = 2
+
+[node name="ProjectileHitboxComponent" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 32
+script = ExtResource("2_qaihd")
+
+[node name="collider" type="CollisionShape2D" parent="ProjectileHitboxComponent"]
+position = Vector2(1, 0)
+shape = SubResource("RectangleShape2D_v2304")

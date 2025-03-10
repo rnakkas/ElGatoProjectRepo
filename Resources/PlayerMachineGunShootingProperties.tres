@@ -6,7 +6,7 @@
 script = ExtResource("1_qspe4")
 ShootingCooldownTime = 0.1
 ReloadTime = 0.1
-MagazineSize = 50
+MagazineSize = 200
 BulletDamage = 2
 BulletKnockback = 100.0
 BulletsPerShot = 2
@@ -14,3 +14,4 @@ BulletSwayAngle = 3.5
 BulletSpeed = 470.0
 AnimationSpeed = 3.0
 TriggerType = 2
+BulletDespawnTimeSeconds = 3.0
