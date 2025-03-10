@@ -74,7 +74,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wfmos"]
-size = Vector2(12, 6)
+size = Vector2(8, 6)
 
 [node name="shotgun_bullet_projectile" type="AnimatedSprite2D"]
 sprite_frames = SubResource("SpriteFrames_c8pyl")
