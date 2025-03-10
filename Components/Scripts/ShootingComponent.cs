@@ -11,7 +11,6 @@ public partial class ShootingComponent : Node2D
 {
 	[Export] public Utility.WeaponType WeaponType;
 	[Export] public ShootingProperties ShootingProperties;
-	
 	[Export] private Marker2D _muzzle;
 	[Export] private Timer _shotCooldownTimer, _reloadTimer;
 
@@ -79,18 +78,25 @@ public partial class ShootingComponent : Node2D
 
 	private void FlipMuzzle(Vector2 targetVector)
 	{
-		if (targetVector.X < 0)
+		switch (targetVector.X)
 		{
-			if (_muzzle != null) _muzzle.Position = new Vector2(-_muzzlePosition.X, _muzzlePosition.Y);
-		}
-		else if (targetVector.X > 0)
-		{
-			if (_muzzle != null) _muzzle.Position = new Vector2(_muzzlePosition.X, _muzzlePosition.Y);
+			case < 0:
+			{
+				if (_muzzle != null) _muzzle.Position = new Vector2(-_muzzlePosition.X, _muzzlePosition.Y);
+				break;
+			}
+			case > 0:
+			{
+				if (_muzzle != null) _muzzle.Position = new Vector2(_muzzlePosition.X, _muzzlePosition.Y);
+				break;
+			}
 		}
 	}
 
 	private void ShootingLogic(Vector2 targetVector)
 	{
+		FlipMuzzle(targetVector);
+		
 		switch (WeaponType)
 		{
 			case Utility.WeaponType.None:
@@ -128,7 +134,6 @@ public partial class ShootingComponent : Node2D
 				break;
 			
 			case Utility.WeaponType.PlayerShotgun:
-				FlipMuzzle(targetVector);
 				for (int i = 0; i < ShootingProperties?.BulletsPerShot; i++)
 				{
 					CreateAndSetBulletProperties(
@@ -140,8 +145,7 @@ public partial class ShootingComponent : Node2D
 				break;
 			case Utility.WeaponType.PlayerPistol:
 			case Utility.WeaponType.PlayerMachineGun:
-			case Utility.WeaponType.PlayerRailGun:	
-				FlipMuzzle(targetVector);
+			case Utility.WeaponType.PlayerRailGun:
 				CreateAndSetBulletProperties(
 					Utility.PlayerOrEnemy.Player, 
 					WeaponType,

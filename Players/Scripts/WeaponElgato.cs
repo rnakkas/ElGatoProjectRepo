@@ -7,14 +7,15 @@ using ElGatoProject.Utilties;
 
 namespace ElGatoProject.Players.Scripts;
 
-//TODO: Create WeaponControllerComponent to handle weapon actions
 public partial class WeaponElgato : Node2D
 {
-	[Export] private ShootingComponent _shooting;
-	[Export] private AnimatedSprite2D _weaponSprite, _characterSprite;
+	[Export] private AnimatedSprite2D _characterSprite;
 	[Export] private PlayerControllerComponent _playerController;
 	[Export] private PickupsComponent _pickupsComponent;
 
+	private ShootingComponent _shootingComponent;
+	private AnimatedSprite2D _weaponSprite;
+	
 	private Vector2 _direction;
 	private int _weaponAmmo;
 	private Vector2 _weaponPosition;
@@ -23,25 +24,27 @@ public partial class WeaponElgato : Node2D
 	
 	public override void _Ready()
 	{
+		GetChildNodes();
 		ConnectSignals();
 		
 		_weaponPosition = Position;
-
-		_muzzle = GetNodeOrNull<Marker2D>("muzzle");
-
+		
 		SetWeaponMuzzleFlash(Utility.WeaponType.PlayerPistol);
 		
 		_weaponSprite?.Play(Utility.EntityAnimations[Utility.EntityState.Idle]);
 		_flashSprite?.Play(Utility.EntityAnimations[Utility.EntityState.Idle]);
+	}
 
-		// For HUD
-		EventsBus.Instance.EmitSignal(nameof(EventsBus.Instance.PlayerCurrentWeaponUpdate),
-			_shooting?.WeaponType.ToString());
+	private void GetChildNodes()
+	{
+		_weaponSprite = GetNodeOrNull<AnimatedSprite2D>("weaponSprite");
+		_muzzle = GetNodeOrNull<Marker2D>("muzzle");
+		_shootingComponent = GetNodeOrNull<ShootingComponent>("ShootingComponent");
 	}
 
 	private void ConnectSignals()
 	{
-		if (_shooting != null) _shooting.Shooting += OnShooting;
+		if (_shootingComponent != null) _shootingComponent.Shooting += OnShooting;
 		
 		if (_pickupsComponent != null) _pickupsComponent.PickedUpWeaponPowerUp += OnWeaponPowerUpPickedUp;
 	}
@@ -58,14 +61,14 @@ public partial class WeaponElgato : Node2D
 	private void OnShooting()
 	{
 		// Change speed scale of animations based on weapon type from shooting properties
-		_weaponSprite?.SetSpeedScale(_shooting.ShootingProperties.AnimationSpeed);
+		_weaponSprite?.SetSpeedScale(_shootingComponent.ShootingProperties.AnimationSpeed);
 		
 		_weaponSprite?.Play(Utility.EntityAnimations[Utility.EntityState.Shoot]);
 		_flashSprite?.Play(Utility.EntityAnimations[Utility.EntityState.Shoot]);
 	
 		
 		// Only reduce ammo for power-up weapons
-		if (_shooting?.WeaponType == Utility.WeaponType.PlayerPistol) 
+		if (_shootingComponent?.WeaponType == Utility.WeaponType.PlayerPistol) 
 			return;
 		_weaponAmmo--;
 		
@@ -75,7 +78,7 @@ public partial class WeaponElgato : Node2D
 
 	private void SwitchWeapon(Utility.WeaponType weaponType)
 	{
-		if (_shooting != null) _shooting.WeaponType = weaponType;
+		if (_shootingComponent != null) _shootingComponent.WeaponType = weaponType;
 
 		switch (weaponType)
 		{
@@ -87,8 +90,8 @@ public partial class WeaponElgato : Node2D
 				return;
 			
 			case Utility.WeaponType.PlayerPistol:
-				if (_shooting != null)
-					_shooting.ShootingProperties =
+				if (_shootingComponent != null)
+					_shootingComponent.ShootingProperties =
 						ResourceLoader.Load<ShootingProperties>(Utility.PlayerPistolShootingProperties);
 				
 				SetWeaponMuzzleFlash(Utility.WeaponType.PlayerPistol);
@@ -96,8 +99,8 @@ public partial class WeaponElgato : Node2D
 				break;
 			
 			case Utility.WeaponType.PlayerShotgun:
-				if (_shooting != null)
-					_shooting.ShootingProperties =
+				if (_shootingComponent != null)
+					_shootingComponent.ShootingProperties =
 						ResourceLoader.Load<ShootingProperties>(Utility.PlayerShotgunShootingProperties);
 
 				SetWeaponMuzzleFlash(Utility.WeaponType.PlayerShotgun);
@@ -105,8 +108,8 @@ public partial class WeaponElgato : Node2D
 				break;
 			
 			case Utility.WeaponType.PlayerMachineGun:
-				if (_shooting != null)
-					_shooting.ShootingProperties =
+				if (_shootingComponent != null)
+					_shootingComponent.ShootingProperties =
 						ResourceLoader.Load<ShootingProperties>(Utility.PlayerMachineGunShootingProperties);
 				
 				SetWeaponMuzzleFlash(Utility.WeaponType.PlayerMachineGun);
@@ -114,8 +117,8 @@ public partial class WeaponElgato : Node2D
 				break;
 			
 			case Utility.WeaponType.PlayerRailGun:
-				if (_shooting != null)
-					_shooting.ShootingProperties =
+				if (_shootingComponent != null)
+					_shootingComponent.ShootingProperties =
 						ResourceLoader.Load<ShootingProperties>(Utility.PlayerRailGunShootingProperties);
 				
 				SetWeaponMuzzleFlash(Utility.WeaponType.PlayerRailGun);
@@ -126,10 +129,10 @@ public partial class WeaponElgato : Node2D
 				throw new ArgumentOutOfRangeException($"Weapon type does not exist");
 		}
 		
-		if (_shooting != null) _weaponAmmo = _shooting.ShootingProperties.MagazineSize;
+		if (_shootingComponent != null) _weaponAmmo = _shootingComponent.ShootingProperties.MagazineSize;
 		
 		// Set the updated timer values for the new weapon type
-		_shooting?.SetTimerValues(); 
+		_shootingComponent?.SetTimerValues(); 
 		
 		// For HUD
 		EventsBus.Instance.EmitSignal(nameof(EventsBus.Instance.PlayerCurrentWeaponUpdate), weaponType.ToString());
@@ -144,18 +147,18 @@ public partial class WeaponElgato : Node2D
 			return;
 		}
 
-		switch (_shooting.ShootingProperties.TriggerType)
+		switch (_shootingComponent.ShootingProperties.TriggerType)
 		{
 			case Utility.WeaponTriggerType.Automatic:
 				if (Input.IsActionPressed("shoot"))
-					_shooting?.Shoot(_direction);
+					_shootingComponent?.Shoot(_direction);
 				else
 					WeaponIdleAnimation();
 				break;
     
 			case Utility.WeaponTriggerType.SingleShot:
 				if (Input.IsActionJustPressed("shoot"))
-					_shooting?.Shoot(_direction);
+					_shootingComponent?.Shoot(_direction);
 				else
 					WeaponIdleAnimation();
 				break;
