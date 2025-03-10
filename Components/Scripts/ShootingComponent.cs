@@ -9,6 +9,7 @@ namespace ElGatoProject.Components.Scripts;
 [GlobalClass]
 public partial class ShootingComponent : Node2D
 {
+	[Export] public Utility.PlayerOrEnemy PlayerOrEnemy;
 	[Export] public Utility.WeaponType WeaponType;
 	[Export] public ShootingProperties ShootingProperties;
 	[Export] private Marker2D _muzzle;
@@ -42,7 +43,7 @@ public partial class ShootingComponent : Node2D
 		}
 	}
 
-	// Helper functions
+	// Helper methods
 	public void SetTimerValues()
 	{
 		if (_shotCooldownTimer != null)
@@ -105,12 +106,7 @@ public partial class ShootingComponent : Node2D
 			case Utility.WeaponType.EnemyShotgun:
 				for (int i = 0; i < ShootingProperties?.BulletsPerShot; i++)
 				{
-					CreateAndSetBulletProperties(
-						Utility.PlayerOrEnemy.Enemy, 
-						WeaponType, 
-						GlobalPosition.DirectionTo(targetVector),
-						i
-						);
+					CreateAndSetBulletProperties(WeaponType, GlobalPosition.DirectionTo(targetVector), i);
 				}
 				break;
 			case Utility.WeaponType.EnemyPistol:
@@ -118,12 +114,7 @@ public partial class ShootingComponent : Node2D
 			case Utility.WeaponType.EnemyRailGun:
 				if (!_reloading)
 				{
-					CreateAndSetBulletProperties(
-						Utility.PlayerOrEnemy.Enemy, 
-						WeaponType, 
-						GlobalPosition.DirectionTo(targetVector),
-						0
-						);
+					CreateAndSetBulletProperties(WeaponType, GlobalPosition.DirectionTo(targetVector));
 					
 					_bulletCount++;
 					
@@ -138,40 +129,29 @@ public partial class ShootingComponent : Node2D
 			case Utility.WeaponType.PlayerShotgun:
 				for (int i = 0; i < ShootingProperties?.BulletsPerShot; i++)
 				{
-					CreateAndSetBulletProperties(
-						Utility.PlayerOrEnemy.Enemy, 
-						WeaponType, 
-						new Vector2(targetVector.X, targetVector.Y),
-						i
-					);
+					CreateAndSetBulletProperties(WeaponType, new Vector2(targetVector.X, targetVector.Y), i);
 				}
 				break;
 			
 			case Utility.WeaponType.PlayerPistol:
 			case Utility.WeaponType.PlayerMachineGun:
 			case Utility.WeaponType.PlayerRailGun:
-				CreateAndSetBulletProperties(
-					Utility.PlayerOrEnemy.Player, 
-					WeaponType,
-					new Vector2(targetVector.X, targetVector.Y),
-					0
-					);
+				CreateAndSetBulletProperties(WeaponType, new Vector2(targetVector.X, targetVector.Y));
 				break;
 		}
 	}
 
 	private void CreateAndSetBulletProperties(
-		Utility.PlayerOrEnemy playerOrEnemy, 
 		Utility.WeaponType projectileWeaponType,
 		Vector2 directionToTarget,
-		int projectileIndex
+		int projectileIndex = 0
 		)
 	{
 		// var projectileInstance = Globals.Instance.BulletProjectile.Instantiate<BulletProjectile>();
 		var projectileInstance = ResourceLoader.Load<PackedScene>(Utility.BulletPackedScenePath)
 			.Instantiate<BulletProjectile>();
 		
-		projectileInstance.PlayerOrEnemyBullet = playerOrEnemy;
+		projectileInstance.PlayerOrEnemyBullet = PlayerOrEnemy;
 		projectileInstance.BulletWeaponType = projectileWeaponType;
 		
 		projectileInstance.Target = directionToTarget;

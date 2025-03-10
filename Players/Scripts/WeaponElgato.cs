@@ -33,6 +33,8 @@ public partial class WeaponElgato : Node2D
 		
 		_weaponSprite?.Play(Utility.EntityAnimations[Utility.EntityState.Idle]);
 		_flashSprite?.Play(Utility.EntityAnimations[Utility.EntityState.Idle]);
+
+		_shootingComponent.PlayerOrEnemy = Utility.PlayerOrEnemy.Player;
 	}
 
 	private void GetChildNodes()
@@ -79,6 +81,7 @@ public partial class WeaponElgato : Node2D
 	private void SwitchWeapon(Utility.WeaponType weaponType)
 	{
 		if (_shootingComponent != null) _shootingComponent.WeaponType = weaponType;
+		SetWeaponMuzzleFlash(weaponType);
 
 		switch (weaponType)
 		{
@@ -93,36 +96,24 @@ public partial class WeaponElgato : Node2D
 				if (_shootingComponent != null)
 					_shootingComponent.ShootingProperties =
 						ResourceLoader.Load<ShootingProperties>(Utility.PlayerPistolShootingProperties);
-				
-				SetWeaponMuzzleFlash(Utility.WeaponType.PlayerPistol);
-				
 				break;
 			
 			case Utility.WeaponType.PlayerShotgun:
 				if (_shootingComponent != null)
 					_shootingComponent.ShootingProperties =
 						ResourceLoader.Load<ShootingProperties>(Utility.PlayerShotgunShootingProperties);
-
-				SetWeaponMuzzleFlash(Utility.WeaponType.PlayerShotgun);
-				
 				break;
 			
 			case Utility.WeaponType.PlayerMachineGun:
 				if (_shootingComponent != null)
 					_shootingComponent.ShootingProperties =
 						ResourceLoader.Load<ShootingProperties>(Utility.PlayerMachineGunShootingProperties);
-				
-				SetWeaponMuzzleFlash(Utility.WeaponType.PlayerMachineGun);
-				
 				break;
 			
 			case Utility.WeaponType.PlayerRailGun:
 				if (_shootingComponent != null)
 					_shootingComponent.ShootingProperties =
 						ResourceLoader.Load<ShootingProperties>(Utility.PlayerRailGunShootingProperties);
-				
-				SetWeaponMuzzleFlash(Utility.WeaponType.PlayerRailGun);
-				
 				break;
 			
 			default:

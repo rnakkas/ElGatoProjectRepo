@@ -59,7 +59,6 @@ debug_color = Color(0.960836, 0.199483, 0, 0.42)
 script = ExtResource("4_ck7fb")
 
 [node name="sprite" type="AnimatedSprite2D" parent="."]
-scale = Vector2(1, 1)
 sprite_frames = SubResource("SpriteFrames_odocg")
 animation = &"idle"
 autoplay = "idle"

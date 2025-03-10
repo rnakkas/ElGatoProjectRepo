@@ -81,7 +81,7 @@ animations = [{
 "speed": 15.0
 }]
 
-[node name="Weapon_ElGato" type="Node2D"]
+[node name="Weapon_ElGato" type="Node2D" groups=["Players"]]
 position = Vector2(6, 5)
 script = ExtResource("1_704rr")
 
