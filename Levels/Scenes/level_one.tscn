@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=4 uid="uid://brms67nc6kr52"]
+[gd_scene load_steps=13 format=4 uid="uid://brms67nc6kr52"]
 
 [ext_resource type="Texture2D" uid="uid://c8wewtsxmggnk" path="res://Assets/Tilesets/tilemap-floors-walls-2-placeholder.png" id="1_qbonj"]
 [ext_resource type="PackedScene" uid="uid://c4o8x6lc2silu" path="res://Players/Scenes/player_the_cat.tscn" id="2_ruasw"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bvfln655yll0j" path="res://Pickups/Scenes/weapon_mod_shotgun.tscn" id="4_ql46u"]
 [ext_resource type="PackedScene" uid="uid://cgnak73pe3qi7" path="res://Pickups/Scenes/weapon_mod_machine_gun.tscn" id="5_8mm0c"]
 [ext_resource type="PackedScene" uid="uid://bkx2ap7o8frrj" path="res://Pickups/Scenes/weapon_mod_rail_gun.tscn" id="6_hhimc"]
+[ext_resource type="PackedScene" uid="uid://cm71gwvwcmf6e" path="res://Enemies/Scenes/enemy_hired_goon.tscn" id="7_b38l0"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_3wlbo"]
 
@@ -113,7 +114,7 @@ tile_map_data = PackedByteArray("AAAXAP//AAABAAIAAAAZAP7/AAADAAEAAAAZAP//AAADAAI
 tile_set = SubResource("TileSet_ft0me")
 
 [node name="PlayerTheCat" parent="." instance=ExtResource("2_ruasw")]
-position = Vector2(87, -85)
+position = Vector2(556, 26)
 
 [node name="Camera2D" type="Camera2D" parent="PlayerTheCat"]
 position = Vector2(0.999985, 4)
@@ -241,3 +242,8 @@ position = Vector2(698, -81)
 
 [node name="WeaponModRailGun" parent="weaponPowerUps" instance=ExtResource("6_hhimc")]
 position = Vector2(1120, -130)
+
+[node name="enemies" type="Node" parent="."]
+
+[node name="enemy_hired_goon" parent="enemies" instance=ExtResource("7_b38l0")]
+position = Vector2(619, 27)

@@ -73,8 +73,8 @@ animations = [{
 "speed": 15.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_wfmos"]
-size = Vector2(8, 6)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ijti6"]
+size = Vector2(8, 4)
 
 [node name="shotgun_bullet_projectile" type="AnimatedSprite2D"]
 sprite_frames = SubResource("SpriteFrames_c8pyl")
@@ -87,4 +87,4 @@ collision_mask = 38
 script = ExtResource("2_ndnt6")
 
 [node name="collider" type="CollisionShape2D" parent="ProjectileHitboxComponent"]
-shape = SubResource("RectangleShape2D_wfmos")
+shape = SubResource("RectangleShape2D_ijti6")

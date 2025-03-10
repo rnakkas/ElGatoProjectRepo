@@ -1,0 +1,66 @@
+[gd_scene load_steps=9 format=3 uid="uid://cm71gwvwcmf6e"]
+
+[ext_resource type="Texture2D" uid="uid://bb23y6i2264yp" path="res://Assets/Enemies/hiredGoon1-sprite-001.png" id="1_r8lkg"]
+[ext_resource type="Script" path="res://Components/Scripts/HealthComponent.cs" id="2_kk1hw"]
+[ext_resource type="Script" path="res://Components/Scripts/HurtboxComponent.cs" id="3_s0qc1"]
+[ext_resource type="Script" path="res://Components/Scripts/VelocityComponent.cs" id="4_ck7fb"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tg0wh"]
+size = Vector2(12, 15)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7ht2k"]
+size = Vector2(16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wxhrb"]
+atlas = ExtResource("1_r8lkg")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_odocg"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wxhrb")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[node name="enemy_hired_goon" type="CharacterBody2D" groups=["Enemies"]]
+scale = Vector2(1.4, 1.4)
+collision_layer = 32
+collision_mask = 39
+
+[node name="collider" type="CollisionShape2D" parent="."]
+position = Vector2(0, 0.5)
+shape = SubResource("RectangleShape2D_tg0wh")
+
+[node name="HealthComponent" type="Node" parent="."]
+script = ExtResource("2_kk1hw")
+CurrentHealth = 100
+_maxHealth = 100
+
+[node name="HurtboxComponent" type="Area2D" parent="." node_paths=PackedStringArray("_hurtStaggerTimer", "_healthComponent", "_bodySprite", "_velocityComponent") groups=["Enemies"]]
+collision_layer = 32
+collision_mask = 8
+script = ExtResource("3_s0qc1")
+_hurtStaggerTimer = NodePath("hurtStaggerTimer")
+_healthComponent = NodePath("../HealthComponent")
+_bodySprite = NodePath("../sprite")
+_velocityComponent = NodePath("../VelocityComponent")
+
+[node name="hurtboxCollider" type="CollisionShape2D" parent="HurtboxComponent"]
+shape = SubResource("RectangleShape2D_7ht2k")
+debug_color = Color(0.960836, 0.199483, 0, 0.42)
+
+[node name="hurtStaggerTimer" type="Timer" parent="HurtboxComponent"]
+
+[node name="VelocityComponent" type="Node" parent="."]
+script = ExtResource("4_ck7fb")
+
+[node name="sprite" type="AnimatedSprite2D" parent="."]
+scale = Vector2(1, 1)
+sprite_frames = SubResource("SpriteFrames_odocg")
+animation = &"idle"
+autoplay = "idle"
+flip_h = true
