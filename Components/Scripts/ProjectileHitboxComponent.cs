@@ -40,8 +40,8 @@ public partial class ProjectileHitboxComponent : Area2D
 	private void OnEntityHit(Area2D entityArea)
 	{
 		if (
-			(entityArea.IsInGroup("PlayersHurtBox") && PlayerOrEnemyProjectile == Utility.PlayerOrEnemy.Enemy) ||
-			(entityArea.IsInGroup("Enemies") && PlayerOrEnemyProjectile == Utility.PlayerOrEnemy.Player)
+			(entityArea.IsInGroup(Utility.NodeGroupPlayersHurtbox) && PlayerOrEnemyProjectile == Utility.PlayerOrEnemy.Enemy) ||
+			(entityArea.IsInGroup(Utility.NodeGroupEnemies) && PlayerOrEnemyProjectile == Utility.PlayerOrEnemy.Player)
 			)
 		{
 			if (entityArea is not HurtboxComponent hurtboxComponent)
