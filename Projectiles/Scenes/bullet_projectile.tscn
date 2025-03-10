@@ -1,9 +1,42 @@
-[gd_scene load_steps=15 format=3 uid="uid://b061rx1dqmjpb"]
+[gd_scene load_steps=20 format=3 uid="uid://b061rx1dqmjpb"]
 
 [ext_resource type="Texture2D" uid="uid://dqx6rpywerr0u" path="res://icon.svg" id="1_1ts8e"]
 [ext_resource type="Script" path="res://Projectiles/Scripts/BulletProjectile.cs" id="1_d133d"]
 [ext_resource type="Script" path="res://Components/Scripts/ProjectileHitboxComponent.cs" id="2_g5lfy"]
 [ext_resource type="Texture2D" uid="uid://bjk8001npdy75" path="res://Assets/Players/bullet-Animation-001-Sheet.png" id="3_bcnpg"]
+[ext_resource type="Texture2D" uid="uid://c74syu7p3y8af" path="res://Assets/Weapons/a-playerPistolBullet-spritesheet-001.png" id="3_xqyxd"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gn6oa"]
+atlas = ExtResource("3_xqyxd")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6bi2d"]
+atlas = ExtResource("3_xqyxd")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5y3gf"]
+atlas = ExtResource("3_xqyxd")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0q2c7"]
+atlas = ExtResource("3_xqyxd")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rdroo"]
+atlas = ExtResource("3_xqyxd")
+region = Rect2(0, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7cuaj"]
+atlas = ExtResource("3_xqyxd")
+region = Rect2(16, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yv18f"]
+atlas = ExtResource("3_xqyxd")
+region = Rect2(32, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_of7wl"]
+atlas = ExtResource("3_xqyxd")
+region = Rect2(48, 32, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_v37nc"]
 atlas = ExtResource("3_bcnpg")
@@ -20,22 +53,6 @@ region = Rect2(32, 0, 16, 16)
 [sub_resource type="AtlasTexture" id="AtlasTexture_ik8n6"]
 atlas = ExtResource("3_bcnpg")
 region = Rect2(48, 0, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_8dp34"]
-atlas = ExtResource("3_bcnpg")
-region = Rect2(0, 16, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_uhh3n"]
-atlas = ExtResource("3_bcnpg")
-region = Rect2(16, 16, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_lrdhu"]
-atlas = ExtResource("3_bcnpg")
-region = Rect2(32, 16, 16, 16)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_w4qwi"]
-atlas = ExtResource("3_bcnpg")
-region = Rect2(48, 16, 16, 16)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ww87r"]
 animations = [{
@@ -84,16 +101,16 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_v37nc")
+"texture": SubResource("AtlasTexture_gn6oa")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_be5f1")
+"texture": SubResource("AtlasTexture_6bi2d")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_1k8tt")
+"texture": SubResource("AtlasTexture_5y3gf")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_ik8n6")
+"texture": SubResource("AtlasTexture_0q2c7")
 }],
 "loop": true,
 "name": &"fly",
@@ -101,20 +118,20 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_8dp34")
+"texture": SubResource("AtlasTexture_rdroo")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_uhh3n")
+"texture": SubResource("AtlasTexture_7cuaj")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_lrdhu")
+"texture": SubResource("AtlasTexture_yv18f")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_w4qwi")
+"texture": SubResource("AtlasTexture_of7wl")
 }],
 "loop": false,
 "name": &"hit",
-"speed": 9.0
+"speed": 15.0
 }, {
 "frames": [],
 "loop": true,
@@ -170,7 +187,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vrq6s"]
-size = Vector2(7, 3)
+size = Vector2(7, 4)
 
 [node name="bulletProjectile" type="Node2D" node_paths=PackedStringArray("_hitbox", "_bulletSprite", "_despawnTimer")]
 script = ExtResource("1_d133d")
@@ -192,6 +209,6 @@ collision_mask = 39
 script = ExtResource("2_g5lfy")
 
 [node name="collider" type="CollisionShape2D" parent="ProjectileHitboxComponent"]
-position = Vector2(0.5, -0.5)
+position = Vector2(0.5, 0)
 shape = SubResource("RectangleShape2D_vrq6s")
 debug_color = Color(0.67451, 0.498039, 0.286275, 0.329412)

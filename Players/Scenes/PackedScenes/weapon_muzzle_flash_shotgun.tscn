@@ -1,0 +1,59 @@
+[gd_scene load_steps=8 format=3 uid="uid://dkuh2xf07ghi4"]
+
+[ext_resource type="Texture2D" uid="uid://bcoc708qul62g" path="res://Assets/Weapons/a-playerMuzzlelFlashes-spritesheet-001.png" id="1_ngwwi"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m67ou"]
+atlas = ExtResource("1_ngwwi")
+region = Rect2(0, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kghax"]
+atlas = ExtResource("1_ngwwi")
+region = Rect2(16, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wrhd7"]
+atlas = ExtResource("1_ngwwi")
+region = Rect2(32, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kyr55"]
+atlas = ExtResource("1_ngwwi")
+region = Rect2(48, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qrhn3"]
+atlas = ExtResource("1_ngwwi")
+region = Rect2(64, 16, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_53xly"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": null
+}],
+"loop": false,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m67ou")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kghax")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wrhd7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kyr55")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qrhn3")
+}],
+"loop": false,
+"name": &"shoot",
+"speed": 13.0
+}]
+
+[node name="weapon_muzzle_flash_shotgun" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_53xly")
+animation = &"shoot"
+autoplay = "idle"

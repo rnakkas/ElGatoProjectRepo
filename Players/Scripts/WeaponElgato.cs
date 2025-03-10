@@ -11,19 +11,25 @@ namespace ElGatoProject.Players.Scripts;
 public partial class WeaponElgato : Node2D
 {
 	[Export] private ShootingComponent _shooting;
-	[Export] private AnimatedSprite2D _weaponSprite, _flashSprite, _characterSprite;
+	[Export] private AnimatedSprite2D _weaponSprite, _characterSprite;
 	[Export] private PlayerControllerComponent _playerController;
 	[Export] private PickupsComponent _pickupsComponent;
 
 	private Vector2 _direction;
 	private int _weaponAmmo;
 	private Vector2 _weaponPosition;
+	private AnimatedSprite2D _flashSprite;
+	private Marker2D _muzzle;
 	
 	public override void _Ready()
 	{
 		ConnectSignals();
 		
 		_weaponPosition = Position;
+
+		_muzzle = GetNodeOrNull<Marker2D>("muzzle");
+
+		SetWeaponMuzzleFlash(Utility.WeaponType.PlayerPistol);
 		
 		_weaponSprite?.Play(Utility.EntityAnimations[Utility.EntityState.Idle]);
 		_flashSprite?.Play(Utility.EntityAnimations[Utility.EntityState.Idle]);
@@ -51,10 +57,8 @@ public partial class WeaponElgato : Node2D
 	// Shooting signal connection
 	private void OnShooting()
 	{
-		//TODO: Can move to WeaponControllerComponent
 		// Change speed scale of animations based on weapon type from shooting properties
 		_weaponSprite?.SetSpeedScale(_shooting.ShootingProperties.AnimationSpeed);
-		_flashSprite?.SetSpeedScale(_shooting.ShootingProperties.AnimationSpeed);
 		
 		_weaponSprite?.Play(Utility.EntityAnimations[Utility.EntityState.Shoot]);
 		_flashSprite?.Play(Utility.EntityAnimations[Utility.EntityState.Shoot]);
@@ -69,7 +73,6 @@ public partial class WeaponElgato : Node2D
 		EventsBus.Instance.EmitSignal(nameof(EventsBus.Instance.PlayerAmmoUpdate), _weaponAmmo);
 	}
 
-	//TODO: Can move to WeaponControllerComponent
 	private void SwitchWeapon(Utility.WeaponType weaponType)
 	{
 		if (_shooting != null) _shooting.WeaponType = weaponType;
@@ -87,24 +90,36 @@ public partial class WeaponElgato : Node2D
 				if (_shooting != null)
 					_shooting.ShootingProperties =
 						ResourceLoader.Load<ShootingProperties>(Utility.PlayerPistolShootingProperties);
+				
+				SetWeaponMuzzleFlash(Utility.WeaponType.PlayerPistol);
+				
 				break;
 			
 			case Utility.WeaponType.PlayerShotgun:
 				if (_shooting != null)
 					_shooting.ShootingProperties =
 						ResourceLoader.Load<ShootingProperties>(Utility.PlayerShotgunShootingProperties);
+
+				SetWeaponMuzzleFlash(Utility.WeaponType.PlayerShotgun);
+				
 				break;
 			
 			case Utility.WeaponType.PlayerMachineGun:
 				if (_shooting != null)
 					_shooting.ShootingProperties =
 						ResourceLoader.Load<ShootingProperties>(Utility.PlayerMachineGunShootingProperties);
+				
+				SetWeaponMuzzleFlash(Utility.WeaponType.PlayerMachineGun);
+				
 				break;
 			
 			case Utility.WeaponType.PlayerRailGun:
 				if (_shooting != null)
 					_shooting.ShootingProperties =
 						ResourceLoader.Load<ShootingProperties>(Utility.PlayerRailGunShootingProperties);
+				
+				SetWeaponMuzzleFlash(Utility.WeaponType.PlayerRailGun);
+				
 				break;
 			
 			default:
@@ -120,8 +135,7 @@ public partial class WeaponElgato : Node2D
 		EventsBus.Instance.EmitSignal(nameof(EventsBus.Instance.PlayerCurrentWeaponUpdate), weaponType.ToString());
 		EventsBus.Instance.EmitSignal(nameof(EventsBus.Instance.PlayerAmmoUpdate), _weaponAmmo);
 	}
-
-	//TODO: Can move to WeaponControllerComponent
+	
 	private void HandleShooting()
 	{
 		if (!CanShoot())
@@ -132,21 +146,21 @@ public partial class WeaponElgato : Node2D
 
 		switch (_shooting.ShootingProperties.TriggerType)
 		{
-			case Utility.WeapoTriggerType.Automatic:
+			case Utility.WeaponTriggerType.Automatic:
 				if (Input.IsActionPressed("shoot"))
 					_shooting?.Shoot(_direction);
 				else
 					WeaponIdleAnimation();
 				break;
     
-			case Utility.WeapoTriggerType.SingleShot:
+			case Utility.WeaponTriggerType.SingleShot:
 				if (Input.IsActionJustPressed("shoot"))
 					_shooting?.Shoot(_direction);
 				else
 					WeaponIdleAnimation();
 				break;
     
-			case Utility.WeapoTriggerType.None:
+			case Utility.WeaponTriggerType.None:
 				break;
     
 			default:
@@ -156,18 +170,16 @@ public partial class WeaponElgato : Node2D
 		HandleWeaponState();
 	}
 	
-	//TODO: Can move to WeaponControllerComponent
 	private bool CanShoot()
 	{
 		return _playerController?.CurrentState != Utility.EntityState.Dash &&
 		       _playerController?.CurrentState != Utility.EntityState.Hurt;
 	}
-
-	//TODO: Can move to WeaponControllerComponent
+	
 	private void WeaponIdleAnimation()
 	{
+		// Set speed scale back to 1 on idle
 		_weaponSprite?.SetSpeedScale(1);
-		_flashSprite?.SetSpeedScale(1);
 
 		// Sync to character's idle animation after shooting
 		if (_weaponSprite != null && !_weaponSprite.IsPlaying())
@@ -180,6 +192,7 @@ public partial class WeaponElgato : Node2D
 		if (
 			_characterSprite != null &&
 			_weaponSprite != null &&
+			!_weaponSprite.IsPlaying() &&
 			_characterSprite.IsPlaying() &&
 			_characterSprite.Animation == Utility.EntityAnimations[Utility.EntityState.Idle]
 		)
@@ -192,8 +205,7 @@ public partial class WeaponElgato : Node2D
 		if (_flashSprite != null && !_flashSprite.IsPlaying())
 			_flashSprite.Play(Utility.EntityAnimations[Utility.EntityState.Idle]);
 	}
-
-	//TODO: Can move to WeaponControllerComponent
+	
 	private void HandleWeaponState()
 	{
 		// If weapon power-up runs out of ammo, switch back to pistol
@@ -208,8 +220,7 @@ public partial class WeaponElgato : Node2D
 			QueueFree();
 		}
 	}
-
-	//TODO: Can move to WeaponControllerComponent
+	
 	private void SetWeaponDirection()
 	{
 		if (_characterSprite == null) 
@@ -225,7 +236,6 @@ public partial class WeaponElgato : Node2D
 		}
 	}
 	
-	//TODO: Can move to WeaponControllerComponent
 	private void FlipSprite()
 	{
 		if (_weaponSprite == null || _flashSprite == null) 
@@ -244,6 +254,20 @@ public partial class WeaponElgato : Node2D
 				Position = new Vector2(_weaponPosition.X, _weaponPosition.Y);
 				break;
 		}
+	}
+
+	private void SetWeaponMuzzleFlash(Utility.WeaponType weaponType)
+	{
+		// Remove current muzzle flash sprite
+		if (_flashSprite != null)
+			_muzzle.RemoveChild(_flashSprite); 
+				
+		// Add new muzzle flash sprite
+		_flashSprite = ResourceLoader
+			.Load<PackedScene>(Utility.MuzzleFlashPackedScenePaths[weaponType])
+			.Instantiate<AnimatedSprite2D>();
+		
+		_muzzle?.AddChild(_flashSprite);
 	}
 	
 	public override void _Process(double delta)
