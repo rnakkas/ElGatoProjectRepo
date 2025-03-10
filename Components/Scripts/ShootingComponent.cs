@@ -108,7 +108,8 @@ public partial class ShootingComponent : Node2D
 					CreateAndSetBulletProperties(
 						Utility.PlayerOrEnemy.Enemy, 
 						WeaponType, 
-						GlobalPosition.DirectionTo(targetVector)
+						GlobalPosition.DirectionTo(targetVector),
+						i
 						);
 				}
 				break;
@@ -120,7 +121,8 @@ public partial class ShootingComponent : Node2D
 					CreateAndSetBulletProperties(
 						Utility.PlayerOrEnemy.Enemy, 
 						WeaponType, 
-						GlobalPosition.DirectionTo(targetVector)
+						GlobalPosition.DirectionTo(targetVector),
+						0
 						);
 					
 					_bulletCount++;
@@ -134,13 +136,25 @@ public partial class ShootingComponent : Node2D
 				break;
 			
 			case Utility.WeaponType.PlayerShotgun:
+				for (int i = 0; i < ShootingProperties?.BulletsPerShot; i++)
+				{
+					CreateAndSetBulletProperties(
+						Utility.PlayerOrEnemy.Enemy, 
+						WeaponType, 
+						new Vector2(targetVector.X, targetVector.Y),
+						i
+					);
+				}
+				break;
+			
 			case Utility.WeaponType.PlayerPistol:
 			case Utility.WeaponType.PlayerMachineGun:
 			case Utility.WeaponType.PlayerRailGun:
 				CreateAndSetBulletProperties(
 					Utility.PlayerOrEnemy.Player, 
 					WeaponType,
-					new Vector2(targetVector.X, targetVector.Y)
+					new Vector2(targetVector.X, targetVector.Y),
+					0
 					);
 				break;
 		}
@@ -149,7 +163,8 @@ public partial class ShootingComponent : Node2D
 	private void CreateAndSetBulletProperties(
 		Utility.PlayerOrEnemy playerOrEnemy, 
 		Utility.WeaponType projectileWeaponType,
-		Vector2 directionToTarget
+		Vector2 directionToTarget,
+		int projectileIndex
 		)
 	{
 		// var projectileInstance = Globals.Instance.BulletProjectile.Instantiate<BulletProjectile>();
@@ -160,8 +175,20 @@ public partial class ShootingComponent : Node2D
 		projectileInstance.BulletWeaponType = projectileWeaponType;
 		
 		projectileInstance.Target = directionToTarget;
-		projectileInstance.RotationDegrees = 
-			Globals.Instance.Rng.RandfRange(-ShootingProperties.BulletSwayAngle, ShootingProperties.BulletSwayAngle);
+
+		if (ShootingProperties.BulletsPerShot > 1)
+		{
+			// Spread bullets equally over the angle range, for shotguns
+			float angle = Mathf.Lerp(-ShootingProperties.BulletSwayAngle, ShootingProperties.BulletSwayAngle,
+				projectileIndex / (float)(ShootingProperties.BulletsPerShot - 1));
+			projectileInstance.RotationDegrees = angle;
+		}
+		else
+		{
+			// For other guns
+			projectileInstance.RotationDegrees = Globals.Instance.Rng.RandfRange(-ShootingProperties.BulletSwayAngle,
+				ShootingProperties.BulletSwayAngle);
+		}
 
 		projectileInstance.DespawnTime = ShootingProperties.BulletDespawnTimeSeconds;
 		projectileInstance.BulletSpeed = ShootingProperties.BulletSpeed;

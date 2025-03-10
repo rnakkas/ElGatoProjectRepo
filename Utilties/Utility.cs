@@ -130,7 +130,7 @@ public static class Utility
     public static readonly Dictionary<WeaponType, string> BulletSpritePackedScenePaths = new()
     {
         [WeaponType.PlayerPistol] = "res://Projectiles/PackedScenes/pistol_bullet_projectile.tscn",
-        [WeaponType.PlayerShotgun] = "res://Projectiles/PackedScenes/shotgun_blast_projectile.tscn",
+        [WeaponType.PlayerShotgun] = "res://Projectiles/PackedScenes/shotgun_bullet_projectile.tscn",
         [WeaponType.PlayerMachineGun] = "res://Projectiles/PackedScenes/machinegun_bullet_projectile.tscn",
         [WeaponType.PlayerRailGun] = "res://Projectiles/PackedScenes/railgun_bullet_projectile.tscn"
     };
