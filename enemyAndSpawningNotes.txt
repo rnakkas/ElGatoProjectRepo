@@ -1,0 +1,8 @@
+enemy spawner
+- a singleton or child of main scene
+- if player crosses a world boundary or area2d, enemy spawner will spawn enemies just outside of the camera
+- enemies will run towards player's position
+- enemies will stop running towards player if player is inside their area2d detection area
+- if enemy is ranged, enemies will shoot at player's x position if player is inside their area2d detection area
+- if player exits the area2d detection area, enemy will run towards player until player is inside the area2d detection area
+- 

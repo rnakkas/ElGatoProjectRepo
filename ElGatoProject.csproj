@@ -6,7 +6,7 @@
     <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="bulletSpriteNotes.txt" />
+    <Content Include="enemyAndSpawningNotes.txt" />
     <Content Include="mainStructureNotes.txt" />
   </ItemGroup>
 </Project>

@@ -1,9 +1,12 @@
-[gd_scene load_steps=9 format=3 uid="uid://cm71gwvwcmf6e"]
+[gd_scene load_steps=13 format=3 uid="uid://cm71gwvwcmf6e"]
 
+[ext_resource type="Script" path="res://Enemies/Scripts/EnemyHiredGoon.cs" id="1_6kr7y"]
 [ext_resource type="Texture2D" uid="uid://bb23y6i2264yp" path="res://Assets/Enemies/hiredGoon1-sprite-001.png" id="1_r8lkg"]
 [ext_resource type="Script" path="res://Components/Scripts/HealthComponent.cs" id="2_kk1hw"]
 [ext_resource type="Script" path="res://Components/Scripts/HurtboxComponent.cs" id="3_s0qc1"]
 [ext_resource type="Script" path="res://Components/Scripts/VelocityComponent.cs" id="4_ck7fb"]
+[ext_resource type="Script" path="res://Components/Scripts/PlayerDetectionComponent.cs" id="5_nm163"]
+[ext_resource type="Resource" uid="uid://c1uypwfxhw5qq" path="res://Resources/EnemyHiredGoonVelocityProperties.tres" id="5_yqawl"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tg0wh"]
 size = Vector2(12, 15)
@@ -26,10 +29,14 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_b1y1x"]
+radius = 300.0
+
 [node name="enemy_hired_goon" type="CharacterBody2D" groups=["Enemies"]]
-scale = Vector2(1.4, 1.4)
+scale = Vector2(1.2, 1.2)
 collision_layer = 32
 collision_mask = 39
+script = ExtResource("1_6kr7y")
 
 [node name="collider" type="CollisionShape2D" parent="."]
 position = Vector2(0, 0.5)
@@ -57,9 +64,19 @@ debug_color = Color(0.960836, 0.199483, 0, 0.42)
 
 [node name="VelocityComponent" type="Node" parent="."]
 script = ExtResource("4_ck7fb")
+CharacterVelocityProperties = ExtResource("5_yqawl")
 
 [node name="sprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_odocg")
 animation = &"idle"
 autoplay = "idle"
-flip_h = true
+
+[node name="PlayerDetectionComponent" type="Node2D" parent="."]
+script = ExtResource("5_nm163")
+
+[node name="Area2D" type="Area2D" parent="PlayerDetectionComponent"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetectionComponent/Area2D"]
+position = Vector2(1.25, 0.416668)
+shape = SubResource("CircleShape2D_b1y1x")
+debug_color = Color(0, 0.6, 0.701961, 0.0431373)

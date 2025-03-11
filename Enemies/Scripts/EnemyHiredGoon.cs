@@ -1,11 +1,11 @@
 using Godot;
+using System;
 using ElGatoProject.Components.Scripts;
 
-namespace ElGatoProject.Players.Scripts;
-
-public partial class PlayerTheCat : CharacterBody2D
+namespace ElGatoProject.Enemies.Scripts;
+public partial class EnemyHiredGoon : CharacterBody2D
 {
-	[Export] private PlayerControllerComponent _playerController;
+	[Export] private EnemyControllerComponent _enemyController;
 	[Export] private VelocityComponent _velocityComponent;
 	
 	private Vector2 _velocity = Vector2.Zero;
@@ -17,8 +17,8 @@ public partial class PlayerTheCat : CharacterBody2D
 	
 	public override void _PhysicsProcess(double delta)
 	{
-		_playerController?.UpdateState((float)delta);
-		if (_velocityComponent != null) _velocity = _velocityComponent.EntityVelocity;
+		// _enemyController?.UpdateState((float)delta);
+		_velocity = _velocityComponent.EntityVelocity;
 		Velocity = _velocity;
 		
 		MoveAndSlide();

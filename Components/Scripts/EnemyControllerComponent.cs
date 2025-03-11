@@ -41,7 +41,7 @@ public partial class EnemyControllerComponent : Node
 	    {
 		    case Utility.EnemyType.Ranged:
 			    if (_canSeePlayer)
-					_shooting.Shoot(_playerDetection.PlayerPosition);
+					_shooting?.Shoot(_playerDetection.PlayerPosition);
 			    break;
 		    
 		    case Utility.EnemyType.Melee:
