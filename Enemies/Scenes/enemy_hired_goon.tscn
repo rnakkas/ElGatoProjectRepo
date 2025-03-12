@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://cm71gwvwcmf6e"]
+[gd_scene load_steps=15 format=3 uid="uid://cm71gwvwcmf6e"]
 
 [ext_resource type="Script" path="res://Enemies/Scripts/EnemyHiredGoon.cs" id="1_6kr7y"]
 [ext_resource type="Texture2D" uid="uid://bb23y6i2264yp" path="res://Assets/Enemies/hiredGoon1-sprite-001.png" id="1_r8lkg"]
@@ -32,11 +32,19 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_b1y1x"]
 radius = 300.0
 
-[node name="enemy_hired_goon" type="CharacterBody2D" groups=["Enemies"]]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tm0qn"]
+bg_color = Color(0.133333, 0.137255, 0.137255, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jrr18"]
+bg_color = Color(0.772549, 0.247059, 0.0666667, 1)
+
+[node name="enemy_hired_goon" type="CharacterBody2D" node_paths=PackedStringArray("_velocityComponent", "_healthComponent") groups=["Enemies"]]
 scale = Vector2(1.2, 1.2)
 collision_layer = 32
-collision_mask = 39
+collision_mask = 38
 script = ExtResource("1_6kr7y")
+_velocityComponent = NodePath("VelocityComponent")
+_healthComponent = NodePath("HealthComponent")
 
 [node name="collider" type="CollisionShape2D" parent="."]
 position = Vector2(0, 0.5)
@@ -80,3 +88,15 @@ script = ExtResource("5_nm163")
 position = Vector2(1.25, 0.416668)
 shape = SubResource("CircleShape2D_b1y1x")
 debug_color = Color(0, 0.6, 0.701961, 0.0431373)
+
+[node name="healthBar" type="ProgressBar" parent="."]
+custom_minimum_size = Vector2(16, 0)
+offset_left = -8.33333
+offset_top = -13.3333
+offset_right = 7.66667
+offset_bottom = -9.33333
+theme_override_styles/background = SubResource("StyleBoxFlat_tm0qn")
+theme_override_styles/fill = SubResource("StyleBoxFlat_jrr18")
+step = 1.0
+value = 50.0
+show_percentage = false

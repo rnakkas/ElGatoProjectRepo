@@ -141,18 +141,18 @@ public partial class WeaponElgato : Node2D
 		switch (_shootingComponent.ShootingProperties.TriggerType)
 		{
 			case Utility.WeaponTriggerType.Automatic:
+			case Utility.WeaponTriggerType.SingleShot:
 				if (Input.IsActionPressed("shoot"))
 					_shootingComponent?.Shoot(_direction);
 				else
 					WeaponIdleAnimation();
 				break;
-    
-			case Utility.WeaponTriggerType.SingleShot:
-				if (Input.IsActionJustPressed("shoot"))
-					_shootingComponent?.Shoot(_direction);
-				else
-					WeaponIdleAnimation();
-				break;
+				// TODO: Keeping this here just in case I want to use it later
+				// if (Input.IsActionJustPressed("shoot"))
+				// 	_shootingComponent?.Shoot(_direction);
+				// else
+				// 	WeaponIdleAnimation();
+				// break;
     
 			case Utility.WeaponTriggerType.None:
 				break;
