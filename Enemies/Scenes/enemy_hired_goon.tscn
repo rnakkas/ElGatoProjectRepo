@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://cm71gwvwcmf6e"]
+[gd_scene load_steps=16 format=3 uid="uid://cm71gwvwcmf6e"]
 
 [ext_resource type="Script" path="res://Enemies/Scripts/EnemyHiredGoon.cs" id="1_6kr7y"]
 [ext_resource type="Texture2D" uid="uid://bb23y6i2264yp" path="res://Assets/Enemies/hiredGoon1-sprite-001.png" id="1_r8lkg"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://Components/Scripts/VelocityComponent.cs" id="4_ck7fb"]
 [ext_resource type="Script" path="res://Components/Scripts/PlayerDetectionComponent.cs" id="5_nm163"]
 [ext_resource type="Resource" uid="uid://c1uypwfxhw5qq" path="res://Resources/EnemyHiredGoonVelocityProperties.tres" id="5_yqawl"]
+[ext_resource type="Script" path="res://Components/Scripts/ShootingComponent.cs" id="8_tv8v2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tg0wh"]
 size = Vector2(12, 15)
@@ -79,8 +80,9 @@ sprite_frames = SubResource("SpriteFrames_odocg")
 animation = &"idle"
 autoplay = "idle"
 
-[node name="PlayerDetectionComponent" type="Node2D" parent="."]
+[node name="PlayerDetectionComponent" type="Node2D" parent="." node_paths=PackedStringArray("_playerDetectionArea")]
 script = ExtResource("5_nm163")
+_playerDetectionArea = NodePath("Area2D")
 
 [node name="Area2D" type="Area2D" parent="PlayerDetectionComponent"]
 
@@ -100,3 +102,6 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_jrr18")
 step = 1.0
 value = 50.0
 show_percentage = false
+
+[node name="ShootingComponent" type="Node2D" parent="."]
+script = ExtResource("8_tv8v2")

@@ -82,6 +82,7 @@ public static class Utility
     public const string NodeGroupPlayers = "Players";
     public const string NodeGroupEnemies = "Enemies";
     public const string NodeGroupPlayersHurtbox = "PlayersHurtBox";
+    public const string NodeGroupLevels = "Levels";
     
     // Level names
     public const string LevelOne = "level_one";

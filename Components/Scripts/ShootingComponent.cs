@@ -177,7 +177,7 @@ public partial class ShootingComponent : Node2D
 		if (_muzzle != null) projectileInstance.GlobalPosition = _muzzle.GlobalPosition;
 		
 		// Add the projectiles to the level instead of root, ensure level is the currently visible one
-		var levelsArray = GetTree().GetNodesInGroup("Levels");
+		var levelsArray = GetTree().GetNodesInGroup(Utility.NodeGroupLevels);
 		foreach (var level in levelsArray)
 		{
 			if (level is Node2D levelNode && levelNode.IsVisible())

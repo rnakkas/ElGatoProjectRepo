@@ -114,7 +114,7 @@ tile_map_data = PackedByteArray("AAAXAP//AAABAAIAAAAZAP7/AAADAAEAAAAZAP//AAADAAI
 tile_set = SubResource("TileSet_ft0me")
 
 [node name="PlayerTheCat" parent="." instance=ExtResource("2_ruasw")]
-position = Vector2(556, 26)
+position = Vector2(551, -88)
 
 [node name="Camera2D" type="Camera2D" parent="PlayerTheCat"]
 position = Vector2(0.999985, 4)
@@ -246,4 +246,4 @@ position = Vector2(1120, -130)
 [node name="enemies" type="Node" parent="."]
 
 [node name="enemy_hired_goon" parent="enemies" instance=ExtResource("7_b38l0")]
-position = Vector2(763, 28)
+position = Vector2(962, 28)

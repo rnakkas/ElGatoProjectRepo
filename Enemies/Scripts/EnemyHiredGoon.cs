@@ -8,6 +8,7 @@ public partial class EnemyHiredGoon : CharacterBody2D
 	[Export] private EnemyControllerComponent _enemyController;
 	[Export] private VelocityComponent _velocityComponent;
 	[Export] private HealthComponent _healthComponent;
+	[Export] private PlayerDetectionComponent _playerDetectionComponent;
 
 	private ProgressBar _healthBar;
 	
@@ -28,7 +29,7 @@ public partial class EnemyHiredGoon : CharacterBody2D
 		}
 		
 	}
-
+	
 	private void OnHealthDamaged(int currentHealth)
 	{
 		_healthBar?.SetVisible(true);

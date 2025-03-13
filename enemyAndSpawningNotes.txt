@@ -1,8 +1,51 @@
-enemy spawner
-- a singleton or child of main scene
-- if player crosses a world boundary or area2d, enemy spawner will spawn enemies just outside of the camera
-- enemies will run towards player's position
-- enemies will stop running towards player if player is inside their area2d detection area
-- if enemy is ranged, enemies will shoot at player's x position if player is inside their area2d detection area
-- if player exits the area2d detection area, enemy will run towards player until player is inside the area2d detection area
-- 
+ENEMY SPAWNER
+- global class
+- add it as a child of each level, so that it can have direct access to player node
+- have a timer node, oneshot = false so it will run continuously, on timeout get player's position and spawn enemies
+just outside of the camera, give them an x direction which points to the player for them to run/fly towards player
+(think of it similarly to a gun, but in this case it shoots enemies at the player lol)
+- will also subscribe to level trigger events when player enters an area2d to spawn enemies, these could be just outside
+of camera or on screen depending on the trigger
+- if enemy is ranged, eg flying drones, enemies will shoot at player's position if player is inside their area2d detection area 
+
++++
+
+SPAWNING LOGIC
+- have an array/list of enemies that can be spawned for each level
+- choose an enemy at random from the list to spawn
+- cannot spawn boss enemies
+
++++
+
+The different enemy types and spawning logic
+
+-- PRE PLACED ENEMIES, these would be placed around the level in predetermined spots, for example stationary turrets,
+stationary shooters etc. If they are ranged enemies, they will shoot at the player's position.
+
+-- SPAWNED ENEMIES, 
+	--- enemies spawned by the enemy spawner on a continuous timer, on timer timeout spawner will get the player's 
+	position/globalPosition, spawn the enemies and give them an x direction for them to run/fly towards the player's 
+	x direction. Once they go offscreen and are a certain  distance from the player, they will despawn,or could even 
+	make it so that these enemies have a hardcoded despawn time upon which they will despawn. Make sure they have a run 
+	speed faster than the player so player cannot catch up with them to see them despawn. Example enemies will be melee 
+	chargers, melee kamikaze, flying drones etc.
+	--- enemies spawned by the enemy spawner on trigger, i.e. when the player enters an area2d, trigger the enemy spawner
+	to spawn enemies, similar to above.
+
+-- BOSS ENEMIES, similar to pre placed enemies, larger health pool, display name and health bar at bottom of screen
+
++++
+
+Enemies
+
+-- MELEE CHARGER: runs towards player, hurt player if player touches them, will run past the player in whichever direction
+they are running
+
+-- KAMIKAZE: runs towards player, explodes and hurts player on touch, explodes on death huring other enemies, if player
+is too close will hurt player too
+
+-- STATIONARY RANGED: stationary but ranged enemies, will shoot at player's position when player enters range,
+e.g. turrets, ambush gunners
+
+-- MOVING RANGED: similar movement logic to melee chargers, similar shooting logic to stationary ranged, but these will
+usually be flying, e.g. drones

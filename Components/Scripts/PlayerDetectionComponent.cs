@@ -3,22 +3,11 @@ using ElGatoProject.Utilties;
 
 namespace ElGatoProject.Components.Scripts;
 
-/*
- * IF player is in detection area
-	- playerInRange = true
-	- activate the player detection ray
-	- rotate the player detection ray to point towards player's position
-	- IF player detection ray is not colliding with wall
-		- canSeePlayer = true
-
-	Pass the canSeePlayer values back to parent
- */
-
 [GlobalClass]
 public partial class PlayerDetectionComponent : Node2D
 {
     [Export] private Area2D _playerDetectionArea;
-    [Export] private RayCast2D _playerDetectionRay;
+    // [Export] private RayCast2D _playerDetectionRay;
     [Export] public Vector2 PlayerPosition;
     
     private bool _playerInRange, _canSeePlayer;
@@ -38,7 +27,7 @@ public partial class PlayerDetectionComponent : Node2D
 	    if (!playerArea.IsInGroup(Utility.NodeGroupPlayers))
 		    return;
 	    _playerInRange = true;
-	    _playerDetectionRay.Enabled = true;
+	    // if (_playerDetectionRay != null) _playerDetectionRay.Enabled = true;
 	    _player = playerArea;
     }
 
@@ -47,29 +36,31 @@ public partial class PlayerDetectionComponent : Node2D
 	    if (!playerArea.IsInGroup(Utility.NodeGroupPlayers))
 		    return;
 	    _playerInRange = false;
-	    _playerDetectionRay.Enabled = false;
+	    // if (_playerDetectionRay != null) _playerDetectionRay.Enabled = false;
     }
 
     public bool PlayerDetectionBehaviour()
     {
-	    if (!_playerInRange)
+	    switch (_playerInRange)
 	    {
-		    _canSeePlayer = false;
-	    } 
-	    else if (_playerInRange)
-	    {
-		    _playerDetectionRay.TargetPosition = ToLocal(_player.GlobalPosition);
-		    PlayerPosition = _player.GlobalPosition;
+		    case true:
+			    // if (_playerDetectionRay != null) _playerDetectionRay.TargetPosition = ToLocal(_player.GlobalPosition);
+			    PlayerPosition = _player.GlobalPosition;
 
-		    // Since target position is being changed this frame, Delay checking of raycasts collisions to the next frame
-		    CallDeferred(nameof(CheckRaycast));
+			    // // Since target position is being changed this frame, Delay checking of raycasts collisions to the next frame
+			    // CallDeferred(nameof(CheckRaycast));
+			    break;
+		    
+		    case false:
+			    _canSeePlayer = false;
+			    break;
 	    }
-	    
+
 	    return _canSeePlayer;
     }
 
-    private void CheckRaycast()
-    {
-	    _canSeePlayer = !_playerDetectionRay.IsColliding();
-    }
+    // private void CheckRaycast()
+    // {
+	   //  _canSeePlayer = !_playerDetectionRay.IsColliding();
+    // }
 }
