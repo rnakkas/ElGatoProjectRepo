@@ -67,6 +67,8 @@ public partial class WeaponElgato : Node2D
 		
 		_weaponSprite?.Play(Utility.EntityAnimations[Utility.EntityState.Shoot]);
 		_flashSprite?.Play(Utility.EntityAnimations[Utility.EntityState.Shoot]);
+
+		_playerController.IsShooting = true;
 	
 		
 		// Only reduce ammo for power-up weapons
@@ -182,18 +184,19 @@ public partial class WeaponElgato : Node2D
 			_weaponSprite.Frame = _characterSprite.Frame;
 		}
 
-		// Sync to character's idle animation
-		if (
-			_characterSprite != null &&
-			_weaponSprite != null &&
-			!_weaponSprite.IsPlaying() &&
-			_characterSprite.IsPlaying() &&
-			_characterSprite.Animation == Utility.EntityAnimations[Utility.EntityState.Idle]
-		)
-		{
-			_weaponSprite.Play(Utility.EntityAnimations[Utility.EntityState.Idle]);
-			_weaponSprite.Frame = _characterSprite.Frame;
-		}
+		// // Sync to character's idle animation
+		// if (
+		// 	_characterSprite != null &&
+		// 	_weaponSprite != null &&
+		// 	!_weaponSprite.IsPlaying() &&
+		// 	_characterSprite.IsPlaying() &&
+		// 	_characterSprite.Animation == Utility.EntityAnimations[Utility.EntityState.Idle]
+		// )
+		// {
+		// 	_weaponSprite.Play(Utility.EntityAnimations[Utility.EntityState.Idle]);
+		// 	_weaponSprite.Frame = _characterSprite.Frame;
+		// 	GD.Print("llllll");
+		// }
 
 		// Idle muzzle flash animation, i.e. no muzzle flash
 		if (_flashSprite != null && !_flashSprite.IsPlaying())

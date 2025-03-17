@@ -20,6 +20,7 @@ public partial class PlayerControllerComponent : Node
 	private bool _isDashing, _onDashCooldown;
 	private Vector2 _direction = Vector2.Zero;
 	public Utility.EntityState CurrentState;
+	public bool IsShooting;
 
 	public override void _Ready()
 	{
@@ -101,7 +102,7 @@ public partial class PlayerControllerComponent : Node
 	
 	
 	// State machine
-	private void SetState(Utility.EntityState newState)
+	public void SetState(Utility.EntityState newState)
 	{
 		if (newState == CurrentState)
 			return;
@@ -117,7 +118,13 @@ public partial class PlayerControllerComponent : Node
 		{
 			case Utility.EntityState.Idle:
 				break;
+			case Utility.EntityState.IdleShoot:
+				IsShooting = false;
+				break;
 			case Utility.EntityState.Run:
+				break;
+			case Utility.EntityState.RunShoot:
+				IsShooting = false;
 				break;
 			case Utility.EntityState.Jump:
 				break;
@@ -146,7 +153,14 @@ public partial class PlayerControllerComponent : Node
 				if (_velocityComponent != null) _velocityComponent.EntityVelocity.Y = 0;
 				break;
 			
+			case Utility.EntityState.IdleShoot:
+				if (_velocityComponent != null) _velocityComponent.EntityVelocity.Y = 0;
+				break;
+			
 			case Utility.EntityState.Run:
+				break;
+			
+			case Utility.EntityState.RunShoot:
 				break;
 			
 			case Utility.EntityState.Jump:
@@ -221,6 +235,32 @@ public partial class PlayerControllerComponent : Node
 				
 				if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown) 
 					SetState(Utility.EntityState.Dash);
+
+				if (IsShooting)
+					SetState(Utility.EntityState.IdleShoot);
+				
+				break;
+			
+			case Utility.EntityState.IdleShoot:
+				_velocityComponent?.DecelerateToZeroVelocity(delta);
+
+				if (!_sprite.IsPlaying())
+				{
+					SetState(Utility.EntityState.Idle);
+				}
+				
+				if (_direction != Vector2.Zero) 
+					SetState(Utility.EntityState.Run);
+				else if (_playerCharacter != null)
+				{
+					if ( !_playerCharacter.IsOnFloor() || _playerCharacter.IsOnCeiling())
+						SetState(Utility.EntityState.Fall);
+					else if (Input.IsActionPressed("jump") && _playerCharacter.IsOnFloor()) 
+						SetState(Utility.EntityState.Jump);
+				}
+				
+				if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown) 
+					SetState(Utility.EntityState.Dash);
 				break;
 			
 			case Utility.EntityState.Run:
@@ -238,6 +278,34 @@ public partial class PlayerControllerComponent : Node
 				
 				if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown)
 					SetState(Utility.EntityState.Dash);
+				
+				if (IsShooting)
+					SetState(Utility.EntityState.RunShoot);
+				
+				break;
+			
+			case Utility.EntityState.RunShoot:
+				_velocityComponent?.AccelerateToMaxVelocity(delta, _direction);
+				
+				if (!Input.IsActionPressed("shoot"))
+					SetState(Utility.EntityState.Run);
+				
+				if (_direction == Vector2.Zero && !IsShooting)
+					SetState(Utility.EntityState.Idle);
+				else if (_direction == Vector2.Zero && IsShooting)
+					SetState(Utility.EntityState.IdleShoot);
+				
+				else if (_playerCharacter != null)
+				{
+					if (!_playerCharacter.IsOnFloor() || _playerCharacter.IsOnCeiling())
+						SetState(Utility.EntityState.Fall);
+					else if (Input.IsActionPressed("jump") && _playerCharacter.IsOnFloor())
+						SetState(Utility.EntityState.Jump); 
+				}
+				
+				if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown)
+					SetState(Utility.EntityState.Dash);
+				
 				break;
 			
 			case Utility.EntityState.Jump:
