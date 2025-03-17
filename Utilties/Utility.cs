@@ -45,13 +45,19 @@ public static class Utility
     public enum EntityState
     {
         Idle,
+        IdleShoot,
         Run,
+        RunShoot,
         Jump,
+        JumpShoot,
         Fall,
+        FallShoot,
         Hurt,
         Death,
         WallSlide,
+        WallSlideShoot,
         WallJump,
+        WallJumpShoot,
         Dash,
         Shoot
     }
@@ -59,13 +65,19 @@ public static class Utility
     public static readonly Dictionary<EntityState, string> EntityAnimations = new()
     {
         [EntityState.Idle] = "idle",
+        [EntityState.IdleShoot] = "idle_shoot",
         [EntityState.Run] = "run",
+        [EntityState.RunShoot] = "run_shoot",
         [EntityState.Jump] = "jump",
+        [EntityState.JumpShoot] = "jump_shoot",
         [EntityState.Fall] = "fall",
+        [EntityState.FallShoot] = "fall_shoot",
         [EntityState.Hurt] = "hurt",
         [EntityState.Death] = "death",
         [EntityState.WallSlide] = "wall_slide",
+        [EntityState.WallSlideShoot] = "wall_slide_shoot",
         [EntityState.WallJump] = "jump",
+        [EntityState.WallJumpShoot] = "jump_shoot",
         [EntityState.Dash] = "dash",
         [EntityState.Shoot] = "shoot"
     };
