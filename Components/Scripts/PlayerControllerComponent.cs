@@ -1,3 +1,4 @@
+using ElGatoProject.Players.Scripts;
 using ElGatoProject.Singletons;
 using ElGatoProject.Utilties;
 using Godot;
@@ -16,6 +17,9 @@ public partial class PlayerControllerComponent : Node
 	[Export] private Timer _dashCooldownTimer, _dashTimer, _gameOverTimer, _invincibilityTimer, _blinkTimer;
 	[Export] private HurtboxComponent _hurtboxComponent;
 	[Export] private HealthComponent _healthComponent;
+	[Export] private AnimationPlayer _animaationPlayer;
+	[Export] private WeaponElgato _weapon;
+	[Export] private ShootingComponent _shootingComponent;
 
 	private bool _isDashing, _onDashCooldown;
 	private Vector2 _direction = Vector2.Zero;
@@ -145,39 +149,54 @@ public partial class PlayerControllerComponent : Node
 
 	private void EnterState()
 	{
-		_sprite?.Play(Utility.EntityAnimations[CurrentState]);
+		// _sprite?.Play(Utility.EntityAnimations[CurrentState]);
+		// _animaationPlayer?.Play(Utility.EntityAnimations[CurrentState]);
 		
 		switch (CurrentState)
 		{
 			case Utility.EntityState.Idle:
 				if (_velocityComponent != null) _velocityComponent.EntityVelocity.Y = 0;
+				if (_animaationPlayer.CurrentAnimation != "idle_shoot")
+					_animaationPlayer?.Play(Utility.EntityAnimations[CurrentState]);
+				else if (_animaationPlayer.CurrentAnimation == "idle_shoot" && !_animaationPlayer.IsPlaying())
+				{
+					_animaationPlayer?.Play(Utility.EntityAnimations[CurrentState]);
+				}
 				break;
 			
 			case Utility.EntityState.IdleShoot:
 				if (_velocityComponent != null) _velocityComponent.EntityVelocity.Y = 0;
+				_animaationPlayer?.Play(Utility.EntityAnimations[CurrentState]);
 				break;
 			
 			case Utility.EntityState.Run:
+				_animaationPlayer?.Play(Utility.EntityAnimations[CurrentState]);
 				break;
 			
 			case Utility.EntityState.RunShoot:
+				_animaationPlayer?.Play(Utility.EntityAnimations[CurrentState]);
 				break;
 			
 			case Utility.EntityState.Jump:
 				_velocityComponent?.JumpeVelocity();
+				_animaationPlayer?.Play(Utility.EntityAnimations[CurrentState]);
 				break;
 			
 			case Utility.EntityState.Fall:
+				_animaationPlayer?.Play(Utility.EntityAnimations[CurrentState]);
 				break;
 			
 			case Utility.EntityState.Hurt:
+				_animaationPlayer?.Play(Utility.EntityAnimations[CurrentState]);
 				break;
 			
 			case Utility.EntityState.WallSlide:
+				_animaationPlayer?.Play(Utility.EntityAnimations[CurrentState]);
 				break;
 			
 			case Utility.EntityState.WallJump:
 				_velocityComponent?.WallJumpingVelocity(_direction);
+				_animaationPlayer?.Play(Utility.EntityAnimations[CurrentState]);
 				break;
 			
 			case Utility.EntityState.Dash:
@@ -198,6 +217,8 @@ public partial class PlayerControllerComponent : Node
 				_onDashCooldown = true;
 				_dashCooldownTimer?.Start();
 				
+				_animaationPlayer?.Play(Utility.EntityAnimations[CurrentState]);
+				
 				break;
 			
 			case Utility.EntityState.Death:
@@ -207,6 +228,8 @@ public partial class PlayerControllerComponent : Node
 				// Wait before transitioning to game over screen
 				_gameOverTimer?.Start();
 				Globals.Instance.IsPlayerDying = true;
+				
+				_animaationPlayer?.Play(Utility.EntityAnimations[CurrentState]);
 				
 				break;
 		}
@@ -236,31 +259,25 @@ public partial class PlayerControllerComponent : Node
 				if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown) 
 					SetState(Utility.EntityState.Dash);
 
-				if (IsShooting)
-					SetState(Utility.EntityState.IdleShoot);
+				if (Input.IsActionPressed("shoot"))
+				{
+					var directionFacing = SetDirectionBasedOnSprite();
+					if (_shootingComponent.Shoot(directionFacing))
+						SetState(Utility.EntityState.IdleShoot);
+				}
 				
 				break;
 			
 			case Utility.EntityState.IdleShoot:
-				_velocityComponent?.DecelerateToZeroVelocity(delta);
-
-				if (!_sprite.IsPlaying())
+				if (Input.IsActionPressed("shoot"))
 				{
+					var directionFacing = SetDirectionBasedOnSprite();
+					if (_shootingComponent.Shoot(directionFacing))
+						SetState(Utility.EntityState.IdleShoot);
+				}
+				else if (!Input.IsActionPressed("shoot"))
 					SetState(Utility.EntityState.Idle);
-				}
 				
-				if (_direction != Vector2.Zero) 
-					SetState(Utility.EntityState.Run);
-				else if (_playerCharacter != null)
-				{
-					if ( !_playerCharacter.IsOnFloor() || _playerCharacter.IsOnCeiling())
-						SetState(Utility.EntityState.Fall);
-					else if (Input.IsActionPressed("jump") && _playerCharacter.IsOnFloor()) 
-						SetState(Utility.EntityState.Jump);
-				}
-				
-				if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown) 
-					SetState(Utility.EntityState.Dash);
 				break;
 			
 			case Utility.EntityState.Run:
@@ -279,21 +296,15 @@ public partial class PlayerControllerComponent : Node
 				if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown)
 					SetState(Utility.EntityState.Dash);
 				
-				if (IsShooting)
-					SetState(Utility.EntityState.RunShoot);
-				
 				break;
 			
 			case Utility.EntityState.RunShoot:
 				_velocityComponent?.AccelerateToMaxVelocity(delta, _direction);
 				
-				if (!Input.IsActionPressed("shoot"))
-					SetState(Utility.EntityState.Run);
-				
-				if (_direction == Vector2.Zero && !IsShooting)
+				if (_direction == Vector2.Zero)
 					SetState(Utility.EntityState.Idle);
-				else if (_direction == Vector2.Zero && IsShooting)
-					SetState(Utility.EntityState.IdleShoot);
+				else if (_direction != Vector2.Zero)
+					SetState(Utility.EntityState.Run);
 				
 				else if (_playerCharacter != null)
 				{
@@ -443,6 +454,17 @@ public partial class PlayerControllerComponent : Node
 		{
 			if (_sprite != null) _sprite.FlipH = true;
 		}
+	}
+
+	private Vector2 SetDirectionBasedOnSprite()
+	{
+		Vector2 directionFacing = Vector2.Zero;
+		if (_sprite.IsFlippedH())
+			directionFacing = Vector2.Left;
+		else if (!_sprite.IsFlippedV())
+			directionFacing = Vector2.Right;
+		
+		return directionFacing;
 	}
 
 	

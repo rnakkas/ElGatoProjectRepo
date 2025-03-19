@@ -7,6 +7,10 @@ using ElGatoProject.Utilties;
 
 namespace ElGatoProject.Players.Scripts;
 
+/*
+ * NOTES:
+ * This could be turned into a weapon manager class which handles weapon ammo, switching weapons on pickup etc
+ */
 public partial class WeaponElgato : Node2D
 {
 	[Export] private AnimatedSprite2D _characterSprite;
@@ -68,8 +72,7 @@ public partial class WeaponElgato : Node2D
 		_weaponSprite?.Play(Utility.EntityAnimations[Utility.EntityState.Shoot]);
 		_flashSprite?.Play(Utility.EntityAnimations[Utility.EntityState.Shoot]);
 
-		_playerController.IsShooting = true;
-	
+		_playerController?.SetState(Utility.EntityState.IdleShoot);
 		
 		// Only reduce ammo for power-up weapons
 		if (_shootingComponent?.WeaponType == Utility.WeaponType.PlayerPistol) 
@@ -132,12 +135,12 @@ public partial class WeaponElgato : Node2D
 		EventsBus.Instance.EmitSignal(nameof(EventsBus.Instance.PlayerAmmoUpdate), _weaponAmmo);
 	}
 	
-	private void HandleShooting()
+	public bool HandleShooting(Utility.EntityState currentState)
 	{
-		if (!CanShoot())
+		var shooting = false;
+		if (!CanShoot(currentState))
 		{
 			WeaponIdleAnimation();
-			return;
 		}
 
 		switch (_shootingComponent.ShootingProperties.TriggerType)
@@ -145,8 +148,12 @@ public partial class WeaponElgato : Node2D
 			case Utility.WeaponTriggerType.Automatic:
 			case Utility.WeaponTriggerType.SingleShot:
 				if (Input.IsActionPressed("shoot"))
+				{
 					_shootingComponent?.Shoot(_direction);
+					shooting = true;
+				}
 				else
+					// shooting = false;
 					WeaponIdleAnimation();
 				break;
 				// TODO: Keeping this here just in case I want to use it later
@@ -164,12 +171,13 @@ public partial class WeaponElgato : Node2D
 		}
 		
 		HandleWeaponState();
+		return shooting;
 	}
 	
-	private bool CanShoot()
+	private bool CanShoot(Utility.EntityState currentState)
 	{
-		return _playerController?.CurrentState != Utility.EntityState.Dash &&
-		       _playerController?.CurrentState != Utility.EntityState.Hurt;
+		return currentState != Utility.EntityState.Dash && 
+		       currentState != Utility.EntityState.Hurt;
 	}
 	
 	private void WeaponIdleAnimation()
@@ -271,6 +279,6 @@ public partial class WeaponElgato : Node2D
 	{
 		SetWeaponDirection();
 		FlipSprite();
-		HandleShooting();
+		// HandleShooting();
 	}
 }

@@ -18,6 +18,9 @@ public partial class ShootingComponent : Node2D
 	[Signal]
 	public delegate void ShootingEventHandler();
 
+	[Signal]
+	public delegate void CannotShootEventHandler();
+
 	public bool HurtStatus;
 	private bool _onCooldown, _reloading;
 	private int _bulletCount;
@@ -32,15 +35,24 @@ public partial class ShootingComponent : Node2D
 	}
 	
 	// Public method
-	public void Shoot(Vector2 targetVector)
+	public bool Shoot(Vector2 targetVector)
 	{
+		bool shootStatus;
 		if (!_onCooldown)
 		{
 			EmitSignal(SignalName.Shooting);
 			ShootingLogic(targetVector);
 			_onCooldown = true;
 			_shotCooldownTimer?.Start();
+			shootStatus = true;
 		}
+		else
+		{
+			EmitSignal(SignalName.CannotShoot);
+			shootStatus = false;
+		}
+
+		return shootStatus;
 	}
 
 	// Helper methods
