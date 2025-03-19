@@ -116,14 +116,13 @@ public partial class PlayerControllerComponent : Node
 		EnterState();
 	}
 
-	private void ExitState()
+	private async void ExitState()
 	{
 		switch (CurrentState)
 		{
 			case Utility.EntityState.Idle:
 				break;
 			case Utility.EntityState.IdleShoot:
-				IsShooting = false;
 				break;
 			case Utility.EntityState.Run:
 				break;
@@ -147,21 +146,22 @@ public partial class PlayerControllerComponent : Node
 		}
 	}
 
-	private void EnterState()
+	private async void EnterState()
 	{
 		// _sprite?.Play(Utility.EntityAnimations[CurrentState]);
-		// _animaationPlayer?.Play(Utility.EntityAnimations[CurrentState]);
 		
 		switch (CurrentState)
 		{
 			case Utility.EntityState.Idle:
 				if (_velocityComponent != null) _velocityComponent.EntityVelocity.Y = 0;
-				if (_animaationPlayer.CurrentAnimation != "idle_shoot")
-					_animaationPlayer?.Play(Utility.EntityAnimations[CurrentState]);
-				else if (_animaationPlayer.CurrentAnimation == "idle_shoot" && !_animaationPlayer.IsPlaying())
+
+				if (_animaationPlayer.CurrentAnimation.Contains("idle_"))
 				{
-					_animaationPlayer?.Play(Utility.EntityAnimations[CurrentState]);
+					await ToSignal(_animaationPlayer, "animation_finished");
 				}
+				
+				_animaationPlayer?.Play(Utility.EntityAnimations[CurrentState]);
+				
 				break;
 			
 			case Utility.EntityState.IdleShoot:
@@ -274,6 +274,10 @@ public partial class PlayerControllerComponent : Node
 					var directionFacing = SetDirectionBasedOnSprite();
 					if (_shootingComponent.Shoot(directionFacing))
 						SetState(Utility.EntityState.IdleShoot);
+					else
+					{
+						SetState(Utility.EntityState.Idle);
+					}
 				}
 				else if (!Input.IsActionPressed("shoot"))
 					SetState(Utility.EntityState.Idle);

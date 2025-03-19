@@ -11,7 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://b6e82lhna6ymn" path="res://Assets/Players/player-001-spritesheet-003.png" id="9_mv6h0"]
 [ext_resource type="Texture2D" uid="uid://cummmt1lb6olu" path="res://Assets/Players/player-001-spritesheet-002.png" id="10_002i0"]
 [ext_resource type="Script" path="res://Components/Scripts/ShootingComponent.cs" id="11_udspu"]
-[ext_resource type="Resource" uid="uid://ddw1u358yaq71" path="res://Resources/PlayerShotgunShootingProperties.tres" id="13_m0ni3"]
+[ext_resource type="Resource" uid="uid://cs6j3p5h3n34h" path="res://Resources/PlayerPistolShootingProperties.tres" id="13_br2kc"]
 [ext_resource type="Resource" uid="uid://dj4480r3q8euy" path="res://Resources/PlayerMachineGunShootingProperties.tres" id="13_pu5mw"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_431m1"]
@@ -1262,12 +1262,12 @@ _shotCooldownTimer = NodePath("../../ShootingComponent/shotCooldownTimer")
 libraries = {
 "": SubResource("AnimationLibrary_ymrhi")
 }
-blend_times = [&"idle_shoot", &"run_shoot", 0.1]
+blend_times = [&"RESET", &"idle", 0.5, &"idle", &"idle", 2.0, &"idle_shoot", &"run_shoot", 0.1]
 
 [node name="ShootingComponent" type="Node2D" parent="." node_paths=PackedStringArray("_muzzle", "_shotCooldownTimer")]
 script = ExtResource("11_udspu")
-WeaponType = 6
-ShootingProperties = ExtResource("13_m0ni3")
+WeaponType = 5
+ShootingProperties = ExtResource("13_br2kc")
 _muzzle = NodePath("../muzzle")
 _shotCooldownTimer = NodePath("shotCooldownTimer")
 
