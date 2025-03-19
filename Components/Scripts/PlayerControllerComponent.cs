@@ -272,15 +272,19 @@ public partial class PlayerControllerComponent : Node
 				if (Input.IsActionPressed("shoot"))
 				{
 					var directionFacing = SetDirectionBasedOnSprite();
-					if (_shootingComponent.Shoot(directionFacing))
-						SetState(Utility.EntityState.IdleShoot);
-					else
-					{
-						SetState(Utility.EntityState.Idle);
-					}
+					SetState(_shootingComponent.Shoot(directionFacing)
+						? Utility.EntityState.IdleShoot
+						: Utility.EntityState.Idle);
 				}
 				else if (!Input.IsActionPressed("shoot"))
 					SetState(Utility.EntityState.Idle);
+				else if (Input.IsActionPressed("shoot") && _direction != Vector2.Zero)
+				{
+					var directionFacing = SetDirectionBasedOnSprite();
+					SetState(_shootingComponent.Shoot(directionFacing)
+						? Utility.EntityState.RunShoot
+						: Utility.EntityState.Run);
+				}
 				
 				break;
 			
@@ -299,6 +303,13 @@ public partial class PlayerControllerComponent : Node
 				
 				if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown)
 					SetState(Utility.EntityState.Dash);
+				
+				if (Input.IsActionPressed("shoot"))
+				{
+					var directionFacing = SetDirectionBasedOnSprite();
+					if (_shootingComponent.Shoot(directionFacing))
+						SetState(Utility.EntityState.RunShoot);
+				}
 				
 				break;
 			
