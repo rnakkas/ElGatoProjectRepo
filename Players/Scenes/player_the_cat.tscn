@@ -1,4 +1,4 @@
-[gd_scene load_steps=108 format=3 uid="uid://c4o8x6lc2silu"]
+[gd_scene load_steps=110 format=3 uid="uid://c4o8x6lc2silu"]
 
 [ext_resource type="Script" path="res://Players/Scripts/PlayerTheCat.cs" id="1_ngcol"]
 [ext_resource type="Script" path="res://Components/Scripts/HealthComponent.cs" id="2_irjyl"]
@@ -16,6 +16,8 @@
 [ext_resource type="Script" path="res://StateSystem/States/RunState.cs" id="14_q32fq"]
 [ext_resource type="Script" path="res://StateSystem/States/JumpState.cs" id="15_bud0n"]
 [ext_resource type="Script" path="res://StateSystem/States/FallState.cs" id="15_dkv7o"]
+[ext_resource type="Script" path="res://StateSystem/States/WallSlideState.cs" id="17_kuc6b"]
+[ext_resource type="Script" path="res://StateSystem/States/WallJumpState.cs" id="18_jj065"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_431m1"]
 radius = 5.0
@@ -1168,30 +1170,20 @@ position = Vector2(14, -1)
 [node name="StateMachine" type="Node" parent="."]
 script = ExtResource("12_te382")
 
-[node name="IdleState" type="Node" parent="StateMachine" node_paths=PackedStringArray("_character", "_velocityComponent", "_animationPlayer", "_characterSprite")]
+[node name="IdleState" type="Node" parent="StateMachine"]
 script = ExtResource("13_0ubik")
-_character = NodePath("../..")
-_velocityComponent = NodePath("../../VelocityComponent")
-_animationPlayer = NodePath("../../AnimationPlayer")
-_characterSprite = NodePath("../../sprite")
 
-[node name="RunState" type="Node" parent="StateMachine" node_paths=PackedStringArray("_character", "_velocityComponent", "_animationPlayer", "_characterSprite")]
+[node name="RunState" type="Node" parent="StateMachine"]
 script = ExtResource("14_q32fq")
-_character = NodePath("../..")
-_velocityComponent = NodePath("../../VelocityComponent")
-_animationPlayer = NodePath("../../AnimationPlayer")
-_characterSprite = NodePath("../../sprite")
 
-[node name="JumpState" type="Node" parent="StateMachine" node_paths=PackedStringArray("_character", "_velocityComponent", "_animationPlayer", "_characterSprite")]
+[node name="JumpState" type="Node" parent="StateMachine"]
 script = ExtResource("15_bud0n")
-_character = NodePath("../..")
-_velocityComponent = NodePath("../../VelocityComponent")
-_animationPlayer = NodePath("../../AnimationPlayer")
-_characterSprite = NodePath("../../sprite")
 
-[node name="FallState" type="Node" parent="StateMachine" node_paths=PackedStringArray("_character", "_velocityComponent", "_animationPlayer", "_characterSprite")]
+[node name="FallState" type="Node" parent="StateMachine"]
 script = ExtResource("15_dkv7o")
-_character = NodePath("../..")
-_velocityComponent = NodePath("../../VelocityComponent")
-_animationPlayer = NodePath("../../AnimationPlayer")
-_characterSprite = NodePath("../../sprite")
+
+[node name="WallSlideState" type="Node" parent="StateMachine"]
+script = ExtResource("17_kuc6b")
+
+[node name="WallJumpState" type="Node" parent="StateMachine"]
+script = ExtResource("18_jj065")

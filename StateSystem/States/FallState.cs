@@ -8,14 +8,23 @@ namespace ElGatoProject.StateSystem.States;
 [GlobalClass]
 public partial class FallState: Node, IState
 {
-    [Export] private CharacterBody2D _character;
-    [Export] private VelocityComponent _velocityComponent;
-    [Export] private AnimationPlayer _animationPlayer;
-    [Export] private AnimatedSprite2D _characterSprite;
+    private CharacterBody2D _character;
+    private VelocityComponent _velocityComponent;
+    private AnimationPlayer _animationPlayer;
+    private RayCast2D _leftWallDetect, _rightWallDetect;
     
     private StateMachine _stateMachine;
     private Vector2 _direction = Vector2.Zero;
-    
+
+    public override void _Ready()
+    {
+        _character = GetOwnerOrNull<CharacterBody2D>();
+        _velocityComponent = _character.GetNodeOrNull<VelocityComponent>("VelocityComponent");
+        _animationPlayer = _character.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
+        _leftWallDetect = _character.GetNodeOrNull<RayCast2D>("LeftWallDetect");
+        _rightWallDetect = _character.GetNodeOrNull<RayCast2D>("RightWallDetect");
+    }
+
     public void Initialize(StateMachine stateMachine)
     {
         _stateMachine = stateMachine;
@@ -38,8 +47,18 @@ public partial class FallState: Node, IState
             "move_up", 
             "move_down");
         
-        if (_character != null && _character.IsOnFloor())
-            _stateMachine?.SetState("IdleState");
+        if (_character != null && _leftWallDetect != null && _rightWallDetect != null)
+        {
+            if (_character.IsOnFloor())
+                _stateMachine?.SetState("WallSlideState");
+            else if (
+                !_character.IsOnFloor() &&
+                (_leftWallDetect.IsColliding() || _rightWallDetect.IsColliding())
+            )
+            {
+                _stateMachine?.SetState("WallSlideState");
+            }
+        }
     }
 
     public void PhysicsUpdate(float delta)

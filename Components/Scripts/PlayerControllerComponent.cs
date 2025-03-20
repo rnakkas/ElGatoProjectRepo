@@ -32,34 +32,34 @@ public partial class PlayerControllerComponent : Node
 	
 	private void GetChildNodes()
 	{
-		_dashCooldownTimer = GetNodeOrNull<Timer>("dashCooldownTimer");
-		_dashTimer = GetNodeOrNull<Timer>("dashTimer");
-		_gameOverTimer = GetNodeOrNull<Timer>("gameOverTimer");
-		_invincibilityTimer = GetNodeOrNull<Timer>("invincibilityTimer");
-		_blinkTimer = GetNodeOrNull<Timer>("blinkTimer");
+		// _dashCooldownTimer = GetNodeOrNull<Timer>("dashCooldownTimer");
+		// _dashTimer = GetNodeOrNull<Timer>("dashTimer");
+		// _gameOverTimer = GetNodeOrNull<Timer>("gameOverTimer");
+		// _invincibilityTimer = GetNodeOrNull<Timer>("invincibilityTimer");
+		// _blinkTimer = GetNodeOrNull<Timer>("blinkTimer");
 		
 	}
 	
 	// Signals and connections methods
 	private void ConnectSignals()
 	{
-		if (_dashCooldownTimer != null) _dashCooldownTimer.Timeout += OnDashCooldownTimerTimeout;
-		
-		if (_dashTimer != null) _dashTimer.Timeout += OnDashTimerTimeout;
-	
-		if (_gameOverTimer != null) _gameOverTimer.Timeout += OnGameOverTimerTimeout;
-	
-		if (_invincibilityTimer != null) _invincibilityTimer.Timeout += OnInvincibilityTimerTimedOut;
-	
-		if (_blinkTimer != null) _blinkTimer.Timeout += OnBlinkTimerTimedOut;
-		
-		if (_hurtboxComponent != null)
-		{
-			_hurtboxComponent.GotHit += OnHitByAttack;
-			_hurtboxComponent.HurtStatusCleared += OnHurtStatusCleared; 
-		}
-		
-		if (_healthComponent != null) _healthComponent.HealthDepleted += OnHealthDepleted;
+		// if (_dashCooldownTimer != null) _dashCooldownTimer.Timeout += OnDashCooldownTimerTimeout;
+		//
+		// if (_dashTimer != null) _dashTimer.Timeout += OnDashTimerTimeout;
+		//
+		// if (_gameOverTimer != null) _gameOverTimer.Timeout += OnGameOverTimerTimeout;
+		//
+		// if (_invincibilityTimer != null) _invincibilityTimer.Timeout += OnInvincibilityTimerTimedOut;
+		//
+		// if (_blinkTimer != null) _blinkTimer.Timeout += OnBlinkTimerTimedOut;
+		//
+		// if (_hurtboxComponent != null)
+		// {
+		// 	_hurtboxComponent.GotHit += OnHitByAttack;
+		// 	_hurtboxComponent.HurtStatusCleared += OnHurtStatusCleared; 
+		// }
+		//
+		// if (_healthComponent != null) _healthComponent.HealthDepleted += OnHealthDepleted;
 	}
 	
 	private void OnDashCooldownTimerTimeout()

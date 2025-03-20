@@ -5,12 +5,13 @@ using Godot;
 namespace ElGatoProject.StateSystem.States;
 
 [GlobalClass]
-public partial class RunState: Node, IState
+public partial class WallJumpState : Node, IState
 {
     private CharacterBody2D _character;
     private VelocityComponent _velocityComponent;
     private AnimationPlayer _animationPlayer;
     private AnimatedSprite2D _characterSprite;
+    private RayCast2D _leftWallDetect, _rightWallDetect;
     
     private StateMachine _stateMachine;
     private Vector2 _direction = Vector2.Zero;
@@ -21,6 +22,8 @@ public partial class RunState: Node, IState
         _velocityComponent = _character.GetNodeOrNull<VelocityComponent>("VelocityComponent");
         _animationPlayer = _character.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
         _characterSprite = _character.GetNodeOrNull<AnimatedSprite2D>("sprite");
+        _leftWallDetect = _character.GetNodeOrNull<RayCast2D>("LeftWallDetect");
+        _rightWallDetect = _character.GetNodeOrNull<RayCast2D>("RightWallDetect");
     }
     
     public void Initialize(StateMachine stateMachine)
@@ -30,39 +33,38 @@ public partial class RunState: Node, IState
 
     public void Enter()
     {
-        _animationPlayer?.Play("run");
+        if (_leftWallDetect != null && _rightWallDetect != null)
+        {
+            if (_leftWallDetect.IsColliding())
+                _direction = Vector2.Right;
+            else if (_rightWallDetect.IsColliding())
+                _direction = Vector2.Left;
+        }
+        _velocityComponent?.WallJumpingVelocity(_direction);
+        _animationPlayer?.Play("jump");
     }
 
     public void Exit()
     {
-        
     }
 
     public void Update(float delta)
     {
-        _direction = Input.GetVector(
-            "move_left", 
-            "move_right", 
-            "move_up", 
-            "move_down");
-        
-        if (_characterSprite != null) _stateMachine.FlipSprite(_characterSprite, _direction);
-        
-        if (_direction == Vector2.Zero)
-        {
-            _stateMachine?.SetState("IdleState");
-        }
-        else if (_character != null)
-        {
-            if (!_character.IsOnFloor() || _character.IsOnCeiling())
-                _stateMachine?.SetState("FallState");
-            else if (Input.IsActionPressed("jump") && _character.IsOnFloor())
-                _stateMachine?.SetState("JumpState");
-        }
     }
 
     public void PhysicsUpdate(float delta)
     {
-        _velocityComponent?.AccelerateToMaxVelocity(delta, _direction);
+        if (_character == null) 
+            return;
+
+        if (_character.IsOnFloor()) 
+            return;
+        
+        _velocityComponent?.FallVelocity(delta);
+	
+        if (_velocityComponent?.EntityVelocity.Y > 0)
+        {
+            _stateMachine?.SetState("FallState");
+        }
     }
 }

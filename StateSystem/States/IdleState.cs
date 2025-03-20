@@ -9,20 +9,20 @@ namespace ElGatoProject.StateSystem.States;
 public partial class IdleState : Node, IState
 {
     // Generic character reference. This will work for Player, Enemy, etc.
-    [Export] private CharacterBody2D _character;
-    [Export] private VelocityComponent _velocityComponent;
-    [Export] private AnimationPlayer _animationPlayer;
-    [Export] private AnimatedSprite2D _characterSprite;
+    private CharacterBody2D _character;
+    private VelocityComponent _velocityComponent;
+    private AnimationPlayer _animationPlayer;
+    private AnimatedSprite2D _characterSprite;
     
     private StateMachine _stateMachine;
     private Vector2 _direction = Vector2.Zero;
 
     public override void _Ready()
     {
-        // Use GetOwner() to obtain the character that owns this state machine.
-        // _character = GetOwnerOrNull<CharacterBody2D>();
-        // _velocityComponent = _character.GetNodeOrNull<VelocityComponent>("VelocityComponent");
-        // _animationPlayer = _character.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
+        _character = GetOwner<CharacterBody2D>();
+        _velocityComponent = _character.GetNodeOrNull<VelocityComponent>("VelocityComponent");
+        _animationPlayer = _character.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
+        _characterSprite = _character.GetNodeOrNull<AnimatedSprite2D>("sprite");
     }
 
     public void Initialize(StateMachine stateMachine)
@@ -48,7 +48,7 @@ public partial class IdleState : Node, IState
             "move_up", 
             "move_down");
 
-        _stateMachine.FlipSprite(_characterSprite, _direction);
+        if (_characterSprite != null) _stateMachine.FlipSprite(_characterSprite, _direction);
         
         if (_direction == Vector2.Left || _direction == Vector2.Right)
         {
