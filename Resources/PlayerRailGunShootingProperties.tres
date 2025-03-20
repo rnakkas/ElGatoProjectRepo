@@ -4,6 +4,8 @@
 
 [resource]
 script = ExtResource("1_evcgf")
+PlayerOrEnemy = 0
+WeaponType = 8
 ShootingCooldownTime = 1.7
 ReloadTime = 1.7
 MagazineSize = 10

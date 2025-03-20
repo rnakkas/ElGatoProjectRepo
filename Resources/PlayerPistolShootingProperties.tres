@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_8ds06")
+WeaponType = 5
 ShootingCooldownTime = 0.3
 ReloadTime = 0.5
 MagazineSize = 1

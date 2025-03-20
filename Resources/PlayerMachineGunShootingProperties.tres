@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_qspe4")
+WeaponType = 7
 ShootingCooldownTime = 0.1
 ReloadTime = 0.1
 MagazineSize = 200

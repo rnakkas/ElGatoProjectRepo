@@ -10,17 +10,16 @@ namespace ElGatoProject.Components.Scripts;
 public partial class PlayerControllerComponent : Node
 {
 	[Export] private CharacterBody2D _playerCharacter;
-	[Export] private AnimatedSprite2D _sprite;
+	[Export] private AnimatedSprite2D _characterSprite;
 	[Export] private VelocityComponent _velocityComponent;
 	[Export] private RayCast2D _leftWallDetect;
 	[Export] private RayCast2D _rightWallDetect;
-	[Export] private Timer _dashCooldownTimer, _dashTimer, _gameOverTimer, _invincibilityTimer, _blinkTimer;
 	[Export] private HurtboxComponent _hurtboxComponent;
 	[Export] private HealthComponent _healthComponent;
 	[Export] private AnimationPlayer _animaationPlayer;
-	[Export] private WeaponElgato _weapon;
 	[Export] private ShootingComponent _shootingComponent;
 
+	private Timer _dashCooldownTimer, _dashTimer, _gameOverTimer, _invincibilityTimer, _blinkTimer;
 	private bool _isDashing, _onDashCooldown;
 	private Vector2 _direction = Vector2.Zero;
 	public Utility.EntityState CurrentState;
@@ -28,7 +27,18 @@ public partial class PlayerControllerComponent : Node
 
 	public override void _Ready()
 	{
+		GetChildNodes();
 		ConnectSignals();
+	}
+
+	private void GetChildNodes()
+	{
+		_dashCooldownTimer = GetNodeOrNull<Timer>("dashCooldownTimer");
+		_dashTimer = GetNodeOrNull<Timer>("dashTimer");
+		_gameOverTimer = GetNodeOrNull<Timer>("gameOverTimer");
+		_invincibilityTimer = GetNodeOrNull<Timer>("invincibilityTimer");
+		_blinkTimer = GetNodeOrNull<Timer>("blinkTimer");
+		
 	}
 
 	// Signals and connections methods
@@ -116,7 +126,7 @@ public partial class PlayerControllerComponent : Node
 		EnterState();
 	}
 
-	private async void ExitState()
+	private void ExitState()
 	{
 		switch (CurrentState)
 		{
@@ -148,7 +158,7 @@ public partial class PlayerControllerComponent : Node
 
 	private async void EnterState()
 	{
-		// _sprite?.Play(Utility.EntityAnimations[CurrentState]);
+		// _characterSprite?.Play(Utility.EntityAnimations[CurrentState]);
 		
 		switch (CurrentState)
 		{
@@ -202,11 +212,11 @@ public partial class PlayerControllerComponent : Node
 			case Utility.EntityState.Dash:
 				_hurtboxComponent?.SetDeferred(Area2D.PropertyName.Monitorable, false); // Enter invincibility when dashing
 				
-				if (_sprite != null && !_sprite.IsFlippedH())
+				if (_characterSprite != null && !_characterSprite.IsFlippedH())
 				{
 					_velocityComponent?.DashVelocity(Vector2.Right);
 				}
-				else if (_sprite != null && _sprite.IsFlippedH())
+				else if (_characterSprite != null && _characterSprite.IsFlippedH())
 				{
 					_velocityComponent?.DashVelocity(Vector2.Left);
 				}
@@ -410,12 +420,12 @@ public partial class PlayerControllerComponent : Node
 					{
 						if (_leftWallDetect.IsColliding())
 						{
-							_sprite.FlipH = false;
+							_characterSprite.FlipH = false;
 							_direction = Vector2.Right;
 						}
 						else if (_rightWallDetect.IsColliding())
 						{
-							_sprite.FlipH = true;
+							_characterSprite.FlipH = true;
 							_direction = Vector2.Left;
 						}
 						else
@@ -463,20 +473,20 @@ public partial class PlayerControllerComponent : Node
 	{
 		if (direction == Vector2.Right)
 		{
-			if (_sprite != null) _sprite.FlipH = false;
+			if (_characterSprite != null) _characterSprite.FlipH = false;
 		}
 		else if (direction == Vector2.Left)
 		{
-			if (_sprite != null) _sprite.FlipH = true;
+			if (_characterSprite != null) _characterSprite.FlipH = true;
 		}
 	}
 
 	private Vector2 SetDirectionBasedOnSprite()
 	{
 		Vector2 directionFacing = Vector2.Zero;
-		if (_sprite.IsFlippedH())
+		if (_characterSprite.IsFlippedH())
 			directionFacing = Vector2.Left;
-		else if (!_sprite.IsFlippedV())
+		else if (!_characterSprite.IsFlippedV())
 			directionFacing = Vector2.Right;
 		
 		return directionFacing;
