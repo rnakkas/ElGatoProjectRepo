@@ -8,5 +8,6 @@
   <ItemGroup>
     <Content Include="enemyAndSpawningNotes.txt" />
     <Content Include="mainStructureNotes.txt" />
+    <Content Include="StateSystem\statemachine notes.txt" />
   </ItemGroup>
 </Project>
