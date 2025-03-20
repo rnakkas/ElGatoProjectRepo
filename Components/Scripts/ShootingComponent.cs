@@ -9,16 +9,14 @@ namespace ElGatoProject.Components.Scripts;
 [GlobalClass]
 public partial class ShootingComponent : Node2D
 {
-	// [Export] public Utility.PlayerOrEnemy PlayerOrEnemy;
-	// [Export] public Utility.WeaponType WeaponType;
 	[Export] public ShootingProperties ShootingProperties;
 	[Export] private Marker2D _muzzle;
-	[Export] private AnimatedSprite2D _flashSprite;
 	[Export] private Timer _shotCooldownTimer, _reloadTimer;
 
 	[Signal]
 	public delegate void ShootingEventHandler();
 
+	private AnimatedSprite2D _flashSprite;
 	public bool HurtStatus;
 	private bool _onCooldown, _reloading;
 	private int _bulletCount;
@@ -32,7 +30,6 @@ public partial class ShootingComponent : Node2D
 		if (_muzzle != null) _muzzlePosition = _muzzle.Position;
 		
 		if (ShootingProperties != null) SetWeaponMuzzleFlash(ShootingProperties.WeaponType);
-		
 	}
 	
 	// Public methods

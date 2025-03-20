@@ -1073,7 +1073,7 @@ monitoring = false
 shape = SubResource("RectangleShape2D_l4g6g")
 debug_color = Color(0.932818, 0.259544, 0, 0.42)
 
-[node name="PlayerControllerComponent" type="Node" parent="." node_paths=PackedStringArray("_playerCharacter", "_characterSprite", "_velocityComponent", "_leftWallDetect", "_rightWallDetect", "_hurtboxComponent", "_healthComponent", "_animaationPlayer", "_weapon", "_shootingComponent")]
+[node name="PlayerControllerComponent" type="Node" parent="." node_paths=PackedStringArray("_playerCharacter", "_characterSprite", "_velocityComponent", "_leftWallDetect", "_rightWallDetect", "_hurtboxComponent", "_healthComponent", "_animaationPlayer", "_shootingComponent")]
 script = ExtResource("2_y5cke")
 _playerCharacter = NodePath("..")
 _characterSprite = NodePath("../sprite")
@@ -1083,7 +1083,6 @@ _rightWallDetect = NodePath("../RightWallDetect")
 _hurtboxComponent = NodePath("../HurtboxComponent")
 _healthComponent = NodePath("../HealthComponent")
 _animaationPlayer = NodePath("../AnimationPlayer")
-_weapon = NodePath("")
 _shootingComponent = NodePath("../ShootingComponent")
 
 [node name="dashCooldownTimer" type="Timer" parent="PlayerControllerComponent"]

@@ -22,9 +22,8 @@ public partial class PlayerControllerComponent : Node
 	private Timer _dashCooldownTimer, _dashTimer, _gameOverTimer, _invincibilityTimer, _blinkTimer;
 	private bool _isDashing, _onDashCooldown;
 	private Vector2 _direction = Vector2.Zero;
-	public Utility.EntityState CurrentState;
-	public bool IsShooting;
-
+	private Utility.EntityState _currentState;
+	
 	public override void _Ready()
 	{
 		GetChildNodes();
@@ -52,7 +51,7 @@ public partial class PlayerControllerComponent : Node
 
 		if (_invincibilityTimer != null) _invincibilityTimer.Timeout += OnInvincibilityTimerTimedOut;
 
-		if (_blinkTimer != null) _blinkTimer.Timeout += BlinkTimerTimedOut;
+		if (_blinkTimer != null) _blinkTimer.Timeout += OnBlinkTimerTimedOut;
 		
 		if (_hurtboxComponent != null)
 		{
@@ -83,13 +82,13 @@ public partial class PlayerControllerComponent : Node
 		_blinkTimer?.Stop();
 		if (_playerCharacter != null) _playerCharacter.Visible = true;
 		
-		if (CurrentState != Utility.EntityState.Death)
+		if (_currentState != Utility.EntityState.Death)
 		{
 			_hurtboxComponent?.SetDeferred(Area2D.PropertyName.Monitorable, true);
 		}
 	}
 
-	private void BlinkTimerTimedOut()
+	private void OnBlinkTimerTimedOut()
 	{
 		_playerCharacter.Visible = !_playerCharacter.Visible;
 	}
@@ -115,20 +114,22 @@ public partial class PlayerControllerComponent : Node
 	}
 	
 	
+	// ########################################################## //
+	
 	// State machine
 	public void SetState(Utility.EntityState newState)
 	{
-		if (newState == CurrentState)
+		if (newState == _currentState)
 			return;
 
 		ExitState();
-		CurrentState = newState;
+		_currentState = newState;
 		EnterState();
 	}
 
 	private void ExitState()
 	{
-		switch (CurrentState)
+		switch (_currentState)
 		{
 			case Utility.EntityState.Idle:
 				break;
@@ -137,7 +138,6 @@ public partial class PlayerControllerComponent : Node
 			case Utility.EntityState.Run:
 				break;
 			case Utility.EntityState.RunShoot:
-				IsShooting = false;
 				break;
 			case Utility.EntityState.Jump:
 				break;
@@ -150,6 +150,7 @@ public partial class PlayerControllerComponent : Node
 			case Utility.EntityState.WallJump:
 				break;
 			case Utility.EntityState.Dash:
+				//TODO: Use the animation player to disable the hurtbox collider
 				_hurtboxComponent?.SetDeferred(Area2D.PropertyName.Monitorable, true); // Exit invincibility after dash finished
 				if (_velocityComponent != null) _velocityComponent.EntityVelocity = Vector2.Zero;
 				break;
@@ -160,7 +161,7 @@ public partial class PlayerControllerComponent : Node
 	{
 		// _characterSprite?.Play(Utility.EntityAnimations[CurrentState]);
 		
-		switch (CurrentState)
+		switch (_currentState)
 		{
 			case Utility.EntityState.Idle:
 				if (_velocityComponent != null) _velocityComponent.EntityVelocity.Y = 0;
@@ -170,46 +171,47 @@ public partial class PlayerControllerComponent : Node
 					await ToSignal(_animaationPlayer, "animation_finished");
 				}
 				
-				_animaationPlayer?.Play(Utility.EntityAnimations[CurrentState]);
+				_animaationPlayer?.Play(Utility.EntityAnimations[_currentState]);
 				
 				break;
 			
 			case Utility.EntityState.IdleShoot:
 				if (_velocityComponent != null) _velocityComponent.EntityVelocity.Y = 0;
-				_animaationPlayer?.Play(Utility.EntityAnimations[CurrentState]);
+				_animaationPlayer?.Play(Utility.EntityAnimations[_currentState]);
 				break;
 			
 			case Utility.EntityState.Run:
-				_animaationPlayer?.Play(Utility.EntityAnimations[CurrentState]);
+				_animaationPlayer?.Play(Utility.EntityAnimations[_currentState]);
 				break;
 			
 			case Utility.EntityState.RunShoot:
-				_animaationPlayer?.Play(Utility.EntityAnimations[CurrentState]);
+				_animaationPlayer?.Play(Utility.EntityAnimations[_currentState]);
 				break;
 			
 			case Utility.EntityState.Jump:
 				_velocityComponent?.JumpeVelocity();
-				_animaationPlayer?.Play(Utility.EntityAnimations[CurrentState]);
+				_animaationPlayer?.Play(Utility.EntityAnimations[_currentState]);
 				break;
 			
 			case Utility.EntityState.Fall:
-				_animaationPlayer?.Play(Utility.EntityAnimations[CurrentState]);
+				_animaationPlayer?.Play(Utility.EntityAnimations[_currentState]);
 				break;
 			
 			case Utility.EntityState.Hurt:
-				_animaationPlayer?.Play(Utility.EntityAnimations[CurrentState]);
+				_animaationPlayer?.Play(Utility.EntityAnimations[_currentState]);
 				break;
 			
 			case Utility.EntityState.WallSlide:
-				_animaationPlayer?.Play(Utility.EntityAnimations[CurrentState]);
+				_animaationPlayer?.Play(Utility.EntityAnimations[_currentState]);
 				break;
 			
 			case Utility.EntityState.WallJump:
 				_velocityComponent?.WallJumpingVelocity(_direction);
-				_animaationPlayer?.Play(Utility.EntityAnimations[CurrentState]);
+				_animaationPlayer?.Play(Utility.EntityAnimations[_currentState]);
 				break;
 			
 			case Utility.EntityState.Dash:
+				//TODO: Use the animation player to disable the hurtbox collider
 				_hurtboxComponent?.SetDeferred(Area2D.PropertyName.Monitorable, false); // Enter invincibility when dashing
 				
 				if (_characterSprite != null && !_characterSprite.IsFlippedH())
@@ -227,7 +229,7 @@ public partial class PlayerControllerComponent : Node
 				_onDashCooldown = true;
 				_dashCooldownTimer?.Start();
 				
-				_animaationPlayer?.Play(Utility.EntityAnimations[CurrentState]);
+				_animaationPlayer?.Play(Utility.EntityAnimations[_currentState]);
 				
 				break;
 			
@@ -239,7 +241,7 @@ public partial class PlayerControllerComponent : Node
 				_gameOverTimer?.Start();
 				Globals.Instance.IsPlayerDying = true;
 				
-				_animaationPlayer?.Play(Utility.EntityAnimations[CurrentState]);
+				_animaationPlayer?.Play(Utility.EntityAnimations[_currentState]);
 				
 				break;
 		}
@@ -248,10 +250,12 @@ public partial class PlayerControllerComponent : Node
 	public void UpdateState(float delta)
 	{
 		_direction = Input.GetVector("move_left", "move_right", "move_up", "move_down");
-
+		
+		Vector2 directionFacing;
+		
 		FlipSprite(_direction);
 		
-		switch (CurrentState)
+		switch (_currentState)
 		{
 			case Utility.EntityState.Idle:
 				_velocityComponent?.DecelerateToZeroVelocity(delta);
@@ -271,7 +275,7 @@ public partial class PlayerControllerComponent : Node
 
 				if (Input.IsActionPressed("shoot"))
 				{
-					var directionFacing = SetDirectionBasedOnSprite();
+					directionFacing = SetDirectionBasedOnSprite();
 					if (_shootingComponent.Shoot(directionFacing))
 						SetState(Utility.EntityState.IdleShoot);
 				}
@@ -281,7 +285,7 @@ public partial class PlayerControllerComponent : Node
 			case Utility.EntityState.IdleShoot:
 				if (Input.IsActionPressed("shoot"))
 				{
-					var directionFacing = SetDirectionBasedOnSprite();
+					directionFacing = SetDirectionBasedOnSprite();
 					SetState(_shootingComponent.Shoot(directionFacing)
 						? Utility.EntityState.IdleShoot
 						: Utility.EntityState.Idle);
@@ -290,7 +294,7 @@ public partial class PlayerControllerComponent : Node
 					SetState(Utility.EntityState.Idle);
 				else if (Input.IsActionPressed("shoot") && _direction != Vector2.Zero)
 				{
-					var directionFacing = SetDirectionBasedOnSprite();
+					directionFacing = SetDirectionBasedOnSprite();
 					SetState(_shootingComponent.Shoot(directionFacing)
 						? Utility.EntityState.RunShoot
 						: Utility.EntityState.Run);
@@ -316,7 +320,7 @@ public partial class PlayerControllerComponent : Node
 				
 				if (Input.IsActionPressed("shoot"))
 				{
-					var directionFacing = SetDirectionBasedOnSprite();
+					directionFacing = SetDirectionBasedOnSprite();
 					if (_shootingComponent.Shoot(directionFacing))
 						SetState(Utility.EntityState.RunShoot);
 				}
@@ -469,6 +473,10 @@ public partial class PlayerControllerComponent : Node
 		}
 	}
 
+	
+	// ########################################################## //
+	
+	// Helper methods
 	private void FlipSprite(Vector2 direction)
 	{
 		if (direction == Vector2.Right)
