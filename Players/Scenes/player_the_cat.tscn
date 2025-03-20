@@ -1,4 +1,4 @@
-[gd_scene load_steps=103 format=3 uid="uid://c4o8x6lc2silu"]
+[gd_scene load_steps=108 format=3 uid="uid://c4o8x6lc2silu"]
 
 [ext_resource type="Script" path="res://Players/Scripts/PlayerTheCat.cs" id="1_ngcol"]
 [ext_resource type="Script" path="res://Components/Scripts/HealthComponent.cs" id="2_irjyl"]
@@ -10,7 +10,12 @@
 [ext_resource type="Texture2D" uid="uid://b6e82lhna6ymn" path="res://Assets/Players/player-001-spritesheet-003.png" id="9_mv6h0"]
 [ext_resource type="Script" path="res://Components/Scripts/WeaponManagerComponent.cs" id="10_5oihl"]
 [ext_resource type="Script" path="res://Components/Scripts/ShootingComponent.cs" id="11_udspu"]
+[ext_resource type="Script" path="res://StateSystem/StateMachine.cs" id="12_te382"]
+[ext_resource type="Script" path="res://StateSystem/States/IdleState.cs" id="13_0ubik"]
 [ext_resource type="Resource" uid="uid://dj4480r3q8euy" path="res://Resources/PlayerMachineGunShootingProperties.tres" id="13_pu5mw"]
+[ext_resource type="Script" path="res://StateSystem/States/RunState.cs" id="14_q32fq"]
+[ext_resource type="Script" path="res://StateSystem/States/JumpState.cs" id="15_bud0n"]
+[ext_resource type="Script" path="res://StateSystem/States/FallState.cs" id="15_dkv7o"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_431m1"]
 radius = 5.0
@@ -1043,11 +1048,10 @@ _data = {
 "wall_slide_shoot": SubResource("Animation_myl41")
 }
 
-[node name="PlayerTheCat" type="CharacterBody2D" node_paths=PackedStringArray("_playerController", "_velocityComponent") groups=["Players"]]
+[node name="PlayerTheCat" type="CharacterBody2D" node_paths=PackedStringArray("_velocityComponent") groups=["Players"]]
 z_index = 100
 collision_mask = 6
 script = ExtResource("1_ngcol")
-_playerController = NodePath("PlayerControllerComponent")
 _velocityComponent = NodePath("VelocityComponent")
 
 [node name="LeftWallDetect" type="RayCast2D" parent="."]
@@ -1073,17 +1077,8 @@ monitoring = false
 shape = SubResource("RectangleShape2D_l4g6g")
 debug_color = Color(0.932818, 0.259544, 0, 0.42)
 
-[node name="PlayerControllerComponent" type="Node" parent="." node_paths=PackedStringArray("_playerCharacter", "_characterSprite", "_velocityComponent", "_leftWallDetect", "_rightWallDetect", "_hurtboxComponent", "_healthComponent", "_animaationPlayer", "_shootingComponent")]
+[node name="PlayerControllerComponent" type="Node" parent="."]
 script = ExtResource("2_y5cke")
-_playerCharacter = NodePath("..")
-_characterSprite = NodePath("../sprite")
-_velocityComponent = NodePath("../VelocityComponent")
-_leftWallDetect = NodePath("../LeftWallDetect")
-_rightWallDetect = NodePath("../RightWallDetect")
-_hurtboxComponent = NodePath("../HurtboxComponent")
-_healthComponent = NodePath("../HealthComponent")
-_animaationPlayer = NodePath("../AnimationPlayer")
-_shootingComponent = NodePath("../ShootingComponent")
 
 [node name="dashCooldownTimer" type="Timer" parent="PlayerControllerComponent"]
 wait_time = 0.7
@@ -1169,3 +1164,34 @@ _shotCooldownTimer = NodePath("shotCooldownTimer")
 
 [node name="muzzle" type="Marker2D" parent="ShootingComponent"]
 position = Vector2(14, -1)
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource("12_te382")
+
+[node name="IdleState" type="Node" parent="StateMachine" node_paths=PackedStringArray("_character", "_velocityComponent", "_animationPlayer", "_characterSprite")]
+script = ExtResource("13_0ubik")
+_character = NodePath("../..")
+_velocityComponent = NodePath("../../VelocityComponent")
+_animationPlayer = NodePath("../../AnimationPlayer")
+_characterSprite = NodePath("../../sprite")
+
+[node name="RunState" type="Node" parent="StateMachine" node_paths=PackedStringArray("_character", "_velocityComponent", "_animationPlayer", "_characterSprite")]
+script = ExtResource("14_q32fq")
+_character = NodePath("../..")
+_velocityComponent = NodePath("../../VelocityComponent")
+_animationPlayer = NodePath("../../AnimationPlayer")
+_characterSprite = NodePath("../../sprite")
+
+[node name="JumpState" type="Node" parent="StateMachine" node_paths=PackedStringArray("_character", "_velocityComponent", "_animationPlayer", "_characterSprite")]
+script = ExtResource("15_bud0n")
+_character = NodePath("../..")
+_velocityComponent = NodePath("../../VelocityComponent")
+_animationPlayer = NodePath("../../AnimationPlayer")
+_characterSprite = NodePath("../../sprite")
+
+[node name="FallState" type="Node" parent="StateMachine" node_paths=PackedStringArray("_character", "_velocityComponent", "_animationPlayer", "_characterSprite")]
+script = ExtResource("15_dkv7o")
+_character = NodePath("../..")
+_velocityComponent = NodePath("../../VelocityComponent")
+_animationPlayer = NodePath("../../AnimationPlayer")
+_characterSprite = NodePath("../../sprite")

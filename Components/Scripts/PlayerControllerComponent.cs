@@ -18,7 +18,7 @@ public partial class PlayerControllerComponent : Node
 	[Export] private HealthComponent _healthComponent;
 	[Export] private AnimationPlayer _animaationPlayer;
 	[Export] private ShootingComponent _shootingComponent;
-
+	
 	private Timer _dashCooldownTimer, _dashTimer, _gameOverTimer, _invincibilityTimer, _blinkTimer;
 	private bool _isDashing, _onDashCooldown;
 	private Vector2 _direction = Vector2.Zero;
@@ -29,7 +29,7 @@ public partial class PlayerControllerComponent : Node
 		GetChildNodes();
 		ConnectSignals();
 	}
-
+	
 	private void GetChildNodes()
 	{
 		_dashCooldownTimer = GetNodeOrNull<Timer>("dashCooldownTimer");
@@ -39,18 +39,18 @@ public partial class PlayerControllerComponent : Node
 		_blinkTimer = GetNodeOrNull<Timer>("blinkTimer");
 		
 	}
-
+	
 	// Signals and connections methods
 	private void ConnectSignals()
 	{
 		if (_dashCooldownTimer != null) _dashCooldownTimer.Timeout += OnDashCooldownTimerTimeout;
 		
 		if (_dashTimer != null) _dashTimer.Timeout += OnDashTimerTimeout;
-
+	
 		if (_gameOverTimer != null) _gameOverTimer.Timeout += OnGameOverTimerTimeout;
-
+	
 		if (_invincibilityTimer != null) _invincibilityTimer.Timeout += OnInvincibilityTimerTimedOut;
-
+	
 		if (_blinkTimer != null) _blinkTimer.Timeout += OnBlinkTimerTimedOut;
 		
 		if (_hurtboxComponent != null)
@@ -61,22 +61,22 @@ public partial class PlayerControllerComponent : Node
 		
 		if (_healthComponent != null) _healthComponent.HealthDepleted += OnHealthDepleted;
 	}
-
+	
 	private void OnDashCooldownTimerTimeout()
 	{
 		_onDashCooldown = false;
 	}
-
+	
 	private void OnDashTimerTimeout()
 	{
 		_isDashing = false;
 	}
-
+	
 	private static void OnGameOverTimerTimeout()
 	{
 		EventsBus.Instance.EmitSignal(nameof(EventsBus.PlayerDied));
 	}
-
+	
 	private void OnInvincibilityTimerTimedOut()
 	{
 		_blinkTimer?.Stop();
@@ -87,7 +87,7 @@ public partial class PlayerControllerComponent : Node
 			_hurtboxComponent?.SetDeferred(Area2D.PropertyName.Monitorable, true);
 		}
 	}
-
+	
 	private void OnBlinkTimerTimedOut()
 	{
 		_playerCharacter.Visible = !_playerCharacter.Visible;
@@ -121,12 +121,12 @@ public partial class PlayerControllerComponent : Node
 	{
 		if (newState == _currentState)
 			return;
-
+	
 		ExitState();
 		_currentState = newState;
 		EnterState();
 	}
-
+	
 	private void ExitState()
 	{
 		switch (_currentState)
@@ -156,7 +156,7 @@ public partial class PlayerControllerComponent : Node
 				break;
 		}
 	}
-
+	
 	private async void EnterState()
 	{
 		// _characterSprite?.Play(Utility.EntityAnimations[CurrentState]);
@@ -165,7 +165,7 @@ public partial class PlayerControllerComponent : Node
 		{
 			case Utility.EntityState.Idle:
 				if (_velocityComponent != null) _velocityComponent.EntityVelocity.Y = 0;
-
+	
 				if (_animaationPlayer.CurrentAnimation.Contains("idle_"))
 				{
 					await ToSignal(_animaationPlayer, "animation_finished");
@@ -222,7 +222,7 @@ public partial class PlayerControllerComponent : Node
 				{
 					_velocityComponent?.DashVelocity(Vector2.Left);
 				}
-
+	
 				_isDashing = true;
 				_dashTimer?.Start();
 					
@@ -246,7 +246,7 @@ public partial class PlayerControllerComponent : Node
 				break;
 		}
 	}
-
+	
 	public void UpdateState(float delta)
 	{
 		_direction = Input.GetVector("move_left", "move_right", "move_up", "move_down");
@@ -272,7 +272,7 @@ public partial class PlayerControllerComponent : Node
 				
 				if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown) 
 					SetState(Utility.EntityState.Dash);
-
+	
 				if (Input.IsActionPressed("shoot"))
 				{
 					directionFacing = SetDirectionBasedOnSprite();
@@ -350,13 +350,13 @@ public partial class PlayerControllerComponent : Node
 			
 			case Utility.EntityState.Jump:
 				_velocityComponent?.AccelerateToMaxVelocity(delta, _direction);
-
+	
 				if (_playerCharacter != null && _leftWallDetect != null && _rightWallDetect != null)
 				{
 					if (!_playerCharacter.IsOnFloor() || _playerCharacter.IsOnCeiling())
 					{
 						_velocityComponent?.FallVelocity(delta);
-
+	
 						if (_velocityComponent?.EntityVelocity.Y > 0)
 						{
 							SetState(Utility.EntityState.Fall);
@@ -378,7 +378,7 @@ public partial class PlayerControllerComponent : Node
 			case Utility.EntityState.Fall:
 				_velocityComponent?.AccelerateToMaxVelocity(delta, _direction);
 				_velocityComponent?.FallVelocity(delta);
-
+	
 				if (_playerCharacter != null && _leftWallDetect != null && _rightWallDetect != null)
 				{
 					if (_playerCharacter.IsOnFloor())
@@ -408,13 +408,13 @@ public partial class PlayerControllerComponent : Node
 			
 			case Utility.EntityState.WallSlide:
 				_velocityComponent?.WallSlidingVelocity(delta);
-
+	
 				if (_playerCharacter != null && _leftWallDetect != null && _rightWallDetect != null)
 				{
 					if (_playerCharacter.IsOnFloor())
 					{
 						SetState(Utility.EntityState.Idle);
-
+	
 						if (_direction != Vector2.Zero)
 						{
 							SetState(Utility.EntityState.Run);
@@ -436,14 +436,14 @@ public partial class PlayerControllerComponent : Node
 						{
 							SetState(Utility.EntityState.Idle);
 						}
-
+	
 						if (Input.IsActionJustPressed("jump"))
 						{
 							SetState(Utility.EntityState.WallJump);
 						}
 					}
 				}
-
+	
 				if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown)
 					SetState(Utility.EntityState.Dash);
 				
@@ -455,7 +455,7 @@ public partial class PlayerControllerComponent : Node
 					if (!_playerCharacter.IsOnFloor())
 					{
 						_velocityComponent?.FallVelocity(delta);
-
+	
 						if (_velocityComponent?.EntityVelocity.Y > 0)
 						{
 							SetState(Utility.EntityState.Fall);
@@ -472,7 +472,7 @@ public partial class PlayerControllerComponent : Node
 				break;
 		}
 	}
-
+	
 	
 	// ########################################################## //
 	
@@ -488,7 +488,7 @@ public partial class PlayerControllerComponent : Node
 			if (_characterSprite != null) _characterSprite.FlipH = true;
 		}
 	}
-
+	
 	private Vector2 SetDirectionBasedOnSprite()
 	{
 		Vector2 directionFacing = Vector2.Zero;
