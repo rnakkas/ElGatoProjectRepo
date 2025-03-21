@@ -91,8 +91,7 @@ public partial class VelocityComponent : Node
 			EntityVelocity = new Vector2(CharacterVelocityProperties.DashSpeed * direction.X, 0);
 	}
 
-	public void ResetVerticalVelocity()
-	{
-		EntityVelocity.Y = 0;
-	}
+	public void ResetVerticalVelocity() => EntityVelocity.Y = 0;
+	
+	public void ResetHorizontalVelocity() => EntityVelocity.X = 0;
 }

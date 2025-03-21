@@ -7,6 +7,8 @@ public partial class CharacterVelocityProperties : Resource
 {
     [Export] public float MaxSpeed { get; set; }
     [Export] public float DashSpeed { get; set; }
+    [Export] public float DashTime { get; set; }
+    [Export] public float DashCooldownTime { get; set; }
     [Export] public float Acceleration { get; set; }
     [Export] public float Friction { get; set; }
     [Export] public float JumpVelocity{ get; set; }

@@ -13,6 +13,7 @@ public partial class IdleState : Node, IState
     private VelocityComponent _velocityComponent;
     private AnimationPlayer _animationPlayer;
     private AnimatedSprite2D _characterSprite;
+    private Timer _dashCooldownTimer;
     
     private StateMachine _stateMachine;
     private Vector2 _direction = Vector2.Zero;
@@ -23,8 +24,9 @@ public partial class IdleState : Node, IState
         _velocityComponent = _character.GetNodeOrNull<VelocityComponent>("VelocityComponent");
         _animationPlayer = _character.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
         _characterSprite = _character.GetNodeOrNull<AnimatedSprite2D>("sprite");
+        _dashCooldownTimer = _character.GetNodeOrNull<Timer>("Timers/DashCooldownTimer");
     }
-
+    
     public void Initialize(StateMachine stateMachine)
     {
         _stateMachine = stateMachine;
@@ -42,17 +44,19 @@ public partial class IdleState : Node, IState
 
     public void Update(float delta)
     {
-        _direction = Input.GetVector(
-            "move_left", 
-            "move_right", 
-            "move_up", 
-            "move_down");
-
+        if (_character.IsInGroup(Utility.NodeGroupPlayers))
+        {
+             _direction = Input.GetVector(
+                        "move_left", 
+                        "move_right", 
+                        "move_up", 
+                        "move_down");
+        }
+        
         if (_characterSprite != null) _stateMachine.FlipSprite(_characterSprite, _direction);
         
         if (_direction == Vector2.Left || _direction == Vector2.Right)
         {
-            // Get the state machine (assumes IdleState is a child of StateMachine)
             _stateMachine?.SetState("RunState");
         }
         else if (_character != null)
@@ -62,6 +66,9 @@ public partial class IdleState : Node, IState
             else if (Input.IsActionPressed("jump") && _character.IsOnFloor())
                 _stateMachine?.SetState("JumpState");
         }
+        
+        if (Input.IsActionJustPressed("dashDodge") && _dashCooldownTimer?.TimeLeft == 0) 
+            _stateMachine?.SetState("DashState");
     }
 
     public void PhysicsUpdate(float delta)

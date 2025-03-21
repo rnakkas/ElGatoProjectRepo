@@ -1,4 +1,4 @@
-[gd_scene load_steps=110 format=3 uid="uid://c4o8x6lc2silu"]
+[gd_scene load_steps=111 format=3 uid="uid://c4o8x6lc2silu"]
 
 [ext_resource type="Script" path="res://Players/Scripts/PlayerTheCat.cs" id="1_ngcol"]
 [ext_resource type="Script" path="res://Components/Scripts/HealthComponent.cs" id="2_irjyl"]
@@ -18,6 +18,7 @@
 [ext_resource type="Script" path="res://StateSystem/States/FallState.cs" id="15_dkv7o"]
 [ext_resource type="Script" path="res://StateSystem/States/WallSlideState.cs" id="17_kuc6b"]
 [ext_resource type="Script" path="res://StateSystem/States/WallJumpState.cs" id="18_jj065"]
+[ext_resource type="Script" path="res://StateSystem/States/DashState.cs" id="19_i3wmp"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_431m1"]
 radius = 5.0
@@ -1082,14 +1083,6 @@ debug_color = Color(0.932818, 0.259544, 0, 0.42)
 [node name="PlayerControllerComponent" type="Node" parent="."]
 script = ExtResource("2_y5cke")
 
-[node name="dashCooldownTimer" type="Timer" parent="PlayerControllerComponent"]
-wait_time = 0.7
-one_shot = true
-
-[node name="dashTimer" type="Timer" parent="PlayerControllerComponent"]
-wait_time = 0.25
-one_shot = true
-
 [node name="gameOverTimer" type="Timer" parent="PlayerControllerComponent"]
 wait_time = 2.2
 one_shot = true
@@ -1109,16 +1102,12 @@ CharacterVelocityProperties = ExtResource("7_u5ntm")
 script = ExtResource("2_irjyl")
 CurrentHealth = 50
 _maxHealth = 100
-_caffeineDrainTimer = NodePath("caffeineDrainTimer")
-
-[node name="caffeineDrainTimer" type="Timer" parent="HealthComponent"]
-wait_time = 0.9
-autostart = true
+_caffeineDrainTimer = NodePath("../Timers/CaffeineDrainTimer")
 
 [node name="HurtboxComponent" type="Area2D" parent="." node_paths=PackedStringArray("_hurtStaggerTimer", "_healthComponent", "_bodySprite", "_velocityComponent") groups=["PlayersHurtBox"]]
 collision_mask = 64
 script = ExtResource("3_5pkbi")
-_hurtStaggerTimer = NodePath("HurtStaggerTimer")
+_hurtStaggerTimer = NodePath("../Timers/HurtStaggerTimer")
 _healthComponent = NodePath("../HealthComponent")
 _bodySprite = NodePath("../sprite")
 _velocityComponent = NodePath("../VelocityComponent")
@@ -1126,10 +1115,6 @@ _velocityComponent = NodePath("../VelocityComponent")
 [node name="HurtboxCollider" type="CollisionShape2D" parent="HurtboxComponent"]
 shape = SubResource("RectangleShape2D_mju0f")
 debug_color = Color(0.897598, 0.279026, 0.387079, 0.42)
-
-[node name="HurtStaggerTimer" type="Timer" parent="HurtboxComponent"]
-wait_time = 0.5
-one_shot = true
 
 [node name="PickupsComponent" type="Area2D" parent="." node_paths=PackedStringArray("_healthComponent") groups=["PlayersPickupsBox"]]
 collision_mask = 16
@@ -1160,9 +1145,7 @@ _shootingComponent = NodePath("../ShootingComponent")
 script = ExtResource("11_udspu")
 ShootingProperties = ExtResource("13_pu5mw")
 _muzzle = NodePath("muzzle")
-_shotCooldownTimer = NodePath("shotCooldownTimer")
-
-[node name="shotCooldownTimer" type="Timer" parent="ShootingComponent"]
+_shotCooldownTimer = NodePath("../Timers/ShotCooldownTimer")
 
 [node name="muzzle" type="Marker2D" parent="ShootingComponent"]
 position = Vector2(14, -1)
@@ -1187,3 +1170,22 @@ script = ExtResource("17_kuc6b")
 
 [node name="WallJumpState" type="Node" parent="StateMachine"]
 script = ExtResource("18_jj065")
+
+[node name="DashState" type="Node" parent="StateMachine"]
+script = ExtResource("19_i3wmp")
+
+[node name="Timers" type="Node" parent="."]
+
+[node name="DashTimer" type="Timer" parent="Timers"]
+
+[node name="DashCooldownTimer" type="Timer" parent="Timers"]
+
+[node name="ShotCooldownTimer" type="Timer" parent="Timers"]
+
+[node name="HurtStaggerTimer" type="Timer" parent="Timers"]
+wait_time = 0.5
+one_shot = true
+
+[node name="CaffeineDrainTimer" type="Timer" parent="Timers"]
+wait_time = 0.9
+autostart = true
