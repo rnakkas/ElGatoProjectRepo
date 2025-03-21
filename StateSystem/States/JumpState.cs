@@ -1,5 +1,6 @@
 using ElGatoProject.Components.Scripts;
 using ElGatoProject.StateSystem.Interfaces;
+using ElGatoProject.Utilties;
 using Godot;
 
 namespace ElGatoProject.StateSystem.States;
@@ -34,7 +35,7 @@ public partial class JumpState : Node, IState
     public void Enter()
     {
         _velocityComponent?.JumpeVelocity();
-        _animationPlayer?.Play("jump");
+        _animationPlayer?.Play(Utility.EntityAnimations[Utility.EntityState.JumpState]);
     }
 
     public void Exit()
@@ -50,7 +51,7 @@ public partial class JumpState : Node, IState
             "move_down");
         
         if (Input.IsActionJustPressed("dashDodge") && _dashCooldownTimer?.TimeLeft == 0) 
-            _stateMachine?.SetState("DashState");
+            _stateMachine?.SetState(Utility.EntityState.DashState.ToString());
     }
 
     public void PhysicsUpdate(float delta)
@@ -65,7 +66,7 @@ public partial class JumpState : Node, IState
 
                 if (_velocityComponent?.EntityVelocity.Y > 0)
                 {
-                    _stateMachine?.SetState("FallState");
+                    _stateMachine?.SetState(Utility.EntityState.FallState.ToString());
                 }
             }
             else if (
@@ -73,7 +74,7 @@ public partial class JumpState : Node, IState
                 (_leftWallDetect.IsColliding() || _rightWallDetect.IsColliding())
             )
             {
-                _stateMachine?.SetState("WallSlideState");
+                _stateMachine?.SetState(Utility.EntityState.WallSlideState.ToString());
             }
         }
     }

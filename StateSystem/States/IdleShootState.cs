@@ -1,5 +1,6 @@
 using ElGatoProject.Components.Scripts;
 using ElGatoProject.StateSystem.Interfaces;
+using ElGatoProject.Utilties;
 using Godot;
 
 namespace ElGatoProject.StateSystem.States;
@@ -37,7 +38,7 @@ public partial class IdleShootState : Node, IState
     {
         _velocityComponent?.ResetVerticalVelocity();
 
-        _animationPlayer?.Play("idle_shoot");
+        _animationPlayer?.Play(Utility.EntityAnimations[Utility.EntityState.IdleShootState]);
     }
 
     public void Exit()
@@ -57,22 +58,22 @@ public partial class IdleShootState : Node, IState
         if (Input.IsActionPressed("shoot"))
         {
             _stateMachine?.SetState(_shootingComponent.Shoot(SetDirectionBasedOnSprite())
-                ? "IdleShootState"
-                : "IdleState");
+                ? Utility.EntityState.IdleShootState.ToString()
+                : Utility.EntityState.IdleState.ToString());
         }
         else if (!Input.IsActionPressed("shoot"))
-            _stateMachine?.SetState("IdleState");
+            _stateMachine?.SetState(Utility.EntityState.IdleState.ToString());
         else if (Input.IsActionPressed("shoot") && 
                  (_direction == Vector2.Left || _direction == Vector2.Right)
                  )
         {
             _stateMachine?.SetState(_shootingComponent.Shoot(SetDirectionBasedOnSprite())
-                ? "RunShootState"
-                : "RunState");
+                ? Utility.EntityState.RunShootState.ToString()
+                : Utility.EntityState.RunState.ToString());
         }
        
         if (Input.IsActionJustPressed("dashDodge") && _dashCooldownTimer?.TimeLeft == 0) 
-            _stateMachine?.SetState("DashState");
+            _stateMachine?.SetState(Utility.EntityState.DashState.ToString());
     }
 
     public void PhysicsUpdate(float delta)

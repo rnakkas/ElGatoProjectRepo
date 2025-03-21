@@ -1,5 +1,6 @@
 using ElGatoProject.Components.Scripts;
 using ElGatoProject.StateSystem.Interfaces;
+using ElGatoProject.Utilties;
 using Godot;
 
 namespace ElGatoProject.StateSystem.States;
@@ -43,7 +44,7 @@ public partial class WallJumpState : Node, IState
                 _direction = Vector2.Left;
         }
         _velocityComponent?.WallJumpingVelocity(_direction);
-        _animationPlayer?.Play("jump");
+        _animationPlayer?.Play(Utility.EntityAnimations[Utility.EntityState.JumpState]);
     }
 
     public void Exit()
@@ -53,7 +54,7 @@ public partial class WallJumpState : Node, IState
     public void Update(float delta)
     {
         if (Input.IsActionJustPressed("dashDodge") && _dashCooldownTimer?.TimeLeft == 0) 
-            _stateMachine?.SetState("DashState");
+            _stateMachine?.SetState(Utility.EntityState.DashState.ToString());
     }
 
     public void PhysicsUpdate(float delta)
@@ -68,7 +69,7 @@ public partial class WallJumpState : Node, IState
 	
         if (_velocityComponent?.EntityVelocity.Y > 0)
         {
-            _stateMachine?.SetState("FallState");
+            _stateMachine?.SetState(Utility.EntityState.FallState.ToString());
         }
     }
 }

@@ -34,7 +34,7 @@ public partial class FallState: Node, IState
 
     public void Enter()
     {
-        _animationPlayer?.Play("fall");
+        _animationPlayer?.Play(Utility.EntityAnimations[Utility.EntityState.FallState]);
     }
 
     public void Exit()
@@ -52,18 +52,18 @@ public partial class FallState: Node, IState
         if (_character != null && _leftWallDetect != null && _rightWallDetect != null)
         {
             if (_character.IsOnFloor())
-                _stateMachine?.SetState("WallSlideState");
+                _stateMachine?.SetState(Utility.EntityState.IdleState.ToString());
             else if (
                 !_character.IsOnFloor() &&
                 (_leftWallDetect.IsColliding() || _rightWallDetect.IsColliding())
             )
             {
-                _stateMachine?.SetState("WallSlideState");
+                _stateMachine?.SetState(Utility.EntityState.WallSlideState.ToString());
             }
         }
         
         if (Input.IsActionJustPressed("dashDodge") && _dashCooldownTimer?.TimeLeft == 0) 
-            _stateMachine?.SetState("DashState");
+            _stateMachine?.SetState(Utility.EntityState.DashState.ToString());
     }
 
     public void PhysicsUpdate(float delta)

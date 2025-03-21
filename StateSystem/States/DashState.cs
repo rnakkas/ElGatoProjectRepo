@@ -1,5 +1,6 @@
 using ElGatoProject.Components.Scripts;
 using ElGatoProject.StateSystem.Interfaces;
+using ElGatoProject.Utilties;
 using Godot;
 
 namespace ElGatoProject.StateSystem.States;
@@ -44,7 +45,7 @@ public partial class DashState : Node, IState
 
     private void OnDashTimerTimedOut()
     {
-        _stateMachine.SetState("IdleState");
+        _stateMachine.SetState(Utility.EntityState.IdleState.ToString());
     }
     
     public void Initialize(StateMachine stateMachine)
@@ -54,7 +55,7 @@ public partial class DashState : Node, IState
 
     public void Enter()
     {
-        _animationPlayer?.Play("dash");
+        _animationPlayer?.Play(Utility.EntityAnimations[Utility.EntityState.DashState]);
         
         if (_characterSprite != null && !_characterSprite.IsFlippedH())
         {

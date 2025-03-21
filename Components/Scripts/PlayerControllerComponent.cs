@@ -82,7 +82,7 @@ public partial class PlayerControllerComponent : Node
 		_blinkTimer?.Stop();
 		if (_playerCharacter != null) _playerCharacter.Visible = true;
 		
-		if (_currentState != Utility.EntityState.Death)
+		if (_currentState != Utility.EntityState.DeathState)
 		{
 			_hurtboxComponent?.SetDeferred(Area2D.PropertyName.Monitorable, true);
 		}
@@ -99,18 +99,18 @@ public partial class PlayerControllerComponent : Node
 		_invincibilityTimer?.Start();
 		_blinkTimer?.Start();
 		
-		SetState(Utility.EntityState.Hurt);
+		SetState(Utility.EntityState.HurtState);
 	}
 	
 	private void OnHurtStatusCleared()
 	{
 		if (_healthComponent is { CurrentHealth: > 0 } )
-			SetState(Utility.EntityState.Idle);
+			SetState(Utility.EntityState.IdleState);
 	}
 	
 	private void OnHealthDepleted()
 	{
-		SetState(Utility.EntityState.Death);
+		SetState(Utility.EntityState.DeathState);
 	}
 	
 	
@@ -131,25 +131,25 @@ public partial class PlayerControllerComponent : Node
 	{
 		switch (_currentState)
 		{
-			case Utility.EntityState.Idle:
+			case Utility.EntityState.IdleState:
 				break;
-			case Utility.EntityState.IdleShoot:
+			case Utility.EntityState.IdleShootState:
 				break;
-			case Utility.EntityState.Run:
+			case Utility.EntityState.RunState:
 				break;
-			case Utility.EntityState.RunShoot:
+			case Utility.EntityState.RunShootState:
 				break;
-			case Utility.EntityState.Jump:
+			case Utility.EntityState.JumpState:
 				break;
-			case Utility.EntityState.Fall:
+			case Utility.EntityState.FallState:
 				break;
-			case Utility.EntityState.Hurt:
+			case Utility.EntityState.HurtState:
 				break;
-			case Utility.EntityState.WallSlide:
+			case Utility.EntityState.WallSlideState:
 				break;
-			case Utility.EntityState.WallJump:
+			case Utility.EntityState.WallJumpState:
 				break;
-			case Utility.EntityState.Dash:
+			case Utility.EntityState.DashState:
 				//TODO: Use the animation player to disable the hurtbox collider
 				_hurtboxComponent?.SetDeferred(Area2D.PropertyName.Monitorable, true); // Exit invincibility after dash finished
 				if (_velocityComponent != null) _velocityComponent.EntityVelocity = Vector2.Zero;
@@ -163,7 +163,7 @@ public partial class PlayerControllerComponent : Node
 		
 		switch (_currentState)
 		{
-			case Utility.EntityState.Idle:
+			case Utility.EntityState.IdleState:
 				if (_velocityComponent != null) _velocityComponent.EntityVelocity.Y = 0;
 	
 				if (_animaationPlayer.CurrentAnimation.Contains("idle_"))
@@ -175,42 +175,42 @@ public partial class PlayerControllerComponent : Node
 				
 				break;
 			
-			case Utility.EntityState.IdleShoot:
+			case Utility.EntityState.IdleShootState:
 				if (_velocityComponent != null) _velocityComponent.EntityVelocity.Y = 0;
 				_animaationPlayer?.Play(Utility.EntityAnimations[_currentState]);
 				break;
 			
-			case Utility.EntityState.Run:
+			case Utility.EntityState.RunState:
 				_animaationPlayer?.Play(Utility.EntityAnimations[_currentState]);
 				break;
 			
-			case Utility.EntityState.RunShoot:
+			case Utility.EntityState.RunShootState:
 				_animaationPlayer?.Play(Utility.EntityAnimations[_currentState]);
 				break;
 			
-			case Utility.EntityState.Jump:
+			case Utility.EntityState.JumpState:
 				_velocityComponent?.JumpeVelocity();
 				_animaationPlayer?.Play(Utility.EntityAnimations[_currentState]);
 				break;
 			
-			case Utility.EntityState.Fall:
+			case Utility.EntityState.FallState:
 				_animaationPlayer?.Play(Utility.EntityAnimations[_currentState]);
 				break;
 			
-			case Utility.EntityState.Hurt:
+			case Utility.EntityState.HurtState:
 				_animaationPlayer?.Play(Utility.EntityAnimations[_currentState]);
 				break;
 			
-			case Utility.EntityState.WallSlide:
+			case Utility.EntityState.WallSlideState:
 				_animaationPlayer?.Play(Utility.EntityAnimations[_currentState]);
 				break;
 			
-			case Utility.EntityState.WallJump:
+			case Utility.EntityState.WallJumpState:
 				_velocityComponent?.WallJumpingVelocity(_direction);
 				_animaationPlayer?.Play(Utility.EntityAnimations[_currentState]);
 				break;
 			
-			case Utility.EntityState.Dash:
+			case Utility.EntityState.DashState:
 				//TODO: Use the animation player to disable the hurtbox collider
 				_hurtboxComponent?.SetDeferred(Area2D.PropertyName.Monitorable, false); // Enter invincibility when dashing
 				
@@ -233,7 +233,7 @@ public partial class PlayerControllerComponent : Node
 				
 				break;
 			
-			case Utility.EntityState.Death:
+			case Utility.EntityState.DeathState:
 				_hurtboxComponent?.SetDeferred(Area2D.PropertyName.Monitorable, false); // Don't get hit if dying
 				if (_velocityComponent != null) _velocityComponent.EntityVelocity = Vector2.Zero;
 				
@@ -257,98 +257,98 @@ public partial class PlayerControllerComponent : Node
 		
 		switch (_currentState)
 		{
-			case Utility.EntityState.Idle:
+			case Utility.EntityState.IdleState:
 				_velocityComponent?.DecelerateToZeroVelocity(delta);
 				
 				if (_direction != Vector2.Zero) 
-					SetState(Utility.EntityState.Run);
+					SetState(Utility.EntityState.RunState);
 				else if (_playerCharacter != null)
 				{
 					if ( !_playerCharacter.IsOnFloor() || _playerCharacter.IsOnCeiling())
-						SetState(Utility.EntityState.Fall);
+						SetState(Utility.EntityState.FallState);
 					else if (Input.IsActionPressed("jump") && _playerCharacter.IsOnFloor()) 
-						SetState(Utility.EntityState.Jump);
+						SetState(Utility.EntityState.JumpState);
 				}
 				
 				if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown) 
-					SetState(Utility.EntityState.Dash);
+					SetState(Utility.EntityState.DashState);
 	
 				if (Input.IsActionPressed("shoot"))
 				{
 					directionFacing = SetDirectionBasedOnSprite();
 					if (_shootingComponent.Shoot(directionFacing))
-						SetState(Utility.EntityState.IdleShoot);
+						SetState(Utility.EntityState.IdleShootState);
 				}
 				
 				break;
 			
-			case Utility.EntityState.IdleShoot:
+			case Utility.EntityState.IdleShootState:
 				if (Input.IsActionPressed("shoot"))
 				{
 					directionFacing = SetDirectionBasedOnSprite();
 					SetState(_shootingComponent.Shoot(directionFacing)
-						? Utility.EntityState.IdleShoot
-						: Utility.EntityState.Idle);
+						? Utility.EntityState.IdleShootState
+						: Utility.EntityState.IdleState);
 				}
 				else if (!Input.IsActionPressed("shoot"))
-					SetState(Utility.EntityState.Idle);
+					SetState(Utility.EntityState.IdleState);
 				else if (Input.IsActionPressed("shoot") && _direction != Vector2.Zero)
 				{
 					directionFacing = SetDirectionBasedOnSprite();
 					SetState(_shootingComponent.Shoot(directionFacing)
-						? Utility.EntityState.RunShoot
-						: Utility.EntityState.Run);
+						? Utility.EntityState.RunShootState
+						: Utility.EntityState.RunState);
 				}
 				
 				break;
 			
-			case Utility.EntityState.Run:
+			case Utility.EntityState.RunState:
 				_velocityComponent?.AccelerateToMaxVelocity(delta, _direction);
 				
 				if (_direction == Vector2.Zero)
-					SetState(Utility.EntityState.Idle);
+					SetState(Utility.EntityState.IdleState);
 				else if (_playerCharacter != null)
 				{
 					if (!_playerCharacter.IsOnFloor() || _playerCharacter.IsOnCeiling())
-						SetState(Utility.EntityState.Fall);
+						SetState(Utility.EntityState.FallState);
 					else if (Input.IsActionPressed("jump") && _playerCharacter.IsOnFloor())
-						SetState(Utility.EntityState.Jump); 
+						SetState(Utility.EntityState.JumpState); 
 				}
 				
 				if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown)
-					SetState(Utility.EntityState.Dash);
+					SetState(Utility.EntityState.DashState);
 				
 				if (Input.IsActionPressed("shoot"))
 				{
 					directionFacing = SetDirectionBasedOnSprite();
 					if (_shootingComponent.Shoot(directionFacing))
-						SetState(Utility.EntityState.RunShoot);
+						SetState(Utility.EntityState.RunShootState);
 				}
 				
 				break;
 			
-			case Utility.EntityState.RunShoot:
+			case Utility.EntityState.RunShootState:
 				_velocityComponent?.AccelerateToMaxVelocity(delta, _direction);
 				
 				if (_direction == Vector2.Zero)
-					SetState(Utility.EntityState.Idle);
+					SetState(Utility.EntityState.IdleState);
 				else if (_direction != Vector2.Zero)
-					SetState(Utility.EntityState.Run);
+					SetState(Utility.EntityState.RunState);
 				
 				else if (_playerCharacter != null)
 				{
 					if (!_playerCharacter.IsOnFloor() || _playerCharacter.IsOnCeiling())
-						SetState(Utility.EntityState.Fall);
+						SetState(Utility.EntityState.FallState);
 					else if (Input.IsActionPressed("jump") && _playerCharacter.IsOnFloor())
-						SetState(Utility.EntityState.Jump); 
+						SetState(Utility.EntityState.JumpState); 
 				}
 				
 				if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown)
-					SetState(Utility.EntityState.Dash);
+					SetState(Utility.EntityState.DashState);
 				
 				break;
 			
-			case Utility.EntityState.Jump:
+			case Utility.EntityState.JumpState:
 				_velocityComponent?.AccelerateToMaxVelocity(delta, _direction);
 	
 				if (_playerCharacter != null && _leftWallDetect != null && _rightWallDetect != null)
@@ -359,7 +359,7 @@ public partial class PlayerControllerComponent : Node
 	
 						if (_velocityComponent?.EntityVelocity.Y > 0)
 						{
-							SetState(Utility.EntityState.Fall);
+							SetState(Utility.EntityState.FallState);
 						}
 					}
 					else if (
@@ -367,36 +367,36 @@ public partial class PlayerControllerComponent : Node
 						(_leftWallDetect.IsColliding() || _rightWallDetect.IsColliding())
 					)
 					{
-						SetState(Utility.EntityState.WallSlide);
+						SetState(Utility.EntityState.WallSlideState);
 					}
 				}
 				
 				if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown)
-					SetState(Utility.EntityState.Dash);
+					SetState(Utility.EntityState.DashState);
 				break;
 			
-			case Utility.EntityState.Fall:
+			case Utility.EntityState.FallState:
 				_velocityComponent?.AccelerateToMaxVelocity(delta, _direction);
 				_velocityComponent?.FallVelocity(delta);
 	
 				if (_playerCharacter != null && _leftWallDetect != null && _rightWallDetect != null)
 				{
 					if (_playerCharacter.IsOnFloor())
-						SetState(Utility.EntityState.Idle);
+						SetState(Utility.EntityState.IdleState);
 					else if (
 						!_playerCharacter.IsOnFloor() &&
 						(_leftWallDetect.IsColliding() || _rightWallDetect.IsColliding())
 					)
 					{
-						SetState(Utility.EntityState.WallSlide);
+						SetState(Utility.EntityState.WallSlideState);
 					}
 				}
 				
 				if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown)
-					SetState(Utility.EntityState.Dash);
+					SetState(Utility.EntityState.DashState);
 				break;
 			
-			case Utility.EntityState.Hurt:
+			case Utility.EntityState.HurtState:
 				if (_playerCharacter != null)
 				{
 					if (!_playerCharacter.IsOnFloor())
@@ -406,18 +406,18 @@ public partial class PlayerControllerComponent : Node
 				}
 				break;
 			
-			case Utility.EntityState.WallSlide:
+			case Utility.EntityState.WallSlideState:
 				_velocityComponent?.WallSlidingVelocity(delta);
 	
 				if (_playerCharacter != null && _leftWallDetect != null && _rightWallDetect != null)
 				{
 					if (_playerCharacter.IsOnFloor())
 					{
-						SetState(Utility.EntityState.Idle);
+						SetState(Utility.EntityState.IdleState);
 	
 						if (_direction != Vector2.Zero)
 						{
-							SetState(Utility.EntityState.Run);
+							SetState(Utility.EntityState.RunState);
 						}
 					}
 					else if (!_playerCharacter.IsOnFloor())
@@ -434,22 +434,22 @@ public partial class PlayerControllerComponent : Node
 						}
 						else
 						{
-							SetState(Utility.EntityState.Idle);
+							SetState(Utility.EntityState.IdleState);
 						}
 	
 						if (Input.IsActionJustPressed("jump"))
 						{
-							SetState(Utility.EntityState.WallJump);
+							SetState(Utility.EntityState.WallJumpState);
 						}
 					}
 				}
 	
 				if (Input.IsActionJustPressed("dashDodge") && !_onDashCooldown)
-					SetState(Utility.EntityState.Dash);
+					SetState(Utility.EntityState.DashState);
 				
 				break;
 			
-			case Utility.EntityState.WallJump:
+			case Utility.EntityState.WallJumpState:
 				if (_playerCharacter != null)
 				{
 					if (!_playerCharacter.IsOnFloor())
@@ -458,16 +458,16 @@ public partial class PlayerControllerComponent : Node
 	
 						if (_velocityComponent?.EntityVelocity.Y > 0)
 						{
-							SetState(Utility.EntityState.Fall);
+							SetState(Utility.EntityState.FallState);
 						}
 					}
 				}
 				break;
 			
-			case Utility.EntityState.Dash:
+			case Utility.EntityState.DashState:
 				if (!_isDashing)
 				{
-					SetState(Utility.EntityState.Idle);
+					SetState(Utility.EntityState.IdleState);
 				}
 				break;
 		}

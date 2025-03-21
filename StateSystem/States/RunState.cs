@@ -1,5 +1,6 @@
 using ElGatoProject.Components.Scripts;
 using ElGatoProject.StateSystem.Interfaces;
+using ElGatoProject.Utilties;
 using Godot;
 
 namespace ElGatoProject.StateSystem.States;
@@ -32,7 +33,7 @@ public partial class RunState: Node, IState
 
     public void Enter()
     {
-        _animationPlayer?.Play("run");
+        _animationPlayer?.Play(Utility.EntityAnimations[Utility.EntityState.RunState]);
     }
 
     public void Exit()
@@ -52,18 +53,18 @@ public partial class RunState: Node, IState
         
         if (_direction == Vector2.Zero)
         {
-            _stateMachine?.SetState("IdleState");
+            _stateMachine?.SetState(Utility.EntityState.IdleState.ToString());
         }
         else if (_character != null)
         {
             if (!_character.IsOnFloor() || _character.IsOnCeiling())
-                _stateMachine?.SetState("FallState");
+                _stateMachine?.SetState(Utility.EntityState.FallState.ToString());
             else if (Input.IsActionPressed("jump") && _character.IsOnFloor())
-                _stateMachine?.SetState("JumpState");
+                _stateMachine?.SetState(Utility.EntityState.JumpState.ToString());
         }
         
         if (Input.IsActionJustPressed("dashDodge") && _dashCooldownTimer?.TimeLeft == 0) 
-            _stateMachine?.SetState("DashState");
+            _stateMachine?.SetState(Utility.EntityState.DashState.ToString());
     }
 
     public void PhysicsUpdate(float delta)

@@ -38,11 +38,11 @@ public partial class IdleState : Node, IState
     {
         _velocityComponent?.ResetVerticalVelocity();
         
-        if (_animationPlayer.CurrentAnimation.Contains("idle_"))
+        if (_animationPlayer.CurrentAnimation == Utility.EntityAnimations[Utility.EntityState.IdleShootState])
         {
             await ToSignal(_animationPlayer, "animation_finished");
         }
-        _animationPlayer?.Play("idle");
+        _animationPlayer?.Play(Utility.EntityAnimations[Utility.EntityState.IdleState]);
     }
 
     public void Exit()
@@ -64,23 +64,23 @@ public partial class IdleState : Node, IState
         
         if (_direction == Vector2.Left || _direction == Vector2.Right)
         {
-            _stateMachine?.SetState("RunState");
+            _stateMachine?.SetState(Utility.EntityState.RunState.ToString());
         }
         else if (_character != null)
         {
             if (!_character.IsOnFloor() || _character.IsOnCeiling())
-                _stateMachine?.SetState("FallState");
+                _stateMachine?.SetState(Utility.EntityState.FallState.ToString());
             else if (Input.IsActionPressed("jump") && _character.IsOnFloor())
-                _stateMachine?.SetState("JumpState");
+                _stateMachine?.SetState(Utility.EntityState.JumpState.ToString());
         }
         
         if (Input.IsActionJustPressed("dashDodge") && _dashCooldownTimer?.TimeLeft == 0) 
-            _stateMachine?.SetState("DashState");
+            _stateMachine?.SetState(Utility.EntityState.DashState.ToString());
 
         if (Input.IsActionPressed("shoot"))
         {
             if (_shootingComponent.Shoot(SetDirectionBasedOnSprite()))
-                _stateMachine?.SetState("IdleShootState");
+                _stateMachine?.SetState(Utility.EntityState.IdleShootState.ToString());
         }
     }
 

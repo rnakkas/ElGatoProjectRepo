@@ -40,7 +40,7 @@ public partial class ShootingComponent : Node2D
 		{
 			EmitSignal(SignalName.Shooting);
 			
-			_flashSprite?.Play(Utility.EntityAnimations[Utility.EntityState.Shoot]);
+			_flashSprite?.Play(Utility.EntityAnimations[Utility.EntityState.ShootState]);
 			
 			ShootingLogic(targetVector);
 			

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using ElGatoProject.StateSystem.Interfaces;
+using ElGatoProject.Utilties;
 using Godot;
 
 namespace ElGatoProject.StateSystem;
@@ -26,9 +27,9 @@ public partial class StateMachine : Node
         }
 
         // Optionally set an initial state (e.g., "IdleState")
-        if (_states.ContainsKey("IdleState"))
+        if (_states.ContainsKey(Utility.EntityState.IdleState.ToString()))
         {
-            SetState("IdleState");
+            SetState(Utility.EntityState.IdleState.ToString());
         }
         else if (_states.Count > 0)
         {

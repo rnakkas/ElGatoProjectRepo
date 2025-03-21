@@ -1,5 +1,6 @@
 using ElGatoProject.Components.Scripts;
 using ElGatoProject.StateSystem.Interfaces;
+using ElGatoProject.Utilties;
 using Godot;
 
 namespace ElGatoProject.StateSystem.States;
@@ -35,7 +36,7 @@ public partial class WallSlideState : Node, IState
 
     public void Enter()
     {
-        _animationPlayer?.Play("wall_slide");
+        _animationPlayer?.Play(Utility.EntityAnimations[Utility.EntityState.WallSlideState]);
     }
 
     public void Exit()
@@ -48,11 +49,11 @@ public partial class WallSlideState : Node, IState
         {
             if (_character.IsOnFloor())
             {
-                _stateMachine?.SetState("IdleState");
+                _stateMachine?.SetState(Utility.EntityState.IdleState.ToString());
 	
                 if (_direction != Vector2.Zero)
                 {
-                    _stateMachine?.SetState("RunState");
+                    _stateMachine?.SetState(Utility.EntityState.RunState.ToString());
                 }
             }
             else if (!_character.IsOnFloor())
@@ -70,18 +71,18 @@ public partial class WallSlideState : Node, IState
                 }
                 else
                 {
-                    _stateMachine?.SetState("IdleState");
+                    _stateMachine?.SetState(Utility.EntityState.IdleState.ToString());
                 }
 	
                 if (Input.IsActionJustPressed("jump"))
                 {
-                    _stateMachine?.SetState("WallJumpState");
+                    _stateMachine?.SetState(Utility.EntityState.WallJumpState.ToString());
                 }
             }
         }
         
         if (Input.IsActionJustPressed("dashDodge") && _dashCooldownTimer?.TimeLeft == 0) 
-            _stateMachine?.SetState("DashState");
+            _stateMachine?.SetState(Utility.EntityState.DashState.ToString());
     }
 
     public void PhysicsUpdate(float delta)
