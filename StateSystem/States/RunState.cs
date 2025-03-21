@@ -11,6 +11,7 @@ public partial class RunState: Node, IState
     private VelocityComponent _velocityComponent;
     private AnimationPlayer _animationPlayer;
     private AnimatedSprite2D _characterSprite;
+    private Timer _dashCooldownTimer;
     
     private StateMachine _stateMachine;
     private Vector2 _direction = Vector2.Zero;
@@ -21,6 +22,7 @@ public partial class RunState: Node, IState
         _velocityComponent = _character.GetNodeOrNull<VelocityComponent>("VelocityComponent");
         _animationPlayer = _character.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
         _characterSprite = _character.GetNodeOrNull<AnimatedSprite2D>("sprite");
+        _dashCooldownTimer = _character.GetNodeOrNull<Timer>("Timers/DashCooldownTimer");
     }
     
     public void Initialize(StateMachine stateMachine)
@@ -59,6 +61,9 @@ public partial class RunState: Node, IState
             else if (Input.IsActionPressed("jump") && _character.IsOnFloor())
                 _stateMachine?.SetState("JumpState");
         }
+        
+        if (Input.IsActionJustPressed("dashDodge") && _dashCooldownTimer?.TimeLeft == 0) 
+            _stateMachine?.SetState("DashState");
     }
 
     public void PhysicsUpdate(float delta)

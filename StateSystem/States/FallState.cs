@@ -12,6 +12,7 @@ public partial class FallState: Node, IState
     private VelocityComponent _velocityComponent;
     private AnimationPlayer _animationPlayer;
     private RayCast2D _leftWallDetect, _rightWallDetect;
+    private Timer _dashCooldownTimer;
     
     private StateMachine _stateMachine;
     private Vector2 _direction = Vector2.Zero;
@@ -23,6 +24,7 @@ public partial class FallState: Node, IState
         _animationPlayer = _character.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
         _leftWallDetect = _character.GetNodeOrNull<RayCast2D>("LeftWallDetect");
         _rightWallDetect = _character.GetNodeOrNull<RayCast2D>("RightWallDetect");
+        _dashCooldownTimer = _character.GetNodeOrNull<Timer>("Timers/DashCooldownTimer");
     }
 
     public void Initialize(StateMachine stateMachine)
@@ -59,6 +61,9 @@ public partial class FallState: Node, IState
                 _stateMachine?.SetState("WallSlideState");
             }
         }
+        
+        if (Input.IsActionJustPressed("dashDodge") && _dashCooldownTimer?.TimeLeft == 0) 
+            _stateMachine?.SetState("DashState");
     }
 
     public void PhysicsUpdate(float delta)
