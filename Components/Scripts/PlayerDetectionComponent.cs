@@ -7,7 +7,7 @@ namespace ElGatoProject.Components.Scripts;
 public partial class PlayerDetectionComponent : Node2D
 {
     [Export] private Area2D _playerDetectionArea;
-    // [Export] private RayCast2D _playerDetectionRay;
+    [Export] private RayCast2D _playerDetectionRay;
     [Export] public Vector2 PlayerPosition;
     
     private bool _playerInRange, _canSeePlayer;
@@ -18,25 +18,35 @@ public partial class PlayerDetectionComponent : Node2D
     {
 	    if (_playerDetectionArea == null)
 		    return;
-	    _playerDetectionArea.AreaEntered += OnPlayerEnteredDetectionArea;
-	    _playerDetectionArea.AreaExited += OnPlayerExitedDetectionArea;
+	    _playerDetectionArea.BodyEntered += OnPlayerEnteredDetectionArea;
+	    _playerDetectionArea.BodyExited += OnPlayerExitedDetectionArea;
     }
 
-    private void OnPlayerEnteredDetectionArea(Area2D playerArea)
+    private void OnPlayerEnteredDetectionArea(Node2D body)
     {
-	    if (!playerArea.IsInGroup(Utility.NodeGroupPlayers))
-		    return;
+	    if (body is not CharacterBody2D characterBody) return;
+	    if (!characterBody.IsInGroup(Utility.NodeGroupPlayers)) return;
+	    
 	    _playerInRange = true;
+	    if (_playerDetectionRay != null) _playerDetectionRay.Enabled = true;
+	    _player = characterBody;
+
+	    // if (!playerArea.IsInGroup(Utility.NodeGroupPlayers))
+		   //  return;
+	    // _playerInRange = true;
 	    // if (_playerDetectionRay != null) _playerDetectionRay.Enabled = true;
-	    _player = playerArea;
+	    // _player = playerArea;
     }
 
-    private void OnPlayerExitedDetectionArea(Area2D playerArea)
+    private void OnPlayerExitedDetectionArea(Node2D body)
     {
-	    if (!playerArea.IsInGroup(Utility.NodeGroupPlayers))
-		    return;
+	    if (body is not CharacterBody2D characterBody) return;
+	    if (!characterBody.IsInGroup(Utility.NodeGroupPlayers)) return;
+	    
+	    // if (!playerArea.IsInGroup(Utility.NodeGroupPlayers))
+		   //  return;
 	    _playerInRange = false;
-	    // if (_playerDetectionRay != null) _playerDetectionRay.Enabled = false;
+	    if (_playerDetectionRay != null) _playerDetectionRay.Enabled = false;
     }
 
     public bool PlayerDetectionBehaviour()
@@ -44,11 +54,11 @@ public partial class PlayerDetectionComponent : Node2D
 	    switch (_playerInRange)
 	    {
 		    case true:
-			    // if (_playerDetectionRay != null) _playerDetectionRay.TargetPosition = ToLocal(_player.GlobalPosition);
+			    if (_playerDetectionRay != null) _playerDetectionRay.TargetPosition = ToLocal(_player.GlobalPosition);
 			    PlayerPosition = _player.GlobalPosition;
 
-			    // // Since target position is being changed this frame, Delay checking of raycasts collisions to the next frame
-			    // CallDeferred(nameof(CheckRaycast));
+			    // Since target position is being changed this frame, Delay checking of raycasts collisions to the next frame
+			    CallDeferred(nameof(CheckRaycast));
 			    break;
 		    
 		    case false:
@@ -59,8 +69,8 @@ public partial class PlayerDetectionComponent : Node2D
 	    return _canSeePlayer;
     }
 
-    // private void CheckRaycast()
-    // {
-	   //  _canSeePlayer = !_playerDetectionRay.IsColliding();
-    // }
+    private void CheckRaycast()
+    {
+	    _canSeePlayer = !_playerDetectionRay.IsColliding();
+    }
 }

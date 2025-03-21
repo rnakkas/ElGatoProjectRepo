@@ -28,7 +28,7 @@ public partial class ShootingComponent : Node2D
 		ConnectToSignals();
 
 		if (_muzzle != null) _muzzlePosition = _muzzle.Position;
-		
+
 		if (ShootingProperties != null) SetWeaponMuzzleFlash(ShootingProperties.WeaponType);
 	}
 	
@@ -40,7 +40,7 @@ public partial class ShootingComponent : Node2D
 		{
 			EmitSignal(SignalName.Shooting);
 			
-			_flashSprite.Play(Utility.EntityAnimations[Utility.EntityState.Shoot]);
+			_flashSprite?.Play(Utility.EntityAnimations[Utility.EntityState.Shoot]);
 			
 			ShootingLogic(targetVector);
 			
