@@ -1,4 +1,4 @@
-[gd_scene load_steps=111 format=3 uid="uid://c4o8x6lc2silu"]
+[gd_scene load_steps=112 format=3 uid="uid://c4o8x6lc2silu"]
 
 [ext_resource type="Script" path="res://Players/Scripts/PlayerTheCat.cs" id="1_ngcol"]
 [ext_resource type="Script" path="res://Components/Scripts/HealthComponent.cs" id="2_irjyl"]
@@ -19,6 +19,7 @@
 [ext_resource type="Script" path="res://StateSystem/States/WallSlideState.cs" id="17_kuc6b"]
 [ext_resource type="Script" path="res://StateSystem/States/WallJumpState.cs" id="18_jj065"]
 [ext_resource type="Script" path="res://StateSystem/States/DashState.cs" id="19_i3wmp"]
+[ext_resource type="Script" path="res://StateSystem/States/IdleShootState.cs" id="20_du4re"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_431m1"]
 radius = 5.0
@@ -1173,6 +1174,9 @@ script = ExtResource("18_jj065")
 
 [node name="DashState" type="Node" parent="StateMachine"]
 script = ExtResource("19_i3wmp")
+
+[node name="IdleShootState" type="Node" parent="StateMachine"]
+script = ExtResource("20_du4re")
 
 [node name="Timers" type="Node" parent="."]
 

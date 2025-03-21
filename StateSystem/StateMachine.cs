@@ -55,7 +55,7 @@ public partial class StateMachine : Node
 
         _currentState?.Exit();
         _currentState = _states[stateName];
-        _currentState.Enter();
+        _currentState?.Enter();
     }
 
     public override void _Process(double delta)

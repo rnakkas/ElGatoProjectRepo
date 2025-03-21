@@ -1,14 +1,12 @@
 using ElGatoProject.Components.Scripts;
 using ElGatoProject.StateSystem.Interfaces;
-using ElGatoProject.Utilties;
 using Godot;
 
 namespace ElGatoProject.StateSystem.States;
 
 [GlobalClass]
-public partial class IdleState : Node, IState
+public partial class IdleShootState : Node, IState
 {
-    // Generic character reference. This will work for Player, Enemy, etc.
     private CharacterBody2D _character;
     private VelocityComponent _velocityComponent;
     private ShootingComponent _shootingComponent;
@@ -18,7 +16,8 @@ public partial class IdleState : Node, IState
     
     private StateMachine _stateMachine;
     private Vector2 _direction = Vector2.Zero;
-
+    private bool _isAnimationFinished;
+    
     public override void _Ready()
     {
         _character = GetOwner<CharacterBody2D>();
@@ -34,15 +33,11 @@ public partial class IdleState : Node, IState
         _stateMachine = stateMachine;
     }
 
-    public async void Enter()
+    public void Enter()
     {
         _velocityComponent?.ResetVerticalVelocity();
-        
-        if (_animationPlayer.CurrentAnimation.Contains("idle_"))
-        {
-            await ToSignal(_animationPlayer, "animation_finished");
-        }
-        _animationPlayer?.Play("idle");
+
+        _animationPlayer?.Play("idle_shoot");
     }
 
     public void Exit()
@@ -51,37 +46,33 @@ public partial class IdleState : Node, IState
 
     public void Update(float delta)
     {
-        if (_character.IsInGroup(Utility.NodeGroupPlayers))
-        {
-             _direction = Input.GetVector(
-                        "move_left", 
-                        "move_right", 
-                        "move_up", 
-                        "move_down");
-        }
+        _direction = Input.GetVector(
+            "move_left", 
+            "move_right", 
+            "move_up", 
+            "move_down");
         
         if (_characterSprite != null) _stateMachine.FlipSprite(_characterSprite, _direction);
         
-        if (_direction == Vector2.Left || _direction == Vector2.Right)
-        {
-            _stateMachine?.SetState("RunState");
-        }
-        else if (_character != null)
-        {
-            if (!_character.IsOnFloor() || _character.IsOnCeiling())
-                _stateMachine?.SetState("FallState");
-            else if (Input.IsActionPressed("jump") && _character.IsOnFloor())
-                _stateMachine?.SetState("JumpState");
-        }
-        
-        if (Input.IsActionJustPressed("dashDodge") && _dashCooldownTimer?.TimeLeft == 0) 
-            _stateMachine?.SetState("DashState");
-
         if (Input.IsActionPressed("shoot"))
         {
-            if (_shootingComponent.Shoot(SetDirectionBasedOnSprite()))
-                _stateMachine?.SetState("IdleShootState");
+            _stateMachine?.SetState(_shootingComponent.Shoot(SetDirectionBasedOnSprite())
+                ? "IdleShootState"
+                : "IdleState");
         }
+        else if (!Input.IsActionPressed("shoot"))
+            _stateMachine?.SetState("IdleState");
+        else if (Input.IsActionPressed("shoot") && 
+                 (_direction == Vector2.Left || _direction == Vector2.Right)
+                 )
+        {
+            _stateMachine?.SetState(_shootingComponent.Shoot(SetDirectionBasedOnSprite())
+                ? "RunShootState"
+                : "RunState");
+        }
+       
+        if (Input.IsActionJustPressed("dashDodge") && _dashCooldownTimer?.TimeLeft == 0) 
+            _stateMachine?.SetState("DashState");
     }
 
     public void PhysicsUpdate(float delta)
