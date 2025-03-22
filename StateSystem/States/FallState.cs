@@ -20,11 +20,11 @@ public partial class FallState: Node, IState
     public override void _Ready()
     {
         _character = GetOwnerOrNull<CharacterBody2D>();
-        _velocityComponent = _character.GetNodeOrNull<VelocityComponent>("VelocityComponent");
-        _animationPlayer = _character.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
-        _leftWallDetect = _character.GetNodeOrNull<RayCast2D>("LeftWallDetect");
-        _rightWallDetect = _character.GetNodeOrNull<RayCast2D>("RightWallDetect");
-        _dashCooldownTimer = _character.GetNodeOrNull<Timer>("Timers/DashCooldownTimer");
+        _velocityComponent = _character?.GetNodeOrNull<VelocityComponent>("VelocityComponent");
+        _animationPlayer = _character?.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
+        _leftWallDetect = _character?.GetNodeOrNull<RayCast2D>("LeftWallDetect");
+        _rightWallDetect = _character?.GetNodeOrNull<RayCast2D>("RightWallDetect");
+        _dashCooldownTimer = _character?.GetNodeOrNull<Timer>("Timers/DashCooldownTimer");
     }
 
     public void Initialize(StateMachine stateMachine)

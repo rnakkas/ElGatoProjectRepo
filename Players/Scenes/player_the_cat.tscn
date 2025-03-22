@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" path="res://Players/Scripts/PlayerTheCat.cs" id="1_ngcol"]
 [ext_resource type="Script" path="res://Components/Scripts/HealthComponent.cs" id="2_irjyl"]
-[ext_resource type="Script" path="res://Components/Scripts/PlayerControllerComponent.cs" id="2_y5cke"]
 [ext_resource type="Script" path="res://Components/Scripts/HurtboxComponent.cs" id="3_5pkbi"]
 [ext_resource type="Script" path="res://Components/Scripts/PickupsComponent.cs" id="4_mdlkx"]
 [ext_resource type="Script" path="res://Components/Scripts/VelocityComponent.cs" id="5_jql4e"]
@@ -20,19 +19,18 @@
 [ext_resource type="Script" path="res://StateSystem/States/WallJumpState.cs" id="18_jj065"]
 [ext_resource type="Script" path="res://StateSystem/States/DashState.cs" id="19_i3wmp"]
 [ext_resource type="Script" path="res://StateSystem/States/IdleShootState.cs" id="20_du4re"]
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_431m1"]
-radius = 5.0
-height = 16.0
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_l4g6g"]
-size = Vector2(5, 5)
+[ext_resource type="Script" path="res://StateSystem/States/HurtState.cs" id="21_7j4xj"]
+[ext_resource type="Script" path="res://StateSystem/States/DeathState.cs" id="22_sfqdw"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mju0f"]
 size = Vector2(12, 15)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_22he6"]
 radius = 9.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_431m1"]
+radius = 5.0
+height = 16.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_p7631"]
 atlas = ExtResource("9_mv6h0")
@@ -621,6 +619,18 @@ tracks/1/keys = {
 "update": 1,
 "values": [0]
 }
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("HurtboxComponent/HurtboxCollider:disabled")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
 
 [sub_resource type="Animation" id="Animation_6gust"]
 resource_name = "dash"
@@ -651,6 +661,18 @@ tracks/1/keys = {
 "update": 1,
 "values": [0, 1, 2, 3]
 }
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("HurtboxComponent/HurtboxCollider:disabled")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.230769),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
 
 [sub_resource type="Animation" id="Animation_yi4po"]
 resource_name = "death"
@@ -679,6 +701,18 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 1,
 "values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("HurtboxComponent/HurtboxCollider:disabled")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, true]
 }
 
 [sub_resource type="Animation" id="Animation_7ffgr"]
@@ -1052,48 +1086,14 @@ _data = {
 "wall_slide_shoot": SubResource("Animation_myl41")
 }
 
-[node name="PlayerTheCat" type="CharacterBody2D" node_paths=PackedStringArray("_velocityComponent") groups=["Players"]]
+[node name="PlayerTheCat" type="CharacterBody2D" node_paths=PackedStringArray("_velocityComponent", "_hurtboxComponent", "_healthComponent", "_stateMachine") groups=["Players"]]
 z_index = 100
 collision_mask = 6
 script = ExtResource("1_ngcol")
 _velocityComponent = NodePath("VelocityComponent")
-
-[node name="LeftWallDetect" type="RayCast2D" parent="."]
-self_modulate = Color(1, 0, 1, 1)
-target_position = Vector2(-12, 0)
-collision_mask = 4
-
-[node name="RightWallDetect" type="RayCast2D" parent="."]
-self_modulate = Color(1, 0, 1, 1)
-target_position = Vector2(12, 0)
-collision_mask = 4
-
-[node name="collider" type="CollisionShape2D" parent="."]
-self_modulate = Color(1, 1, 1, 0.403922)
-shape = SubResource("CapsuleShape2D_431m1")
-
-[node name="TargetBox" type="Area2D" parent="."]
-position = Vector2(0, 5.465)
-collision_mask = 0
-monitoring = false
-
-[node name="TargetBoxCollider" type="CollisionShape2D" parent="TargetBox"]
-shape = SubResource("RectangleShape2D_l4g6g")
-debug_color = Color(0.932818, 0.259544, 0, 0.42)
-
-[node name="PlayerControllerComponent" type="Node" parent="."]
-script = ExtResource("2_y5cke")
-
-[node name="gameOverTimer" type="Timer" parent="PlayerControllerComponent"]
-wait_time = 2.2
-one_shot = true
-
-[node name="invincibilityTimer" type="Timer" parent="PlayerControllerComponent"]
-wait_time = 1.5
-one_shot = true
-
-[node name="blinkTimer" type="Timer" parent="PlayerControllerComponent"]
-wait_time = 0.12
+_hurtboxComponent = NodePath("HurtboxComponent")
+_healthComponent = NodePath("HealthComponent")
+_stateMachine = NodePath("StateMachine")
 
 [node name="VelocityComponent" type="Node" parent="."]
 script = ExtResource("5_jql4e")
@@ -1101,7 +1101,7 @@ CharacterVelocityProperties = ExtResource("7_u5ntm")
 
 [node name="HealthComponent" type="Node" parent="." node_paths=PackedStringArray("_caffeineDrainTimer")]
 script = ExtResource("2_irjyl")
-CurrentHealth = 50
+CurrentHealth = 5
 _maxHealth = 100
 _caffeineDrainTimer = NodePath("../Timers/CaffeineDrainTimer")
 
@@ -1126,16 +1126,6 @@ _healthComponent = NodePath("../HealthComponent")
 self_modulate = Color(1, 1, 1, 0.737255)
 shape = SubResource("CircleShape2D_22he6")
 debug_color = Color(0, 0.65098, 0, 0.419608)
-
-[node name="sprite" type="AnimatedSprite2D" parent="."]
-sprite_frames = SubResource("SpriteFrames_w0g3d")
-animation = &"idle"
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-"": SubResource("AnimationLibrary_ymrhi")
-}
-blend_times = [&"RESET", &"idle", 0.5, &"idle", &"idle", 2.0, &"idle_shoot", &"run_shoot", 0.1]
 
 [node name="WeaponManagerComponent" type="Node" parent="." node_paths=PackedStringArray("_pickupsComponent", "_shootingComponent")]
 script = ExtResource("10_5oihl")
@@ -1178,6 +1168,12 @@ script = ExtResource("19_i3wmp")
 [node name="IdleShootState" type="Node" parent="StateMachine"]
 script = ExtResource("20_du4re")
 
+[node name="HurtState" type="Node" parent="StateMachine"]
+script = ExtResource("21_7j4xj")
+
+[node name="DeathState" type="Node" parent="StateMachine"]
+script = ExtResource("22_sfqdw")
+
 [node name="Timers" type="Node" parent="."]
 
 [node name="DashTimer" type="Timer" parent="Timers"]
@@ -1193,3 +1189,38 @@ one_shot = true
 [node name="CaffeineDrainTimer" type="Timer" parent="Timers"]
 wait_time = 0.9
 autostart = true
+
+[node name="InvincibilityTimer" type="Timer" parent="Timers"]
+wait_time = 1.7
+one_shot = true
+
+[node name="BlinkTimer" type="Timer" parent="Timers"]
+wait_time = 0.12
+
+[node name="GameOverTimer" type="Timer" parent="Timers"]
+wait_time = 2.2
+one_shot = true
+
+[node name="collider" type="CollisionShape2D" parent="."]
+self_modulate = Color(1, 1, 1, 0.403922)
+shape = SubResource("CapsuleShape2D_431m1")
+
+[node name="LeftWallDetect" type="RayCast2D" parent="."]
+self_modulate = Color(1, 0, 1, 1)
+target_position = Vector2(-12, 0)
+collision_mask = 4
+
+[node name="RightWallDetect" type="RayCast2D" parent="."]
+self_modulate = Color(1, 0, 1, 1)
+target_position = Vector2(12, 0)
+collision_mask = 4
+
+[node name="sprite" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_w0g3d")
+animation = &"idle"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_ymrhi")
+}
+blend_times = [&"RESET", &"idle", 0.5, &"idle", &"idle", 2.0, &"idle_shoot", &"run_shoot", 0.1]

@@ -21,12 +21,12 @@ public partial class IdleShootState : Node, IState
     
     public override void _Ready()
     {
-        _character = GetOwner<CharacterBody2D>();
-        _velocityComponent = _character.GetNodeOrNull<VelocityComponent>("VelocityComponent");
-        _shootingComponent = _character.GetNodeOrNull<ShootingComponent>("ShootingComponent");
-        _animationPlayer = _character.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
-        _characterSprite = _character.GetNodeOrNull<AnimatedSprite2D>("sprite");
-        _dashCooldownTimer = _character.GetNodeOrNull<Timer>("Timers/DashCooldownTimer");
+        _character = GetOwnerOrNull<CharacterBody2D>();
+        _velocityComponent = _character?.GetNodeOrNull<VelocityComponent>("VelocityComponent");
+        _shootingComponent = _character?.GetNodeOrNull<ShootingComponent>("ShootingComponent");
+        _animationPlayer = _character?.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
+        _characterSprite = _character?.GetNodeOrNull<AnimatedSprite2D>("sprite");
+        _dashCooldownTimer = _character?.GetNodeOrNull<Timer>("Timers/DashCooldownTimer");
     }
     
     public void Initialize(StateMachine stateMachine)
@@ -54,24 +54,27 @@ public partial class IdleShootState : Node, IState
             "move_down");
         
         if (_characterSprite != null) _stateMachine.FlipSprite(_characterSprite, _direction);
-        
-        if (Input.IsActionPressed("shoot"))
+
+        if (_shootingComponent != null)
         {
-            _stateMachine?.SetState(_shootingComponent.Shoot(SetDirectionBasedOnSprite())
-                ? Utility.EntityState.IdleShootState.ToString()
-                : Utility.EntityState.IdleState.ToString());
+            if (Input.IsActionPressed("shoot"))
+            {
+                _stateMachine?.SetState(_shootingComponent.Shoot(SetDirectionBasedOnSprite())
+                    ? Utility.EntityState.IdleShootState.ToString()
+                    : Utility.EntityState.IdleState.ToString());
+            }
+            else if (!Input.IsActionPressed("shoot"))
+                _stateMachine?.SetState(Utility.EntityState.IdleState.ToString());
+            else if (Input.IsActionPressed("shoot") &&
+                     (_direction == Vector2.Left || _direction == Vector2.Right)
+                    )
+            {
+                _stateMachine?.SetState(_shootingComponent.Shoot(SetDirectionBasedOnSprite())
+                    ? Utility.EntityState.RunShootState.ToString()
+                    : Utility.EntityState.RunState.ToString());
+            }
         }
-        else if (!Input.IsActionPressed("shoot"))
-            _stateMachine?.SetState(Utility.EntityState.IdleState.ToString());
-        else if (Input.IsActionPressed("shoot") && 
-                 (_direction == Vector2.Left || _direction == Vector2.Right)
-                 )
-        {
-            _stateMachine?.SetState(_shootingComponent.Shoot(SetDirectionBasedOnSprite())
-                ? Utility.EntityState.RunShootState.ToString()
-                : Utility.EntityState.RunState.ToString());
-        }
-       
+
         if (Input.IsActionJustPressed("dashDodge") && _dashCooldownTimer?.TimeLeft == 0) 
             _stateMachine?.SetState(Utility.EntityState.DashState.ToString());
     }

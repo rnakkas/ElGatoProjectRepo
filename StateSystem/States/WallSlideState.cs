@@ -21,12 +21,12 @@ public partial class WallSlideState : Node, IState
     public override void _Ready()
     {
         _character = GetOwnerOrNull<CharacterBody2D>();
-        _velocityComponent = _character.GetNodeOrNull<VelocityComponent>("VelocityComponent");
-        _animationPlayer = _character.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
-        _characterSprite = _character.GetNodeOrNull<AnimatedSprite2D>("sprite");
-        _leftWallDetect = _character.GetNodeOrNull<RayCast2D>("LeftWallDetect");
-        _rightWallDetect = _character.GetNodeOrNull<RayCast2D>("RightWallDetect");
-        _dashCooldownTimer = _character.GetNodeOrNull<Timer>("Timers/DashCooldownTimer");
+        _velocityComponent = _character?.GetNodeOrNull<VelocityComponent>("VelocityComponent");
+        _animationPlayer = _character?.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
+        _characterSprite = _character?.GetNodeOrNull<AnimatedSprite2D>("sprite");
+        _leftWallDetect = _character?.GetNodeOrNull<RayCast2D>("LeftWallDetect");
+        _rightWallDetect = _character?.GetNodeOrNull<RayCast2D>("RightWallDetect");
+        _dashCooldownTimer = _character?.GetNodeOrNull<Timer>("Timers/DashCooldownTimer");
     }
 
     public void Initialize(StateMachine stateMachine)
@@ -45,16 +45,13 @@ public partial class WallSlideState : Node, IState
 
     public void Update(float delta)
     {
+        
+        
         if (_character != null && _leftWallDetect != null && _rightWallDetect != null)
         {
             if (_character.IsOnFloor())
             {
                 _stateMachine?.SetState(Utility.EntityState.IdleState.ToString());
-	
-                if (_direction != Vector2.Zero)
-                {
-                    _stateMachine?.SetState(Utility.EntityState.RunState.ToString());
-                }
             }
             else if (!_character.IsOnFloor())
             {

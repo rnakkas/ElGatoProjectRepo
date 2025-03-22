@@ -20,11 +20,11 @@ public partial class JumpState : Node, IState
     public override void _Ready()
     {
         _character = GetOwnerOrNull<CharacterBody2D>();
-        _velocityComponent = _character.GetNodeOrNull<VelocityComponent>("VelocityComponent");
-        _animationPlayer = _character.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
-        _leftWallDetect = _character.GetNodeOrNull<RayCast2D>("LeftWallDetect");
-        _rightWallDetect = _character.GetNodeOrNull<RayCast2D>("RightWallDetect");
-        _dashCooldownTimer = _character.GetNodeOrNull<Timer>("Timers/DashCooldownTimer");
+        _velocityComponent = _character?.GetNodeOrNull<VelocityComponent>("VelocityComponent");
+        _animationPlayer = _character?.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
+        _leftWallDetect = _character?.GetNodeOrNull<RayCast2D>("LeftWallDetect");
+        _rightWallDetect = _character?.GetNodeOrNull<RayCast2D>("RightWallDetect");
+        _dashCooldownTimer = _character?.GetNodeOrNull<Timer>("Timers/DashCooldownTimer");
     }
 
     public void Initialize(StateMachine stateMachine)
@@ -44,12 +44,18 @@ public partial class JumpState : Node, IState
 
     public void Update(float delta)
     {
-        _direction = Input.GetVector(
-            "move_left", 
-            "move_right", 
-            "move_up", 
-            "move_down");
-        
+        if (_character != null)
+        {
+            if (_character.IsInGroup(Utility.NodeGroupPlayers))
+            {
+                _direction = Input.GetVector(
+                    "move_left",
+                    "move_right",
+                    "move_up",
+                    "move_down");
+            }
+        }
+
         if (Input.IsActionJustPressed("dashDodge") && _dashCooldownTimer?.TimeLeft == 0) 
             _stateMachine?.SetState(Utility.EntityState.DashState.ToString());
     }

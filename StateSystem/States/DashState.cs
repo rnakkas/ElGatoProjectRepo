@@ -19,13 +19,13 @@ public partial class DashState : Node, IState
     
     public override void _Ready()
     {
-        _character = GetOwner<CharacterBody2D>();
-        _velocityComponent = _character.GetNodeOrNull<VelocityComponent>("VelocityComponent");
-        _animationPlayer = _character.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
-        _characterSprite = _character.GetNodeOrNull<AnimatedSprite2D>("sprite");
+        _character = GetOwnerOrNull<CharacterBody2D>();
+        _velocityComponent = _character?.GetNodeOrNull<VelocityComponent>("VelocityComponent");
+        _animationPlayer = _character?.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
+        _characterSprite = _character?.GetNodeOrNull<AnimatedSprite2D>("sprite");
         
-        _dashTimer = _character.GetNodeOrNull<Timer>("Timers/DashTimer");
-        _dashCooldownTimer = _character.GetNodeOrNull<Timer>("Timers/DashCooldownTimer");
+        _dashTimer = _character?.GetNodeOrNull<Timer>("Timers/DashTimer");
+        _dashCooldownTimer = _character?.GetNodeOrNull<Timer>("Timers/DashCooldownTimer");
 
         if (_dashTimer != null)
         {
@@ -45,7 +45,7 @@ public partial class DashState : Node, IState
 
     private void OnDashTimerTimedOut()
     {
-        _stateMachine.SetState(Utility.EntityState.IdleState.ToString());
+        _stateMachine?.SetState(Utility.EntityState.IdleState.ToString());
     }
     
     public void Initialize(StateMachine stateMachine)

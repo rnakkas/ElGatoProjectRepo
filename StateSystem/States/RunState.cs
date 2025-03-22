@@ -20,10 +20,10 @@ public partial class RunState: Node, IState
     public override void _Ready()
     {
         _character = GetOwnerOrNull<CharacterBody2D>();
-        _velocityComponent = _character.GetNodeOrNull<VelocityComponent>("VelocityComponent");
-        _animationPlayer = _character.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
-        _characterSprite = _character.GetNodeOrNull<AnimatedSprite2D>("sprite");
-        _dashCooldownTimer = _character.GetNodeOrNull<Timer>("Timers/DashCooldownTimer");
+        _velocityComponent = _character?.GetNodeOrNull<VelocityComponent>("VelocityComponent");
+        _animationPlayer = _character?.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
+        _characterSprite = _character?.GetNodeOrNull<AnimatedSprite2D>("sprite");
+        _dashCooldownTimer = _character?.GetNodeOrNull<Timer>("Timers/DashCooldownTimer");
     }
     
     public void Initialize(StateMachine stateMachine)
@@ -38,17 +38,22 @@ public partial class RunState: Node, IState
 
     public void Exit()
     {
-        
     }
 
     public void Update(float delta)
     {
-        _direction = Input.GetVector(
-            "move_left", 
-            "move_right", 
-            "move_up", 
-            "move_down");
-        
+        if (_character != null)
+        {
+            if (_character.IsInGroup(Utility.NodeGroupPlayers))
+            {
+                _direction = Input.GetVector(
+                    "move_left",
+                    "move_right",
+                    "move_up",
+                    "move_down");
+            }
+        }
+
         if (_characterSprite != null) _stateMachine.FlipSprite(_characterSprite, _direction);
         
         if (_direction == Vector2.Zero)
