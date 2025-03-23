@@ -10,7 +10,9 @@ public partial class JumpState : Node, IState
 {
     private CharacterBody2D _character;
     private VelocityComponent _velocityComponent;
+    private ShootingComponent _shootingComponent;
     private AnimationPlayer _animationPlayer;
+    private AnimatedSprite2D _characterSprite;
     private RayCast2D _leftWallDetect, _rightWallDetect;
     private Timer _dashCooldownTimer;
     
@@ -21,7 +23,9 @@ public partial class JumpState : Node, IState
     {
         _character = GetOwnerOrNull<CharacterBody2D>();
         _velocityComponent = _character?.GetNodeOrNull<VelocityComponent>("VelocityComponent");
+        _shootingComponent = _character?.GetNodeOrNull<ShootingComponent>("ShootingComponent");
         _animationPlayer = _character?.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
+        _characterSprite = _character?.GetNodeOrNull<AnimatedSprite2D>("sprite");
         _leftWallDetect = _character?.GetNodeOrNull<RayCast2D>("LeftWallDetect");
         _rightWallDetect = _character?.GetNodeOrNull<RayCast2D>("RightWallDetect");
         _dashCooldownTimer = _character?.GetNodeOrNull<Timer>("Timers/DashCooldownTimer");
@@ -56,6 +60,14 @@ public partial class JumpState : Node, IState
             }
         }
 
+        if (_shootingComponent == null) 
+            return;
+        if (Input.IsActionPressed("shoot"))
+        {
+            if (_shootingComponent.Shoot(Utility.SetShootingDirection(_characterSprite)))
+                _stateMachine?.SetState(Utility.EntityState.RunShootState.ToString());
+        }
+        
         if (Input.IsActionJustPressed("dashDodge") && _dashCooldownTimer?.TimeLeft == 0) 
             _stateMachine?.SetState(Utility.EntityState.DashState.ToString());
     }

@@ -67,7 +67,7 @@ public partial class IdleState : Node, IState
             }
         }
 
-        if (_characterSprite != null) _stateMachine.FlipSprite(_characterSprite, _direction);
+        if (_characterSprite != null) Utility.FlipSprite(_characterSprite, _direction);
         
         if (_direction == Vector2.Left || _direction == Vector2.Right)
         {
@@ -88,7 +88,7 @@ public partial class IdleState : Node, IState
             return;
         if (Input.IsActionPressed("shoot"))
         {
-            if (_shootingComponent.Shoot(SetShootingDirection()))
+            if (_shootingComponent.Shoot(Utility.SetShootingDirection(_characterSprite)))
                 _stateMachine?.SetState(Utility.EntityState.IdleShootState.ToString());
         }
     }
@@ -96,20 +96,5 @@ public partial class IdleState : Node, IState
     public void PhysicsUpdate(float delta)
     {
         _velocityComponent?.DecelerateToZeroVelocity(delta);
-    }
-    
-    private Vector2 SetShootingDirection()
-    {
-        var directionFacing = Vector2.Zero;
-
-        if (_characterSprite == null) 
-            return directionFacing;
-        
-        if (_characterSprite.IsFlippedH())
-            directionFacing = Vector2.Left;
-        else if (!_characterSprite.IsFlippedV())
-            directionFacing = Vector2.Right;
-
-        return directionFacing;
     }
 }

@@ -60,43 +60,25 @@ public partial class RunShootState : Node, IState
             "move_up", 
             "move_down");
         
-        if (_characterSprite != null) _stateMachine.FlipSprite(_characterSprite, _direction);
+        if (_characterSprite != null) Utility.FlipSprite(_characterSprite, _direction);
         
         if (_shootingComponent != null)
         {
-            if (Input.IsActionPressed("shoot"))
+            if (Input.IsActionPressed("shoot") &&
+                !_shootingComponent.Shoot(Utility.SetShootingDirection(_characterSprite))
+               )
             {
-                _stateMachine?.SetState(_shootingComponent.Shoot(SetShootingDirection())
-                    ? Utility.EntityState.RunShootState.ToString()
-                    : Utility.EntityState.RunState.ToString());
+                _stateMachine?.SetState(Utility.EntityState.RunState.ToString());
             }
             else if (!Input.IsActionPressed("shoot"))
-                _stateMachine?.SetState(Utility.EntityState.RunState.ToString());
-            else if (Input.IsActionPressed("shoot") && _direction == Vector2.Zero)
             {
-                _stateMachine?.SetState(_shootingComponent.Shoot(SetShootingDirection())
-                    ? Utility.EntityState.IdleShootState.ToString()
-                    : Utility.EntityState.IdleState.ToString());
+                _stateMachine?.SetState(Utility.EntityState.RunState.ToString());
             }
         }
-
-        if (Input.IsActionJustPressed("dashDodge") && _dashCooldownTimer?.TimeLeft == 0) 
-            _stateMachine?.SetState(Utility.EntityState.DashState.ToString());
     }
 
     public void PhysicsUpdate(float delta)
     {
         _velocityComponent?.AccelerateToMaxVelocity(delta, _direction);
-    }
-    
-    private Vector2 SetShootingDirection()
-    {
-        Vector2 directionFacing = Vector2.Zero;
-        if (_characterSprite.IsFlippedH())
-            directionFacing = Vector2.Left;
-        else if (!_characterSprite.IsFlippedV())
-            directionFacing = Vector2.Right;
-		
-        return directionFacing;
     }
 }

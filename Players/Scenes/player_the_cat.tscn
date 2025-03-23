@@ -1101,7 +1101,7 @@ CharacterVelocityProperties = ExtResource("7_u5ntm")
 
 [node name="HealthComponent" type="Node" parent="." node_paths=PackedStringArray("_caffeineDrainTimer")]
 script = ExtResource("2_irjyl")
-CurrentHealth = 5
+CurrentHealth = 30
 _maxHealth = 100
 _caffeineDrainTimer = NodePath("../Timers/CaffeineDrainTimer")
 

@@ -13,7 +13,6 @@ public partial class IdleShootState : Node, IState
     private ShootingComponent _shootingComponent;
     private AnimationPlayer _animationPlayer;
     private AnimatedSprite2D _characterSprite;
-    private Timer _dashCooldownTimer;
     
     private StateMachine _stateMachine;
     private Vector2 _direction = Vector2.Zero;
@@ -25,7 +24,6 @@ public partial class IdleShootState : Node, IState
         _shootingComponent = _character?.GetNodeOrNull<ShootingComponent>("ShootingComponent");
         _animationPlayer = _character?.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
         _characterSprite = _character?.GetNodeOrNull<AnimatedSprite2D>("sprite");
-        _dashCooldownTimer = _character?.GetNodeOrNull<Timer>("Timers/DashCooldownTimer");
     }
     
     public void Initialize(StateMachine stateMachine)
@@ -63,45 +61,25 @@ public partial class IdleShootState : Node, IState
             "move_up", 
             "move_down");
         
-        if (_characterSprite != null) _stateMachine.FlipSprite(_characterSprite, _direction);
+        if (_characterSprite != null) Utility.FlipSprite(_characterSprite, _direction);
 
         if (_shootingComponent != null)
         {
-            if (Input.IsActionPressed("shoot"))
+            if (Input.IsActionPressed("shoot") &&
+                !_shootingComponent.Shoot(Utility.SetShootingDirection(_characterSprite))
+               )
             {
-                _stateMachine?.SetState(_shootingComponent.Shoot(SetShootingDirection())
-                    ? Utility.EntityState.IdleShootState.ToString()
-                    : Utility.EntityState.IdleState.ToString());
+                _stateMachine?.SetState(Utility.EntityState.IdleState.ToString());
             }
             else if (!Input.IsActionPressed("shoot"))
-                _stateMachine?.SetState(Utility.EntityState.IdleState.ToString());
-            else if (Input.IsActionPressed("shoot") &&
-                     (_direction == Vector2.Left || _direction == Vector2.Right)
-                    )
             {
-                _stateMachine?.SetState(_shootingComponent.Shoot(SetShootingDirection())
-                    ? Utility.EntityState.RunShootState.ToString()
-                    : Utility.EntityState.RunState.ToString());
+                _stateMachine?.SetState(Utility.EntityState.IdleState.ToString());
             }
         }
-
-        if (Input.IsActionJustPressed("dashDodge") && _dashCooldownTimer?.TimeLeft == 0) 
-            _stateMachine?.SetState(Utility.EntityState.DashState.ToString());
     }
 
     public void PhysicsUpdate(float delta)
     {
         _velocityComponent?.DecelerateToZeroVelocity(delta);
-    }
-    
-    private Vector2 SetShootingDirection()
-    {
-        Vector2 directionFacing = Vector2.Zero;
-        if (_characterSprite.IsFlippedH())
-            directionFacing = Vector2.Left;
-        else if (!_characterSprite.IsFlippedV())
-            directionFacing = Vector2.Right;
-		
-        return directionFacing;
     }
 }

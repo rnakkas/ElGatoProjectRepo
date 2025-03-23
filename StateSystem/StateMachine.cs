@@ -68,15 +68,4 @@ public partial class StateMachine : Node
     {
         _currentState?.PhysicsUpdate((float)delta);
     }
-    
-    public void FlipSprite(AnimatedSprite2D characterSprite, Vector2 direction)
-    {
-        if (characterSprite == null) 
-            return;
-        
-        if (direction == Vector2.Left)
-            characterSprite.FlipH = true;
-        else if (direction == Vector2.Right)
-            characterSprite.FlipH = false;
-    }
 }

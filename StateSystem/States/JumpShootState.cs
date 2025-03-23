@@ -6,12 +6,13 @@ using Godot;
 namespace ElGatoProject.StateSystem.States;
 
 [GlobalClass]
-public partial class RunState: Node, IState
+public partial class JumpShootState : Node, IState
 {
     private CharacterBody2D _character;
     private VelocityComponent _velocityComponent;
     private ShootingComponent _shootingComponent;
     private AnimationPlayer _animationPlayer;
+    private RayCast2D _leftWallDetect, _rightWallDetect;
     private AnimatedSprite2D _characterSprite;
     private Timer _dashCooldownTimer;
     
@@ -24,6 +25,8 @@ public partial class RunState: Node, IState
         _velocityComponent = _character?.GetNodeOrNull<VelocityComponent>("VelocityComponent");
         _shootingComponent = _character?.GetNodeOrNull<ShootingComponent>("ShootingComponent");
         _animationPlayer = _character?.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
+        _leftWallDetect = _character?.GetNodeOrNull<RayCast2D>("LeftWallDetect");
+        _rightWallDetect = _character?.GetNodeOrNull<RayCast2D>("RightWallDetect");
         _characterSprite = _character?.GetNodeOrNull<AnimatedSprite2D>("sprite");
         _dashCooldownTimer = _character?.GetNodeOrNull<Timer>("Timers/DashCooldownTimer");
     }
@@ -33,17 +36,21 @@ public partial class RunState: Node, IState
         _stateMachine = stateMachine;
     }
 
-    public async void Enter()
+    public void Enter()
     {
-        if (_animationPlayer != null)
+        GD.Print("enter");
+        _velocityComponent?.JumpeVelocity();
+        switch (_shootingComponent.ShootingProperties.WeaponType)
         {
-            if (_animationPlayer.CurrentAnimation == Utility.EntityAnimations[Utility.EntityState.RunShootState])
-            {
-                await ToSignal(_animationPlayer, "animation_finished");
-            }
+            case Utility.WeaponType.PlayerPistol:
+            case Utility.WeaponType.PlayerShotgun:
+            case Utility.WeaponType.PlayerRailGun:
+                _animationPlayer?.Play(Utility.EntityAnimations[Utility.EntityState.RunShootState]);
+                break;
+            case Utility.WeaponType.PlayerMachineGun:
+                _animationPlayer?.Play(Utility.EntityAnimations[Utility.EntityState.RunShootState], -1, 1.5f);
+                break;
         }
-        
-        _animationPlayer?.Play(Utility.EntityAnimations[Utility.EntityState.RunState]);
     }
 
     public void Exit()
@@ -63,31 +70,23 @@ public partial class RunState: Node, IState
                     "move_down");
             }
         }
+        
+        // if (_shootingComponent != null)
+        // {
+        //     if (Input.IsActionPressed("shoot") &&
+        //         !_shootingComponent.Shoot(Utility.SetShootingDirection(_characterSprite))
+        //        )
+        //     {
+        //         _stateMachine?.SetState(Utility.EntityState.JumpState.ToString());
+        //     }
+        //     else if (!Input.IsActionPressed("shoot"))
+        //     {
+        //         _stateMachine?.SetState(Utility.EntityState.JumpState.ToString());
+        //     }
+        // }
 
-        if (_characterSprite != null) Utility.FlipSprite(_characterSprite, _direction);
-        
-        if (_direction == Vector2.Zero)
-        {
-            _stateMachine?.SetState(Utility.EntityState.IdleState.ToString());
-        }
-        else if (_character != null)
-        {
-            if (!_character.IsOnFloor() || _character.IsOnCeiling())
-                _stateMachine?.SetState(Utility.EntityState.FallState.ToString());
-            else if (Input.IsActionPressed("jump") && _character.IsOnFloor())
-                _stateMachine?.SetState(Utility.EntityState.JumpState.ToString());
-        }
-        
         if (Input.IsActionJustPressed("dashDodge") && _dashCooldownTimer?.TimeLeft == 0) 
             _stateMachine?.SetState(Utility.EntityState.DashState.ToString());
-        
-        if (_shootingComponent == null) 
-            return;
-        if (Input.IsActionPressed("shoot"))
-        {
-            if (_shootingComponent.Shoot(Utility.SetShootingDirection(_characterSprite)))
-                _stateMachine?.SetState(Utility.EntityState.RunShootState.ToString());
-        }
     }
 
     public void PhysicsUpdate(float delta)

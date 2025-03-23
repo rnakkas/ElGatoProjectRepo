@@ -1,3 +1,4 @@
+using Godot;
 using Godot.Collections;
 
 namespace ElGatoProject.Utilties;
@@ -131,5 +132,33 @@ public static class Utility
         [WeaponType.PlayerMachineGun] = "res://Projectiles/PackedScenes/machinegun_bullet_projectile.tscn",
         [WeaponType.PlayerRailGun] = "res://Projectiles/PackedScenes/railgun_bullet_projectile.tscn"
     };
+    
+    // Methods
+    
+    public static void FlipSprite(AnimatedSprite2D characterSprite, Vector2 direction)
+    {
+        if (characterSprite == null) 
+            return;
+        
+        if (direction == Vector2.Left)
+            characterSprite.FlipH = true;
+        else if (direction == Vector2.Right)
+            characterSprite.FlipH = false;
+    }
+    
+    public static Vector2 SetShootingDirection(Node characterSprite)
+    {
+        var directionFacing = Vector2.Zero;
+        
+        if (characterSprite is not AnimatedSprite2D animatedSprite)
+            return directionFacing;
+        
+        if (animatedSprite.IsFlippedH())
+            directionFacing = Vector2.Left;
+        else if (!animatedSprite.IsFlippedV())
+            directionFacing = Vector2.Right;
+		
+        return directionFacing;
+    }
 
 }
