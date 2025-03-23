@@ -10,6 +10,7 @@ public partial class WallJumpState : Node, IState
 {
     private CharacterBody2D _character;
     private VelocityComponent _velocityComponent;
+    private ShootingComponent _shootingComponent;
     private AnimationPlayer _animationPlayer;
     private AnimatedSprite2D _characterSprite;
     private RayCast2D _leftWallDetect, _rightWallDetect;
@@ -22,6 +23,7 @@ public partial class WallJumpState : Node, IState
     {
         _character = GetOwnerOrNull<CharacterBody2D>();
         _velocityComponent = _character?.GetNodeOrNull<VelocityComponent>("VelocityComponent");
+        _shootingComponent = _character?.GetNodeOrNull<ShootingComponent>("ShootingComponent");
         _animationPlayer = _character?.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
         _characterSprite = _character?.GetNodeOrNull<AnimatedSprite2D>("sprite");
         _leftWallDetect = _character?.GetNodeOrNull<RayCast2D>("LeftWallDetect");

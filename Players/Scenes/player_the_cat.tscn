@@ -1,4 +1,4 @@
-[gd_scene load_steps=115 format=3 uid="uid://c4o8x6lc2silu"]
+[gd_scene load_steps=116 format=3 uid="uid://c4o8x6lc2silu"]
 
 [ext_resource type="Script" path="res://Players/Scripts/PlayerTheCat.cs" id="1_ngcol"]
 [ext_resource type="Script" path="res://Components/Scripts/HealthComponent.cs" id="2_irjyl"]
@@ -21,6 +21,7 @@
 [ext_resource type="Script" path="res://StateSystem/States/WallJumpState.cs" id="18_jj065"]
 [ext_resource type="Script" path="res://StateSystem/States/DashState.cs" id="19_i3wmp"]
 [ext_resource type="Script" path="res://StateSystem/States/IdleShootState.cs" id="20_du4re"]
+[ext_resource type="Script" path="res://StateSystem/States/WallSlideShootState.cs" id="20_y72iw"]
 [ext_resource type="Script" path="res://StateSystem/States/HurtState.cs" id="21_7j4xj"]
 [ext_resource type="Script" path="res://StateSystem/States/RunShootState.cs" id="21_kj3ca"]
 [ext_resource type="Script" path="res://StateSystem/States/DeathState.cs" id="22_sfqdw"]
@@ -1172,6 +1173,9 @@ script = ExtResource("18_j0b4a")
 
 [node name="WallSlideState" type="Node" parent="StateMachine"]
 script = ExtResource("17_kuc6b")
+
+[node name="WallSlideShootState" type="Node" parent="StateMachine"]
+script = ExtResource("20_y72iw")
 
 [node name="WallJumpState" type="Node" parent="StateMachine"]
 script = ExtResource("18_jj065")
