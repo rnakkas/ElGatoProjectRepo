@@ -65,13 +65,8 @@ public partial class IdleShootState : Node, IState
 
         if (_shootingComponent != null)
         {
-            if (Input.IsActionPressed("shoot") &&
-                !_shootingComponent.Shoot(Utility.SetShootingDirection(_characterSprite))
-               )
-            {
-                _stateMachine?.SetState(Utility.EntityState.IdleState.ToString());
-            }
-            else if (!Input.IsActionPressed("shoot"))
+            if (!Input.IsActionPressed("shoot") ||
+                !_shootingComponent.Shoot(Utility.SetShootingDirection(_characterSprite)))
             {
                 _stateMachine?.SetState(Utility.EntityState.IdleState.ToString());
             }

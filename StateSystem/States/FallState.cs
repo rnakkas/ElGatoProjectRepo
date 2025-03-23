@@ -10,7 +10,10 @@ public partial class FallState: Node, IState
 {
     private CharacterBody2D _character;
     private VelocityComponent _velocityComponent;
+    private ShootingComponent _shootingComponent;
     private AnimationPlayer _animationPlayer;
+    private AnimatedSprite2D _characterSprite;
+    
     private RayCast2D _leftWallDetect, _rightWallDetect;
     private Timer _dashCooldownTimer;
     
@@ -21,7 +24,9 @@ public partial class FallState: Node, IState
     {
         _character = GetOwnerOrNull<CharacterBody2D>();
         _velocityComponent = _character?.GetNodeOrNull<VelocityComponent>("VelocityComponent");
+        _shootingComponent = _character?.GetNodeOrNull<ShootingComponent>("ShootingComponent");
         _animationPlayer = _character?.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
+        _characterSprite = _character?.GetNodeOrNull<AnimatedSprite2D>("sprite");
         _leftWallDetect = _character?.GetNodeOrNull<RayCast2D>("LeftWallDetect");
         _rightWallDetect = _character?.GetNodeOrNull<RayCast2D>("RightWallDetect");
         _dashCooldownTimer = _character?.GetNodeOrNull<Timer>("Timers/DashCooldownTimer");
@@ -32,8 +37,15 @@ public partial class FallState: Node, IState
         _stateMachine = stateMachine;
     }
 
-    public void Enter()
+    public async void Enter()
     {
+        if (_animationPlayer != null)
+        {
+            if (_animationPlayer.CurrentAnimation == Utility.EntityAnimations[Utility.EntityState.FallShootState])
+            {
+                await ToSignal(_animationPlayer, "animation_finished");
+            }
+        }
         _animationPlayer?.Play(Utility.EntityAnimations[Utility.EntityState.FallState]);
     }
 
@@ -43,12 +55,18 @@ public partial class FallState: Node, IState
 
     public void Update(float delta)
     {
-        _direction = Input.GetVector(
-            "move_left", 
-            "move_right", 
-            "move_up", 
-            "move_down");
-        
+        if (_character != null)
+        {
+            if (_character.IsInGroup(Utility.NodeGroupPlayers))
+            {
+                _direction = Input.GetVector(
+                    "move_left",
+                    "move_right",
+                    "move_up",
+                    "move_down");
+            }
+        }
+
         if (_character != null && _leftWallDetect != null && _rightWallDetect != null)
         {
             if (_character.IsOnFloor())
@@ -60,6 +78,14 @@ public partial class FallState: Node, IState
             {
                 _stateMachine?.SetState(Utility.EntityState.WallSlideState.ToString());
             }
+        }
+        
+        if (_shootingComponent == null) 
+            return;
+        if (Input.IsActionPressed("shoot"))
+        {
+            if (_shootingComponent.Shoot(Utility.SetShootingDirection(_characterSprite)))
+                _stateMachine?.SetState(Utility.EntityState.FallShootState.ToString());
         }
         
         if (Input.IsActionJustPressed("dashDodge") && _dashCooldownTimer?.TimeLeft == 0) 

@@ -6,14 +6,13 @@ using Godot;
 namespace ElGatoProject.StateSystem.States;
 
 [GlobalClass]
-public partial class RunShootState : Node, IState
+public partial class FallShootState : Node, IState
 {
     private CharacterBody2D _character;
     private VelocityComponent _velocityComponent;
     private ShootingComponent _shootingComponent;
     private AnimationPlayer _animationPlayer;
     private AnimatedSprite2D _characterSprite;
-    private Timer _dashCooldownTimer;
     
     private StateMachine _stateMachine;
     private Vector2 _direction = Vector2.Zero;
@@ -25,7 +24,6 @@ public partial class RunShootState : Node, IState
         _shootingComponent = _character?.GetNodeOrNull<ShootingComponent>("ShootingComponent");
         _animationPlayer = _character?.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
         _characterSprite = _character?.GetNodeOrNull<AnimatedSprite2D>("sprite");
-        _dashCooldownTimer = _character?.GetNodeOrNull<Timer>("Timers/DashCooldownTimer");
     }
     
     public void Initialize(StateMachine stateMachine)
@@ -40,10 +38,10 @@ public partial class RunShootState : Node, IState
             case Utility.WeaponType.PlayerPistol:
             case Utility.WeaponType.PlayerShotgun:
             case Utility.WeaponType.PlayerRailGun:
-                _animationPlayer?.Play(Utility.EntityAnimations[Utility.EntityState.RunShootState]);
+                _animationPlayer?.Play(Utility.EntityAnimations[Utility.EntityState.FallShootState]);
                 break;
             case Utility.WeaponType.PlayerMachineGun:
-                _animationPlayer?.Play(Utility.EntityAnimations[Utility.EntityState.RunShootState], -1, 1.5f);
+                _animationPlayer?.Play(Utility.EntityAnimations[Utility.EntityState.FallShootState], -1, 1.5f);
                 break;
         }
     }
@@ -60,14 +58,12 @@ public partial class RunShootState : Node, IState
             "move_up", 
             "move_down");
         
-        if (_characterSprite != null) Utility.FlipSprite(_characterSprite, _direction);
-        
         if (_shootingComponent != null)
         {
             if (!Input.IsActionPressed("shoot") ||
                 !_shootingComponent.Shoot(Utility.SetShootingDirection(_characterSprite)))
             {
-                _stateMachine?.SetState(Utility.EntityState.RunState.ToString());
+                _stateMachine?.SetState(Utility.EntityState.FallState.ToString());
             }
         }
     }
@@ -75,5 +71,6 @@ public partial class RunShootState : Node, IState
     public void PhysicsUpdate(float delta)
     {
         _velocityComponent?.AccelerateToMaxVelocity(delta, _direction);
+        _velocityComponent?.FallVelocity(delta);
     }
 }

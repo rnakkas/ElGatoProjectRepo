@@ -36,9 +36,18 @@ public partial class JumpState : Node, IState
         _stateMachine = stateMachine;
     }
 
-    public void Enter()
+    public async void Enter()
     {
         _velocityComponent?.JumpeVelocity();
+        
+         if (_animationPlayer != null)
+         {
+             if (_animationPlayer.CurrentAnimation == Utility.EntityAnimations[Utility.EntityState.JumpShootState])
+             {
+                 await ToSignal(_animationPlayer, "animation_finished");
+             }
+         }
+         
         _animationPlayer?.Play(Utility.EntityAnimations[Utility.EntityState.JumpState]);
     }
 
@@ -65,7 +74,7 @@ public partial class JumpState : Node, IState
         if (Input.IsActionPressed("shoot"))
         {
             if (_shootingComponent.Shoot(Utility.SetShootingDirection(_characterSprite)))
-                _stateMachine?.SetState(Utility.EntityState.RunShootState.ToString());
+                _stateMachine?.SetState(Utility.EntityState.JumpShootState.ToString());
         }
         
         if (Input.IsActionJustPressed("dashDodge") && _dashCooldownTimer?.TimeLeft == 0) 
