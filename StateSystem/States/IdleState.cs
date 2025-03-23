@@ -88,7 +88,7 @@ public partial class IdleState : Node, IState
             return;
         if (Input.IsActionPressed("shoot"))
         {
-            if (_shootingComponent.Shoot(SetDirectionBasedOnSprite()))
+            if (_shootingComponent.Shoot(SetShootingDirection()))
                 _stateMachine?.SetState(Utility.EntityState.IdleShootState.ToString());
         }
     }
@@ -98,7 +98,7 @@ public partial class IdleState : Node, IState
         _velocityComponent?.DecelerateToZeroVelocity(delta);
     }
     
-    private Vector2 SetDirectionBasedOnSprite()
+    private Vector2 SetShootingDirection()
     {
         var directionFacing = Vector2.Zero;
 

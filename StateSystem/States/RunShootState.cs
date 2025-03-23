@@ -6,7 +6,7 @@ using Godot;
 namespace ElGatoProject.StateSystem.States;
 
 [GlobalClass]
-public partial class IdleShootState : Node, IState
+public partial class RunShootState : Node, IState
 {
     private CharacterBody2D _character;
     private VelocityComponent _velocityComponent;
@@ -35,20 +35,17 @@ public partial class IdleShootState : Node, IState
 
     public void Enter()
     {
-        _velocityComponent?.ResetVerticalVelocity();
-
         switch (_shootingComponent.ShootingProperties.WeaponType)
         {
             case Utility.WeaponType.PlayerPistol:
             case Utility.WeaponType.PlayerShotgun:
             case Utility.WeaponType.PlayerRailGun:
-                 _animationPlayer?.Play(Utility.EntityAnimations[Utility.EntityState.IdleShootState]);
-                 break;
+                _animationPlayer?.Play(Utility.EntityAnimations[Utility.EntityState.RunShootState]);
+                break;
             case Utility.WeaponType.PlayerMachineGun:
-                _animationPlayer?.Play(Utility.EntityAnimations[Utility.EntityState.IdleShootState], -1, 3f);
+                _animationPlayer?.Play(Utility.EntityAnimations[Utility.EntityState.RunShootState], -1, 1.5f);
                 break;
         }
-       
     }
 
     public void Exit()
@@ -64,24 +61,22 @@ public partial class IdleShootState : Node, IState
             "move_down");
         
         if (_characterSprite != null) _stateMachine.FlipSprite(_characterSprite, _direction);
-
+        
         if (_shootingComponent != null)
         {
             if (Input.IsActionPressed("shoot"))
             {
                 _stateMachine?.SetState(_shootingComponent.Shoot(SetShootingDirection())
-                    ? Utility.EntityState.IdleShootState.ToString()
-                    : Utility.EntityState.IdleState.ToString());
-            }
-            else if (!Input.IsActionPressed("shoot"))
-                _stateMachine?.SetState(Utility.EntityState.IdleState.ToString());
-            else if (Input.IsActionPressed("shoot") &&
-                     (_direction == Vector2.Left || _direction == Vector2.Right)
-                    )
-            {
-                _stateMachine?.SetState(_shootingComponent.Shoot(SetShootingDirection())
                     ? Utility.EntityState.RunShootState.ToString()
                     : Utility.EntityState.RunState.ToString());
+            }
+            else if (!Input.IsActionPressed("shoot"))
+                _stateMachine?.SetState(Utility.EntityState.RunState.ToString());
+            else if (Input.IsActionPressed("shoot") && _direction == Vector2.Zero)
+            {
+                _stateMachine?.SetState(_shootingComponent.Shoot(SetShootingDirection())
+                    ? Utility.EntityState.IdleShootState.ToString()
+                    : Utility.EntityState.IdleState.ToString());
             }
         }
 
@@ -91,7 +86,7 @@ public partial class IdleShootState : Node, IState
 
     public void PhysicsUpdate(float delta)
     {
-        _velocityComponent?.DecelerateToZeroVelocity(delta);
+        _velocityComponent?.AccelerateToMaxVelocity(delta, _direction);
     }
     
     private Vector2 SetShootingDirection()

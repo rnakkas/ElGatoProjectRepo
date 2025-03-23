@@ -1,4 +1,4 @@
-[gd_scene load_steps=112 format=3 uid="uid://c4o8x6lc2silu"]
+[gd_scene load_steps=113 format=3 uid="uid://c4o8x6lc2silu"]
 
 [ext_resource type="Script" path="res://Players/Scripts/PlayerTheCat.cs" id="1_ngcol"]
 [ext_resource type="Script" path="res://Components/Scripts/HealthComponent.cs" id="2_irjyl"]
@@ -20,6 +20,7 @@
 [ext_resource type="Script" path="res://StateSystem/States/DashState.cs" id="19_i3wmp"]
 [ext_resource type="Script" path="res://StateSystem/States/IdleShootState.cs" id="20_du4re"]
 [ext_resource type="Script" path="res://StateSystem/States/HurtState.cs" id="21_7j4xj"]
+[ext_resource type="Script" path="res://StateSystem/States/RunShootState.cs" id="21_kj3ca"]
 [ext_resource type="Script" path="res://StateSystem/States/DeathState.cs" id="22_sfqdw"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_mju0f"]
@@ -952,7 +953,6 @@ tracks/1/keys = {
 [sub_resource type="Animation" id="Animation_d1onj"]
 resource_name = "run_shoot"
 length = 0.285722
-loop_mode = 1
 step = 0.0714286
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -1139,7 +1139,7 @@ _muzzle = NodePath("muzzle")
 _shotCooldownTimer = NodePath("../Timers/ShotCooldownTimer")
 
 [node name="muzzle" type="Marker2D" parent="ShootingComponent"]
-position = Vector2(14, -1)
+position = Vector2(15, -2)
 
 [node name="StateMachine" type="Node" parent="."]
 script = ExtResource("12_te382")
@@ -1147,8 +1147,14 @@ script = ExtResource("12_te382")
 [node name="IdleState" type="Node" parent="StateMachine"]
 script = ExtResource("13_0ubik")
 
+[node name="IdleShootState" type="Node" parent="StateMachine"]
+script = ExtResource("20_du4re")
+
 [node name="RunState" type="Node" parent="StateMachine"]
 script = ExtResource("14_q32fq")
+
+[node name="RunShootState" type="Node" parent="StateMachine"]
+script = ExtResource("21_kj3ca")
 
 [node name="JumpState" type="Node" parent="StateMachine"]
 script = ExtResource("15_bud0n")
@@ -1164,9 +1170,6 @@ script = ExtResource("18_jj065")
 
 [node name="DashState" type="Node" parent="StateMachine"]
 script = ExtResource("19_i3wmp")
-
-[node name="IdleShootState" type="Node" parent="StateMachine"]
-script = ExtResource("20_du4re")
 
 [node name="HurtState" type="Node" parent="StateMachine"]
 script = ExtResource("21_7j4xj")

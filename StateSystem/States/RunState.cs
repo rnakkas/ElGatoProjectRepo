@@ -10,6 +10,7 @@ public partial class RunState: Node, IState
 {
     private CharacterBody2D _character;
     private VelocityComponent _velocityComponent;
+    private ShootingComponent _shootingComponent;
     private AnimationPlayer _animationPlayer;
     private AnimatedSprite2D _characterSprite;
     private Timer _dashCooldownTimer;
@@ -21,6 +22,7 @@ public partial class RunState: Node, IState
     {
         _character = GetOwnerOrNull<CharacterBody2D>();
         _velocityComponent = _character?.GetNodeOrNull<VelocityComponent>("VelocityComponent");
+        _shootingComponent = _character?.GetNodeOrNull<ShootingComponent>("ShootingComponent");
         _animationPlayer = _character?.GetNodeOrNull<AnimationPlayer>("AnimationPlayer");
         _characterSprite = _character?.GetNodeOrNull<AnimatedSprite2D>("sprite");
         _dashCooldownTimer = _character?.GetNodeOrNull<Timer>("Timers/DashCooldownTimer");
@@ -31,8 +33,16 @@ public partial class RunState: Node, IState
         _stateMachine = stateMachine;
     }
 
-    public void Enter()
+    public async void Enter()
     {
+        if (_animationPlayer != null)
+        {
+            if (_animationPlayer.CurrentAnimation == Utility.EntityAnimations[Utility.EntityState.RunShootState])
+            {
+                await ToSignal(_animationPlayer, "animation_finished");
+            }
+        }
+        
         _animationPlayer?.Play(Utility.EntityAnimations[Utility.EntityState.RunState]);
     }
 
@@ -70,10 +80,33 @@ public partial class RunState: Node, IState
         
         if (Input.IsActionJustPressed("dashDodge") && _dashCooldownTimer?.TimeLeft == 0) 
             _stateMachine?.SetState(Utility.EntityState.DashState.ToString());
+        
+        if (_shootingComponent == null) 
+            return;
+        if (Input.IsActionPressed("shoot"))
+        {
+            if (_shootingComponent.Shoot(SetShootingDirection()))
+                _stateMachine?.SetState(Utility.EntityState.RunShootState.ToString());
+        }
     }
 
     public void PhysicsUpdate(float delta)
     {
         _velocityComponent?.AccelerateToMaxVelocity(delta, _direction);
+    }
+    
+    private Vector2 SetShootingDirection()
+    {
+        var directionFacing = Vector2.Zero;
+
+        if (_characterSprite == null) 
+            return directionFacing;
+        
+        if (_characterSprite.IsFlippedH())
+            directionFacing = Vector2.Left;
+        else if (!_characterSprite.IsFlippedV())
+            directionFacing = Vector2.Right;
+
+        return directionFacing;
     }
 }
