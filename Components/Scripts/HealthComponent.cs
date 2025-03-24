@@ -13,6 +13,11 @@ public partial class HealthComponent : Node
 	
 	[Signal]
 	public delegate void HealthDepletedEventHandler();
+	
+	[Signal]
+	public delegate void HealthDamagedEventHandler(int currentHealth);
+	
+	public int MaxHealth => _maxHealth;
 
 	public override void _Ready()
 	{
@@ -46,9 +51,14 @@ public partial class HealthComponent : Node
 				break;
 			}
 			case <= 0:
+				if (Owner.IsInGroup(Utility.NodeGroupPlayers))
+					EventsBus.Instance.EmitSignal(nameof(EventsBus.PlayerCurrentHealthUpdate), CurrentHealth);
 				EmitSignal(SignalName.HealthDepleted);
 				break;
 		}
+		
+		if (Owner.IsInGroup(Utility.NodeGroupEnemies))
+			EmitSignal(SignalName.HealthDamaged, CurrentHealth);
 	}
 
 	public bool Heal(int heal)

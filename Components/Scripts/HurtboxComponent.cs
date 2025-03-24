@@ -33,8 +33,8 @@ public partial class HurtboxComponent : Area2D
 		var attackPosition = (attackArea.GlobalPosition - GlobalPosition).Normalized();
 		
 		_healthComponent?.TakeDamage(attackDamage);
-		
-		if (_velocityComponent != null) _velocityComponent.KnockbackFromAttack(attackPosition, knockback);
+
+		_velocityComponent?.KnockbackFromAttack(attackPosition, knockback);
 
 		if (_bodySprite != null)
 		{

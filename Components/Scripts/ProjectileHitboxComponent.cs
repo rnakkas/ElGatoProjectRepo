@@ -13,13 +13,13 @@ namespace ElGatoProject.Components.Scripts;
 [GlobalClass]
 public partial class ProjectileHitboxComponent : Area2D
 {
-	public int Damage { get; set; }
-	public float Knockback { get; set; }
-	public Vector2 Velocity { get; set; }
+	[Export] public int Damage { get; set; }
+	[Export] public float Knockback { get; set; }
+	[Export] public Vector2 Velocity { get; set; }
 	
 	[Signal] public delegate void HitboxCollidedEventHandler();
 	
-	public Utility.PlayerOrEnemy PlayerOrEnemyProjectile { get; set; }
+	[Export] public Utility.PlayerOrEnemy PlayerOrEnemyProjectile { get; set; }
 
 	public override void _Ready()
 	{
@@ -40,14 +40,15 @@ public partial class ProjectileHitboxComponent : Area2D
 	private void OnEntityHit(Area2D entityArea)
 	{
 		if (
-			(entityArea.IsInGroup("PlayersHurtBox") && PlayerOrEnemyProjectile == Utility.PlayerOrEnemy.Enemy) ||
-			(entityArea.IsInGroup("Enemies") && PlayerOrEnemyProjectile == Utility.PlayerOrEnemy.Player)
+			(entityArea.IsInGroup(Utility.NodeGroupPlayersHurtbox) && PlayerOrEnemyProjectile == Utility.PlayerOrEnemy.Enemy) ||
+			(entityArea.IsInGroup(Utility.NodeGroupEnemies) && PlayerOrEnemyProjectile == Utility.PlayerOrEnemy.Player)
 			)
 		{
 			if (entityArea is not HurtboxComponent hurtboxComponent)
 				return;
-			SetDeferred(Area2D.PropertyName.Monitoring, false);
-			SetDeferred(Area2D.PropertyName.Monitorable, false);
+			//TODO: Commented out Just for testing, reenable once done
+			// SetDeferred(Area2D.PropertyName.Monitoring, false);
+			// SetDeferred(Area2D.PropertyName.Monitorable, false);
 			hurtboxComponent.HitByAttack(this, Damage, Knockback);
 			EmitSignal(SignalName.HitboxCollided);
 		}

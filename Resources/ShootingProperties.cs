@@ -6,6 +6,8 @@ namespace ElGatoProject.Resources;
 [GlobalClass]
 public partial class ShootingProperties : Resource
 {
+    [Export] public Utility.PlayerOrEnemy PlayerOrEnemy;
+    [Export] public Utility.WeaponType WeaponType; 
     [Export] public float ShootingCooldownTime;
     [Export] public float ReloadTime;
     [Export] public int MagazineSize;

@@ -4,7 +4,9 @@
 
 [resource]
 script = ExtResource("1_yxpyi")
-ShootingCooldownTime = 0.7
+PlayerOrEnemy = 0
+WeaponType = 6
+ShootingCooldownTime = 0.6
 ReloadTime = 1.2
 MagazineSize = 40
 BulletDamage = 10

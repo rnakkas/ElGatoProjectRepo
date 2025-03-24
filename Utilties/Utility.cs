@@ -1,3 +1,4 @@
+using Godot;
 using Godot.Collections;
 
 namespace ElGatoProject.Utilties;
@@ -44,53 +45,47 @@ public static class Utility
 
     public enum EntityState
     {
-        Idle,
-        Run,
-        Jump,
-        Fall,
-        Hurt,
-        Death,
-        WallSlide,
-        WallJump,
-        Dash,
-        Shoot
+        IdleState,
+        IdleShootState,
+        RunState,
+        RunShootState,
+        JumpState,
+        JumpShootState,
+        FallState,
+        FallShootState,
+        HurtState,
+        DeathState,
+        WallSlideState,
+        WallSlideShootState,
+        WallJumpState,
+        WallJumpShootState,
+        DashState,
+        ShootState
     }
 
     public static readonly Dictionary<EntityState, string> EntityAnimations = new()
     {
-        [EntityState.Idle] = "idle",
-        [EntityState.Run] = "run",
-        [EntityState.Jump] = "jump",
-        [EntityState.Fall] = "fall",
-        [EntityState.Hurt] = "hurt",
-        [EntityState.Death] = "death",
-        [EntityState.WallSlide] = "wall_slide",
-        [EntityState.WallJump] = "jump",
-        [EntityState.Dash] = "dash",
-        [EntityState.Shoot] = "shoot"
+        [EntityState.IdleState] = "idle",
+        [EntityState.IdleShootState] = "idle_shoot",
+        [EntityState.RunState] = "run",
+        [EntityState.RunShootState] = "run_shoot",
+        [EntityState.JumpState] = "jump",
+        [EntityState.JumpShootState] = "jump_shoot",
+        [EntityState.FallState] = "fall",
+        [EntityState.FallShootState] = "fall_shoot",
+        [EntityState.HurtState] = "hurt",
+        [EntityState.DeathState] = "death",
+        [EntityState.WallSlideState] = "wall_slide",
+        [EntityState.WallSlideShootState] = "wall_slide_shoot",
+        [EntityState.WallJumpState] = "jump",
+        [EntityState.WallJumpShootState] = "jump_shoot",
+        [EntityState.DashState] = "dash",
+        [EntityState.ShootState] = "shoot"
     };
     
     // Projectile animation string names
     public const string BulletFlyAnimation = "fly";
     public const string BulletHitAnimation = "hit";
-    
-    // public static string EnemyMachineGunFly = "enemy_machinegun_fly";
-    // public static string EnemyMachineGunHit = "enemy_machinegun_hit";
-    // public static string EnemyPistolFly = "enemy_pistol_fly";
-    // public static string EnemyPistolHit = "enemy_pistol_hit";
-    // public static string EnemyRailGunFly = "enemy_railgun_fly";
-    // public static string EnemyRailGunHit = "enemy_railgun_hit";
-    // public static string EnemyShotgunFly = "enemy_shotgun_fly";
-    // public static string EnemyShotgunHit = "enemy_shotgun_hit";
-    // public static string PlayerMachineGunFly = "player_machinegun_fly";
-    // public static string PlayerMachineGunHit = "player_machinegun_hit";
-    // public static string PlayerPistolFly = "player_pistol_fly";
-    // public static string PlayerPistolHit = "player_pistol_hit";
-    // public static string PlayerRailGunFly = "player_railgun_fly";
-    // public static string PlayerRailGunHit = "player_railgun_hit";
-    // public static string PlayerShotgunFly = "player_shotgun_fly";
-    // public static string PlayerShotgunHit = "player_shotgun_hit";
-
     
     // Scene transition and shader string names
     public const string SceneTransitionWipeAnimation = "screen_wipe_animation";
@@ -98,6 +93,9 @@ public static class Utility
     
     // Node group string names
     public const string NodeGroupPlayers = "Players";
+    public const string NodeGroupEnemies = "Enemies";
+    public const string NodeGroupPlayersHurtbox = "PlayersHurtBox";
+    public const string NodeGroupLevels = "Levels";
     
     // Level names
     public const string LevelOne = "level_one";
@@ -134,5 +132,33 @@ public static class Utility
         [WeaponType.PlayerMachineGun] = "res://Projectiles/PackedScenes/machinegun_bullet_projectile.tscn",
         [WeaponType.PlayerRailGun] = "res://Projectiles/PackedScenes/railgun_bullet_projectile.tscn"
     };
+    
+    // Methods
+    
+    public static void FlipSprite(AnimatedSprite2D characterSprite, Vector2 direction)
+    {
+        if (characterSprite == null) 
+            return;
+        
+        if (direction == Vector2.Left)
+            characterSprite.FlipH = true;
+        else if (direction == Vector2.Right)
+            characterSprite.FlipH = false;
+    }
+    
+    public static Vector2 SetShootingDirection(Node characterSprite)
+    {
+        var directionFacing = Vector2.Zero;
+        
+        if (characterSprite is not AnimatedSprite2D animatedSprite)
+            return directionFacing;
+        
+        if (animatedSprite.IsFlippedH())
+            directionFacing = Vector2.Left;
+        else if (!animatedSprite.IsFlippedV())
+            directionFacing = Vector2.Right;
+		
+        return directionFacing;
+    }
 
 }

@@ -1,0 +1,220 @@
+Here's a step-by-step solution to create a flexible state machine for Godot 4.3 in C#:
+
+1. **State Machine Core**
+```csharp
+// StateMachine.cs
+using Godot;
+using System.Collections.Generic;
+
+public partial class StateMachine : Node
+{
+    private Dictionary<string, State> _states = new();
+    private State _currentState;
+
+    public Node Owner { get; private set; }
+
+    public override void _Ready()
+    {
+        Owner = GetParent();
+    }
+
+    public void AddState(string stateName, State state)
+    {
+        _states[stateName] = state;
+        state.Initialize(this, Owner);
+    }
+
+    public void ChangeState(string stateName)
+    {
+        if (_states.TryGetValue(stateName, out State newState))
+        {
+            _currentState?.Exit();
+            _currentState = newState;
+            _currentState.Enter();
+        }
+    }
+
+    public override void _Process(double delta) => _currentState?.Update(delta);
+    public override void _PhysicsProcess(double delta) => _currentState?.PhysicsUpdate(delta);
+}
+
+// State.cs
+public class State
+{
+    protected StateMachine StateMachine { get; private set; }
+    protected Node Owner { get; private set; }
+
+    public void Initialize(StateMachine stateMachine, Node owner)
+    {
+        StateMachine = stateMachine;
+        Owner = owner;
+    }
+
+    public virtual void Enter() { }
+    public virtual void Exit() { }
+    public virtual void Update(double delta) { }
+    public virtual void PhysicsUpdate(double delta) { }
+}
+```
+
+2. **Character Interfaces**
+```csharp
+// IMovable.cs
+public interface IMovable
+{
+    void Move(float direction);
+    bool IsGrounded();
+    void PlayAnimation(string animation);
+}
+
+// IShooter.cs
+public interface IShooter
+{
+    void Shoot();
+}
+
+// IJumper.cs
+public interface IJumper
+{
+    void Jump();
+}
+
+// IDamageable.cs
+public interface IDamageable
+{
+    void TakeDamage(int damage);
+    void Die();
+}
+```
+
+3. **Example Player States**
+```csharp
+// PlayerIdleState.cs
+public class PlayerIdleState : State
+{
+    public override void Enter()
+    {
+        if (Owner is IMovable movable) movable.PlayAnimation("Idle");
+    }
+
+    public override void Update(double delta)
+    {
+        if (Owner is IMovable movable && Input.GetAxis("left", "right") != 0)
+            StateMachine.ChangeState("Run");
+        
+        if (Owner is IShooter && Input.IsActionPressed("shoot"))
+            StateMachine.ChangeState("IdleShoot");
+        
+        if (Owner is IJumper && Input.IsActionJustPressed("jump"))
+            StateMachine.ChangeState("Jump");
+    }
+}
+
+// PlayerRunShootState.cs
+public class PlayerRunShootState : State
+{
+    public override void Enter()
+    {
+        if (Owner is IMovable movable) movable.PlayAnimation("RunShoot");
+    }
+
+    public override void Update(double delta)
+    {
+        if (Owner is IMovable movable)
+        {
+            movable.Move(Input.GetAxis("left", "right"));
+            if (movable.IsGrounded() && Input.IsActionJustPressed("jump"))
+                StateMachine.ChangeState("Jump");
+        }
+        
+        if (Owner is IShooter shooter && Input.IsActionPressed("shoot"))
+            shooter.Shoot();
+    }
+}
+```
+
+4. **Example Enemy States**
+```csharp
+// EnemyShootState.cs
+public class EnemyShootState : State
+{
+    public override void Enter()
+    {
+        if (Owner is IShooter shooter) shooter.Shoot();
+        StateMachine.ChangeState("Run");
+    }
+}
+
+// EnemyHurtState.cs
+public class EnemyHurtState : State
+{
+    public override void Enter()
+    {
+        if (Owner is IDamageable damageable) damageable.TakeDamage(10);
+        if (Owner is IMovable movable) movable.PlayAnimation("Hurt");
+        StateMachine.ChangeState(Health <= 0 ? "Death" : "Idle");
+    }
+}
+```
+
+5. **Character Implementation Example**
+```csharp
+// PlayerCat.cs
+public partial class PlayerCat : CharacterBody2D, IMovable, IShooter, IJumper
+{
+    [Export] public float Speed = 300;
+    [Export] public float JumpForce = 500;
+
+    public override void _Ready()
+    {
+        var stateMachine = GetNode<StateMachine>("StateMachine");
+        stateMachine.AddState("Idle", new PlayerIdleState());
+        stateMachine.AddState("RunShoot", new PlayerRunShootState());
+        // Add other states...
+        stateMachine.ChangeState("Idle");
+    }
+
+    public void Move(float direction) => Velocity = new Vector2(direction * Speed, Velocity.Y);
+    public bool IsGrounded() => IsOnFloor();
+    public void PlayAnimation(string anim) => GetNode<AnimationPlayer>("AnimationPlayer").Play(anim);
+    public void Jump() => Velocity = new Vector2(Velocity.X, -JumpForce);
+    public void Shoot() => GD.Print("Shooting bullet!");
+}
+```
+
+**Implementation Notes:**
+
+1. **Folder Structure:**
+   ```
+   - Characters/
+     - Player/
+       - PlayerCat.cs
+       - PlayerDog.cs
+     - Enemies/
+       - EnemyFrog.cs
+       - EnemyToad.cs
+   - StateSystem/
+     - StateMachine.cs
+     - States/
+       - PlayerStates/
+       - EnemyStates/
+     - Interfaces/
+   ```
+
+2. **Scene Setup:**
+   - For each character:
+     - Root node (CharacterBody2D)
+     - StateMachine node (as child)
+     - AnimationPlayer and other necessary nodes
+
+3. **Adding New States:**
+   1. Create new class inheriting from `State`
+   2. Implement required interface checks
+   3. Add to character's state machine in `_Ready()`
+
+This architecture provides:
+- Complete separation between state logic and character implementation
+- Easy addition of new states/characters
+- Type safety through interface contracts
+- Reusable state components across character types
+- Clear state transition management
