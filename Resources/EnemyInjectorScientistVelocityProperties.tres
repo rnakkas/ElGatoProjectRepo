@@ -1,11 +1,13 @@
 [gd_resource type="Resource" script_class="CharacterVelocityProperties" load_steps=2 format=3 uid="uid://c1uypwfxhw5qq"]
 
-[ext_resource type="Script" path="res://Resources/CharacterVelocityProperties.cs" id="1_pjpeb"]
+[ext_resource type="Script" path="res://Resources/CharacterVelocityProperties.cs" id="1_1hgf6"]
 
 [resource]
-script = ExtResource("1_pjpeb")
-MaxSpeed = 100.0
+script = ExtResource("1_1hgf6")
+MaxSpeed = 150.0
 DashSpeed = 0.0
+DashTime = 0.0
+DashCooldownTime = 0.0
 Acceleration = 550.0
 Friction = 320.0
 JumpVelocity = 0.0

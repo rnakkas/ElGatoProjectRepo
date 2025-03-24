@@ -1,0 +1,88 @@
+[gd_scene load_steps=14 format=3 uid="uid://ch40gmom7cw1l"]
+
+[ext_resource type="Texture2D" uid="uid://bb23y6i2264yp" path="res://Assets/Enemies/hiredGoon1-sprite-001.png" id="1_tt38v"]
+[ext_resource type="Script" path="res://Enemies/Scripts/InjectorScientist.cs" id="1_u5wu1"]
+[ext_resource type="Script" path="res://Components/Scripts/HealthComponent.cs" id="2_7ndu1"]
+[ext_resource type="Script" path="res://Components/Scripts/HurtboxComponent.cs" id="3_i2dil"]
+[ext_resource type="Script" path="res://Components/Scripts/VelocityComponent.cs" id="3_rf441"]
+[ext_resource type="Script" path="res://StateSystem/StateMachine.cs" id="5_3mjhv"]
+[ext_resource type="Script" path="res://StateSystem/States/ChaseState.cs" id="6_rgblf"]
+[ext_resource type="Script" path="res://StateSystem/States/DeathState.cs" id="6_s4d7u"]
+[ext_resource type="Script" path="res://StateSystem/States/FallState.cs" id="7_i1o21"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_cwosb"]
+radius = 6.0
+height = 16.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bg3fj"]
+size = Vector2(16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vxrpi"]
+atlas = ExtResource("1_tt38v")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vkmp6"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vxrpi")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[node name="InjectorScientist" type="CharacterBody2D" node_paths=PackedStringArray("_velocityComponent", "_hurtboxComponent", "_healthComponent", "_stateMachine", "_despawnTimer") groups=["Enemies"]]
+script = ExtResource("1_u5wu1")
+_velocityComponent = NodePath("VelocityComponent")
+_hurtboxComponent = NodePath("HurtboxComponent")
+_healthComponent = NodePath("HealthComponent")
+_stateMachine = NodePath("StateMachine")
+_despawnTimer = NodePath("Timers/DespawnTimer")
+_despawnTimeSeconds = 2.0
+
+[node name="Collider" type="CollisionShape2D" parent="."]
+position = Vector2(0, -8)
+shape = SubResource("CapsuleShape2D_cwosb")
+
+[node name="HealthComponent" type="Node" parent="."]
+script = ExtResource("2_7ndu1")
+CurrentHealth = 20
+_maxHealth = 100
+
+[node name="VelocityComponent" type="Node" parent="."]
+script = ExtResource("3_rf441")
+
+[node name="HurtboxComponent" type="Area2D" parent="." node_paths=PackedStringArray("_healthComponent", "_bodySprite", "_velocityComponent")]
+position = Vector2(0, -8)
+script = ExtResource("3_i2dil")
+_healthComponent = NodePath("../HealthComponent")
+_bodySprite = NodePath("../AnimatedSprite")
+_velocityComponent = NodePath("../VelocityComponent")
+
+[node name="HurtboxCollider" type="CollisionShape2D" parent="HurtboxComponent"]
+shape = SubResource("RectangleShape2D_bg3fj")
+debug_color = Color(0.883684, 0.329445, 0.142117, 0.42)
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource("5_3mjhv")
+
+[node name="ChaseState" type="Node" parent="StateMachine"]
+script = ExtResource("6_rgblf")
+
+[node name="FallState" type="Node" parent="StateMachine"]
+script = ExtResource("7_i1o21")
+
+[node name="DeathState" type="Node" parent="StateMachine"]
+script = ExtResource("6_s4d7u")
+
+[node name="Timers" type="Node" parent="."]
+
+[node name="DespawnTimer" type="Timer" parent="Timers"]
+
+[node name="AnimatedSprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -8)
+sprite_frames = SubResource("SpriteFrames_vkmp6")
+animation = &"idle"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]

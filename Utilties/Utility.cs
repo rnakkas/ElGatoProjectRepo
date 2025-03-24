@@ -58,8 +58,9 @@ public static class Utility
         WallSlideState,
         WallSlideShootState,
         WallJumpState,
-        WallJumpShootState,
+        WallJumpShootState, //TODO: Might not need this, can remove
         DashState,
+        ChaseState,
         ShootState
     }
 
@@ -78,8 +79,9 @@ public static class Utility
         [EntityState.WallSlideState] = "wall_slide",
         [EntityState.WallSlideShootState] = "wall_slide_shoot",
         [EntityState.WallJumpState] = "jump",
-        [EntityState.WallJumpShootState] = "jump_shoot",
+        [EntityState.WallJumpShootState] = "jump_shoot", //TODO: Might not need this, can remove
         [EntityState.DashState] = "dash",
+        [EntityState.ChaseState] = "chase",
         [EntityState.ShootState] = "shoot"
     };
     
@@ -134,7 +136,6 @@ public static class Utility
     };
     
     // Methods
-    
     public static void FlipSprite(AnimatedSprite2D characterSprite, Vector2 direction)
     {
         if (characterSprite == null) 
