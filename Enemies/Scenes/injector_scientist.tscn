@@ -39,7 +39,7 @@ _hurtboxComponent = NodePath("HurtboxComponent")
 _healthComponent = NodePath("HealthComponent")
 _stateMachine = NodePath("StateMachine")
 _despawnTimer = NodePath("Timers/DespawnTimer")
-_despawnTimeSeconds = 2.0
+_despawnTimeSeconds = 5.0
 
 [node name="Collider" type="CollisionShape2D" parent="."]
 position = Vector2(0, -8)

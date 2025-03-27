@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://53hkq24j3wee"]
+[gd_scene load_steps=9 format=3 uid="uid://53hkq24j3wee"]
 
 [ext_resource type="Script" path="res://Mains/Scripts/Main.cs" id="1_sui6x"]
 [ext_resource type="PackedScene" uid="uid://b48vrq7yrm6ip" path="res://UI/Menus/Scenes/main_menu.tscn" id="2_qhitg"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://1n6eoojc5hfk" path="res://UI/Menus/Scenes/game_over_menu.tscn" id="4_havpe"]
 [ext_resource type="PackedScene" uid="uid://cs8e7jtnmbagf" path="res://SceneTransitions/Scenes/scene_transition.tscn" id="5_81irw"]
 [ext_resource type="PackedScene" uid="uid://cdxspo7dwh0iq" path="res://UI/HUD/Scenes/player_hud.tscn" id="5_biahh"]
+[ext_resource type="Script" path="res://EnemySpawnerSystem/EnemySpawner.cs" id="8_d5csy"]
 
 [node name="Main" type="Node2D" node_paths=PackedStringArray("_sceneTransition", "_playerHud", "_gameOverMenu", "_mainMenu", "_pauseMenu", "_levelLoader")]
 process_mode = 3
@@ -32,3 +33,6 @@ _levelLoader = NodePath("LevelLoader")
 
 [node name="LevelLoader" type="Node" parent="."]
 script = ExtResource("4_aum1p")
+
+[node name="EnemySpawner" type="Node" parent="."]
+script = ExtResource("8_d5csy")

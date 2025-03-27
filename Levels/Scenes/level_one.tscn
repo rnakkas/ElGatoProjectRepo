@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=4 uid="uid://brms67nc6kr52"]
+[gd_scene load_steps=15 format=4 uid="uid://brms67nc6kr52"]
 
 [ext_resource type="Texture2D" uid="uid://c8wewtsxmggnk" path="res://Assets/Tilesets/tilemap-floors-walls-2-placeholder.png" id="1_qbonj"]
 [ext_resource type="PackedScene" uid="uid://c4o8x6lc2silu" path="res://Players/Scenes/player_the_cat.tscn" id="2_ruasw"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://cgnak73pe3qi7" path="res://Pickups/Scenes/weapon_mod_machine_gun.tscn" id="5_8mm0c"]
 [ext_resource type="PackedScene" uid="uid://bkx2ap7o8frrj" path="res://Pickups/Scenes/weapon_mod_rail_gun.tscn" id="6_hhimc"]
 [ext_resource type="PackedScene" uid="uid://cm71gwvwcmf6e" path="res://Enemies/Scenes/enemy_hired_goon.tscn" id="7_b38l0"]
+[ext_resource type="Script" path="res://EnemySpawnerSystem/TriggerAreas/TestTriggerArea.cs" id="8_128gc"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_3wlbo"]
 
@@ -94,6 +95,9 @@ physics_layer_0/collision_layer = 4
 physics_layer_0/collision_mask = 9
 sources/0 = SubResource("TileSetAtlasSource_aayjg")
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5he77"]
+size = Vector2(2, 581)
+
 [node name="level_one" type="Node2D" groups=["Levels"]]
 process_mode = 1
 
@@ -114,7 +118,7 @@ tile_map_data = PackedByteArray("AAAXAP//AAABAAIAAAAZAP7/AAADAAEAAAAZAP//AAADAAI
 tile_set = SubResource("TileSet_ft0me")
 
 [node name="PlayerTheCat" parent="." instance=ExtResource("2_ruasw")]
-position = Vector2(1174, -131)
+position = Vector2(666, -81)
 
 [node name="Camera2D" type="Camera2D" parent="PlayerTheCat"]
 position = Vector2(0.999985, 4)
@@ -247,3 +251,20 @@ position = Vector2(1120, -130)
 
 [node name="enemy_hired_goon" parent="enemies" instance=ExtResource("7_b38l0")]
 position = Vector2(962, 28)
+
+[node name="TestTriggerArea" type="Area2D" parent="."]
+script = ExtResource("8_128gc")
+
+[node name="TriggerCollider" type="CollisionShape2D" parent="TestTriggerArea"]
+position = Vector2(615.5, -86.5)
+shape = SubResource("RectangleShape2D_5he77")
+debug_color = Color(0.596078, 0.529412, 0.384314, 0.105882)
+
+[node name="sp1" type="Marker2D" parent="TestTriggerArea" groups=["SpawnPoints"]]
+position = Vector2(897, -78)
+
+[node name="sp2" type="Marker2D" parent="TestTriggerArea" groups=["SpawnPoints"]]
+position = Vector2(389, -31)
+
+[node name="sp3" type="Marker2D" parent="TestTriggerArea" groups=["SpawnPoints"]]
+position = Vector2(547, -79)

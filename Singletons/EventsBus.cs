@@ -1,3 +1,4 @@
+using ElGatoProject.Utilties;
 using Godot;
 
 namespace ElGatoProject.Singletons;
@@ -18,6 +19,10 @@ public partial class EventsBus : Node
 	public delegate void PlayerCurrentWeaponUpdateEventHandler(string weaponType);
 	[Signal]
 	public delegate void PlayerAmmoUpdateEventHandler(int ammo);
+
+	[Signal]
+	public delegate void
+		PlayerEnteredEnemySpawnTriggerEventHandler(string enemyType, Vector2 playerPosition);
 	
 	public override void _Ready()
 	{

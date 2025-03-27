@@ -28,6 +28,7 @@ public partial class InjectorScientist : CharacterBody2D
 		if (_despawnTimer == null) return;
 		_despawnTimer.OneShot = true;
 		_despawnTimer.SetWaitTime(_despawnTimeSeconds);
+		_despawnTimer.Start();
 	}
 	
 	/** Signals and connections */
